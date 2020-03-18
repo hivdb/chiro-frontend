@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Dropdown, Menu } from 'semantic-ui-react';
 
-import DOMAIN from '../config';
+import DOMAIN from '../../config';
 
 class SearchMenu extends React.Component {
     
