@@ -102,8 +102,10 @@ class Home extends React.Component {
       <Container>
         <Header as='h1' textAlign='center' block>
           CoV-Rx-DB
+          <Header.Subheader>
+          COVID 19, Coronavirus, SARS-CoV2
+          </Header.Subheader>
         </Header>
-        <p align="center">COVID 19, Coronavirus, SARS-CoV2</p>
         
         <Grid>
           <Grid.Row>
