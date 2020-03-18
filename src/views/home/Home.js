@@ -7,9 +7,9 @@ import 'semantic-ui-css/semantic.min.css';
 import { Container, Header, Grid, Statistic } from 'semantic-ui-react';
 
 // import SearchMenu from './components/search_menu';
-import SearchMenu from '../../components/search_menu_horizontal';
+import SearchMenu from '../../components/home/search_menu_horizontal';
 // import SearchResult from './components/search_result';
-import SearchResult from '../../components/search_result_table';
+import SearchResult from '../../components/home/search_result_table';
 import DOMAIN from '../../config';
 
 
