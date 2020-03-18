@@ -159,10 +159,10 @@ class SearchResult extends React.Component {
                                 <Table.Cell
                                     width={5}
                                     verticalAlign='top'>
-                                    <Label.Group>
+                                    <Label.Group size="tiny">
                                         {tags && tags.map((tag, index) => {
                                             return (
-                                                <Label key={index}>{tag}</Label>
+                                                <Label key={index} size="tiny">{tag}</Label>
                                             );
                                         })}
                                     </Label.Group>
