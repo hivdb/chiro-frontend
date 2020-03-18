@@ -117,10 +117,12 @@ class Home extends React.Component {
               />
             </Grid.Column>
             <Grid.Column>
+              {this.state.references.length > 0 &&
               <Statistic size="mini">
                   <Statistic.Label>Results</Statistic.Label>
                   <Statistic.Value>{this.state.references.length}</Statistic.Value>
               </Statistic>
+              }
             </Grid.Column>
           </Grid.Row>
         </Grid>
