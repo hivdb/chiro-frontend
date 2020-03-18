@@ -1,19 +1,19 @@
 import React from 'react';
 // import {contextRef} from 'react';
 
-import './App.css';
+import './Home.css';
 
 import 'semantic-ui-css/semantic.min.css';
 import { Container, Header, Grid, Statistic } from 'semantic-ui-react';
 
 // import SearchMenu from './components/search_menu';
-import SearchMenu from './components/search_menu_horizontal';
+import SearchMenu from '../../components/search_menu_horizontal';
 // import SearchResult from './components/search_result';
-import SearchResult from './components/search_result_table';
-import DOMAIN from './config';
+import SearchResult from '../../components/search_result_table';
+import DOMAIN from '../../config';
 
 
-class Layout extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);
     
@@ -98,6 +98,7 @@ class Layout extends React.Component {
   
   render() {    
     return (
+      <div>
       <Container>
         <Header as='h1' textAlign='center' block>
           CoV-Rx-DB
@@ -130,17 +131,9 @@ class Layout extends React.Component {
         <Header as='h5' textAlign="center">© 2020, All Rights Reserved.</Header>
 
       </Container>  
+      </div>
       );
   }
 }
 
-
-function App() {
-  return (
-    <div>
-      <Layout />
-    </div>
-  );
-}
-
-export default App;
+export default Home;
