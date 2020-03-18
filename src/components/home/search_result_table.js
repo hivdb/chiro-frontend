@@ -1,7 +1,9 @@
 import React from 'react';
 import _ from 'lodash'
 
-import { Table, Label, Popup, Button } from 'semantic-ui-react';
+import { Table, Label, Popup, List } from 'semantic-ui-react';
+
+import './search_result_table.css';
 
 
 class SearchResult extends React.Component {
@@ -85,7 +87,7 @@ class SearchResult extends React.Component {
                         <Table.HeaderCell
                             sorted={sort_column === 'author' ? direction: null}
                             onClick={this.handleSort('author')}>
-                            First Author(Journal)
+                            Publish
                         </Table.HeaderCell>
                         <Table.HeaderCell
                             sorted={sort_column === 'year' ? direction: null}
@@ -124,13 +126,17 @@ class SearchResult extends React.Component {
                         return (
                             <Table.Row key={index}>
                                 <Table.Cell
+                                    width={5}
                                     verticalAlign='top'>
-                                    <a href={title_url} target="_blank" rel="noopener noreferrer">{title}</a>
+                                    <a href={title_url} target="_blank" rel="noopener noreferrer">
+                                        {title}
+                                    </a>
                                 </Table.Cell>
                                 <Table.Cell
                                     width={1}
                                     verticalAlign='top'>
-                                    {author} ({journal})
+                                    <p>{author}</p>
+                                    <p>{journal}</p>
                                 </Table.Cell>
                                 <Table.Cell
                                     width={1}
@@ -157,7 +163,7 @@ class SearchResult extends React.Component {
                                     </List>
                                 </Table.Cell> */}
                                 <Table.Cell
-                                    width={5}
+                                    width={3}
                                     verticalAlign='top'>
                                     <Label.Group size="tiny">
                                         {tags && tags.map((tag, index) => {
@@ -170,19 +176,22 @@ class SearchResult extends React.Component {
                                 
                                 {exp_tags &&  
                                 <Table.Cell
-                                    width={2}
-                                    textAlign='right'
+                                    width={1}
                                     verticalAlign='top'>
-                                    <Button.Group vertical size='mini' width={2}>
+                                        <List divided size='mini'>
                                         {exp_tags.map((tag, index) => {
                                             return (
-                                                <Popup key={index} content='In progress.' trigger={
-                                                    <Button color='green' as="a">{tag}</Button>}
+                                                <List.Item key={index} size='mini'>
+                                                <Popup content='In progress.' size='mini' trigger={
+                                                    <a size='mini' onClick={e=>e.preventDefault()}>
+                                                        {tag}
+                                                    </a>
+                                                    }
                                                 />
+                                                </List.Item>
                                             );
                                         })}
-                                    </Button.Group>
-                                    
+                                        </List>
                                 </Table.Cell>
                                 }
                             </Table.Row>
