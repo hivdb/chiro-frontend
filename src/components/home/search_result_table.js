@@ -140,9 +140,15 @@ class SearchResult extends React.Component {
                                 <Table.Cell
                                     width={5}
                                     verticalAlign='top'>
-                                    <a href={title_url} target="_blank" rel="noopener noreferrer">
-                                        {title}
-                                    </a>
+                                        <Popup 
+                                            content="View more from publisher"
+                                            size='mini'
+                                            position='bottom center'
+                                            trigger={
+                                            <a href={title_url} target="_blank" rel="noopener noreferrer">
+                                                {title}
+                                            </a>
+                                        } />
                                 </Table.Cell>
                                 <Table.Cell
                                     width={1}
