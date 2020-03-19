@@ -141,7 +141,7 @@ class SearchResult extends React.Component {
                                     width={5}
                                     verticalAlign='top'>
                                         <Popup 
-                                            content="View more from publisher"
+                                            content="Go to publisher page."
                                             size='mini'
                                             position='bottom center'
                                             trigger={
