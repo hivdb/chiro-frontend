@@ -122,7 +122,15 @@ class SearchResult extends React.Component {
                         // const doi = reference.doi;
                         const doi_url = reference.doi_url;
                         // const contents = reference.contents;
-                        const tags = reference.tags;
+                        let tags = reference.tags;
+                        let more_tags = false;
+                        if (tags.length > 5) {
+                            tags = tags.slice(0, 5);
+                            more_tags = true;
+                        } else {
+                            more_tags = false;
+                        }
+                            
                         const exp_tags = reference.exp_tags;
                         
                         const title_url = doi_url ? doi_url: (pubmed_url ? pubmed_url : (pmc_url ? pmc_url : ''));
@@ -178,6 +186,9 @@ class SearchResult extends React.Component {
                                                 <Label key={index} size="tiny">{tag}</Label>
                                             );
                                         })}
+                                        {more_tags &&
+                                        "..."
+                                        }
                                     </Label.Group>
                                 </Table.Cell>
                                 
