@@ -109,6 +109,10 @@ class SearchResult extends React.Component {
                         const author = reference.author;
                         // const authors = reference.authors;
                         const journal = reference.journal_abbr;
+                        const acronym = journal.split(' ').map(
+                            (value, index) => {
+                                return value.charAt(0).toUpperCase()
+                            }).join('');
                         // const abstract = reference.abstract;
                         const year = reference.year;
                         // const pmid = reference.pmid;
@@ -136,7 +140,10 @@ class SearchResult extends React.Component {
                                     width={1}
                                     verticalAlign='top'>
                                     <p>{author}</p>
-                                    <p>{journal}</p>
+                                    <Popup
+                                        content={journal} trigger={<p>{acronym}</p>}
+                                    />
+                                    
                                 </Table.Cell>
                                 <Table.Cell
                                     width={1}
