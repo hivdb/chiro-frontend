@@ -63,6 +63,15 @@ class SearchResult extends React.Component {
     
     render() {
         const {sort_column, references, direction} = this.state;
+
+        let references_has_data = references.filter((item) => {;
+            return item.exp_tags.length > 0;
+        });
+
+        let is_display_data_column = false;
+        if (references_has_data.length > 0) {
+            is_display_data_column = true;
+        }
         
         return (
 
@@ -97,9 +106,11 @@ class SearchResult extends React.Component {
                         <Table.HeaderCell>
                             Tags
                         </Table.HeaderCell>
+                        { is_display_data_column &&
                         <Table.HeaderCell>
                             Data
                         </Table.HeaderCell>
+                        }
                     </Table.Row>
 
                 </Table.Header>
@@ -192,7 +203,7 @@ class SearchResult extends React.Component {
                                     </Label.Group>
                                 </Table.Cell>
                                 
-                                {exp_tags &&  
+                                {exp_tags>0 &&  
                                 <Table.Cell
                                     width={1}
                                     verticalAlign='top'>
