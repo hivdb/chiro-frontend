@@ -116,8 +116,9 @@ class Home extends React.Component {
         <Header as='h1' textAlign='center' block dividing>
           CoV-Rx-DB
           {subHeaderInfo &&
-          <Header.Subheader size='mini'>
-            <span>{subHeaderInfo.timestamp}</span>, Total publications: {subHeaderInfo.total_num}
+          <Header.Subheader>
+            <span>Updated at: {subHeaderInfo.timestamp}, </span>
+            <span>Total publications: {subHeaderInfo.total_num}</span>
           </Header.Subheader>
           }
         </Header>
