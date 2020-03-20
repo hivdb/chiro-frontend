@@ -37,18 +37,18 @@ class SearchMenu extends React.Component {
                 result = result.items;
                 result = result.map((value, index) => {
                     const category = value.category;
-                    let tags = value.tags.map((tag, index) => {
-                        return {
+                    let tags = [{
+                        key: 0,
+                        text: 'All',
+                        value: 'all',
+                    }];
+                    value.tags.map((tag, index) => {
+                        return tags.push({
                             key: index + 1,
                             text: tag,
                             value: tag,
-                        };
+                        });
                     });
-                    tags.push({
-                        key: tags.length + 1,
-                        text: 'All',
-                        value: 'all',
-                    })
                     return {
                         category: category,
                         tags: tags
