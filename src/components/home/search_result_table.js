@@ -151,10 +151,7 @@ class SearchResult extends React.Component {
                                     width={1}
                                     verticalAlign='top'>
                                     <p>{author}</p>
-                                    <Popup
-                                        content={journal} trigger={<p>{acronym}</p>}
-                                    />
-                                    
+                                    <p>{acronym}</p>
                                 </Table.Cell>
                                 <Table.Cell
                                     width={1}
@@ -204,7 +201,7 @@ class SearchResult extends React.Component {
                                             return (
                                                 <List.Item key={index} size='mini'>
                                                 <Popup content='In progress.' size='mini' trigger={
-                                                    <a size='mini' onClick={e=>e.preventDefault()}>
+                                                    <a size='mini' href="#" onClick={e=>e.preventDefault()}>
                                                         {tag}
                                                     </a>
                                                     }
