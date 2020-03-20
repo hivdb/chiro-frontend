@@ -203,7 +203,7 @@ class SearchResult extends React.Component {
                                     </Label.Group>
                                 </Table.Cell>
                                 
-                                {exp_tags>0 &&  
+                                {exp_tags && is_display_data_column &&  
                                 <Table.Cell
                                     width={1}
                                     verticalAlign='top'>
