@@ -102,9 +102,6 @@ class Home extends React.Component {
       <Container>
         <Header as='h1' textAlign='center' block>
           CoV-Rx-DB
-          <Header.Subheader>
-          COVID 19, Coronavirus, SARS-CoV2
-          </Header.Subheader>
         </Header>
         
         <Grid>
@@ -132,7 +129,7 @@ class Home extends React.Component {
         <SearchResult references={this.state.references} update_time={this.state.update_time}/>
         }
         
-        <Header as='h5' textAlign="center">© 2020, All Rights Reserved.</Header>
+        {/* <Header as='h5' textAlign="center">© 2020, All Rights Reserved.</Header> */}
 
       </Container>  
       </div>
