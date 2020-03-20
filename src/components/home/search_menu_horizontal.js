@@ -47,7 +47,6 @@ class SearchMenu extends React.Component {
                         text: 'All',
                         value: 'all',
                     })
-                    console.log(tags);
                     return {
                         category: category,
                         tags: tags
