@@ -29,10 +29,12 @@ class Home extends React.Component {
       content_keyword: "",
       references: [],
       update_time: null,
+      subHeaderInfo: null,
     };
     
     this.handleSearchPreparedKeyword = this.handleSearchPreparedKeyword.bind(this);
     this.handleSearchContent = this.handleSearchContent.bind(this);
+    this.handleUpdateSubHeader = this.handleUpdateSubHeader.bind(this);
   }
 
   componentDidMount() {
@@ -96,12 +98,28 @@ class Home extends React.Component {
     )
   }
   
-  render() {    
+  handleUpdateSubHeader(result) {
+    this.setState({
+      subHeaderInfo: {
+        timestamp: result['update-time'],
+        total_num: result['total-publications'],
+      }
+    });
+  } 
+
+  render() {
+    const subHeaderInfo = this.state.subHeaderInfo;
+
     return (
       <div>
       <Container>
-        <Header as='h1' textAlign='center' block>
+        <Header as='h1' textAlign='center' block dividing>
           CoV-Rx-DB
+          {subHeaderInfo &&
+          <Header.Subheader size='mini'>
+            <span>{subHeaderInfo.timestamp}</span>, Total publications: {subHeaderInfo.total_num}
+          </Header.Subheader>
+          }
         </Header>
         
         <Grid>
@@ -111,6 +129,7 @@ class Home extends React.Component {
                 searchPreparedKeyword={this.handleSearchPreparedKeyword}
                 searchContent = {this.handleSearchContent}
                 references={this.state.references}
+                updateSubHeader={this.handleUpdateSubHeader}
               />
             </Grid.Column>
             <Grid.Column>

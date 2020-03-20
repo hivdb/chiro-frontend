@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Dropdown, Menu } from 'semantic-ui-react';
+import { Dropdown, Menu} from 'semantic-ui-react';
 
 import DOMAIN from '../../config';
 
@@ -17,7 +17,7 @@ class SearchMenu extends React.Component {
             target: '',
             mechanism: '',
             search_keyword: '',
-            categories: []
+            categories: [],
         }
         
         this.handleChange = this.handleChange.bind(this);
@@ -32,6 +32,8 @@ class SearchMenu extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
+                this.props.updateSubHeader(result);
+
                 result = result.items;
                 result = result.map((value, index) => {
                     const category = value.category;
@@ -54,7 +56,7 @@ class SearchMenu extends React.Component {
                 });
                 
                 this.setState({
-                    categories: result
+                    categories: result,
                 });
             },
             (error) => {
