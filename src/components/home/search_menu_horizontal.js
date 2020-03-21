@@ -4,11 +4,13 @@ import { Dropdown, Menu} from 'semantic-ui-react';
 
 import DOMAIN from '../../config';
 
+import './search_menu_horizontal.sass';
+
 class SearchMenu extends React.Component {
-    
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
       "publication type": '',
       "study type": '',
@@ -19,15 +21,15 @@ class SearchMenu extends React.Component {
       search_keyword: '',
       categories: [],
     };
-        
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
   }
-    
+
   componentDidMount() {
     let url = DOMAIN + '/categories';
-        
+
     fetch(url)
       .then(res => res.json())
       .then(
@@ -54,7 +56,7 @@ class SearchMenu extends React.Component {
               tags: tags
             };
           });
-                
+
           this.setState({
             categories: result,
           });
@@ -63,14 +65,14 @@ class SearchMenu extends React.Component {
         }
       );
   }
-    
+
   handleChange(e, keyword) {
     const name = keyword.name;
     const value = keyword.value;
     let update = {};
-        
+
     update[name] = value;
-        
+
     this.setState(update, () => {
       this.props.searchPreparedKeyword({
         "publication type": this.state["publication type"],
@@ -82,21 +84,21 @@ class SearchMenu extends React.Component {
       });
     });
   }
-    
-    
+
+
   handleSearchChange(e, input) {
     this.setState({
       search_keyword: input.value
     });
   }
-    
+
   handleSearchSubmit(e) {
     this.props.searchContent(this.state.search_keyword);
   }
-    
+
   render() {
     const categories = this.state.categories;
-        
+
     return (
       <Menu compact stackable>
         {categories.map((item, index) => {
@@ -119,7 +121,7 @@ class SearchMenu extends React.Component {
 
         {/* <Form onSubmit={this.handleSearchSubmit}>
                     <Form.Field>
-                        <Form.Input 
+                        <Form.Input
                          placeholder='Search content...'
                          onChange={this.handleSearchChange}/>
                     </Form.Field>

@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.ui.dividing.header .sub.header {
+  font-size: 0.5em;
+}
