@@ -1,20 +1,40 @@
 import React from 'react';
-import {Grid, Header, Icon} from 'semantic-ui-react';
+import {routerShape} from 'found';
+import {Grid, Header, Icon, Button} from 'semantic-ui-react';
 
-import SearchBox from './search-box';
+import {CombinedSearchBox} from '../../components/search-box';
 import style from './style.module.scss';
 
 
 export default class ChiroSearch extends React.Component {
 
-  state = {value: ''}
+  static propTypes = {
+    router: routerShape.isRequired
+  }
 
-  handleSearchBoxChange = (value) => {
-    this.setState({value});
+  state = {value: '', category: null}
+
+  handleSearchBoxChange = (value, category) => {
+    this.setState({value, category});
+  }
+
+  handleSearchClick = () => {
+    const {value, category} = this.state;
+    const query = {};
+    if (category === 'compounds') {
+      query.compound = value;
+    }
+    else {
+      query.virus = value;
+    }
+    this.props.router.push(
+      {pathname: '/search-result/', query}
+    );
   }
 
   render() {
-    const {value} = this.state;
+    const {value, category} = this.state;
+    const preventSearch = category === null;
     return <Grid>
       <Grid.Row centered>
         <Grid.Column width={6}>
@@ -32,10 +52,20 @@ export default class ChiroSearch extends React.Component {
       </Grid.Row>
       <Grid.Row centered>
         <Grid.Column width={6}>
-          <SearchBox
+          <CombinedSearchBox
            fluid size="large" value={value}
            onChange={this.handleSearchBoxChange}
           />
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row centered>
+        <Grid.Column textAlign="center" width={6}>
+          <Button
+           primary size="large"
+           onClick={this.handleSearchClick}
+           disabled={preventSearch}>
+            Search
+          </Button>
         </Grid.Column>
       </Grid.Row>
     </Grid>;

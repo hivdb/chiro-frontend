@@ -98,7 +98,7 @@ function groupByCat(results) {
       if (!(category in acc)) {
         acc[category] = {name: capitalize(category), results: []};
       }
-      acc[category].results.push(result);
+      acc[category].results.push({category, ...result});
       return acc;
     }, {});
 }
@@ -143,7 +143,7 @@ class SearchBoxInner extends React.Component {
     this.fuse = new Fuse(data, fuseOption);
   }
 
-  updateSuggestions = (value, otherState = {}) => {
+  updateSuggestions = (value, otherState = {}, category = null) => {
     let results;
     const trimmedValue = value.trim();
     if (trimmedValue === '') {
@@ -160,7 +160,7 @@ class SearchBoxInner extends React.Component {
         }));
     }
     this.setState({results: groupByCat(results), ...otherState});
-    this.props.onChange(value);
+    this.props.onChange(value, category);
   }
 
   handleFocus = () => {
@@ -173,7 +173,7 @@ class SearchBoxInner extends React.Component {
 
   handleResultSelect = (e, {result}) => {
     const value = result.title;
-    this.updateSuggestions(value, {open: false});
+    this.updateSuggestions(value, {open: false}, result.category);
   }
 
   handleSearchChange = (e, {value}) => {
