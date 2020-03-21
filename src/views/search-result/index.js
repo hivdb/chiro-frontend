@@ -1,4 +1,5 @@
 import React from 'react';
+import defer from 'lodash/defer';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
@@ -18,8 +19,9 @@ class SearchResultInner extends React.Component {
   static propTypes = {
     match: matchShape.isRequired,
     router: routerShape.isRequired,
-    compoundName: PropTypes.string.isRequired,
-    compound: compoundShape.isRequired,
+    qCompoundName: PropTypes.string,
+    qVirusName: PropTypes.string,
+    compound: compoundShape,
     virusExperiments: virusExperimentsShape.isRequired
   }
 
@@ -29,13 +31,25 @@ class SearchResultInner extends React.Component {
       match: {
         location: {pathname, query}
       },
-      compoundName: qCompoundName,
-      compound: {name: compoundName} = {},
+      qCompoundName, qVirusName,
+      compound: {name: compoundName} = {name: null},
+      virus: {name: virusName} = {name: null}
     } = this.props;
-    if (compoundName !== qCompoundName) {
-      router.push({
-        pathname, query: {...query, compound_name: compoundName}
-      });
+
+    const newQuery = {...query};
+    let changed = false;
+
+    if (compoundName && qCompoundName !== compoundName) {
+      newQuery.compound = compoundName;
+      changed = true;
+    }
+
+    if (virusName && qVirusName !== virusName) {
+      newQuery.virus = virusName;
+      changed = true;
+    }
+    if (changed) {
+      defer(() => router.push({pathname, query: newQuery}));
     }
   }
 
@@ -64,12 +78,17 @@ export default function SearchResult({match, ...props}) {
   const {
     location: {
       query: {
-        compound_name: compoundName
+        compound: compoundName,
+        virus: virusName
       } = {}
     }
   } = match;
   let {loading, error, data} = useQuery(searchResultQuery, {
-    variables: {compoundName}
+    variables: {
+      compoundName, virusName,
+      withCompound: Boolean(compoundName),
+      withVirus: Boolean(virusName)
+    }
   });
   if (loading) {
     return <Loader active inline="centered" />;
@@ -79,7 +98,8 @@ export default function SearchResult({match, ...props}) {
   }
   return (
     <SearchResultInner
-     compoundName={compoundName}
+     qCompoundName={compoundName}
+     qVirusName={virusName}
      match={match}
      {...props}
      {...data} />

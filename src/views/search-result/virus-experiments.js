@@ -60,10 +60,32 @@ const tableColumns = [
     'virusName', 'Virus',
     (virus, {strainName}) => strainName ? <>
       {virus}
-      <div className={style['strain-name']}>
+      <div className={style['supplement-info']}>
         {strainName}
       </div>
     </> : virus,
+  ),
+  new ColDef(
+    'compoundObj', 'Compound',
+    ({name, primaryCompound}) => {
+      if (primaryCompound) {
+        primaryCompound = primaryCompound.name;
+      }
+      if (primaryCompound === null || name === primaryCompound) {
+        return name;
+      }
+      return <>
+        {name}
+        <div className={style['supplement-info']}>
+          Closely related to {primaryCompound}
+        </div>
+      </>;
+    },
+    data => sortBy(data, r => [
+      (r.compoundObj.primaryCompound || {}).name,
+      !r.compoundObj.isPrimaryCompound,
+      r.compoundObj.name
+    ])
   ),
   new ColDef('virusInput', 'TCID50'),
   new ColDef('virusEndpoint', 'Endpoint'),

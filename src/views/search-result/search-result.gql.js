@@ -2,9 +2,13 @@ import gql from 'graphql-tag';
 
 export default gql`
   query searchResult(
-    $compoundName: String!
+    $compoundName: String
+    $virusName: String
+    $withCompound: Boolean!
+    $withVirus: Boolean!
+
   ) {
-    compound(name: $compoundName) {
+    compound(name: $compoundName) @include(if: $withCompound) {
       name
       synonyms
       drugClassName
@@ -17,12 +21,28 @@ export default gql`
       description
     }
 
-    virusExperiments(compoundName: $compoundName) {
+    virus(name: $virusName) @include(if: $withVirus) {
+      name
+      fullName
+      synonyms
+      typeName
+      description
+    }
+
+    virusExperiments(
+      compoundName: $compoundName,
+      virusName: $virusName
+    ) {
       totalCount
       edges {
         node {
           articles { nickname }
           virusName
+          compoundObj {
+            name
+            isPrimaryCompound
+            primaryCompound { name }
+          }
           strainName
           virusInput
           virusEndpoint
