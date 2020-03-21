@@ -1,0 +1,33 @@
+@import "../../styles/colors";
+
+.search-header {
+  margin-top: 5rem !important;
+}
+
+.search-result {
+  .title {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  .match {
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
+    float: right;
+    > strong {
+      display: inline-block;
+      max-width: 7rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: text-bottom;
+    }
+  }
+  .type {
+    font-size: 1rem;
+    margin: 0.25rem 0;
+  }
+  .desc {
+    font-size: 0.9rem;
+    color: rgba(0,0,0,.4);
+  }
+}

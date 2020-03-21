@@ -1,21 +1,24 @@
 import React from 'react';
 import {
-    createBrowserRouter,
-    makeRouteConfig,
-    Route,
-  } from 'found';
+  createBrowserRouter,
+  makeRouteConfig,
+  Route,
+} from 'found';
 
 import Home from './views/home/Home';
+import Search from './views/search';
   
 const BrowserRouter = createBrowserRouter({
-    routeConfig: makeRouteConfig(
-        <Route path="/" Component={Home}>
-        </Route>,
-    ),
+  routeConfig: makeRouteConfig(
+    <Route path="/">
+      <Route Component={Home} />
+      <Route Component={Search} path="/search" />
+    </Route>,
+  ),
 
-    renderError: ({ error }) => (
-        <div>{error.status === 404 ? 'Not found' : 'Error'}</div>
-    ),
+  renderError: ({ error }) => (
+    <div>{error.status === 404 ? 'Not found' : 'Error'}</div>
+  ),
 });
 
-export default BrowserRouter
+export default BrowserRouter;
