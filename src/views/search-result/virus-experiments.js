@@ -74,7 +74,7 @@ const tableColumns = [
     data => sortBy(data, ['ec50unit', 'ec50cmp', 'ec50'])
   ),
   new ColDef(
-    'cc50', 'cc50 (\xb5M)',
+    'cc50', 'CC50 (\xb5M)',
     (cc50, {cc50cmp, cc50unit}) => renderXX50(cc50, cc50cmp, cc50unit),
     data => sortBy(data, ['cc50unit', 'cc50cmp', 'cc50'])
   ),
