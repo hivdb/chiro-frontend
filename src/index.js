@@ -6,13 +6,15 @@ import './index.css';
 import BrowserRouter from './Routing';
 import chiroClient from './apollo';
 
+import Header from './components/header';
+
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
+ReactDOM.render(<>
+  <Header />
   <ApolloProvider client={chiroClient}>
     <BrowserRouter />
-  </ApolloProvider>,
-  document.getElementById('root')
-);
+  </ApolloProvider>
+</>, document.getElementById('root'));
 
 serviceWorker.unregister();

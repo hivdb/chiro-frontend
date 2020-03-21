@@ -1,3 +1,4 @@
 import CombinedSearchBox from './combined';
+import InlineSearchBox from './inline';
 
-export {CombinedSearchBox};
+export {CombinedSearchBox, InlineSearchBox};
