@@ -3,13 +3,13 @@ import Fuse from 'fuse.js';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
-import {Search} from 'semantic-ui-react';
+import {Search, Loader} from 'semantic-ui-react';
 import capitalize from 'lodash/capitalize';
 import {useQuery} from '@apollo/react-hooks';
 
 import searchPromptsQuery from './search-prompts.gql';
 
-import style from '../style.module.scss';
+import style from './style.module.scss';
 
 
 function resultContainer({children, className, onClick, onMouseDown}) {
@@ -44,10 +44,12 @@ function reformQueryData(data) {
       })
     ),
     ...viruses.edges.map(
-      ({node: {name, fullName, typeName, description}}) => ({
+      ({node: {name, fullName, synonyms,
+        typeName, description
+      }}) => ({
         as: resultContainer,
         title: name,
-        fullName,
+        fullName, synonyms,
         type: typeName,
         virusType: typeName,
         description,
@@ -208,7 +210,7 @@ class SearchBoxInner extends React.Component {
 export default function SearchBox(props) {
   let {loading, error, data} = useQuery(searchPromptsQuery);
   if (loading) {
-    return 'Loading ...';
+    return <Loader active inline="centered" />;
   }
   else if (error) {
     return `Error: ${error.message}`;

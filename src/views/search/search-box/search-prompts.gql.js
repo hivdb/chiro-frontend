@@ -23,6 +23,7 @@ export default gql`
         node {
           name
           fullName
+          synonyms
           typeName
           description
         }
