@@ -8,27 +8,26 @@ import Article from './article_item';
 class SearchResult extends React.Component {
     
     
-    render() {
-        const references = this.props.references;
-        const ref = references[0];
-        return (
-            <List>
-                {
+  render() {
+    const references = this.props.references;
+    return (
+      <List>
+        {
                 references.map(
                     (reference, index) => {
                         return (
-                            <List.Item key={index}>
-                                <List.Content>
-                                    <Article reference={reference}/>
-                                </List.Content>
-                            </List.Item>
+                          <List.Item key={index}>
+                            <List.Content>
+                              <Article reference={reference}/>
+                            </List.Content>
+                          </List.Item>
                         );
                     }
                 )
                 }
-            </List>
-            );
-    }
+      </List>
+    );
+  }
 }
 
 export default SearchResult;

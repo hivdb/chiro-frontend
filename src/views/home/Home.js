@@ -32,17 +32,20 @@ class Home extends React.Component {
       subHeaderInfo: null,
     };
     
-    this.handleSearchPreparedKeyword = this.handleSearchPreparedKeyword.bind(this);
-    this.handleSearchContent = this.handleSearchContent.bind(this);
-    this.handleUpdateSubHeader = this.handleUpdateSubHeader.bind(this);
+    this.handleSearchPreparedKeyword = 
+      this.handleSearchPreparedKeyword.bind(this);
+    this.handleSearchContent = 
+      this.handleSearchContent.bind(this);
+    this.handleUpdateSubHeader = 
+      this.handleUpdateSubHeader.bind(this);
   }
 
   componentDidMount() {
     let url = this.state.keyword_api;
 
     fetch(url)
-    .then(res => res.json())
-    .then(
+      .then(res => res.json())
+      .then(
         (result) => {
           this.setState({
             references: result['items'],
@@ -51,7 +54,7 @@ class Home extends React.Component {
         },
         (error) => {
         }
-    )
+      );
   }
   
   handleSearchPreparedKeyword(keywords) {
@@ -61,7 +64,7 @@ class Home extends React.Component {
     for (const prop in keywords) {
       let value = keywords[prop];
       if (value) {
-        params.push(`${prop}=${value}`)
+        params.push(`${prop}=${value}`);
       }
     }
 
@@ -69,8 +72,8 @@ class Home extends React.Component {
     url = encodeURI(url);
     
     fetch(url)
-    .then(res => res.json())
-    .then(
+      .then(res => res.json())
+      .then(
         (result) => {
           this.setState({
             references: result['items'],
@@ -79,14 +82,14 @@ class Home extends React.Component {
         },
         (error) => {
         }
-    )
+      );
   }
   
   handleSearchContent(keyword) {
     let url = this.state.search_api + '?keyword=' + keyword;
     fetch(url)
-    .then(res => res.json())
-    .then(
+      .then(res => res.json())
+      .then(
         (result) => {
           this.setState({
             references: result['items'],
@@ -95,7 +98,7 @@ class Home extends React.Component {
         },
         (error) => {
         }
-    )
+      );
   }
   
   handleUpdateSubHeader(result) {
@@ -112,48 +115,56 @@ class Home extends React.Component {
 
     return (
       <div>
-      <Container>
-        <Header as='h1' textAlign='center' block dividing>
+        <Container>
+          <Header as='h1' textAlign='center' block dividing>
           CoV-Rx-DB
-          {subHeaderInfo &&
-          <Header.Subheader>
-            <span>Updated at: {subHeaderInfo.timestamp}, </span>
-            <span>Total publications: {subHeaderInfo.total_num}</span>
-          </Header.Subheader>
+            {subHeaderInfo &&
+            <Header.Subheader>
+              <span>Updated at: {subHeaderInfo.timestamp}, </span>
+              <span>Total publications: {subHeaderInfo.total_num}</span>
+            </Header.Subheader>
           }
-        </Header>
+          </Header>
         
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={12}>
-              <SearchMenu 
-                searchPreparedKeyword={this.handleSearchPreparedKeyword}
-                searchContent = {this.handleSearchContent}
-                references={this.state.references}
-                updateSubHeader={this.handleUpdateSubHeader}
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={12}>
+                <SearchMenu 
+                 searchPreparedKeyword={this.handleSearchPreparedKeyword}
+                 searchContent = {this.handleSearchContent}
+                 references={this.state.references}
+                 updateSubHeader={this.handleUpdateSubHeader}
               />
-            </Grid.Column>
-            <Grid.Column>
-              {this.state.references.length > 0 &&
-              <Statistic size="mini">
+              </Grid.Column>
+              <Grid.Column>
+                {this.state.references.length > 0 &&
+                <Statistic size="mini">
                   <Statistic.Label>Results</Statistic.Label>
-                  <Statistic.Value>{this.state.references.length}</Statistic.Value>
-              </Statistic>
+                  <Statistic.Value>
+                    {this.state.references.length}
+                  </Statistic.Value>
+                </Statistic>
               }
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
 
 
-        {this.state.references.length > 0 &&
-        <SearchResult references={this.state.references} update_time={this.state.update_time}/>
+          {this.state.references.length > 0 &&
+          <SearchResult
+           references={this.state.references}
+           update_time={this.state.update_time}/>
         }
         
-        {/* <Header as='h5' textAlign="center">© 2020, All Rights Reserved.</Header> */}
+          {/* <Header 
+           as='h5'
+           textAlign="center">
+           © 2020, All Rights Reserved.
+           </Header> */}
 
-      </Container>  
+        </Container>  
       </div>
-      );
+    );
   }
 }
 
