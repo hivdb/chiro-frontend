@@ -38,24 +38,15 @@ export default gql`
         node {
           articles { nickname }
           virusName
-          compoundObj {
-            name
-            isPrimaryCompound
-            primaryCompound { name }
-          }
+          compoundName
+          compoundObj { name target }
           strainName
+          cellsObj { name fullName }
           virusInput
-          virusEndpoint
-          virusMeasurement
-          drugConcentration
-          drugTiming
-          durationOfInfection
+          measurement
           ec50cmp
           ec50
           ec50unit
-          cc50cmp
-          cc50
-          cc50unit
           sicmp
           si
         }

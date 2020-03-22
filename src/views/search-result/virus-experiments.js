@@ -1,4 +1,5 @@
 import React from 'react';
+import nestedGet from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import startCase from 'lodash/startCase';
 import {Table} from 'semantic-ui-react';
@@ -33,10 +34,9 @@ function renderXX50(num, cmp, unit) {
     return 'NA';
   }
   num = readableNum(num);
-  return (
-    `${cmp === '=' ? '' : cmp}${num}` +
-    (unit === '\xb5M' ? '' : ` ${unit}`)
-  );
+  return <span className={style['nowrap']}>
+    {cmp === '=' ? '' : cmp}{num} {unit}
+  </span>;
 }
 
 
@@ -57,7 +57,7 @@ const tableColumns = [
     ).join('; ')
   ),
   new ColDef(
-    'virusName', 'Virus',
+    'virusName', 'Virus Species',
     (virus, {strainName}) => strainName ? <>
       {virus}
       <div className={style['supplement-info']}>
@@ -65,40 +65,23 @@ const tableColumns = [
       </div>
     </> : virus,
   ),
+  new ColDef('virusInput'),
+  new ColDef('compoundObj.name', 'Compound'),
+  new ColDef('compoundObj.target', 'Target'),
   new ColDef(
-    'compoundObj', 'Compound',
-    ({name, primaryCompound}) => {
-      if (primaryCompound) {
-        primaryCompound = primaryCompound.name;
-      }
-      if (primaryCompound === null || name === primaryCompound) {
-        return name;
-      }
-      return <>
-        {name}
-        <div className={style['supplement-info']}>
-          Closely related to {primaryCompound}
-        </div>
-      </>;
-    },
-    data => sortBy(data, r => [
-      (r.compoundObj.primaryCompound || {}).name,
-      !r.compoundObj.isPrimaryCompound,
-      r.compoundObj.name
-    ])
+    'cellsObj.name', 'Cells',
+    (name, {cellsObj: {fullName}}) => <>
+      {name}
+      {fullName ? <div className={style['supplement-info']}>
+        {fullName}
+      </div> : null}
+    </>
   ),
-  new ColDef('virusInput', 'TCID50'),
-  new ColDef('virusEndpoint', 'Endpoint'),
-  new ColDef('drugConcentration', '[Drug]'),
+  new ColDef('measurement'),
   new ColDef(
-    'ec50', 'EC50 (\xb5M)',
+    'ec50', 'EC50',
     (ec50, {ec50cmp, ec50unit}) => renderXX50(ec50, ec50cmp, ec50unit),
-    data => sortBy(data, ['ec50unit', 'ec50cmp', 'ec50'])
-  ),
-  new ColDef(
-    'cc50', 'CC50 (\xb5M)',
-    (cc50, {cc50cmp, cc50unit}) => renderXX50(cc50, cc50cmp, cc50unit),
-    data => sortBy(data, ['cc50unit', 'cc50cmp', 'cc50'])
+    data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp'])
   ),
   new ColDef(
     'si', 'SI',
@@ -194,7 +177,7 @@ export default class VirusExperiments extends React.Component {
           <Table.Row key={idx}>
             {tableColumns.map(({name, render}, jdx) => (
               <Table.Cell key={jdx}>
-                {render(row[name], row)}
+                {render(nestedGet(row, name), row)}
               </Table.Cell>
             ))}
           </Table.Row>
