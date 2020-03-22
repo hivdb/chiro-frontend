@@ -30,12 +30,22 @@ class SearchBoxInner extends React.Component {
     }).isRequired).isRequired,
     compoundValue: PropTypes.string.isRequired,
     virusValue: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    children: PropTypes.func.isRequired
   }
 
   static defaultProps = {
     compoundValue: NULLSTR,
-    virusValue: NULLSTR
+    virusValue: NULLSTR,
+    children: ({compoundDropdown, virusDropdown}) => (
+      <span>
+        Showing experiment data for{' '}
+        {compoundDropdown}
+        {' '}compound and{' '}
+        {virusDropdown}
+        {' '}virus.
+      </span>
+    )
   }
 
   get compoundOptions() {
@@ -54,26 +64,25 @@ class SearchBoxInner extends React.Component {
   }
 
   render() {
-    let {compoundValue, virusValue} = this.props;
+    let {compoundValue, virusValue, children} = this.props;
     compoundValue = compoundValue || NULLSTR;
     virusValue = virusValue || NULLSTR;
-    return (
-      <span>
-        Showing experiment data for{' '}
+    return children({
+      compoundDropdown: (
         <Dropdown
-         inline search
+         inline search direction="left"
          options={this.compoundOptions}
          onChange={this.handleChange('compounds')}
          value={compoundValue} />
-        {' '}compound and{' '}
+      ),
+      virusDropdown: (
         <Dropdown
-         inline search
+         inline search direction="left"
          options={this.virusOptions}
          onChange={this.handleChange('viruses')}
          value={virusValue} />
-        {' '}virus.
-      </span>
-    );
+      )
+    });
   }
 
 }

@@ -5,6 +5,7 @@ import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
+import StatTable from './stat';
 import VirusExpTable from './virus-experiments';
 import searchResultQuery from './search-result.gql';
 
@@ -19,12 +20,17 @@ import {
 class SearchResultInner extends React.Component {
 
   static propTypes = {
+    loading: PropTypes.bool.isRequired,
     match: matchShape.isRequired,
     router: routerShape.isRequired,
     qCompoundName: PropTypes.string,
     qVirusName: PropTypes.string,
     compound: compoundShape,
-    virusExperiments: virusExperimentsShape.isRequired
+    virusExperiments: virusExperimentsShape
+  }
+
+  static defaultProps = {
+    loading: false
   }
 
   handleQueryChange = (value, category) => {
@@ -87,24 +93,58 @@ class SearchResultInner extends React.Component {
     const {
       qCompoundName,
       qVirusName,
-      virusExperiments
+      virusExperiments,
+      loading
     } = this.props;
     return <Grid>
+      <InlineSearchBox
+       compoundValue={qCompoundName}
+       virusValue={qVirusName}
+       onChange={this.handleQueryChange}>
+        {({compoundDropdown, virusDropdown}) => (
+          <Grid.Row>
+            <Grid.Column width={2}></Grid.Column>
+            <StatTable columnWidth={2}>
+              {[
+                {
+                  title: 'Selection',
+                  cells: [
+                    {label: 'Compound', value: compoundDropdown},
+                    {label: 'Virus', value: virusDropdown}
+                  ]
+                },
+                {
+                  title: 'Results',
+                  cells: [
+                    {
+                      label: 'Cell Culture',
+                      value: (
+                        loading ?
+                          <Loader active inline size="mini" /> :
+                          virusExperiments.totalCount
+                      )
+                    },
+                    {label: 'Biochemical', value: 'pending'},
+                    {label: 'Animal model', value: 'pending'},
+                    {label: 'Clinical study', value: 'pending'},
+                  ]
+                }
+              ]}
+            </StatTable>
+          </Grid.Row>
+        )}
+      </InlineSearchBox>
       <Grid.Row centered>
         <Grid.Column width={12}>
-          <InlineSearchBox
-           compoundValue={qCompoundName}
-           virusValue={qVirusName}
-           onChange={this.handleQueryChange}
-          />
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={12}>
-          <Header as="h3">
+          <Header as="h3" dividing>
             InVitro (Cells) Experiments
           </Header>
-          <VirusExpTable data={virusExperiments} />
+          {loading ?
+            <Loader active inline="centered" /> :
+            <VirusExpTable
+             compoundName={qCompoundName}
+             virusName={qVirusName}
+             data={virusExperiments} />}
         </Grid.Column>
       </Grid.Row>
     </Grid>;
@@ -130,7 +170,15 @@ export default function SearchResult({match, ...props}) {
     }
   });
   if (loading) {
-    return <Loader active inline="centered" />;
+    // return <Loader active inline="centered" />;
+    return (
+      <SearchResultInner
+       qCompoundName={compoundName}
+       qVirusName={virusName}
+       match={match}
+       loading
+       {...props} />
+    );
   }
   else if (error) {
     return `Error: ${error.message}`;

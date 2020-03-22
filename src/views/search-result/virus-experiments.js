@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import nestedGet from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import startCase from 'lodash/startCase';
@@ -92,6 +93,9 @@ const tableColumns = [
 
 
 function reformExpData(expData) {
+  if (!expData || !expData.edges) {
+    return [];
+  }
   return expData.edges.map(({node}) => node);
 }
 
@@ -112,6 +116,8 @@ function getNextDirection(direction) {
 export default class VirusExperiments extends React.Component {
 
   static propTypes = {
+    compoundName: PropTypes.string,
+    virusName: PropTypes.string,
     data: virusExperimentsShape.isRequired
   }
 
@@ -123,6 +129,21 @@ export default class VirusExperiments extends React.Component {
       sortedData: reformExpData(data),
       sortDirection: null
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    const {compoundName, virusName, data} = this.props;
+    if (
+      prevProps.compoundName !== compoundName ||
+      prevProps.virusName !== virusName
+    ) {
+      // compound or virus was updated
+      this.setState({
+        sortedByColumn: null,
+        sortedData: reformExpData(data),
+        sortDirection: null
+      });
+    }
   }
 
   handleSort(column, sortFunc) {
