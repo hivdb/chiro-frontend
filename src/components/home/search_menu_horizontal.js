@@ -106,13 +106,13 @@ class SearchMenu extends React.Component {
     const categories = this.state.categories;
 
     return (
-      <Menu compact stackable>
+      <Menu stackable>
         {categories.map((item, index) => {
                     const category = item.category;
                     const tags = item.tags;
                     return (
-
                       <Dropdown
+                       fluid
                        key={index}
                        name={category.toLowerCase()}
                        placeholder={category}
@@ -121,7 +121,6 @@ class SearchMenu extends React.Component {
                        options={tags}
                        selection
                        onChange={this.handleChange}/>
-
                     );
                 })}
 

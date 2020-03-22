@@ -16,11 +16,11 @@ import DOMAIN from '../../config';
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    
+
     const default_api = 'keyword_api';
     const keyword_api = DOMAIN + '/search-by-keyword';
     const search_api = DOMAIN + '/search-by-content';
-    
+
     this.state = {
       current_api: default_api,
       keyword_api: keyword_api,
@@ -31,12 +31,12 @@ class Home extends React.Component {
       update_time: null,
       subHeaderInfo: null,
     };
-    
-    this.handleSearchPreparedKeyword = 
+
+    this.handleSearchPreparedKeyword =
       this.handleSearchPreparedKeyword.bind(this);
-    this.handleSearchContent = 
+    this.handleSearchContent =
       this.handleSearchContent.bind(this);
-    this.handleUpdateSubHeader = 
+    this.handleUpdateSubHeader =
       this.handleUpdateSubHeader.bind(this);
   }
 
@@ -56,10 +56,10 @@ class Home extends React.Component {
         }
       );
   }
-  
+
   handleSearchPreparedKeyword(keywords) {
     let url = this.state.keyword_api + '?';
-    
+
     let params = [];
     for (const prop in keywords) {
       let value = keywords[prop];
@@ -70,7 +70,7 @@ class Home extends React.Component {
 
     url += params.join('&');
     url = encodeURI(url);
-    
+
     fetch(url)
       .then(res => res.json())
       .then(
@@ -84,7 +84,7 @@ class Home extends React.Component {
         }
       );
   }
-  
+
   handleSearchContent(keyword) {
     let url = this.state.search_api + '?keyword=' + keyword;
     fetch(url)
@@ -100,7 +100,7 @@ class Home extends React.Component {
         }
       );
   }
-  
+
   handleUpdateSubHeader(result) {
     this.setState({
       subHeaderInfo: {
@@ -108,7 +108,7 @@ class Home extends React.Component {
         total_num: result['total-publications'],
       }
     });
-  } 
+  }
 
   render() {
     const subHeaderInfo = this.state.subHeaderInfo;
@@ -125,11 +125,14 @@ class Home extends React.Component {
             </Header.Subheader>
           }
           </Header>
-        
+
           <Grid>
             <Grid.Row>
-              <Grid.Column width={12}>
-                <SearchMenu 
+              <Grid.Column
+               width={14}
+               mobile={13}
+               >
+                <SearchMenu
                  searchPreparedKeyword={this.handleSearchPreparedKeyword}
                  searchContent = {this.handleSearchContent}
                  references={this.state.references}
@@ -155,14 +158,14 @@ class Home extends React.Component {
            references={this.state.references}
            update_time={this.state.update_time}/>
         }
-        
-          {/* <Header 
+
+          {/* <Header
            as='h5'
            textAlign="center">
            © 2020, All Rights Reserved.
            </Header> */}
 
-        </Container>  
+        </Container>
       </div>
     );
   }
