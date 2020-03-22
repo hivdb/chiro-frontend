@@ -1,8 +1,9 @@
 let DOMAIN = '';
-if (!process.env.REACT_APP_ENVIRONMENT || process.env.REACT_APP_ENVIRONMENT === 'development') {
-    DOMAIN = 'http://127.0.0.1:5000';
+
+if (window.__NODE_ENV === 'production') {
+  DOMAIN = '';
 } else {
-    DOMAIN = '';
+  DOMAIN = 'http://127.0.0.1:5000';
 }
- 
-export default DOMAIN; 
+
+export default DOMAIN;
