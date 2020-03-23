@@ -1,5 +1,6 @@
 import React from 'react';
 import sortBy from 'lodash/sortBy';
+import orderBy from 'lodash/orderBy';
 import startCase from 'lodash/startCase';
 
 import style from './style.module.scss';
@@ -23,7 +24,14 @@ function reformExpData(expData) {
   if (!expData || !expData.edges) {
     return [];
   }
-  return expData.edges.map(({node}) => node);
+  const data = expData.edges.map(({node}) => node);
+  return orderBy(
+    data, [
+      row => ((row.articles[0] || {}).year || 0),
+      row => ((row.articles[0] || {}).nickname || [''])[0]
+    ],
+    ['desc', 'asc']
+  );
 }
 
 
@@ -47,19 +55,40 @@ function renderXX50(num, cmp, unit) {
 const authorYearColDef = new ColDef(
   'articles', 'Author/Year',
   articles => articles.map(
-    ({nickname}) => nickname.join('/')
-  ).join('; ')
+    ({nickname, pmid, doi}, idx) => {
+      let url;
+      if (pmid && pmid.length > 0) {
+        url = `https://www.ncbi.nlm.nih.gov/pubmed/${pmid[0]}`;
+      }
+      else if (doi && doi.length > 0) {
+        url = `https://doi.org/${doi[0]}`;
+      }
+      nickname = nickname.join('/');
+      if (url) {
+        return (
+          <a
+           key={idx}
+           href={url}
+           className={style['pubmed-link']}
+           rel="noopener noreferrer"
+           target="_blank">
+            {nickname}
+          </a>
+        );
+      }
+      else {
+        return nickname;
+      }
+    }
+  ),
+  data => sortBy(data, row => (
+    ((row.articles[0] || {}).nickname || [''])[0]
+  ))
 );
 
 
 const virusSpeciesDef = new ColDef(
-  'virusName', 'Virus Species',
-  (virus, {strainName}) => strainName ? <>
-    {virus}
-    <div className={style['supplement-info']}>
-      {strainName}
-    </div>
-  </> : virus,
+  'virusName', 'Virus Species'
 );
 
 

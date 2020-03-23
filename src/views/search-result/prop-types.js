@@ -26,13 +26,18 @@ const virusExperimentsShape = PropTypes.shape({
       articles: PropTypes.arrayOf(PropTypes.shape({
         nickname: PropTypes.arrayOf(
           PropTypes.string.isRequired
+        ).isRequired,
+        pmid: PropTypes.arrayOf(
+          PropTypes.string.isRequired
+        ).isRequired,
+        doi: PropTypes.arrayOf(
+          PropTypes.string.isRequired
         ).isRequired
       })).isRequired,
       virusName: PropTypes.string.isRequired,
       strainName: PropTypes.string,
       compoundObj: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        target: PropTypes.string
+        name: PropTypes.string.isRequired
       }).isRequired,
       cellsObj: PropTypes.shape({
         name: PropTypes.string.isRequired

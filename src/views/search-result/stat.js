@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Grid, List, Header} from 'semantic-ui-react';
+import {Grid, Header} from 'semantic-ui-react';
+
+import style from './style.module.scss';
 
 
 export default class StatTable extends React.Component {
@@ -19,7 +21,7 @@ export default class StatTable extends React.Component {
   }
 
   static defaultProps = {
-    columnWidth: 2
+    columnWidth: 3
   }
 
   render() {
@@ -28,19 +30,19 @@ export default class StatTable extends React.Component {
     return <>
       {children.map(({title, cells}, idx) => (
         <Grid.Column key={idx} width={columnWidth}>
-          <Header as='h4' dividing>
+          <Header as='h2' dividing>
             {title}
           </Header>
-          <List relaxed>
+          <div className={style['stat-list']}>
             {cells.map(({label, value}, jdx) => (
-              <List.Item key={jdx}>
-                <List.Content floated="right">
+              <div className={style['stat-item']} key={jdx}>
+                <div className={style['item-label']}>{label}</div>
+                <div className={style['item-value']}>
                   {value}
-                </List.Content>
-                <List.Content>{label}</List.Content>
-              </List.Item>
+                </div>
+              </div>
             ))}
-          </List>
+          </div>
         </Grid.Column>
       ))}
     </>;

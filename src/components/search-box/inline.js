@@ -70,14 +70,15 @@ class SearchBoxInner extends React.Component {
     return children({
       compoundDropdown: (
         <Dropdown
-         inline search direction="left"
+         search direction="left"
+         size="mini"
          options={this.compoundOptions}
          onChange={this.handleChange('compounds')}
          value={compoundValue} />
       ),
       virusDropdown: (
         <Dropdown
-         inline search direction="left"
+         search direction="left"
          options={this.virusOptions}
          onChange={this.handleChange('viruses')}
          value={virusValue} />

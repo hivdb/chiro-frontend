@@ -25,7 +25,6 @@ const tableColumns = [
   authorYearColDef, virusSpeciesDef,
   new ColDef('virusInput'),
   new ColDef('compoundObj.name', 'Compound'),
-  new ColDef('compoundObj.target', 'Target'),
   new ColDef(
     'cellsObj.name', 'Cells',
     (name, {cellsObj: {fullName}}) => <>

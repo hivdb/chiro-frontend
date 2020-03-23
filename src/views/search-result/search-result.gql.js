@@ -36,11 +36,13 @@ export default gql`
       totalCount
       edges {
         node {
-          articles { nickname }
+          articles {
+            nickname pmid doi year
+          }
           virusName
           strainName
-          compoundObj { name target }
-          cellsObj { name fullName }
+          compoundObj { name }
+          cellsObj { name }
           virusInput
           measurement
           ec50cmp
@@ -59,7 +61,9 @@ export default gql`
       totalCount
       edges {
         node {
-          articles { nickname }
+          articles {
+            nickname pmid doi year
+          }
           virusName
           compoundObj { name }
           targetObj { name }

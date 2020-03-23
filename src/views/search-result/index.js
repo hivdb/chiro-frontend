@@ -108,7 +108,7 @@ class SearchResultInner extends React.Component {
         {({compoundDropdown, virusDropdown}) => (
           <Grid.Row>
             <Grid.Column width={2}></Grid.Column>
-            <StatTable columnWidth={2}>
+            <StatTable columnWidth={3}>
               {[
                 {
                   title: 'Selection',
@@ -132,7 +132,7 @@ class SearchResultInner extends React.Component {
                     },
                     {
                       label: <a href="#invitro-biochem">
-                        Biochemical
+                        Biochemistry
                       </a>,
                       value: (
                         loading ?
@@ -140,8 +140,8 @@ class SearchResultInner extends React.Component {
                           biochemExperiments.totalCount
                       )
                     },
-                    {label: 'Animal model', value: 'pending'},
-                    {label: 'Clinical study', value: 'pending'},
+                    {label: 'Animal models', value: 'pending'},
+                    {label: 'Clinical studies', value: 'pending'},
                   ]
                 }
               ]}
@@ -151,8 +151,8 @@ class SearchResultInner extends React.Component {
       </InlineSearchBox>
       <Grid.Row centered>
         <Grid.Column width={12}>
-          <Header as="h3" dividing id="invitro-cells">
-            InVitro (Cells) Experiments
+          <Header as="h2" dividing id="invitro-cells">
+            Cell Culture
           </Header>
           {loading ?
             <Loader active inline="centered" /> :
@@ -164,8 +164,8 @@ class SearchResultInner extends React.Component {
       </Grid.Row>
       <Grid.Row centered>
         <Grid.Column width={12}>
-          <Header as="h3" dividing id="invitro-biochem">
-            InVitro (Biochemical) Experiments
+          <Header as="h2" dividing id="invitro-biochem">
+            Biochemistry
           </Header>
           {loading ?
             <Loader active inline="centered" /> :
