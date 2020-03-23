@@ -7,13 +7,15 @@ import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import StatTable from './stat';
 import VirusExpTable from './virus-experiments';
+import BiochemExpTable from './biochem-experiments';
 import searchResultQuery from './search-result.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
 
 import {
   compoundShape,
-  virusExperimentsShape
+  virusExperimentsShape,
+  biochemExperimentsShape
 } from './prop-types';
 
 
@@ -26,7 +28,8 @@ class SearchResultInner extends React.Component {
     qCompoundName: PropTypes.string,
     qVirusName: PropTypes.string,
     compound: compoundShape,
-    virusExperiments: virusExperimentsShape
+    virusExperiments: virusExperimentsShape,
+    biochemExperiments: biochemExperimentsShape
   }
 
   static defaultProps = {
@@ -94,6 +97,7 @@ class SearchResultInner extends React.Component {
       qCompoundName,
       qVirusName,
       virusExperiments,
+      biochemExperiments,
       loading
     } = this.props;
     return <Grid>
@@ -117,14 +121,25 @@ class SearchResultInner extends React.Component {
                   title: 'Results',
                   cells: [
                     {
-                      label: 'Cell Culture',
+                      label: <a href="#invitro-cells">
+                        Cell Culture
+                      </a>,
                       value: (
                         loading ?
                           <Loader active inline size="mini" /> :
                           virusExperiments.totalCount
                       )
                     },
-                    {label: 'Biochemical', value: 'pending'},
+                    {
+                      label: <a href="#invitro-biochem">
+                        Biochemical
+                      </a>,
+                      value: (
+                        loading ?
+                          <Loader active inline size="mini" /> :
+                          biochemExperiments.totalCount
+                      )
+                    },
                     {label: 'Animal model', value: 'pending'},
                     {label: 'Clinical study', value: 'pending'},
                   ]
@@ -136,7 +151,7 @@ class SearchResultInner extends React.Component {
       </InlineSearchBox>
       <Grid.Row centered>
         <Grid.Column width={12}>
-          <Header as="h3" dividing>
+          <Header as="h3" dividing id="invitro-cells">
             InVitro (Cells) Experiments
           </Header>
           {loading ?
@@ -145,6 +160,19 @@ class SearchResultInner extends React.Component {
              compoundName={qCompoundName}
              virusName={qVirusName}
              data={virusExperiments} />}
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row centered>
+        <Grid.Column width={12}>
+          <Header as="h3" dividing id="invitro-biochem">
+            InVitro (Biochemical) Experiments
+          </Header>
+          {loading ?
+            <Loader active inline="centered" /> :
+            <BiochemExpTable
+             compoundName={qCompoundName}
+             virusName={qVirusName}
+             data={biochemExperiments} />}
         </Grid.Column>
       </Grid.Row>
     </Grid>;

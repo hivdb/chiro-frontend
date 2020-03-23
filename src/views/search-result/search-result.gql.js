@@ -38,9 +38,8 @@ export default gql`
         node {
           articles { nickname }
           virusName
-          compoundName
-          compoundObj { name target }
           strainName
+          compoundObj { name target }
           cellsObj { name fullName }
           virusInput
           measurement
@@ -49,6 +48,24 @@ export default gql`
           ec50unit
           sicmp
           si
+        }
+      }
+    }
+
+    biochemExperiments(
+      compoundName: $compoundName,
+      virusName: $virusName
+    ) {
+      totalCount
+      edges {
+        node {
+          articles { nickname }
+          virusName
+          compoundObj { name }
+          targetObj { name }
+          ic50cmp
+          ic50
+          ic50unit
         }
       }
     }

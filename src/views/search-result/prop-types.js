@@ -23,25 +23,55 @@ const virusExperimentsShape = PropTypes.shape({
   totalCount: PropTypes.number.isRequired,
   edges: PropTypes.arrayOf(PropTypes.shape({
     node: PropTypes.shape({
-      articleNicknames: PropTypes.arrayOf(
-        PropTypes.string.isRequired
-      ),
+      articles: PropTypes.arrayOf(PropTypes.shape({
+        nickname: PropTypes.arrayOf(
+          PropTypes.string.isRequired
+        ).isRequired
+      })).isRequired,
       virusName: PropTypes.string.isRequired,
       strainName: PropTypes.string,
+      compoundObj: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        target: PropTypes.string
+      }).isRequired,
+      cellsObj: PropTypes.shape({
+        name: PropTypes.string.isRequired
+      }).isRequired,
       virusInput: PropTypes.string,
-      virusEndpoint: PropTypes.string,
-      virusMeasurement: PropTypes.string,
-      drugConcentration: PropTypes.string,
-      drugTiming: PropTypes.string,
-      durationOfInfection: PropTypes.string,
+      measurement: PropTypes.string,
       ec50cmp: PropTypes.string,
       ec50: PropTypes.number,
       ec50unit: PropTypes.string,
-      cc50cmp: PropTypes.string,
-      cc50: PropTypes.number,
-      cc50unit: PropTypes.string
+      sicmp: PropTypes.string,
+      si: PropTypes.number
     })
   }))
 });
 
-export {compoundShape, virusExperimentsShape};
+const biochemExperimentsShape = PropTypes.shape({
+  totalCount: PropTypes.number.isRequired,
+  edges: PropTypes.arrayOf(PropTypes.shape({
+    node: PropTypes.shape({
+      articles: PropTypes.arrayOf(PropTypes.shape({
+        nickname: PropTypes.arrayOf(
+          PropTypes.string.isRequired
+        ).isRequired
+      })).isRequired,
+      virusName: PropTypes.string.isRequired,
+      compoundObj: PropTypes.shape({
+        name: PropTypes.string.isRequired
+      }).isRequired,
+      targetObj: PropTypes.shape({
+        name: PropTypes.string.isRequired
+      }).isRequired,
+      ic50cmp: PropTypes.string,
+      ic50: PropTypes.number,
+      ic50unit: PropTypes.string
+    })
+  }))
+});
+
+export {
+  compoundShape, virusExperimentsShape,
+  biochemExperimentsShape
+};
