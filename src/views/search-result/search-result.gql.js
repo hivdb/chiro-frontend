@@ -40,7 +40,7 @@ export default gql`
             nickname pmid doi year
           }
           virusName
-          strainName
+          virusStrainName
           compoundObj { name }
           cellsObj { name }
           virusInput

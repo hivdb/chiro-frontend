@@ -35,7 +35,7 @@ const virusExperimentsShape = PropTypes.shape({
         ).isRequired
       })).isRequired,
       virusName: PropTypes.string.isRequired,
-      strainName: PropTypes.string,
+      virusStrainName: PropTypes.string,
       compoundObj: PropTypes.shape({
         name: PropTypes.string.isRequired
       }).isRequired,
