@@ -12,7 +12,7 @@ export default gql`
       name
       synonyms
       drugClassName
-      availability
+      category: availability
       target
       molecularWeight
       isPrimaryCompound

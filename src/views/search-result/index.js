@@ -96,18 +96,19 @@ class SearchResultInner extends React.Component {
     const {
       qCompoundName,
       qVirusName,
+      compound,
       virusExperiments,
       biochemExperiments,
       loading
     } = this.props;
     return <Grid stackable>
-      <InlineSearchBox
-       compoundValue={qCompoundName}
-       virusValue={qVirusName}
-       onChange={this.handleQueryChange}>
-        {({compoundDropdown, virusDropdown}) => (
-          <Grid.Row>
-            <Grid.Column width={2}></Grid.Column>
+      <Grid.Row>
+        <Grid.Column width={2}></Grid.Column>
+        <InlineSearchBox
+         compoundValue={qCompoundName}
+         virusValue={qVirusName}
+         onChange={this.handleQueryChange}>
+          {({compoundDropdown, virusDropdown}) => (
             <StatTable>
               {[
                 {
@@ -145,12 +146,32 @@ class SearchResultInner extends React.Component {
                     {label: 'Animal models', value: 'pending'},
                     {label: 'Clinical studies', value: 'pending'},
                   ]
-                }
+                },
+                ...(compound ? [{
+                  description: compound.description,
+                  width: 6,
+                  cells: [
+                    {label: 'Target', value: compound.target},
+                    {label: 'Drug Class', value: compound.drugClassName},
+                    {label: 'Category', value: compound.category},
+                    ...(compound.synonyms.length > 0 ? [{
+                      label: 'Synonyms',
+                      value: compound.synonyms.join(' / ')
+                    }] : []),
+                    ...(compound.relatedCompounds.length > 0 ? [{
+                      label: 'Related Compounds',
+                      value: (
+                        compound.relatedCompounds
+                        .map(({name}) => name).join(' / ')
+                      )
+                    }] : [])
+                  ]
+                }] : [])
               ]}
             </StatTable>
-          </Grid.Row>
-        )}
-      </InlineSearchBox>
+          )}
+        </InlineSearchBox>
+      </Grid.Row>
       <Grid.Row centered>
         <Grid.Column width={12}>
           <Header as="h2" dividing id="invitro-cells">
