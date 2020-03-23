@@ -23,7 +23,7 @@ function renderSI(num, cmp) {
 
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
-  new ColDef('virusInput'),
+  new ColDef('virusInput', 'Virus Input', null, null, false),
   new ColDef('compoundObj.name', 'Compound'),
   new ColDef(
     'cellsObj.name', 'Cells',

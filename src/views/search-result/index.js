@@ -100,7 +100,7 @@ class SearchResultInner extends React.Component {
       biochemExperiments,
       loading
     } = this.props;
-    return <Grid>
+    return <Grid stackable>
       <InlineSearchBox
        compoundValue={qCompoundName}
        virusValue={qVirusName}
@@ -108,10 +108,11 @@ class SearchResultInner extends React.Component {
         {({compoundDropdown, virusDropdown}) => (
           <Grid.Row>
             <Grid.Column width={2}></Grid.Column>
-            <StatTable columnWidth={3}>
+            <StatTable>
               {[
                 {
                   title: 'Selection',
+                  width: 4,
                   cells: [
                     {label: 'Compound', value: compoundDropdown},
                     {label: 'Virus', value: virusDropdown}
@@ -119,6 +120,7 @@ class SearchResultInner extends React.Component {
                 },
                 {
                   title: 'Results',
+                  width: 2,
                   cells: [
                     {
                       label: <a href="#invitro-cells">

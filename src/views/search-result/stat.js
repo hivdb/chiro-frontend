@@ -28,8 +28,8 @@ export default class StatTable extends React.Component {
     const {children, columnWidth} = this.props;
 
     return <>
-      {children.map(({title, cells}, idx) => (
-        <Grid.Column key={idx} width={columnWidth}>
+      {children.map(({title, width, cells}, idx) => (
+        <Grid.Column key={idx} width={width ? width : columnWidth}>
           <Header as='h2' dividing>
             {title}
           </Header>

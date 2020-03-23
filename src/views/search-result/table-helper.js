@@ -8,13 +8,14 @@ import style from './style.module.scss';
 
 class ColDef {
 
-  constructor(name, label, render, sort) {
+  constructor(name, label, render, sort, sortable = true) {
     this.name = name;
     this.label = label ? label : startCase(name);
     this.render = render ? render : cellData => (
       (cellData === null || cellData === '') ? 'NA' : cellData
     );
     this.sort = sort ? sort : data => sortBy(data, [name]);
+    this.sortable = Boolean(sortable);
   }
 
 }

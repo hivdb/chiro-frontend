@@ -25,7 +25,8 @@ export default class ExpTable extends React.Component {
       name: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       render: PropTypes.func.isRequired,
-      sort: PropTypes.func.isRequired
+      sort: PropTypes.func.isRequired,
+      sortable: PropTypes.bool.isRequired
     })),
     data: PropTypes.arrayOf(
       PropTypes.object.isRequired
@@ -92,10 +93,12 @@ export default class ExpTable extends React.Component {
     return <Table basic="very" sortable celled compact selectable>
       <Table.Header>
         <Table.Row>
-          {columnDefs.map(({name, label, sort}, idx) => (
+          {columnDefs.map(({name, label, sort, sortable}, idx) => (
             <Table.HeaderCell
-             sorted={sortedByColumn === name ? sortDirection : null}
-             onClick={this.handleSort(name, sort)}
+             {...(sortable ? {
+               sorted: sortedByColumn === name ? sortDirection : null,
+               onClick: this.handleSort(name, sort)
+             } : {})}
              key={idx}>
               {label}
             </Table.HeaderCell>
