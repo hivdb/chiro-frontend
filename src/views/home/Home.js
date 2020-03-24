@@ -129,7 +129,7 @@ class Home extends React.Component {
           <Grid>
             <Grid.Row>
               <Grid.Column
-               width={14}
+               computer={14}
                mobile={13}
                >
                 <SearchMenu
