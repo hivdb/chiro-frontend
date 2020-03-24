@@ -45,6 +45,8 @@ export default gql`
           cellsObj { name }
           virusInput
           measurement
+          drugTiming
+          durationOfInfection
           ec50cmp
           ec50
           ec50unit

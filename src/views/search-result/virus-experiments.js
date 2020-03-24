@@ -26,6 +26,14 @@ const tableColumns = [
   new ColDef('virusInput', 'Virus Input', null, null, false),
   new ColDef('compoundObj.name', 'Compound'),
   new ColDef(
+    'drugTiming', 'Timing',
+    value => (
+      value ?
+        (/\d$/.test(value) ? `${value} hr` : value) :
+        'NA'
+    )
+  ),
+  new ColDef(
     'cellsObj.name', 'Cells',
     (name, {cellsObj: {fullName}}) => <>
       {name}
@@ -33,6 +41,14 @@ const tableColumns = [
         {fullName}
       </div> : null}
     </>
+  ),
+  new ColDef(
+    'durationOfInfection', 'Infection Duration',
+    value => (
+      value ?
+        (/\d$/.test(value) ? `${value} hr` : value) :
+        'NA'
+    )
   ),
   new ColDef('measurement'),
   new ColDef(
