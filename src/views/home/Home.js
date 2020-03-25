@@ -116,9 +116,7 @@ class Home extends React.Component {
     return (
       <div>
         <Container>
-          <Header as='h1' textAlign='center' block dividing>
-          CoV-Rx-DB
-            {subHeaderInfo &&
+          <Header as='h1' textAlign='center' block dividing>            {subHeaderInfo &&
             <Header.Subheader>
               <span>Updated at: {subHeaderInfo.timestamp}, </span>
               <span>Total publications: {subHeaderInfo.total_num}</span>
