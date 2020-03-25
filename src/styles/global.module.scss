@@ -1,0 +1,13 @@
+@import "./variables";
+
+:global(.he.is.dead.jim.ui.container) {
+  // unfxxk SemanticUI's extremely high priority
+  // container width define.
+  // See I am higher than you now!
+  width: 75vw;
+}
+
+.main-content {
+  background-color: rgba(0, 0, 0, .05);
+  min-height: calc(100vh - #{$header-bar-height + $header-logo-height});
+}

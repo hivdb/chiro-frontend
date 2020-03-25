@@ -107,7 +107,6 @@ class SearchResultInner extends React.Component {
     } = this.props;
     return <Grid stackable>
       <Grid.Row>
-        <Grid.Column width={2}></Grid.Column>
         <InlineSearchBox
          compoundValue={qCompoundName}
          virusValue={qVirusName}
@@ -117,7 +116,7 @@ class SearchResultInner extends React.Component {
               {[
                 {
                   title: 'Selection',
-                  width: 4,
+                  width: 5,
                   cells: [
                     {label: 'Compound', value: compoundDropdown},
                     {label: 'Virus', value: virusDropdown}
@@ -125,7 +124,7 @@ class SearchResultInner extends React.Component {
                 },
                 {
                   title: 'Results',
-                  width: 2,
+                  width: 3,
                   cells: [
                     {
                       label: <a href="#invitro-cells">
@@ -162,7 +161,7 @@ class SearchResultInner extends React.Component {
                 },
                 ...(compound ? [{
                   description: compound.description,
-                  width: 6,
+                  width: 8,
                   cells: [
                     {label: 'Target', value: compound.target},
                     {label: 'Drug Class', value: compound.drugClassName},
@@ -186,7 +185,7 @@ class SearchResultInner extends React.Component {
         </InlineSearchBox>
       </Grid.Row>
       <Grid.Row centered>
-        <Grid.Column width={12}>
+        <Grid.Column width={16}>
           <Header as="h2" dividing id="invitro-cells">
             Cell Culture
           </Header>
@@ -199,7 +198,7 @@ class SearchResultInner extends React.Component {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row centered>
-        <Grid.Column width={12}>
+        <Grid.Column width={16}>
           <Header as="h2" dividing id="invitro-biochem">
             Biochemistry
           </Header>
@@ -212,7 +211,7 @@ class SearchResultInner extends React.Component {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row centered>
-        <Grid.Column width={12}>
+        <Grid.Column width={16}>
           <Header as="h2" dividing id="animal-models">
             Animal Models
           </Header>

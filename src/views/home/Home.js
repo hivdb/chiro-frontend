@@ -3,8 +3,7 @@ import React from 'react';
 
 import './Home.css';
 
-import 'semantic-ui-css/semantic.min.css';
-import { Container, Header, Grid, Statistic } from 'semantic-ui-react';
+import {Header, Grid, Statistic} from 'semantic-ui-react';
 
 // import SearchMenu from './components/search_menu';
 import SearchMenu from '../../components/home/search_menu_horizontal';
@@ -89,59 +88,54 @@ class Home extends React.Component {
   render() {
     const subHeaderInfo = this.state.subHeaderInfo;
 
-    return (
-      <div>
-        <Container>
-          <Header as='h1' textAlign='center' block dividing>
-            {subHeaderInfo &&
-            <Header.Subheader>
-              <span>Updated at: {subHeaderInfo.timestamp}, </span>
-              <span>Total publications: {subHeaderInfo.total_num}</span>
-            </Header.Subheader>
-            }
-          </Header>
-
-          <Grid>
-            <Grid.Row>
-              <Grid.Column
-               computer={14}
-               mobile={13}
-               >
-                <SearchMenu
-                 searchPreparedKeyword={this.handleSearchPreparedKeyword}
-                 references={this.state.references}
-                 updateSubHeader={this.handleUpdateSubHeader}
-              />
-              </Grid.Column>
-              <Grid.Column>
-                {this.state.references.length > 0 &&
-                <Statistic size="mini">
-                  <Statistic.Label>Results</Statistic.Label>
-                  <Statistic.Value>
-                    {this.state.references.length}
-                  </Statistic.Value>
-                </Statistic>
-              }
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-
-
-          {this.state.references.length > 0 &&
-          <SearchResult
-           references={this.state.references}
-           update_time={this.state.update_time}/>
+    return <>
+      <Header as='h1' textAlign='center' block dividing>
+        {subHeaderInfo &&
+        <Header.Subheader>
+          <span>Updated at: {subHeaderInfo.timestamp}, </span>
+          <span>Total publications: {subHeaderInfo.total_num}</span>
+        </Header.Subheader>
         }
+      </Header>
 
-          {/* <Header
-           as='h5'
-           textAlign="center">
-           © 2020, All Rights Reserved.
-           </Header> */}
+      <Grid>
+        <Grid.Row>
+          <Grid.Column
+           computer={14}
+           mobile={13}
+           >
+            <SearchMenu
+             searchPreparedKeyword={this.handleSearchPreparedKeyword}
+             references={this.state.references}
+             updateSubHeader={this.handleUpdateSubHeader}
+          />
+          </Grid.Column>
+          <Grid.Column>
+            {this.state.references.length > 0 &&
+            <Statistic size="mini">
+              <Statistic.Label>Results</Statistic.Label>
+              <Statistic.Value>
+                {this.state.references.length}
+              </Statistic.Value>
+            </Statistic>
+          }
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
 
-        </Container>
-      </div>
-    );
+
+      {this.state.references.length > 0 &&
+      <SearchResult
+       references={this.state.references}
+       update_time={this.state.update_time}/>}
+
+      {/* <Header
+       as='h5'
+       textAlign="center">
+       © 2020, All Rights Reserved.
+       </Header> */}
+
+    </>;
   }
 }
 

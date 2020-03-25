@@ -1,6 +1,7 @@
 import React from 'react';
+import classnames from 'classnames';
 
-import './header.sass';
+import style from './header.module.sass';
 
 
 export default class MockHeader extends React.Component {
@@ -8,25 +9,31 @@ export default class MockHeader extends React.Component {
   render() {
     return (
       <>
-        <header className="header-bar">
-          <nav className="header-container">
-            <ul className="nav">
-              <li className="nav-item">
+        <header className={style['header-bar']}>
+          <nav className={style['header-container']}>
+            <ul className={style['nav']}>
+              <li className={style['nav-item']}>
                 <a href="/">Home</a>
               </li>
-              <li className="nav-item">
+              <li className={style['nav-item']}>
                 <a href="/">Literatures</a>
               </li>
-              <li className="nav-item">
+              <li className={style['nav-item']}>
                 <a href="/search">Experiments</a>
               </li>
             </ul>
           </nav>
         </header>
-        <header className="header-global header-logo">
-          <nav className="header-container">
-            <a className="brand-logo" href="/">Stanford Medicine</a>
-            <a className="brand-sitename" href="/">CoV-Rx-DB</a>
+        <header
+         className={classnames(
+           style['header-global'],
+           style['header-logo']
+         )}>
+          <nav className={style['header-container']}>
+            <a className={style['brand-logo']} href="/">Stanford Medicine</a>
+            <a className={style['brand-sitename']} href="/">
+              Coronavirus Rx Database
+            </a>
           </nav>
 
         </header>
