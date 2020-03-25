@@ -21,30 +21,31 @@ function renderSI(num, cmp) {
 
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
-  new ColDef('virusInput', 'Virus Input', null, null, false),
+  new ColDef('moi.text', 'MOI', null, null, false),
   compoundColDef('Compound'),
   new ColDef(
     'drugTiming', 'Timing',
     value => (
-      value ?
-        (/\d$/.test(value) ? `${value} hr` : value) :
-        'NA'
-    )
+      value && value.length > 0 ? <>
+        {value.map(({text}) => text).join(' and ')} hr
+      </> : 'NA'
+    ),
+    data => sortBy(data, [
+      'drugTiming[0].lower',
+      'drugTiming[0].upper']),
   ),
   new ColDef('cellsName', 'Cells'),
   new ColDef(
-    'durationOfInfection', 'Infection Duration',
-    value => (
-      value ?
-        (/\d$/.test(value) ? `${value} hr` : value) :
-        'NA'
-    )
+    'durationOfInfection.text', 'Infection Duration',
+    value => value ? `${value} hr` : 'NA'
   ),
   new ColDef('measurement'),
   new ColDef(
     'ec50', 'EC50',
-    (ec50, {ec50cmp, ec50unit}) => renderXX50(ec50, ec50cmp, ec50unit),
-    data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp'])
+    (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
+      renderXX50(ec50, ec50cmp, ec50unit, ec50inactive)
+    ),
+    data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive'])
   ),
   new ColDef(
     'si', 'SI',

@@ -12,7 +12,7 @@ export default gql`
       name
       synonyms
       drugClassName
-      category: availability
+      category
       target
       molecularWeight
       isPrimaryCompound
@@ -43,13 +43,14 @@ export default gql`
           virusStrainName
           compoundNames
           cellsName
-          virusInput
+          moi { text lower upper }
           measurement
-          drugTiming
-          durationOfInfection
+          drugTiming { text lower upper }
+          durationOfInfection { text lower upper }
           ec50cmp
           ec50
           ec50unit
+          ec50inactive
           sicmp
           si
         }
@@ -72,6 +73,7 @@ export default gql`
           ic50cmp
           ic50
           ic50unit
+          ic50inactive
         }
       }
     }

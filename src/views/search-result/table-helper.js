@@ -12,7 +12,9 @@ class ColDef {
     this.name = name;
     this.label = label ? label : startCase(name);
     this.render = render ? render : cellData => (
-      (cellData === null || cellData === '') ? 'NA' : cellData
+      (cellData === undefined ||
+        cellData === null ||
+        cellData === '') ? 'NA' : cellData
     );
     this.sort = sort ? sort : data => sortBy(data, [name]);
     this.sortable = Boolean(sortable);
@@ -42,7 +44,10 @@ function readableNum(num) {
 }
 
 
-function renderXX50(num, cmp, unit) {
+function renderXX50(num, cmp, unit, inactive) {
+  if (inactive) {
+    return <em>inactive</em>;
+  }
   if (num === null) {
     return 'NA';
   }

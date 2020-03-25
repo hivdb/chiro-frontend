@@ -6,7 +6,7 @@ const compoundShape = PropTypes.shape({
     PropTypes.string.isRequired
   ),
   drugClassName: PropTypes.string,
-  availability: PropTypes.string,
+  category: PropTypes.string,
   target: PropTypes.string,
   molecularWeight: PropTypes.number,
   isPrimaryCompound: PropTypes.boolean,

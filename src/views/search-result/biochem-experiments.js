@@ -18,8 +18,10 @@ const tableColumns = [
   new ColDef('targetName', 'Target'),
   new ColDef(
     'ic50', 'IC50',
-    (ic50, {ic50cmp, ic50unit}) => renderXX50(ic50, ic50cmp, ic50unit),
-    data => sortBy(data, ['ic50unit', 'ic50', 'ic50cmp'])
+    (ic50, {ic50cmp, ic50unit, ic50inactive}) => (
+      renderXX50(ic50, ic50cmp, ic50unit, ic50inactive)
+    ),
+    data => sortBy(data, ['ic50unit', 'ic50', 'ic50cmp', 'ic50inactive'])
   )
 ];
 
