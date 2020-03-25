@@ -116,9 +116,7 @@ class Home extends React.Component {
     return (
       <div>
         <Container>
-          <Header as='h1' textAlign='center' block dividing>
-          CoV-Rx-DB
-            {subHeaderInfo &&
+          <Header as='h1' textAlign='center' block dividing>            {subHeaderInfo &&
             <Header.Subheader>
               <span>Updated at: {subHeaderInfo.timestamp}, </span>
               <span>Total publications: {subHeaderInfo.total_num}</span>
@@ -129,7 +127,7 @@ class Home extends React.Component {
           <Grid>
             <Grid.Row>
               <Grid.Column
-               width={14}
+               computer={14}
                mobile={13}
                >
                 <SearchMenu
