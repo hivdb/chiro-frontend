@@ -93,7 +93,14 @@ const virusSpeciesDef = new ColDef(
 );
 
 
+const compoundColDef = label => new ColDef(
+  'compoundObjs', label,
+  compounds => compounds.map(({name}) => name).join(' + '),
+  data => sortBy(data, ['compoundObjs[0].name'])
+);
+
+
 export {
   ColDef, reformExpData, readableNum, renderXX50,
-  authorYearColDef, virusSpeciesDef
+  authorYearColDef, virusSpeciesDef, compoundColDef
 };

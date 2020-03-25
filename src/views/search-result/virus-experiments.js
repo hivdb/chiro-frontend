@@ -6,7 +6,7 @@ import ExpTable from './exptable';
 import {virusExperimentsShape} from './prop-types';
 import {
   ColDef, reformExpData, readableNum, renderXX50,
-  authorYearColDef, virusSpeciesDef
+  authorYearColDef, virusSpeciesDef, compoundColDef
 } from './table-helper';
 
 import style from './style.module.scss';
@@ -24,7 +24,7 @@ function renderSI(num, cmp) {
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
   new ColDef('virusInput', 'Virus Input', null, null, false),
-  new ColDef('compoundObj.name', 'Compound'),
+  compoundColDef('Compound'),
   new ColDef(
     'drugTiming', 'Timing',
     value => (

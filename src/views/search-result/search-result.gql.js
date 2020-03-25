@@ -29,7 +29,7 @@ export default gql`
       description
     }
 
-    virusExperiments(
+    virusExperiments: virusInCellCultureExperiments(
       compoundName: $compoundName,
       virusName: $virusName
     ) {
@@ -41,7 +41,7 @@ export default gql`
           }
           virusName
           virusStrainName
-          compoundObj { name }
+          compoundObjs { name }
           cellsObj { name }
           virusInput
           measurement
@@ -67,7 +67,7 @@ export default gql`
             nickname pmid doi year
           }
           virusName
-          compoundObj { name }
+          compoundObjs { name }
           targetObj { name }
           ic50cmp
           ic50

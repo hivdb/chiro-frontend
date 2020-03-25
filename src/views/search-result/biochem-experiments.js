@@ -7,13 +7,14 @@ import {biochemExperimentsShape} from './prop-types';
 
 import {
   ColDef, reformExpData, renderXX50,
-  authorYearColDef, virusSpeciesDef
+  authorYearColDef, virusSpeciesDef,
+  compoundColDef
 } from './table-helper';
 
 
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
-  new ColDef('compoundObj.name', 'Compound'),
+  compoundColDef('Compound'),
   new ColDef('targetObj.name', 'Target'),
   new ColDef(
     'ic50', 'IC50',
