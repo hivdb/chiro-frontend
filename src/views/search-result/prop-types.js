@@ -36,12 +36,10 @@ const virusExperimentsShape = PropTypes.shape({
       })).isRequired,
       virusName: PropTypes.string.isRequired,
       virusStrainName: PropTypes.string,
-      compoundObj: PropTypes.shape({
-        name: PropTypes.string.isRequired
-      }).isRequired,
-      cellsObj: PropTypes.shape({
-        name: PropTypes.string.isRequired
-      }).isRequired,
+      compoundNames: PropTypes.arrayOf(
+        PropTypes.string.isRequired
+      ).isRequired,
+      cellsName: PropTypes.string.isRequired,
       virusInput: PropTypes.string,
       measurement: PropTypes.string,
       ec50cmp: PropTypes.string,
@@ -63,12 +61,10 @@ const biochemExperimentsShape = PropTypes.shape({
         ).isRequired
       })).isRequired,
       virusName: PropTypes.string.isRequired,
-      compoundObj: PropTypes.shape({
-        name: PropTypes.string.isRequired
-      }).isRequired,
-      targetObj: PropTypes.shape({
-        name: PropTypes.string.isRequired
-      }).isRequired,
+      compoundNames: PropTypes.arrayOf(
+        PropTypes.string.isRequired
+      ).isRequired,
+      targetName: PropTypes.string.isRequired,
       ic50cmp: PropTypes.string,
       ic50: PropTypes.number,
       ic50unit: PropTypes.string
@@ -76,7 +72,26 @@ const biochemExperimentsShape = PropTypes.shape({
   }))
 });
 
+
+const animalExperimentsShape = PropTypes.shape({
+  totalCount: PropTypes.number.isRequired,
+  edges: PropTypes.arrayOf(PropTypes.shape({
+    node: PropTypes.shape({
+      articles: PropTypes.arrayOf(PropTypes.shape({
+        nickname: PropTypes.arrayOf(
+          PropTypes.string.isRequired
+        ).isRequired
+      })).isRequired,
+      virusName: PropTypes.string.isRequired,
+      compoundNames: PropTypes.arrayOf(
+        PropTypes.string.isRequired
+      ).isRequired
+    })
+  }))
+});
+
+
 export {
   compoundShape, virusExperimentsShape,
-  biochemExperimentsShape
+  biochemExperimentsShape, animalExperimentsShape
 };

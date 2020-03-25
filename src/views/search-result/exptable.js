@@ -87,10 +87,11 @@ export default class ExpTable extends React.Component {
   }
 
   render() {
-    const {columnDefs} = this.props;
+    const {color, columnDefs} = this.props;
     const {sortedByColumn, sortedData, sortDirection} = this.state;
 
-    return <Table basic="very" sortable celled compact selectable>
+    return <Table
+     color={color} sortable celled compact selectable>
       <Table.Header>
         <Table.Row>
           {columnDefs.map(({name, label, sort, sortable}, idx) => (

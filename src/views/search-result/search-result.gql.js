@@ -41,8 +41,8 @@ export default gql`
           }
           virusName
           virusStrainName
-          compoundObjs { name }
-          cellsObj { name }
+          compoundNames
+          cellsName
           virusInput
           measurement
           drugTiming
@@ -67,11 +67,38 @@ export default gql`
             nickname pmid doi year
           }
           virusName
-          compoundObjs { name }
-          targetObj { name }
+          compoundNames
+          targetName
           ic50cmp
           ic50
           ic50unit
+        }
+      }
+    }
+    animalExperiments (
+      compoundName: $compoundName,
+      virusName: $virusName
+    ) {
+      totalCount
+      edges {
+        node {
+          articles {
+            nickname pmid doi year
+          }
+          virusName
+          compoundNames
+          animalModelName
+          animalModelDetail
+          inoculation
+          treatmentType
+          numSubjects
+          numControls
+          dose
+          treatmentTime
+          resultObjs {
+            resultName
+            result
+          }
         }
       }
     }

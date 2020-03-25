@@ -8,6 +8,7 @@ import {Grid, Header, Loader} from 'semantic-ui-react';
 import StatTable from './stat';
 import VirusExpTable from './virus-experiments';
 import BiochemExpTable from './biochem-experiments';
+import AnimalExpTable from './animal-experiments';
 import searchResultQuery from './search-result.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
@@ -15,7 +16,8 @@ import {InlineSearchBox} from '../../components/search-box';
 import {
   compoundShape,
   virusExperimentsShape,
-  biochemExperimentsShape
+  biochemExperimentsShape,
+  animalExperimentsShape
 } from './prop-types';
 
 
@@ -29,7 +31,8 @@ class SearchResultInner extends React.Component {
     qVirusName: PropTypes.string,
     compound: compoundShape,
     virusExperiments: virusExperimentsShape,
-    biochemExperiments: biochemExperimentsShape
+    biochemExperiments: biochemExperimentsShape,
+    animalExperiments: animalExperimentsShape
   }
 
   static defaultProps = {
@@ -99,6 +102,7 @@ class SearchResultInner extends React.Component {
       compound,
       virusExperiments,
       biochemExperiments,
+      animalExperiments,
       loading
     } = this.props;
     return <Grid stackable>
@@ -143,7 +147,16 @@ class SearchResultInner extends React.Component {
                           biochemExperiments.totalCount
                       )
                     },
-                    {label: 'Animal models', value: 'pending'},
+                    {
+                      label: <a href="#animal-models">
+                        Animal models
+                      </a>,
+                      value: (
+                        loading ?
+                          <Loader active inline size="mini" /> :
+                          animalExperiments.totalCount
+                      )
+                    },
                     {label: 'Clinical studies', value: 'pending'},
                   ]
                 },
@@ -196,6 +209,19 @@ class SearchResultInner extends React.Component {
              compoundName={qCompoundName}
              virusName={qVirusName}
              data={biochemExperiments} />}
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row centered>
+        <Grid.Column width={12}>
+          <Header as="h2" dividing id="animal-models">
+            Animal Models
+          </Header>
+          {loading ?
+            <Loader active inline="centered" /> :
+            <AnimalExpTable
+             compoundName={qCompoundName}
+             virusName={qVirusName}
+             data={animalExperiments} />}
         </Grid.Column>
       </Grid.Row>
     </Grid>;

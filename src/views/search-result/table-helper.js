@@ -94,9 +94,9 @@ const virusSpeciesDef = new ColDef(
 
 
 const compoundColDef = label => new ColDef(
-  'compoundObjs', label,
-  compounds => compounds.map(({name}) => name).join(' + '),
-  data => sortBy(data, ['compoundObjs[0].name'])
+  'compoundNames', label,
+  compoundNames => compoundNames.join(' + '),
+  data => sortBy(data, ['compoundNames[0]'])
 );
 
 

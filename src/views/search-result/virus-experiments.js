@@ -9,8 +9,6 @@ import {
   authorYearColDef, virusSpeciesDef, compoundColDef
 } from './table-helper';
 
-import style from './style.module.scss';
-
 
 function renderSI(num, cmp) {
   if (num === null) {
@@ -33,15 +31,7 @@ const tableColumns = [
         'NA'
     )
   ),
-  new ColDef(
-    'cellsObj.name', 'Cells',
-    (name, {cellsObj: {fullName}}) => <>
-      {name}
-      {fullName ? <div className={style['supplement-info']}>
-        {fullName}
-      </div> : null}
-    </>
-  ),
+  new ColDef('cellsName', 'Cells'),
   new ColDef(
     'durationOfInfection', 'Infection Duration',
     value => (

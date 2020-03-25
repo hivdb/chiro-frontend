@@ -15,7 +15,7 @@ import {
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
   compoundColDef('Compound'),
-  new ColDef('targetObj.name', 'Target'),
+  new ColDef('targetName', 'Target'),
   new ColDef(
     'ic50', 'IC50',
     (ic50, {ic50cmp, ic50unit}) => renderXX50(ic50, ic50cmp, ic50unit),
