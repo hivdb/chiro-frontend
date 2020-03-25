@@ -17,16 +17,10 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
 
-    const default_api = 'keyword_api';
-    const keyword_api = DOMAIN + '/search-by-keyword';
-    const search_api = DOMAIN + '/search-by-content';
+    const keyword_api = '/search-by-keyword';
 
     this.state = {
-      current_api: default_api,
       keyword_api: keyword_api,
-      prepared_keyword: {},
-      search_api: search_api,
-      content_keyword: "",
       references: [],
       update_time: null,
       subHeaderInfo: null,
@@ -34,59 +28,41 @@ class Home extends React.Component {
 
     this.handleSearchPreparedKeyword =
       this.handleSearchPreparedKeyword.bind(this);
-    this.handleSearchContent =
-      this.handleSearchContent.bind(this);
     this.handleUpdateSubHeader =
       this.handleUpdateSubHeader.bind(this);
   }
 
   componentDidMount() {
-    let url = this.state.keyword_api;
-
-    fetch(url)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            references: result['items'],
-            update_time: new Date()
-          });
-        },
-        (error) => {
-        }
-      );
+    this.setState({
+      update_time: new Date()
+    });
   }
 
   handleSearchPreparedKeyword(keywords) {
-    let url = this.state.keyword_api + '?';
+    const {
+      router,
+      match: {
+        location: {pathname}
+      }
+    } = this.props;
 
     let params = [];
+    let query = {};
     for (const prop in keywords) {
       let value = keywords[prop];
-      if (value) {
+
+      if (value && value.length > 0) {
+        value = value.join(',');
         params.push(`${prop}=${value}`);
+        query[prop] = value;
       }
     }
 
-    url += params.join('&');
+    router.push({pathname, query});
+    const param_string = params.join('&');
+    let url = DOMAIN + this.state.keyword_api + '?' + param_string;
     url = encodeURI(url);
 
-    fetch(url)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            references: result['items'],
-            update_time: new Date(),
-          });
-        },
-        (error) => {
-        }
-      );
-  }
-
-  handleSearchContent(keyword) {
-    let url = this.state.search_api + '?keyword=' + keyword;
     fetch(url)
       .then(res => res.json())
       .then(
@@ -116,12 +92,13 @@ class Home extends React.Component {
     return (
       <div>
         <Container>
-          <Header as='h1' textAlign='center' block dividing>            {subHeaderInfo &&
+          <Header as='h1' textAlign='center' block dividing>
+            {subHeaderInfo &&
             <Header.Subheader>
               <span>Updated at: {subHeaderInfo.timestamp}, </span>
               <span>Total publications: {subHeaderInfo.total_num}</span>
             </Header.Subheader>
-          }
+            }
           </Header>
 
           <Grid>
@@ -132,7 +109,6 @@ class Home extends React.Component {
                >
                 <SearchMenu
                  searchPreparedKeyword={this.handleSearchPreparedKeyword}
-                 searchContent = {this.handleSearchContent}
                  references={this.state.references}
                  updateSubHeader={this.handleUpdateSubHeader}
               />

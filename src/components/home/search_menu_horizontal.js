@@ -12,19 +12,14 @@ class SearchMenu extends React.Component {
     super(props);
 
     this.state = {
-      "publication type": '',
       "study type": '',
       virus: '',
       compound: '',
       target: '',
-      mechanism: '',
-      search_keyword: '',
       categories: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -81,25 +76,12 @@ class SearchMenu extends React.Component {
 
     this.setState(update, () => {
       this.props.searchPreparedKeyword({
-        "publication type": this.state["publication type"],
         "study type": this.state["study type"],
         virus: this.state.virus,
         compound: this.state.compound,
         target: this.state.target,
-        mechanism: this.state.mechanism
       });
     });
-  }
-
-
-  handleSearchChange(e, input) {
-    this.setState({
-      search_keyword: input.value
-    });
-  }
-
-  handleSearchSubmit(e) {
-    this.props.searchContent(this.state.search_keyword);
   }
 
   render() {
@@ -108,33 +90,25 @@ class SearchMenu extends React.Component {
     return (
       <Menu stackable>
         {categories.map((item, index) => {
-                    const category = item.category;
-                    const tags = item.tags;
-                    return (
-                      <Dropdown
-                       fluid
-                       key={index}
-                       name={category.toLowerCase()}
-                       placeholder={category}
-                       clearable
-                       multiple
-                       options={tags}
-                       selection
-                       onChange={this.handleChange}/>
-                    );
-                })}
-
-        {/* <Form onSubmit={this.handleSearchSubmit}>
-                    <Form.Field>
-                        <Form.Input
-                         placeholder='Search content...'
-                         onChange={this.handleSearchChange}/>
-                    </Form.Field>
-                </Form> */}
+          const category = item.category;
+          const tags = item.tags;
+          return (
+            <Dropdown
+             fluid
+             key={index}
+             name={category.toLowerCase()}
+             placeholder={category}
+             clearable
+             multiple
+             options={tags}
+             selection
+             onChange={this.handleChange}/>
+          );
+          })
+        }
       </Menu>
     );
   }
 }
-
 
 export default SearchMenu;
