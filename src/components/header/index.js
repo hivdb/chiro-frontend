@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import style from './header.module.sass';
 
 
-export default class MockHeader extends React.Component {
+export default class Header extends React.Component {
 
   render() {
     return (
@@ -28,7 +28,7 @@ export default class MockHeader extends React.Component {
                 <a href="/">Home</a>
               </li>
               <li className={style['nav-item']}>
-                <a href="/">Literatures</a>
+                <a href="/">Literature</a>
               </li>
               <li className={style['nav-item']}>
                 <a href="/search">Experiments</a>

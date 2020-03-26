@@ -3,7 +3,7 @@ import defer from 'lodash/defer';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
-import {Grid, Header, Loader} from 'semantic-ui-react';
+import {Grid, Header, Loader, Breadcrumb} from 'semantic-ui-react';
 
 import StatTable from './stat';
 import VirusExpTable from './virus-experiments';
@@ -12,6 +12,8 @@ import AnimalExpTable from './animal-experiments';
 import searchResultQuery from './search-result.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
+
+import style from './style.module.scss';
 
 import {
   compoundShape,
@@ -94,6 +96,25 @@ class SearchResultInner extends React.Component {
     }
   }
 
+  renderBreadcrumb() {
+    const {
+      qCompoundName, qVirusName
+    } = this.props;
+    return <Breadcrumb>
+      <Breadcrumb.Section href="/">Home</Breadcrumb.Section>
+      <Breadcrumb.Divider icon="right angle" />
+      <Breadcrumb.Section href="/search/">
+        Experiment Search
+      </Breadcrumb.Section>
+      <Breadcrumb.Divider icon="right angle" />
+      <Breadcrumb.Section active>
+        Search{' '}
+        {qCompoundName ? `compound "${qCompoundName}"` :
+          (qVirusName ? `virus "${qVirusName}"` : null )}
+      </Breadcrumb.Section>
+    </Breadcrumb>;
+  }
+
   render() {
     this.redirectIfNeeded();
     const {
@@ -105,7 +126,10 @@ class SearchResultInner extends React.Component {
       animalExperiments,
       loading
     } = this.props;
-    return <Grid stackable>
+    return <Grid stackable className={style['search-result']}>
+      <Grid.Row>
+        {this.renderBreadcrumb()}
+      </Grid.Row>
       <Grid.Row>
         <InlineSearchBox
          compoundValue={qCompoundName}

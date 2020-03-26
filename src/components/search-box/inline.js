@@ -5,12 +5,12 @@ import {Dropdown} from 'semantic-ui-react';
 import LoadSuggestions from './query';
 
 
-const NULLSTR = '__NULLSTR';
+const ANY = '__ANY';
 
 
 function data2Options(data, categoryOnly) {
   return [
-    {key: 'any', text: 'Any', value: '__NULLSTR'},
+    {key: 'any', text: 'Any', value: '__ANY'},
     ...(data
       .filter(({category}) => category === categoryOnly)
       .map(({title}) => ({key: title, text: title, value: title}))
@@ -28,15 +28,16 @@ class SearchBoxInner extends React.Component {
       description: PropTypes.string.isRequired,
       category: PropTypes.string.isRequired,
     }).isRequired).isRequired,
-    compoundValue: PropTypes.string.isRequired,
-    virusValue: PropTypes.string.isRequired,
+    compoundValue: PropTypes.string,
+    virusValue: PropTypes.string,
     onChange: PropTypes.func.isRequired,
-    children: PropTypes.func.isRequired
+    children: PropTypes.func.isRequired,
+    dropdownProps: PropTypes.object.isRequired
   }
 
   static defaultProps = {
-    compoundValue: NULLSTR,
-    virusValue: NULLSTR,
+    compoundValue: ANY,
+    virusValue: ANY,
     children: ({compoundDropdown, virusDropdown}) => (
       <span>
         Showing experiment data for{' '}
@@ -45,7 +46,8 @@ class SearchBoxInner extends React.Component {
         {virusDropdown}
         {' '}virus.
       </span>
-    )
+    ),
+    dropdownProps: {}
   }
 
   get compoundOptions() {
@@ -57,21 +59,23 @@ class SearchBoxInner extends React.Component {
   }
 
   handleChange = category => (event, {value}) => {
-    if (value === NULLSTR) {
+    if (value === ANY) {
       value = null;
     }
     this.props.onChange(value, category);
   }
 
   render() {
-    let {compoundValue, virusValue, children} = this.props;
-    compoundValue = compoundValue || NULLSTR;
-    virusValue = virusValue || NULLSTR;
+    const {
+      compoundValue, virusValue,
+      children, dropdownProps
+    } = this.props;
     return children({
       compoundDropdown: (
         <Dropdown
          search direction="left"
-         size="mini"
+         {...dropdownProps}
+         placeholder="Compound"
          options={this.compoundOptions}
          onChange={this.handleChange('compounds')}
          value={compoundValue} />
@@ -79,6 +83,8 @@ class SearchBoxInner extends React.Component {
       virusDropdown: (
         <Dropdown
          search direction="left"
+         {...dropdownProps}
+         placeholder="Virus"
          options={this.virusOptions}
          onChange={this.handleChange('viruses')}
          value={virusValue} />

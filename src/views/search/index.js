@@ -1,8 +1,11 @@
 import React from 'react';
 import {routerShape} from 'found';
-import {Grid, Header, Icon, Button} from 'semantic-ui-react';
+import {
+  Grid, Header, Segment,
+  Divider, Breadcrumb
+} from 'semantic-ui-react';
 
-import {CombinedSearchBox} from '../../components/search-box';
+import {InlineSearchBox} from '../../components/search-box';
 import style from './style.module.scss';
 
 
@@ -12,14 +15,10 @@ export default class ChiroSearch extends React.Component {
     router: routerShape.isRequired
   }
 
-  state = {value: '', category: null}
-
   handleSearchBoxChange = (value, category) => {
-    this.setState({value, category});
-  }
-
-  handleSearchClick = () => {
-    const {value, category} = this.state;
+    if (value === null) {
+      return;
+    }
     const query = {};
     if (category === 'compounds') {
       query.compound = value;
@@ -32,40 +31,52 @@ export default class ChiroSearch extends React.Component {
     );
   }
 
+  renderBreadcrumb() {
+    return <Breadcrumb>
+      <Breadcrumb.Section href="/">Home</Breadcrumb.Section>
+      <Breadcrumb.Divider icon="right angle" />
+      <Breadcrumb.Section active>
+        Experiment Search
+      </Breadcrumb.Section>
+    </Breadcrumb>;
+  }
+
   render() {
-    const {value, category} = this.state;
-    const preventSearch = category === null;
-    return <Grid>
+    return <Grid className={style.search}>
+      {/*<Grid.Row>{this.renderBreadcrumb()}</Grid.Row>*/}
       <Grid.Row centered>
         <Grid.Column width={6}>
           <Header
-           className={style["search-header"]}
            textAlign="center"
-           as="h2" icon>
-            <Icon name="search" />
-            CoVRx Search
+           as="h2">
+            Experiment Search
             <Header.Subheader>
-              Search experiment data for compounds and viruses.
+              Search compounds, targets, and viruses.
             </Header.Subheader>
           </Header>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row centered>
-        <Grid.Column width={6}>
-          <CombinedSearchBox
-           fluid size="large" value={value}
-           onChange={this.handleSearchBoxChange}
-          />
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column textAlign="center" width={6}>
-          <Button
-           primary size="large"
-           onClick={this.handleSearchClick}
-           disabled={preventSearch}>
-            Search
-          </Button>
+        <Grid.Column width={8}>
+          <Segment basic>
+            <Grid columns={2} relaxed='very'>
+              <InlineSearchBox
+               compoundValue={null}
+               virusValue={null}
+               onChange={this.handleSearchBoxChange}
+               dropdownProps={{selection: true, fluid: true}}>
+                {({compoundDropdown, virusDropdown}) => <>
+                  <Grid.Column>
+                    {compoundDropdown}
+                  </Grid.Column>
+                  <Grid.Column>
+                    {virusDropdown}
+                  </Grid.Column>
+                </>}
+              </InlineSearchBox>
+            </Grid>
+            <Divider vertical>Or</Divider>
+          </Segment>
         </Grid.Column>
       </Grid.Row>
     </Grid>;

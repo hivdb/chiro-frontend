@@ -10,4 +10,5 @@
 .main-content {
   background-color: rgba(0, 0, 0, .05);
   min-height: calc(100vh - #{$header-bar-height + $header-logo-height});
+  padding-top: 1.5rem;
 }
