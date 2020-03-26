@@ -13,9 +13,9 @@ import {
 } from './table-helper';
 
 
-const inoculationMap = {
-  PROPHYLACTIC: 'Prophylactic',
-  THERAPEUTIC: 'Therapeutic'
+const treatmentTypeMap = {
+  PROPHYLACTIC: 'Pre',
+  THERAPEUTIC: 'Post'
 };
 
 const symbols = {
@@ -42,26 +42,52 @@ const colors = [
   'black',
 ];
 
+const rxTimePattern = /-?(\d+)([dh]pi)/;
+
 const tableColumns = [
   authorYearColDef,
   new ColDef('animalModelName', 'Host'),
   virusSpeciesDef,
   new ColDef('inoculation', null, null, null, false),
-  compoundColDef('Regimen'),
+  compoundColDef('Drug(s)'),
+  new ColDef('dose', 'Dosage', null, null, false),
+  new ColDef('treatmentTime', 'Start',
+    (ts, {treatmentType: tt}) => {
+      tt = treatmentTypeMap[tt];
+      if (rxTimePattern.test(ts)) {
+        const match = rxTimePattern.exec(ts);
+        let [, num, unit] = match;
+        num = parseInt(num);
+        unit = {'dpi': 'day', 'hpi': 'hour'}[unit.toLocaleLowerCase()];
+        return `${tt} (${num} ${unit})`;
+      }
+      return tt;
+    },
+    null, false
+  ),
   new ColDef(
-    'treatmentType', null, t => inoculationMap[t]),
-  new ColDef('numSubjects', null, null, null, false),
-  new ColDef('numControls', null, null, null, false),
-  new ColDef('dose', null, null, null, false),
-  new ColDef('treatmentTime', null, null, null, false)
+    'numSubjects',
+    <># Subjects / # Controls</>,
+    (ns, {numControls: nc}) => `${ns} / ${nc}`,
+    null, false)
 ];
 
 
 function resultColDefs(rows) {
   const colDefs = {};
+  const displayResultNames = {
+    'Lung VL': true,
+    'Weight Loss': true,
+    'Mortality': true,
+    'Lung pathology': true,
+    'Clinical Diseases': true
+  };
   for (const {resultObjs} of rows) {
     for (const {resultName} of resultObjs) {
       if (resultName in colDefs) {
+        continue;
+      }
+      if (!(resultName in displayResultNames)) {
         continue;
       }
       colDefs[resultName] = new ColDef(

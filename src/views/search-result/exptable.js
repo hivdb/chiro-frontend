@@ -23,7 +23,7 @@ export default class ExpTable extends React.Component {
     cacheKey: PropTypes.string,
     columnDefs: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
+      label: PropTypes.node.isRequired,
       render: PropTypes.func.isRequired,
       sort: PropTypes.func.isRequired,
       sortable: PropTypes.bool.isRequired

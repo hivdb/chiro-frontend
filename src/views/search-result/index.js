@@ -110,7 +110,7 @@ class SearchResultInner extends React.Component {
       <Breadcrumb.Section active>
         Search{' '}
         {qCompoundName ? `compound "${qCompoundName}"` :
-          (qVirusName ? `virus "${qVirusName}"` : null )}
+          (qVirusName ? `virus "${qVirusName}"` : 'all')}
       </Breadcrumb.Section>
     </Breadcrumb>;
   }
@@ -186,22 +186,7 @@ class SearchResultInner extends React.Component {
                 ...(compound ? [{
                   description: compound.description,
                   width: 8,
-                  cells: [
-                    {label: 'Target', value: compound.target},
-                    {label: 'Drug Class', value: compound.drugClassName},
-                    {label: 'Category', value: compound.category},
-                    ...(compound.synonyms.length > 0 ? [{
-                      label: 'Synonyms',
-                      value: compound.synonyms.join(' / ')
-                    }] : []),
-                    ...(compound.relatedCompounds.length > 0 ? [{
-                      label: 'Related Compounds',
-                      value: (
-                        compound.relatedCompounds
-                        .map(({name}) => name).join(' / ')
-                      )
-                    }] : [])
-                  ]
+                  cells: []
                 }] : [])
               ]}
             </StatTable>

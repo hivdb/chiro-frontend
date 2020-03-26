@@ -16,7 +16,7 @@ export default class Header extends React.Component {
          )}>
           <nav className={style['header-container']}>
             <a className={style['brand-sitename']} href="/">
-              Coronavirus Antiviral Treatment Research Database
+              Coronavirus Antiviral Research Database
             </a>
           </nav>
 
