@@ -58,25 +58,25 @@ export default class ChiroSearch extends React.Component {
       </Grid.Row>
       <Grid.Row centered>
         <Grid.Column width={8}>
-          <Segment basic>
-            <Grid columns={2} relaxed='very'>
-              <InlineSearchBox
-               compoundValue={null}
-               virusValue={null}
-               onChange={this.handleSearchBoxChange}
-               dropdownProps={{selection: true, fluid: true}}>
-                {({compoundDropdown, virusDropdown}) => <>
+          <InlineSearchBox
+           compoundValue={null}
+           virusValue={null}
+           onChange={this.handleSearchBoxChange}
+           dropdownProps={{selection: true, fluid: true}}>
+            {({compoundDropdown, virusDropdown}) => (
+              <Segment basic>
+                <Grid columns={2} relaxed='very'>
                   <Grid.Column>
                     {compoundDropdown}
                   </Grid.Column>
                   <Grid.Column>
                     {virusDropdown}
                   </Grid.Column>
-                </>}
-              </InlineSearchBox>
-            </Grid>
-            <Divider vertical>Or</Divider>
-          </Segment>
+                </Grid>
+                <Divider vertical>Or</Divider>
+              </Segment>
+            )}
+          </InlineSearchBox>
         </Grid.Column>
       </Grid.Row>
     </Grid>;
