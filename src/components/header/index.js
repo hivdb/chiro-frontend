@@ -9,6 +9,18 @@ export default class MockHeader extends React.Component {
   render() {
     return (
       <>
+        <header
+         className={classnames(
+           style['header-global'],
+           style['header-logo']
+         )}>
+          <nav className={style['header-container']}>
+            <a className={style['brand-sitename']} href="/">
+              Coronavirus Antiviral Treatment Research Database
+            </a>
+          </nav>
+
+        </header>
         <header className={style['header-bar']}>
           <nav className={style['header-container']}>
             <ul className={style['nav']}>
@@ -23,19 +35,6 @@ export default class MockHeader extends React.Component {
               </li>
             </ul>
           </nav>
-        </header>
-        <header
-         className={classnames(
-           style['header-global'],
-           style['header-logo']
-         )}>
-          <nav className={style['header-container']}>
-            <a className={style['brand-logo']} href="/">Stanford Medicine</a>
-            <a className={style['brand-sitename']} href="/">
-              Coronavirus Rx Database
-            </a>
-          </nav>
-
         </header>
       </>
     );

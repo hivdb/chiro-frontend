@@ -1,3 +1,4 @@
+@import "../../styles/colors"
 @import "../../styles/variables"
 
 .header-container
@@ -6,7 +7,7 @@
   margin-right: auto
 
 .header-bar
-  background-color: #000000
+  background-color: $cardinal
   width: 100%
   height: $header-bar-height
   border-bottom: 10px solid white
@@ -16,20 +17,18 @@
   nav
     display: block
 
-  nav .nav
+  nav ul.nav
     display: block
-    padding: 0 5px
-    float: right !important
+    padding: 1rem .2rem
+    margin: 0
 
-  nav .nav .nav-item
-    float: left
-    display: block
+  nav ul.nav li.nav-item
+    display: inline-block
     margin-top: auto
     margin-bottom: auto
-    margin-left: 20px
-    margin-right: 0
-    padding-left: 10px
-    font-size: 16px
+    margin-left: 0
+    margin-right: 1rem
+    font-size: 1.1rem
 
     a
       color: white
@@ -42,7 +41,7 @@
   height: $header-logo-height
   font-family: "Source Sans Pro", sans-serif
   font-weight: 400
-  font-size: 20px
+  font-size: 2rem
 
   .brand-logo
     display: block
@@ -58,5 +57,4 @@
     float: left
     height: 50px
     padding-top: 30px
-    padding-bottom: 0px
-    padding-left: 10px
+    padding-bottom: 0
