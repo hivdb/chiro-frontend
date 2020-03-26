@@ -23,7 +23,7 @@ const symbols = {
   'REDUCE': '↓',
   'SIG_INCREASE': '↑↑↑',
   'INCREASE': '↑',
-  'NO_CHANGE': '≈'
+  'NO_CHANGE': '<=>'
 };
 
 const colors = [
