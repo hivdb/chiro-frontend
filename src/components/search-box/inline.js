@@ -27,6 +27,7 @@ class SearchBoxInner extends React.Component {
       title: PropTypes.string.isRequired,
       category: PropTypes.string.isRequired
     }).isRequired).isRequired,
+    articleValue: PropTypes.string,
     compoundValue: PropTypes.string,
     virusValue: PropTypes.string,
     compoundTargetValue: PropTypes.string,
@@ -37,16 +38,19 @@ class SearchBoxInner extends React.Component {
 
   static defaultProps = {
     noAny: false,
+    articleValue: ANY,
     compoundValue: ANY,
     compoundTargetValue: ANY,
     virusValue: ANY,
     children: ({
+      articleDropdown,
       compoundTargetDropdown,
       compoundDropdown,
       virusDropdown
     }) => (
       <span>
         Showing experiment data for{' '}
+        {articleDropdown}{' '}article,{' '}
         {compoundTargetDropdown}{' '}target,{' '}
         {compoundDropdown}
         {' '}compound and{' '}
@@ -55,6 +59,13 @@ class SearchBoxInner extends React.Component {
       </span>
     ),
     dropdownProps: {}
+  }
+
+  get articleOptions() {
+    const {data, noAny} = this.props;
+    return data2Options(
+      data, 'articles',
+      noAny && 'Input/select an article...');
   }
 
   get targetOptions() {
@@ -87,11 +98,21 @@ class SearchBoxInner extends React.Component {
 
   render() {
     const {
+      articleValue,
       compoundTargetValue,
       compoundValue, virusValue,
       children, dropdownProps
     } = this.props;
     return children({
+      articleDropdown: (
+        <Dropdown
+         search direction="left"
+         {...dropdownProps}
+         placeholder="article"
+         options={this.articleOptions}
+         onChange={this.handleChange('articles')}
+         value={articleValue} />
+      ),
       compoundTargetDropdown: (
         <Dropdown
          search direction="left"

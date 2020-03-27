@@ -5,64 +5,30 @@ import {useQuery} from '@apollo/react-hooks';
 import searchPromptsQuery from './search-prompts.gql';
 
 
-function resultContainer({children, className, onClick, onMouseDown}) {
-  // Whitelist props passing to <div> to prevent warnings.
-  // This function was passed to <Search> prop results as an attribute "as".
-  // Check source code Search.js and SearchResult.js of semantic-ui-react for
-  // how it works.
-  return <div {...{className, onClick, onMouseDown}}>
-    {children}
-  </div>;
-}
-
-
 function reformQueryData(data) {
-  const {compoundTargets, compounds, viruses} = data;
+  const {articles, compoundTargets, compounds, viruses} = data;
   return [
+    ...articles.edges.map(
+      ({node: {nickname: [nickname]}}) => ({
+        title: nickname,
+        category: 'articles'
+      })
+    ),
     ...compoundTargets.edges.map(
-      ({node: {
-        name, synonyms,
-        relatedCompoundTargets,
-        description
-      }}) => ({
-        as: resultContainer,
+      ({node: {name}}) => ({
         title: name,
-        synonyms,
-        relatedCompoundTargets: relatedCompoundTargets.reduce(
-          (acc, {name, synonyms}) => [...acc, name, ...synonyms],
-          []
-        ),
-        description,
         category: 'compoundTargets'
       })
     ),
     ...compounds.edges.map(
-      ({node: {name, synonyms, relatedCompounds,
-        drugClassName, description
-      }}) => ({
-        as: resultContainer,
+      ({node: {name}}) => ({
         title: name,
-        synonyms,
-        relatedCompounds: relatedCompounds.reduce(
-          (acc, {name, synonyms}) => [...acc, name, ...synonyms],
-          []
-        ),
-        type: drugClassName,
-        drugClass: drugClassName,
-        description,
         category: 'compounds'
       })
     ),
     ...viruses.edges.map(
-      ({node: {name, fullName, synonyms,
-        typeName, description
-      }}) => ({
-        as: resultContainer,
+      ({node: {name}}) => ({
         title: name,
-        fullName, synonyms,
-        type: typeName,
-        virusType: typeName,
-        description,
         category: 'viruses'
       })
     )

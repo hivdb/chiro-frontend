@@ -71,6 +71,12 @@ class SearchResultInner extends React.Component {
         changed = true;
       }
     }
+    else if (category === 'articles') {
+      if (value !== query.article) {
+        newQuery.article = value;
+        changed = true;
+      }
+    }
     else {  // viruses
       if (value !== query.virus) {
         newQuery.virus = value;
@@ -88,7 +94,11 @@ class SearchResultInner extends React.Component {
       match: {
         location: {pathname, query}
       },
-      qCompoundTargetName, qCompoundName, qVirusName,
+      qArticleNickname = null,
+      qCompoundTargetName = null,
+      qCompoundName = null,
+      qVirusName = null,
+      article:{nickname: [articleNickname]} = {nickname: [null]},
       compoundTarget: {name: compoundTargetName} = {name: null},
       compound: {name: compoundName} = {name: null},
       virus: {name: virusName} = {name: null}
@@ -96,6 +106,11 @@ class SearchResultInner extends React.Component {
 
     const newQuery = {...query};
     let changed = false;
+
+    if (articleNickname && qArticleNickname !== articleNickname) {
+      newQuery.article = articleNickname;
+      changed = true;
+    }
 
     if (compoundTargetName && qCompoundTargetName !== compoundTargetName) {
       newQuery.target = compoundTargetName;
@@ -121,10 +136,10 @@ class SearchResultInner extends React.Component {
       qCompoundTargetName, qCompoundName, qVirusName, qArticleNickname
     } = this.props;
     let searches = [
+      ...(qArticleNickname ? [`article “${qArticleNickname}”`] : []),
       ...(qVirusName ? [`virus “${qVirusName}”`] : []),
       ...(qCompoundTargetName ? [`target “${qCompoundTargetName}”`] : []),
-      ...(qCompoundName ? [`compound “${qCompoundName}”`] : []),
-      ...(qArticleNickname ? [`article “${qArticleNickname}”`] : [])
+      ...(qCompoundName ? [`compound “${qCompoundName}”`] : [])
     ];
     if (searches.length > 1) {
       let [last, ...others] = searches.reverse();
@@ -152,7 +167,7 @@ class SearchResultInner extends React.Component {
   }
 
   render() {
-    this.redirectIfNeeded();
+    this.props.loading || this.redirectIfNeeded();
     const {
       qCompoundTargetName,
       qCompoundName,
@@ -176,11 +191,16 @@ class SearchResultInner extends React.Component {
       </Grid.Row>
       <Grid.Row>
         <InlineSearchBox
+         articleValue={qArticleNickname}
          compoundValue={qCompoundName}
          virusValue={qVirusName}
          compoundTargetValue={qCompoundTargetName}
          onChange={this.handleQueryChange}>
-          {({compoundDropdown, compoundTargetDropdown, virusDropdown}) => (
+          {({
+            compoundDropdown,
+            compoundTargetDropdown,
+            virusDropdown
+          }) => (
             <StatTable>
               {[
                 {

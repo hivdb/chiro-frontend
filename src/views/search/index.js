@@ -19,7 +19,10 @@ export default class ChiroSearch extends React.Component {
       return;
     }
     const query = {};
-    if (category === 'compounds') {
+    if (category === 'articles') {
+      query.article = value;
+    }
+    else if (category === 'compounds') {
       query.compound = value;
     }
     else if (category === 'compoundTargets') {
@@ -62,6 +65,7 @@ export default class ChiroSearch extends React.Component {
         <Grid.Column width={10}>
           <InlineSearchBox
            noAny
+           articleValue={null}
            compoundValue={null}
            compoundTargetValue={null}
            virusValue={null}
@@ -72,7 +76,7 @@ export default class ChiroSearch extends React.Component {
               compoundDropdown,
               virusDropdown
             }) => (
-              <Grid columns={3}>
+              <Grid columns={4}>
                 <Grid.Column>
                   {virusDropdown}
                 </Grid.Column>
