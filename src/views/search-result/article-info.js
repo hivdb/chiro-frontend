@@ -54,7 +54,7 @@ export default class ArticleInfo extends React.Component {
         {' '}[<a
          href={`https://www.ncbi.nlm.nih.gov/pubmed/${pmid[0]}/`}
          rel="noopener noreferrer"
-         target="_blank">PMID{pmid[0]}</a>]
+         target="_blank">PubMed{pmid[0]}</a>]
       </> : null}
       {pmcid.length > 0 ? <>
         {' '}[<a

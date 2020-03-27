@@ -113,13 +113,12 @@ function resultColDefs(rows) {
 export default class AnimalExpTable extends React.Component {
 
   static propTypes = {
-    compoundName: PropTypes.string,
-    virusName: PropTypes.string,
+    cacheKey: PropTypes.string.isRequired,
     data: animalExperimentsShape.isRequired
   }
 
   render() {
-    const {compoundName, virusName, data} = this.props;
+    const {cacheKey, data} = this.props;
     return Object.entries(
       groupBy(
         reformExpData(data),
@@ -133,7 +132,7 @@ export default class AnimalExpTable extends React.Component {
       <ExpTable
        key={idx}
        color={colors[idx % colors.length]}
-       cacheKey={`${compoundName}@@${virusName}@@${aname}`}
+       cacheKey={cacheKey}
        columnDefs={[...tableColumns, ...resultColDefs(articleData)]}
        data={articleData} />
     ));

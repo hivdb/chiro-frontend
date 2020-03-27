@@ -26,12 +26,6 @@ const virusExperimentsShape = PropTypes.shape({
       articles: PropTypes.arrayOf(PropTypes.shape({
         nickname: PropTypes.arrayOf(
           PropTypes.string.isRequired
-        ).isRequired,
-        pmid: PropTypes.arrayOf(
-          PropTypes.string.isRequired
-        ).isRequired,
-        doi: PropTypes.arrayOf(
-          PropTypes.string.isRequired
         ).isRequired
       })).isRequired,
       virusName: PropTypes.string.isRequired,

@@ -50,6 +50,7 @@ class SearchResultInner extends React.Component {
       }
     } = this.props;
     const newQuery = {...query};
+    delete newQuery.article;
     value = value || undefined;
     let changed = false;
     if (category === 'compounds') {
@@ -110,10 +111,13 @@ class SearchResultInner extends React.Component {
       <Breadcrumb.Divider icon="right angle" />
       <Breadcrumb.Section active>
         Search{' '}
-        {qCompoundName ? `compound "${qCompoundName}"` :
-          (qVirusName ? `virus "${qVirusName}"` :
-            (qArticleNickname ? `article "${qArticleNickname}"` : 'all')
-          )}
+        {[...(qCompoundName ? [`compound “${qCompoundName}”`] : []),
+          ...(qVirusName ? [`virus “${qVirusName}”`] : []),
+          ...(qArticleNickname ? [`article “${qArticleNickname}”`] : []),
+          ...((!qCompoundName && !qVirusName && !qArticleNickname) ?
+            ['all'] : []
+          )
+        ].join(' and ')}
       </Breadcrumb.Section>
     </Breadcrumb>;
   }
@@ -123,6 +127,7 @@ class SearchResultInner extends React.Component {
     const {
       qCompoundName,
       qVirusName,
+      qArticleNickname,
       compound,
       article,
       virusExperiments,
@@ -130,6 +135,7 @@ class SearchResultInner extends React.Component {
       animalExperiments,
       loading
     } = this.props;
+    const cacheKey = `${qCompoundName}@@${qVirusName}@@${qArticleNickname}`;
     return <Grid stackable className={style['search-result']}>
       <Grid.Row>
         {this.renderBreadcrumb()}
@@ -191,7 +197,7 @@ class SearchResultInner extends React.Component {
                   description: compound.description,
                   width: 8
                 }] : []),
-                ...(article ? [{
+                ...(!compound && article ? [{
                   description: <ArticleInfo {...article} />,
                   width: 8
                 }] :[])
@@ -208,8 +214,7 @@ class SearchResultInner extends React.Component {
           {loading ?
             <Loader active inline="centered" /> :
             <VirusExpTable
-             compoundName={qCompoundName}
-             virusName={qVirusName}
+             cacheKey={cacheKey}
              data={virusExperiments} />}
         </Grid.Column>
       </Grid.Row>
@@ -221,8 +226,7 @@ class SearchResultInner extends React.Component {
           {loading ?
             <Loader active inline="centered" /> :
             <BiochemExpTable
-             compoundName={qCompoundName}
-             virusName={qVirusName}
+             cacheKey={cacheKey}
              data={biochemExperiments} />}
         </Grid.Column>
       </Grid.Row>
@@ -234,8 +238,7 @@ class SearchResultInner extends React.Component {
           {loading ?
             <Loader active inline="centered" /> :
             <AnimalExpTable
-             compoundName={qCompoundName}
-             virusName={qVirusName}
+             cacheKey={cacheKey}
              data={animalExperiments} />}
         </Grid.Column>
       </Grid.Row>

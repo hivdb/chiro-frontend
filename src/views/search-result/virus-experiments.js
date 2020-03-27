@@ -58,16 +58,15 @@ const tableColumns = [
 export default class VirusExpTable extends React.Component {
 
   static propTypes = {
-    compoundName: PropTypes.string,
-    virusName: PropTypes.string,
+    cacheKey: PropTypes.string.isRequired,
     data: virusExperimentsShape.isRequired
   }
 
   render() {
-    const {compoundName, virusName, data} = this.props;
+    const {cacheKey, data} = this.props;
     return (
       <ExpTable
-       cacheKey={`${compoundName}@@${virusName}`}
+       cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data)} />
     );

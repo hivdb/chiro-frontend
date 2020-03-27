@@ -51,7 +51,7 @@ export default gql`
       edges {
         node {
           articles {
-            nickname pmid doi year
+            nickname year
           }
           virusName
           virusStrainName
@@ -80,7 +80,7 @@ export default gql`
       edges {
         node {
           articles {
-            nickname pmid doi year
+            nickname year
           }
           virusName
           compoundNames
@@ -101,7 +101,7 @@ export default gql`
       edges {
         node {
           articles {
-            nickname pmid doi year
+            nickname year
           }
           virusName
           compoundNames

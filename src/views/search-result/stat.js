@@ -10,7 +10,7 @@ export default class StatTable extends React.Component {
   static propTypes = {
     children: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string,
-      description: PropTypes.string,
+      description: PropTypes.node,
       cells: PropTypes.arrayOf(
         PropTypes.shape({
           label: PropTypes.node.isRequired,

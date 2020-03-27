@@ -29,16 +29,15 @@ const tableColumns = [
 export default class BiochemExpTable extends React.Component {
 
   static propTypes = {
-    compoundName: PropTypes.string,
-    virusName: PropTypes.string,
+    cacheKey: PropTypes.string.isRequired,
     data: biochemExperimentsShape.isRequired
   }
 
   render() {
-    const {compoundName, virusName, data} = this.props;
+    const {cacheKey, data} = this.props;
     return (
       <ExpTable
-       cacheKey={`${compoundName}@@${virusName}`}
+       cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data)} />
     );
