@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'found';
 import classnames from 'classnames';
 
 import style from './header.module.sass';
@@ -15,9 +16,9 @@ export default class Header extends React.Component {
            style['header-logo']
          )}>
           <nav className={style['header-container']}>
-            <a className={style['brand-sitename']} href="/">
+            <Link className={style['brand-sitename']} to="/">
               Coronavirus Antiviral Research Database
-            </a>
+            </Link>
           </nav>
 
         </header>
@@ -25,13 +26,13 @@ export default class Header extends React.Component {
           <nav className={style['header-container']}>
             <ul className={style['nav']}>
               <li className={style['nav-item']}>
-                <a href="/">Home</a>
+                <Link to="/">Home</Link>
               </li>
               <li className={style['nav-item']}>
-                <a href="/">Literature</a>
+                <Link to="/">Literature</Link>
               </li>
               <li className={style['nav-item']}>
-                <a href="/search">Experiments</a>
+                <Link to="/search/">Experiments</Link>
               </li>
             </ul>
           </nav>

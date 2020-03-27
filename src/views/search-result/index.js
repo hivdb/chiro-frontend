@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'found';
 import defer from 'lodash/defer';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
@@ -103,9 +104,9 @@ class SearchResultInner extends React.Component {
       qCompoundName, qVirusName, qArticleNickname
     } = this.props;
     return <Breadcrumb>
-      <Breadcrumb.Section href="/">Home</Breadcrumb.Section>
+      <Breadcrumb.Section as={Link} to="/">Home</Breadcrumb.Section>
       <Breadcrumb.Divider icon="right angle" />
-      <Breadcrumb.Section href="/search/">
+      <Breadcrumb.Section as={Link} to="/search/">
         Experiment Search
       </Breadcrumb.Section>
       <Breadcrumb.Divider icon="right angle" />

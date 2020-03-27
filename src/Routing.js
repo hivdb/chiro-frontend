@@ -8,15 +8,17 @@ import {
 import Home from './views/home/Home';
 import Search from './views/search';
 import SearchResult from './views/search-result';
-import GAWrapper from './components/ga/gawrapper';
+
+import Layout from './components/layout';
 
 const BrowserRouter = createBrowserRouter({
+
   routeConfig: makeRouteConfig(
-    <Route path="/" Component={GAWrapper}>
+    <Route path="/" Component={Layout}>
       <Route Component={Home} />
       <Route Component={Search} path="/search/" />
       <Route Component={SearchResult} path="/search-result/" />
-    </Route>,
+    </Route>
   ),
 
   renderError: ({ error }) => (

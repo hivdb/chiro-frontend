@@ -3,12 +3,6 @@ import ReactGA from 'react-ga';
 
 export default class GAWrapper extends React.Component {
 
-  static childContextTypes = {
-  }
-
-  getChildContext() {
-  }
-
   logPageView() {
     setTimeout(() => {
       ReactGA.set({
@@ -28,10 +22,9 @@ export default class GAWrapper extends React.Component {
       return true;
     });
 
-
   }
 
   render() {
-    return this.props.children;
+    return null;
   }
 }
