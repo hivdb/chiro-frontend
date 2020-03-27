@@ -16,7 +16,13 @@ const tableColumns = [
   authorYearColDef,
   virusSpeciesDef,
   compoundColDef('Compound'),
-  new ColDef('effectorCellsName', 'Effector Cells'),
+  new ColDef(
+    'effectorCellsName',
+    'Effector Cells',
+    cellData => (
+      (cellData === undefined ||
+        cellData === null ||
+        cellData === '') ? '-' : cellData)),
   new ColDef('cellsName', 'Target Cells'),
   new ColDef('measurement'),
   new ColDef(
