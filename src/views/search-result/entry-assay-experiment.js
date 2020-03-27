@@ -15,9 +15,9 @@ import {
 const tableColumns = [
   authorYearColDef,
   virusSpeciesDef,
-  compoundColDef('compound'),
-  new ColDef('cellsName', 'Cells'),
+  compoundColDef('Compound'),
   new ColDef('effectorCellsName', 'Effector Cells'),
+  new ColDef('cellsName', 'Target Cells'),
   new ColDef('measurement'),
   new ColDef(
     'ec50', 'EC50',
