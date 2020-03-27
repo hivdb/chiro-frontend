@@ -4,8 +4,10 @@ export default gql`
   query searchResult(
     $compoundName: String
     $virusName: String
+    $articleNickname: String
     $withCompound: Boolean!
     $withVirus: Boolean!
+    $withArticle: Boolean!
 
   ) {
     compound(name: $compoundName) @include(if: $withCompound) {
@@ -29,9 +31,21 @@ export default gql`
       description
     }
 
+    article(nickname: $articleNickname) @include(if: $withArticle) {
+      nickname
+      pmid doi pmcid
+      title journal
+      authors {
+        surname
+        givenNames
+      }
+      year
+    }
+
     virusExperiments: virusInCellCultureExperiments(
       compoundName: $compoundName,
-      virusName: $virusName
+      virusName: $virusName,
+      articleNickname: $articleNickname
     ) {
       totalCount
       edges {
@@ -59,7 +73,8 @@ export default gql`
 
     biochemExperiments(
       compoundName: $compoundName,
-      virusName: $virusName
+      virusName: $virusName,
+      articleNickname: $articleNickname
     ) {
       totalCount
       edges {
@@ -79,7 +94,8 @@ export default gql`
     }
     animalExperiments (
       compoundName: $compoundName,
-      virusName: $virusName
+      virusName: $virusName,
+      articleNickname: $articleNickname
     ) {
       totalCount
       edges {

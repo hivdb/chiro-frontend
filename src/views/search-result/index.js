@@ -13,6 +13,7 @@ import searchResultQuery from './search-result.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
 
+import ArticleInfo from './article-info';
 import style from './style.module.scss';
 
 import {
@@ -98,7 +99,7 @@ class SearchResultInner extends React.Component {
 
   renderBreadcrumb() {
     const {
-      qCompoundName, qVirusName
+      qCompoundName, qVirusName, qArticleNickname
     } = this.props;
     return <Breadcrumb>
       <Breadcrumb.Section href="/">Home</Breadcrumb.Section>
@@ -110,7 +111,9 @@ class SearchResultInner extends React.Component {
       <Breadcrumb.Section active>
         Search{' '}
         {qCompoundName ? `compound "${qCompoundName}"` :
-          (qVirusName ? `virus "${qVirusName}"` : 'all')}
+          (qVirusName ? `virus "${qVirusName}"` :
+            (qArticleNickname ? `article "${qArticleNickname}"` : 'all')
+          )}
       </Breadcrumb.Section>
     </Breadcrumb>;
   }
@@ -121,6 +124,7 @@ class SearchResultInner extends React.Component {
       qCompoundName,
       qVirusName,
       compound,
+      article,
       virusExperiments,
       biochemExperiments,
       animalExperiments,
@@ -185,9 +189,12 @@ class SearchResultInner extends React.Component {
                 },
                 ...(compound ? [{
                   description: compound.description,
-                  width: 8,
-                  cells: []
-                }] : [])
+                  width: 8
+                }] : []),
+                ...(article ? [{
+                  description: <ArticleInfo {...article} />,
+                  width: 8
+                }] :[])
               ]}
             </StatTable>
           )}
@@ -243,15 +250,17 @@ export default function SearchResult({match, ...props}) {
     location: {
       query: {
         compound: compoundName,
-        virus: virusName
+        virus: virusName,
+        article: articleNickname
       } = {}
     }
   } = match;
   let {loading, error, data} = useQuery(searchResultQuery, {
     variables: {
-      compoundName, virusName,
+      compoundName, virusName, articleNickname,
       withCompound: Boolean(compoundName),
-      withVirus: Boolean(virusName)
+      withVirus: Boolean(virusName),
+      withArticle: Boolean(articleNickname)
     }
   });
   if (loading) {
@@ -260,6 +269,7 @@ export default function SearchResult({match, ...props}) {
       <SearchResultInner
        qCompoundName={compoundName}
        qVirusName={virusName}
+       qArticleNickname={articleNickname}
        match={match}
        loading
        {...props} />
@@ -272,6 +282,7 @@ export default function SearchResult({match, ...props}) {
     <SearchResultInner
      qCompoundName={compoundName}
      qVirusName={virusName}
+     qArticleNickname={articleNickname}
      match={match}
      {...props}
      {...data} />

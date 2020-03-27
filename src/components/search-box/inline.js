@@ -8,9 +8,9 @@ import LoadSuggestions from './query';
 const ANY = '__ANY';
 
 
-function data2Options(data, categoryOnly) {
+function data2Options(data, categoryOnly, noAnyText) {
   return [
-    {key: 'any', text: 'Any', value: '__ANY'},
+    ...[{key: 'any', text: noAnyText || 'Any', value: '__ANY'}],
     ...(data
       .filter(({category}) => category === categoryOnly)
       .map(({title}) => ({key: title, text: title, value: title}))
@@ -22,6 +22,7 @@ function data2Options(data, categoryOnly) {
 class SearchBoxInner extends React.Component {
 
   static propTypes = {
+    noAny: PropTypes.bool.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
@@ -36,6 +37,7 @@ class SearchBoxInner extends React.Component {
   }
 
   static defaultProps = {
+    noAny: false,
     compoundValue: ANY,
     virusValue: ANY,
     children: ({compoundDropdown, virusDropdown}) => (
@@ -51,11 +53,17 @@ class SearchBoxInner extends React.Component {
   }
 
   get compoundOptions() {
-    return data2Options(this.props.data, 'compounds');
+    const {data, noAny} = this.props;
+    return data2Options(
+      data, 'compounds',
+      noAny && 'Input/select a compound...');
   }
 
   get virusOptions() {
-    return data2Options(this.props.data, 'viruses');
+    const {data, noAny} = this.props;
+    return data2Options(
+      data, 'viruses',
+      noAny && 'Input/select a virus...');
   }
 
   handleChange = category => (event, {value}) => {

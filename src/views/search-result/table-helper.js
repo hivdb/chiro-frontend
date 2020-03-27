@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'found';
 import sortBy from 'lodash/sortBy';
 import orderBy from 'lodash/orderBy';
 import startCase from 'lodash/startCase';
@@ -61,30 +62,11 @@ function renderXX50(num, cmp, unit, inactive) {
 const authorYearColDef = new ColDef(
   'articles', 'Author/Year',
   articles => articles.map(
-    ({nickname, pmid, doi}, idx) => {
-      let url;
-      if (pmid && pmid.length > 0) {
-        url = `https://www.ncbi.nlm.nih.gov/pubmed/${pmid[0]}`;
-      }
-      else if (doi && doi.length > 0) {
-        url = `https://doi.org/${doi[0]}`;
-      }
-      nickname = nickname.join('/');
-      if (url) {
-        return (
-          <a
-           key={idx}
-           href={url}
-           className={style['pubmed-link']}
-           rel="noopener noreferrer"
-           target="_blank">
-            {nickname}
-          </a>
-        );
-      }
-      else {
-        return nickname;
-      }
+    ({nickname}, idx) => {
+      return <Link key={idx} to={{
+        pathname: '/search-result/',
+        query: {article: nickname[0]}
+      }}>{nickname[0]}</Link>;
     }
   ),
   data => sortBy(data, row => (

@@ -59,6 +59,7 @@ export default class ChiroSearch extends React.Component {
       <Grid.Row centered>
         <Grid.Column width={8}>
           <InlineSearchBox
+           noAny
            compoundValue={null}
            virusValue={null}
            onChange={this.handleSearchBoxChange}
