@@ -67,7 +67,7 @@ const tableColumns = [
   ),
   new ColDef(
     'numSubjects',
-    <># Subjects / # Controls</>,
+    <># Subjects /<br /># Controls</>,
     (ns, {numControls: nc}) => `${ns} / ${nc}`,
     null, false)
 ];
@@ -100,7 +100,7 @@ function resultColDefs(rows) {
             return symbols[resultObj.result];
           }
           else {
-            return 'NA';
+            return '?';
           }
         }, null, false
       );

@@ -12,7 +12,7 @@ import {
 
 function renderSI(num, cmp) {
   if (num === null) {
-    return 'ND';
+    return '-';
   }
   num = readableNum(num);
   return `${cmp === '=' ? '' : cmp}${num}`;
@@ -21,14 +21,14 @@ function renderSI(num, cmp) {
 
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
-  new ColDef('moi.text', 'MOI', null, null, false),
+  new ColDef('moi.mean', 'MOI', readableNum, null, false),
   compoundColDef('Compound'),
   new ColDef(
     'drugTiming', 'Timing',
     value => (
       value && value.length > 0 ? <>
         {value.map(({text}) => text).join(' and ')} hr
-      </> : 'NA'
+      </> : '?'
     ),
     data => sortBy(data, [
       'drugTiming[0].lower',
@@ -36,8 +36,7 @@ const tableColumns = [
   ),
   new ColDef('cellsName', 'Cells'),
   new ColDef(
-    'durationOfInfection.text', 'Infection Duration',
-    value => value ? `${value} hr` : 'NA'
+    'durationOfInfection.text', 'Infection (hr)'
   ),
   new ColDef('measurement'),
   new ColDef(

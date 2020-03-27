@@ -15,7 +15,7 @@ class ColDef {
     this.render = render ? render : cellData => (
       (cellData === undefined ||
         cellData === null ||
-        cellData === '') ? 'NA' : cellData
+        cellData === '') ? '?' : cellData
     );
     this.sort = sort ? sort : data => sortBy(data, [name]);
     this.sortable = Boolean(sortable);
@@ -40,17 +40,20 @@ function reformExpData(expData) {
 
 
 function readableNum(num) {
+  if (isNaN(num)) {
+    return '?';
+  }
   let prec = Math.max(Math.floor(Math.log10(num)) + 1, 2);
-  return num.toPrecision(prec);
+  return num.toPrecision(prec).replace(/(\.\d+)0+$/, '$1');
 }
 
 
 function renderXX50(num, cmp, unit, inactive) {
   if (inactive) {
-    return <em>inactive</em>;
+    return '>>>';
   }
   if (num === null) {
-    return 'NA';
+    return '?';
   }
   num = readableNum(num);
   return <span className={style['nowrap']}>
@@ -76,7 +79,7 @@ const authorYearColDef = new ColDef(
 
 
 const virusSpeciesDef = new ColDef(
-  'virusName', 'Virus Species'
+  'virusName', 'Virus'
 );
 
 

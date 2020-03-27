@@ -68,7 +68,7 @@ export default gql`
           virusStrainName
           compoundNames
           cellsName
-          moi { text lower upper }
+          moi { mean }
           measurement
           drugTiming { text lower upper }
           durationOfInfection { text lower upper }

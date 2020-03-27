@@ -76,7 +76,7 @@ export default class ChiroSearch extends React.Component {
               compoundDropdown,
               virusDropdown
             }) => (
-              <Grid columns={4}>
+              <Grid columns={3}>
                 <Grid.Column>
                   {virusDropdown}
                 </Grid.Column>
