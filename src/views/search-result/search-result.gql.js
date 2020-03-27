@@ -71,6 +71,31 @@ export default gql`
       }
     }
 
+    entryAssayExperiments: entryAssayCellCultureExperiments(
+      compoundName: $compoundName,
+      virusName: $virusName,
+      articleNickname: $articleNickname,
+    ) {
+      totalCount
+      edges {
+        node {
+          articles {
+            nickname year
+          }
+          virusName
+          compoundNames
+          cellsName
+          measurement
+          drugTiming { text lower upper }
+          ec50cmp
+          ec50
+          ec50unit
+          ec50inactive
+          effectorCellsName
+        }
+      }
+    }
+
     biochemExperiments(
       compoundName: $compoundName,
       virusName: $virusName,

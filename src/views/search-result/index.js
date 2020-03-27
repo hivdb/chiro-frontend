@@ -11,6 +11,7 @@ import VirusExpTable from './virus-experiments';
 import BiochemExpTable from './biochem-experiments';
 import AnimalExpTable from './animal-experiments';
 import searchResultQuery from './search-result.gql';
+import EntryAssayExpTable from './entry-assay-experiment';
 
 import {InlineSearchBox} from '../../components/search-box';
 
@@ -20,6 +21,7 @@ import style from './style.module.scss';
 import {
   compoundShape,
   virusExperimentsShape,
+  entryAssayExperimentsShape,
   biochemExperimentsShape,
   animalExperimentsShape
 } from './prop-types';
@@ -36,7 +38,8 @@ class SearchResultInner extends React.Component {
     compound: compoundShape,
     virusExperiments: virusExperimentsShape,
     biochemExperiments: biochemExperimentsShape,
-    animalExperiments: animalExperimentsShape
+    animalExperiments: animalExperimentsShape,
+    entryAssayExperiments: entryAssayExperimentsShape,
   }
 
   static defaultProps = {
@@ -132,6 +135,7 @@ class SearchResultInner extends React.Component {
       compound,
       article,
       virusExperiments,
+      entryAssayExperiments,
       biochemExperiments,
       animalExperiments,
       loading
@@ -182,6 +186,16 @@ class SearchResultInner extends React.Component {
                       )
                     },
                     {
+                      label: <a href="#invitro-entryassay">
+                        Entry assay
+                      </a>,
+                      value: (
+                        loading ?
+                          <Loader active inline size="mini" /> :
+                          entryAssayExperiments.totalCount
+                      )
+                    },
+                    {
                       label: <a href="#animal-models">
                         Animal models
                       </a>,
@@ -217,6 +231,18 @@ class SearchResultInner extends React.Component {
             <VirusExpTable
              cacheKey={cacheKey}
              data={virusExperiments} />}
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row centered>
+        <Grid.Column withd={16}>
+          <Header as="h2" dividing id="invitro-entryassay">
+            Entry Assay
+          </Header>
+          {loading ?
+            <Loader active inline="centered" /> :
+            <EntryAssayExpTable
+             cacheKey={cacheKey}
+             data={entryAssayExperiments} />}
         </Grid.Column>
       </Grid.Row>
       <Grid.Row centered>

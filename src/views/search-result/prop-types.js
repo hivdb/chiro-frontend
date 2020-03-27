@@ -45,6 +45,31 @@ const virusExperimentsShape = PropTypes.shape({
   }))
 });
 
+
+const entryAssayExperimentsShape = PropTypes.shape({
+  totalCount: PropTypes.number.isRequired,
+  edges: PropTypes.arrayOf(PropTypes.shape({
+    node: PropTypes.shape({
+      articles: PropTypes.arrayOf(PropTypes.shape({
+        nickname: PropTypes.arrayOf(
+          PropTypes.string.isRequired
+        ).isRequired
+      })).isRequired,
+      virusName: PropTypes.string.isRequired,
+      compoundNames: PropTypes.arrayOf(
+        PropTypes.string.isRequired
+      ).isRequired,
+      measurement: PropTypes.string,
+      cellsName: PropTypes.string.isRequired,
+      effectorCellsName: PropTypes.string,
+      ec50cm: PropTypes.string,
+      ec50: PropTypes.number,
+      ec50unit: PropTypes.string,
+    })
+  }))
+});
+
+
 const biochemExperimentsShape = PropTypes.shape({
   totalCount: PropTypes.number.isRequired,
   edges: PropTypes.arrayOf(PropTypes.shape({
@@ -87,5 +112,6 @@ const animalExperimentsShape = PropTypes.shape({
 
 export {
   compoundShape, virusExperimentsShape,
+  entryAssayExperimentsShape,
   biochemExperimentsShape, animalExperimentsShape
 };
