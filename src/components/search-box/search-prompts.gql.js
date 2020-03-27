@@ -2,8 +2,19 @@ import gql from 'graphql-tag';
 
 export default gql`
   query SearchPrompts {
+    compoundTargets {
+      edges {
+        node {
+          name
+          synonyms
+          relatedCompoundTargets {
+            name
+            synonyms
+          }
+        }
+      }
+    }
     compounds {
-      totalCount
       edges {
         node {
           name
@@ -18,7 +29,6 @@ export default gql`
       }
     }
     viruses {
-      totalCount
       edges {
         node {
           name

@@ -25,12 +25,11 @@ class SearchBoxInner extends React.Component {
     noAny: PropTypes.bool.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-      category: PropTypes.string.isRequired,
+      category: PropTypes.string.isRequired
     }).isRequired).isRequired,
     compoundValue: PropTypes.string,
     virusValue: PropTypes.string,
+    compoundTargetValue: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
     dropdownProps: PropTypes.object.isRequired
@@ -39,10 +38,16 @@ class SearchBoxInner extends React.Component {
   static defaultProps = {
     noAny: false,
     compoundValue: ANY,
+    compoundTargetValue: ANY,
     virusValue: ANY,
-    children: ({compoundDropdown, virusDropdown}) => (
+    children: ({
+      compoundTargetDropdown,
+      compoundDropdown,
+      virusDropdown
+    }) => (
       <span>
         Showing experiment data for{' '}
+        {compoundTargetDropdown}{' '}target,{' '}
         {compoundDropdown}
         {' '}compound and{' '}
         {virusDropdown}
@@ -50,6 +55,13 @@ class SearchBoxInner extends React.Component {
       </span>
     ),
     dropdownProps: {}
+  }
+
+  get targetOptions() {
+    const {data, noAny} = this.props;
+    return data2Options(
+      data, 'compoundTargets',
+      noAny && 'Input/select a target...');
   }
 
   get compoundOptions() {
@@ -75,10 +87,20 @@ class SearchBoxInner extends React.Component {
 
   render() {
     const {
+      compoundTargetValue,
       compoundValue, virusValue,
       children, dropdownProps
     } = this.props;
     return children({
+      compoundTargetDropdown: (
+        <Dropdown
+         search direction="left"
+         {...dropdownProps}
+         placeholder="Compound target"
+         options={this.targetOptions}
+         onChange={this.handleChange('compoundTargets')}
+         value={compoundTargetValue} />
+      ),
       compoundDropdown: (
         <Dropdown
          search direction="left"

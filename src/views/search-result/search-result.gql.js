@@ -3,9 +3,11 @@ import gql from 'graphql-tag';
 export default gql`
   query searchResult(
     $compoundName: String
+    $compoundTargetName: String
     $virusName: String
     $articleNickname: String
     $withCompound: Boolean!
+    $withCompoundTarget: Boolean!
     $withVirus: Boolean!
     $withArticle: Boolean!
 
@@ -20,6 +22,14 @@ export default gql`
       isPrimaryCompound
       primaryCompound { name }
       relatedCompounds { name }
+      description
+    }
+
+    compoundTarget(name: $compoundTargetName)
+    @include(if: $withCompoundTarget) {
+      name
+      synonyms
+      relatedCompoundTargets { name }
       description
     }
 
@@ -44,6 +54,7 @@ export default gql`
 
     virusExperiments: virusInCellCultureExperiments(
       compoundName: $compoundName,
+      compoundTargetName: $compoundTargetName,
       virusName: $virusName,
       articleNickname: $articleNickname
     ) {
@@ -98,6 +109,7 @@ export default gql`
 
     biochemExperiments(
       compoundName: $compoundName,
+      compoundTargetName: $compoundTargetName,
       virusName: $virusName,
       articleNickname: $articleNickname
     ) {
@@ -119,6 +131,7 @@ export default gql`
     }
     animalExperiments (
       compoundName: $compoundName,
+      compoundTargetName: $compoundTargetName,
       virusName: $virusName,
       articleNickname: $articleNickname
     ) {

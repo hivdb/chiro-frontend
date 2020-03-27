@@ -1,8 +1,7 @@
 import React from 'react';
 import {routerShape} from 'found';
 import {
-  Grid, Header, Segment,
-  Divider, Breadcrumb
+  Grid, Header, Breadcrumb
 } from 'semantic-ui-react';
 
 import {InlineSearchBox} from '../../components/search-box';
@@ -22,6 +21,9 @@ export default class ChiroSearch extends React.Component {
     const query = {};
     if (category === 'compounds') {
       query.compound = value;
+    }
+    else if (category === 'compoundTargets') {
+      query.target = value;
     }
     else {
       query.virus = value;
@@ -57,25 +59,30 @@ export default class ChiroSearch extends React.Component {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row centered>
-        <Grid.Column width={8}>
+        <Grid.Column width={10}>
           <InlineSearchBox
            noAny
            compoundValue={null}
+           compoundTargetValue={null}
            virusValue={null}
            onChange={this.handleSearchBoxChange}
            dropdownProps={{selection: true, fluid: true}}>
-            {({compoundDropdown, virusDropdown}) => (
-              <Segment basic>
-                <Grid columns={2} relaxed='very'>
-                  <Grid.Column>
-                    {compoundDropdown}
-                  </Grid.Column>
-                  <Grid.Column>
-                    {virusDropdown}
-                  </Grid.Column>
-                </Grid>
-                <Divider vertical>Or</Divider>
-              </Segment>
+            {({
+              compoundTargetDropdown,
+              compoundDropdown,
+              virusDropdown
+            }) => (
+              <Grid columns={3}>
+                <Grid.Column>
+                  {virusDropdown}
+                </Grid.Column>
+                <Grid.Column>
+                  {compoundTargetDropdown}
+                </Grid.Column>
+                <Grid.Column>
+                  {compoundDropdown}
+                </Grid.Column>
+              </Grid>
             )}
           </InlineSearchBox>
         </Grid.Column>

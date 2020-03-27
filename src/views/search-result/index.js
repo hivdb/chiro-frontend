@@ -35,6 +35,8 @@ class SearchResultInner extends React.Component {
     router: routerShape.isRequired,
     qCompoundName: PropTypes.string,
     qVirusName: PropTypes.string,
+    qCompoundTargetName: PropTypes.string,
+    qArticleNickname: PropTypes.string,
     compound: compoundShape,
     virusExperiments: virusExperimentsShape,
     biochemExperiments: biochemExperimentsShape,
@@ -63,6 +65,12 @@ class SearchResultInner extends React.Component {
         changed = true;
       }
     }
+    else if (category === 'compoundTargets') {
+      if (value !== query.target) {
+        newQuery.target = value;
+        changed = true;
+      }
+    }
     else {  // viruses
       if (value !== query.virus) {
         newQuery.virus = value;
@@ -80,13 +88,19 @@ class SearchResultInner extends React.Component {
       match: {
         location: {pathname, query}
       },
-      qCompoundName, qVirusName,
+      qCompoundTargetName, qCompoundName, qVirusName,
+      compoundTarget: {name: compoundTargetName} = {name: null},
       compound: {name: compoundName} = {name: null},
       virus: {name: virusName} = {name: null}
     } = this.props;
 
     const newQuery = {...query};
     let changed = false;
+
+    if (compoundTargetName && qCompoundTargetName !== compoundTargetName) {
+      newQuery.target = compoundTargetName;
+      changed = true;
+    }
 
     if (compoundName && qCompoundName !== compoundName) {
       newQuery.compound = compoundName;
@@ -104,8 +118,26 @@ class SearchResultInner extends React.Component {
 
   renderBreadcrumb() {
     const {
-      qCompoundName, qVirusName, qArticleNickname
+      qCompoundTargetName, qCompoundName, qVirusName, qArticleNickname
     } = this.props;
+    let searches = [
+      ...(qVirusName ? [`virus “${qVirusName}”`] : []),
+      ...(qCompoundTargetName ? [`target “${qCompoundTargetName}”`] : []),
+      ...(qCompoundName ? [`compound “${qCompoundName}”`] : []),
+      ...(qArticleNickname ? [`article “${qArticleNickname}”`] : [])
+    ];
+    if (searches.length > 1) {
+      let [last, ...others] = searches.reverse();
+      others = others.reverse();
+      searches = `${others.join(', ')} and ${last}`;
+    }
+    else if (searches.length === 1) {
+      searches = searches[0];
+    }
+    else {
+      searches = 'all';
+    }
+
     return <Breadcrumb>
       <Breadcrumb.Section as={Link} to="/">Home</Breadcrumb.Section>
       <Breadcrumb.Divider icon="right angle" />
@@ -114,14 +146,7 @@ class SearchResultInner extends React.Component {
       </Breadcrumb.Section>
       <Breadcrumb.Divider icon="right angle" />
       <Breadcrumb.Section active>
-        Search{' '}
-        {[...(qCompoundName ? [`compound “${qCompoundName}”`] : []),
-          ...(qVirusName ? [`virus “${qVirusName}”`] : []),
-          ...(qArticleNickname ? [`article “${qArticleNickname}”`] : []),
-          ...((!qCompoundName && !qVirusName && !qArticleNickname) ?
-            ['all'] : []
-          )
-        ].join(' and ')}
+        Search {searches}
       </Breadcrumb.Section>
     </Breadcrumb>;
   }
@@ -129,6 +154,7 @@ class SearchResultInner extends React.Component {
   render() {
     this.redirectIfNeeded();
     const {
+      qCompoundTargetName,
       qCompoundName,
       qVirusName,
       qArticleNickname,
@@ -140,7 +166,10 @@ class SearchResultInner extends React.Component {
       animalExperiments,
       loading
     } = this.props;
-    const cacheKey = `${qCompoundName}@@${qVirusName}@@${qArticleNickname}`;
+    const cacheKey = (
+      `${qCompoundTargetName}@@${qCompoundName}` +
+      `@@${qVirusName}@@${qArticleNickname}`
+    );
     return <Grid stackable className={style['search-result']}>
       <Grid.Row>
         {this.renderBreadcrumb()}
@@ -149,16 +178,18 @@ class SearchResultInner extends React.Component {
         <InlineSearchBox
          compoundValue={qCompoundName}
          virusValue={qVirusName}
+         compoundTargetValue={qCompoundTargetName}
          onChange={this.handleQueryChange}>
-          {({compoundDropdown, virusDropdown}) => (
+          {({compoundDropdown, compoundTargetDropdown, virusDropdown}) => (
             <StatTable>
               {[
                 {
                   title: 'Selection',
                   width: 5,
                   cells: [
-                    {label: 'Compound', value: compoundDropdown},
-                    {label: 'Virus', value: virusDropdown}
+                    {label: 'Virus', value: virusDropdown},
+                    {label: 'Target', value: compoundTargetDropdown},
+                    {label: 'Compound', value: compoundDropdown}
                   ]
                 },
                 {
@@ -281,15 +312,17 @@ export default function SearchResult({match, ...props}) {
       query: {
         compound: compoundName,
         virus: virusName,
+        target: compoundTargetName,
         article: articleNickname
       } = {}
     }
   } = match;
   let {loading, error, data} = useQuery(searchResultQuery, {
     variables: {
-      compoundName, virusName, articleNickname,
+      compoundName, compoundTargetName, virusName, articleNickname,
       withCompound: Boolean(compoundName),
       withVirus: Boolean(virusName),
+      withCompoundTarget: Boolean(compoundTargetName),
       withArticle: Boolean(articleNickname)
     }
   });
@@ -300,6 +333,7 @@ export default function SearchResult({match, ...props}) {
        qCompoundName={compoundName}
        qVirusName={virusName}
        qArticleNickname={articleNickname}
+       qCompoundTargetName={compoundTargetName}
        match={match}
        loading
        {...props} />
@@ -313,6 +347,7 @@ export default function SearchResult({match, ...props}) {
      qCompoundName={compoundName}
      qVirusName={virusName}
      qArticleNickname={articleNickname}
+     qCompoundTargetName={compoundTargetName}
      match={match}
      {...props}
      {...data} />

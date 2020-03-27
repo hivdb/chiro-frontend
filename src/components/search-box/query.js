@@ -17,8 +17,25 @@ function resultContainer({children, className, onClick, onMouseDown}) {
 
 
 function reformQueryData(data) {
-  const {compounds, viruses} = data;
+  const {compoundTargets, compounds, viruses} = data;
   return [
+    ...compoundTargets.edges.map(
+      ({node: {
+        name, synonyms,
+        relatedCompoundTargets,
+        description
+      }}) => ({
+        as: resultContainer,
+        title: name,
+        synonyms,
+        relatedCompoundTargets: relatedCompoundTargets.reduce(
+          (acc, {name, synonyms}) => [...acc, name, ...synonyms],
+          []
+        ),
+        description,
+        category: 'compoundTargets'
+      })
+    ),
     ...compounds.edges.map(
       ({node: {name, synonyms, relatedCompounds,
         drugClassName, description
