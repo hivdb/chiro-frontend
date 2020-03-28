@@ -211,7 +211,7 @@ class SearchResultInner extends React.Component {
                   width: 5,
                   cells: [
                     {label: 'Virus', value: virusDropdown},
-                    /*{label: 'Target', value: compoundTargetDropdown},*/
+                    {label: 'Target', value: compoundTargetDropdown},
                     {label: 'Compound', value: compoundDropdown}
                   ]
                 },
