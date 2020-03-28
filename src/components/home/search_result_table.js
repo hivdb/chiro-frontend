@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 
-import { Table, Label, Popup, List } from 'semantic-ui-react';
+import { Table, Popup, List } from 'semantic-ui-react';
 
 import './search_result_table.css';
 
@@ -9,30 +9,30 @@ import './search_result_table.css';
 class SearchResult extends React.Component {
   constructor(props) {
     super(props);
-        
+
     this.state = {
       sort_column: null,
       direction: null,
       references: [],
       update_time: null,
     };
-        
+
     this.handleSort = this.handleSort.bind(this);
   }
-    
+
   componentDidMount() {
     this.setState({
       references: this.props.references,
       update_time: this.props.update_time,
     });
   }
-    
+
   componentDidUpdate() {
     // this.setState({
     //     references: this.props.references,
     // });
     const update_time = this.state.update_time;
-        
+
     if (update_time < this.props.update_time) {
       this.setState({
         references: this.props.references,
@@ -40,27 +40,27 @@ class SearchResult extends React.Component {
       });
     }
   }
-    
+
     handleSort = (clickedColumn) => () => {
       const {sort_column, references, direction} = this.state;
-        
+
       if (sort_column !== clickedColumn) {
         this.setState({
           sort_column: clickedColumn,
           references: _.sortBy(references, [clickedColumn]),
           direction: 'descending',
         });
-            
+
         return;
       }
-        
+
       this.setState({
         references: references.reverse(),
         direction: direction === 'ascending' ? 'descending' : 'ascending',
       });
     }
-    
-    
+
+
     render() {
       const {sort_column, references, direction} = this.state;
 
@@ -72,7 +72,7 @@ class SearchResult extends React.Component {
       if (references_has_data.length > 0) {
         is_display_data_column = true;
       }
-        
+
       return (
 
         <Table celled sortable>
@@ -103,9 +103,9 @@ class SearchResult extends React.Component {
                onClick={this.handleSort('year')}>
                             Year</Table.HeaderCell>
               {/* <Table.HeaderCell>Links</Table.HeaderCell> */}
-              <Table.HeaderCell>
+              {/* <Table.HeaderCell>
                             Tags
-              </Table.HeaderCell>
+              </Table.HeaderCell> */}
               { is_display_data_column &&
                 <Table.HeaderCell>
                             Data
@@ -130,33 +130,33 @@ class SearchResult extends React.Component {
                         // const doi = reference.doi;
                         const doi_url = reference.doi_url;
                         // const contents = reference.contents;
-                        let tags = reference.tags;
-                        let more_tags = false;
-                        if (tags.length > 5) {
-                            tags = tags.slice(0, 5);
-                            more_tags = true;
-                        } else {
-                            more_tags = false;
-                        }
-                            
+                        // let tags = reference.tags;
+                        // let more_tags = false;
+                        // if (tags.length > 5) {
+                        //     tags = tags.slice(0, 5);
+                        //     more_tags = true;
+                        // } else {
+                        //     more_tags = false;
+                        // }
+
                         const exp_tags = reference.exp_tags;
-                        
+
                         const title_url = doi_url ? doi_url: (
                           pubmed_url ? pubmed_url : (
                             pmc_url ? pmc_url : ''));
-                        
+
                         return (
                           <Table.Row key={index}>
                             <Table.Cell
                              width={5}
                              verticalAlign='top'>
-                              <Popup 
+                              <Popup
                                content="Go to publisher page."
                                size='mini'
                                position='bottom center'
                                trigger={
-                                 <a 
-                                  href={title_url} 
+                                 <a
+                                  href={title_url}
                                   target="_blank" rel="noopener noreferrer">
                                    {title}
                                  </a>
@@ -173,13 +173,13 @@ class SearchResult extends React.Component {
                              verticalAlign='top'>
                               {year}
                             </Table.Cell>
-                            <Table.Cell
+                            {/* <Table.Cell
                              width={3}
                              verticalAlign='top'>
                               <Label.Group size="tiny">
                                 {tags && tags.map((tag, index) => {
                                   return (
-                                    <Label 
+                                    <Label
                                      key={index}
                                      size="tiny">{tag}</Label>
                                   );
@@ -188,28 +188,22 @@ class SearchResult extends React.Component {
                                         "..."
                                         }
                               </Label.Group>
-                            </Table.Cell>
-                                
-                            {exp_tags && is_display_data_column &&  
+                            </Table.Cell> */}
+
+                            {exp_tags && is_display_data_column &&
                             <Table.Cell
-                             width={1}
+                             width={2}
                              verticalAlign='top'>
                               <List divided size='mini'>
                                 {exp_tags.map((tag, index) => {
                                   return (
                                     <List.Item key={index} size='mini'>
-                                      <Popup 
-                                       content='In progress.' 
-                                       size='mini' 
-                                       trigger={
-                                         <a
-                                          size='mini' 
-                                          href="/" 
-                                          onClick={e=>e.preventDefault()}>
-                                           {tag}
-                                         </a>
-                                          }
-                                      />
+                                      <a
+                                       size='mini'
+                                       href="/"
+                                       onClick={e=>e.preventDefault()}>
+                                        {tag}
+                                      </a>
                                     </List.Item>
                                   );
                               })}
@@ -219,7 +213,7 @@ class SearchResult extends React.Component {
                           </Table.Row>
                         );
                     })}
-                    
+
           </Table.Body>
         </Table>
       );
