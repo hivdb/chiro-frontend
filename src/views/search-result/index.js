@@ -10,8 +10,9 @@ import StatTable from './stat';
 import VirusExpTable from './virus-experiments';
 import BiochemExpTable from './biochem-experiments';
 import AnimalExpTable from './animal-experiments';
-import searchResultQuery from './search-result.gql';
 import EntryAssayExpTable from './entry-assay-experiment';
+import ClinicalExpTable from './clinical-experiments';
+import searchResultQuery from './search-result.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
 
@@ -174,11 +175,13 @@ class SearchResultInner extends React.Component {
       qVirusName,
       qArticleNickname,
       compound,
+      virus,
       article,
       virusExperiments,
       entryAssayExperiments,
       biochemExperiments,
       animalExperiments,
+      clinicalExperiments,
       loading
     } = this.props;
     const cacheKey = (
@@ -208,7 +211,7 @@ class SearchResultInner extends React.Component {
                   width: 5,
                   cells: [
                     {label: 'Virus', value: virusDropdown},
-                    {label: 'Target', value: compoundTargetDropdown},
+                    /*{label: 'Target', value: compoundTargetDropdown},*/
                     {label: 'Compound', value: compoundDropdown}
                   ]
                 },
@@ -227,16 +230,6 @@ class SearchResultInner extends React.Component {
                       )
                     },
                     {
-                      label: <a href="#invitro-biochem">
-                        Biochemistry
-                      </a>,
-                      value: (
-                        loading ?
-                          <Loader active inline size="mini" /> :
-                          biochemExperiments.totalCount
-                      )
-                    },
-                    {
                       label: <a href="#invitro-entryassay">
                         Entry assay
                       </a>,
@@ -244,6 +237,16 @@ class SearchResultInner extends React.Component {
                         loading ?
                           <Loader active inline size="mini" /> :
                           entryAssayExperiments.totalCount
+                      )
+                    },
+                    {
+                      label: <a href="#invitro-biochem">
+                        Biochemistry
+                      </a>,
+                      value: (
+                        loading ?
+                          <Loader active inline size="mini" /> :
+                          biochemExperiments.totalCount
                       )
                     },
                     {
@@ -256,7 +259,16 @@ class SearchResultInner extends React.Component {
                           animalExperiments.totalCount
                       )
                     },
-                    {label: 'Clinical studies', value: 'pending'},
+                    {
+                      label: <a href="#clinical-trials">
+                        Clinical Trials
+                      </a>,
+                      value: (
+                        loading ?
+                          <Loader active inline size="mini" /> :
+                          clinicalExperiments.totalCount
+                      )
+                    },
                   ]
                 },
                 ...(compound ? [{
@@ -266,7 +278,11 @@ class SearchResultInner extends React.Component {
                 ...(!compound && article ? [{
                   description: <ArticleInfo {...article} />,
                   width: 8
-                }] :[])
+                }] : []),
+                ...(!compound && !article && virus ? [{
+                  description: virus.description,
+                  width: 8
+                }] : [])
               ]}
             </StatTable>
           )}
@@ -318,6 +334,18 @@ class SearchResultInner extends React.Component {
             <AnimalExpTable
              cacheKey={cacheKey}
              data={animalExperiments} />}
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row centered>
+        <Grid.Column width={16}>
+          <Header as="h2" dividing id="clinical-trials">
+            Cinical Trials
+          </Header>
+          {loading ?
+            <Loader active inline="centered" /> :
+            <ClinicalExpTable
+             cacheKey={cacheKey}
+             data={clinicalExperiments} />}
         </Grid.Column>
       </Grid.Row>
     </Grid>;

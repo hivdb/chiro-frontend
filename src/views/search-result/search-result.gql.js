@@ -158,5 +158,29 @@ export default gql`
         }
       }
     }
+    clinicalExperiments (
+      compoundName: $compoundName,
+      compoundTargetName: $compoundTargetName,
+      virusName: $virusName,
+      articleNickname: $articleNickname
+    ) {
+      totalCount
+      edges {
+        node {
+          articles {
+            nickname year
+          }
+          virusName
+          compoundNames
+          regimenDetail
+          studyType
+          numSubjects
+          attachedTextObjs {
+            type
+            content
+          }
+        }
+      }
+    }
   }
 `;

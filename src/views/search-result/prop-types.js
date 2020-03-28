@@ -110,8 +110,27 @@ const animalExperimentsShape = PropTypes.shape({
 });
 
 
+const clinicalExperimentsShape = PropTypes.shape({
+  totalCount: PropTypes.number.isRequired,
+  edges: PropTypes.arrayOf(PropTypes.shape({
+    node: PropTypes.shape({
+      articles: PropTypes.arrayOf(PropTypes.shape({
+        nickname: PropTypes.arrayOf(
+          PropTypes.string.isRequired
+        ).isRequired
+      })).isRequired,
+      virusName: PropTypes.string.isRequired,
+      compoundNames: PropTypes.arrayOf(
+        PropTypes.string.isRequired
+      ).isRequired
+    })
+  }))
+});
+
+
 export {
   compoundShape, virusExperimentsShape,
   entryAssayExperimentsShape,
-  biochemExperimentsShape, animalExperimentsShape
+  biochemExperimentsShape, animalExperimentsShape,
+  clinicalExperimentsShape
 };
