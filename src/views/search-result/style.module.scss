@@ -44,3 +44,8 @@
 .compound-description {
   font-size: 1.2rem;
 }
+
+:global(.ui.table td).justify {
+  text-align: justify;
+  text-justify: inter-word;
+}

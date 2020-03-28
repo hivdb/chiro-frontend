@@ -9,7 +9,10 @@ import style from './style.module.scss';
 
 class ColDef {
 
-  constructor(name, label, render, sort, sortable = true) {
+  constructor({
+    name, label, render, sort,
+    sortable = true, textAlign = 'center'
+  }) {
     this.name = name;
     this.label = label ? label : startCase(name);
     this.render = render ? render : cellData => (
@@ -19,6 +22,7 @@ class ColDef {
     );
     this.sort = sort ? sort : data => sortBy(data, [name]);
     this.sortable = Boolean(sortable);
+    this.textAlign = textAlign;
   }
 
 }
@@ -43,8 +47,15 @@ function readableNum(num) {
   if (isNaN(num)) {
     return '?';
   }
-  let prec = Math.max(Math.floor(Math.log10(num)) + 1, 2);
-  return num.toPrecision(prec).replace(/(\.\d+)0+$/, '$1');
+  let prec = Math.max(Math.floor(Math.log10(num)) + 1, 0);
+  if (prec < 2) {
+    prec ++;
+  }
+  return (
+    num.toPrecision(prec)
+      .replace(/(\.\d*)0+$/, '$1')
+      .replace(/\.$/, '')
+  );
 }
 
 
@@ -57,14 +68,16 @@ function renderXX50(num, cmp, unit, inactive) {
   }
   num = readableNum(num);
   return <span className={style['nowrap']}>
-    {cmp === '=' ? '' : cmp}{num} {unit}
+    {cmp === '=' ? '' : cmp}{num}
+    {unit === '\xb5M' ? '' : ` ${unit}`}
   </span>;
 }
 
 
-const authorYearColDef = new ColDef(
-  'articles', 'Author/Year',
-  articles => articles.map(
+const authorYearColDef = new ColDef({
+  name: 'articles',
+  label: 'Author/Year',
+  render: articles => articles.map(
     ({nickname}, idx) => {
       return <Link key={idx} to={{
         pathname: '/search-result/',
@@ -72,22 +85,24 @@ const authorYearColDef = new ColDef(
       }}>{nickname[0]}</Link>;
     }
   ),
-  data => sortBy(data, row => (
+  sort: data => sortBy(data, row => (
     ((row.articles[0] || {}).nickname || [''])[0]
   ))
-);
+});
 
 
-const virusSpeciesDef = new ColDef(
-  'virusName', 'Virus'
-);
+const virusSpeciesDef = new ColDef({
+  name: 'virusName',
+  label: 'Virus'
+});
 
 
-const compoundColDef = label => new ColDef(
-  'compoundNames', label,
-  compoundNames => compoundNames.join(' + '),
-  data => sortBy(data, ['compoundNames[0]'])
-);
+const compoundColDef = label => new ColDef({
+  name: 'compoundNames',
+  label,
+  render: compoundNames => compoundNames.join(' + '),
+  sort: data => sortBy(data, ['compoundNames[0]'])
+});
 
 
 export {

@@ -21,36 +21,51 @@ function renderSI(num, cmp) {
 
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
-  new ColDef('moi.mean', 'MOI', readableNum, null, false),
+  new ColDef({
+    name: 'moi.mean',
+    label: 'MOI',
+    render: readableNum,
+    sortable: false
+  }),
   compoundColDef('Compound'),
-  new ColDef(
-    'drugTiming', 'Timing',
-    value => (
+  new ColDef({
+    name: 'drugTiming',
+    label: 'Timing',
+    render: value => (
       value && value.length > 0 ? <>
         {value.map(({text}) => text).join(' and ')} hr
       </> : '?'
     ),
-    data => sortBy(data, [
+    sort: data => sortBy(data, [
       'drugTiming[0].lower',
       'drugTiming[0].upper']),
-  ),
-  new ColDef('cellsName', 'Cells'),
-  new ColDef(
-    'durationOfInfection.text', 'Infection (hr)'
-  ),
-  new ColDef('measurement'),
-  new ColDef(
-    'ec50', 'EC50',
-    (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
+  }),
+  new ColDef({
+    name: 'cellsName',
+    label: 'Cells'
+  }),
+  new ColDef({
+    name: 'durationOfInfection.text',
+    label: 'Culture',
+    render: h => h ? `${h} hr` : '?'
+  }),
+  new ColDef({name: 'measurement'}),
+  new ColDef({
+    name: 'ec50',
+    label: 'EC50 (\xb5M)',
+    render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
       renderXX50(ec50, ec50cmp, ec50unit, ec50inactive)
     ),
-    data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive'])
-  ),
-  new ColDef(
-    'si', 'SI',
-    (si, {sicmp}) => renderSI(si, sicmp),
-    data => sortBy(data, ['sicmp', 'si'])
-  )
+    sort: data => sortBy(
+      data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive']
+    )
+  }),
+  new ColDef({
+    name: 'si',
+    label: 'SI',
+    render: (si, {sicmp}) => renderSI(si, sicmp),
+    sort: data => sortBy(data, ['sicmp', 'si'])
+  })
 ];
 
 

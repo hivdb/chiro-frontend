@@ -16,22 +16,26 @@ const tableColumns = [
   authorYearColDef,
   virusSpeciesDef,
   compoundColDef('Compound'),
-  new ColDef(
-    'effectorCellsName',
-    'Effector Cells',
-    cellData => (
-      (cellData === undefined ||
-        cellData === null ||
-        cellData === '') ? '-' : cellData)),
-  new ColDef('cellsName', 'Target Cells'),
-  new ColDef('measurement'),
-  new ColDef(
-    'ec50', 'EC50',
-    (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
+  new ColDef({
+    name: 'effectorCellsName',
+    label: 'Effector Cells',
+    render: cellData => cellData ? cellData : '-'
+  }),
+  new ColDef({
+    name: 'cellsName',
+    label: 'Target Cells'
+  }),
+  new ColDef({name: 'measurement'}),
+  new ColDef({
+    name: 'ec50',
+    label: 'EC50 (\xb5M)',
+    render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
       renderXX50(ec50, ec50cmp, ec50unit, ec50inactive)
     ),
-    data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive'])
-  )
+    sort: data => sortBy(
+      data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive']
+    )
+  })
 ];
 
 

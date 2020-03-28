@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import nestedGet from 'lodash/get';
 import {Table} from 'semantic-ui-react';
+import style from './style.module.scss';
 
 
 function getNextDirection(direction) {
@@ -100,6 +101,7 @@ export default class ExpTable extends React.Component {
                sorted: sortedByColumn === name ? sortDirection : null,
                onClick: this.handleSort(name, sort)
              } : {})}
+             textAlign="center"
              key={idx}>
               {label}
             </Table.HeaderCell>
@@ -108,9 +110,15 @@ export default class ExpTable extends React.Component {
       </Table.Header>
       <Table.Body>
         {sortedData.map((row, idx) => (
-          <Table.Row key={idx}>
-            {columnDefs.map(({name, render}, jdx) => (
-              <Table.Cell key={jdx}>
+          <Table.Row verticalAlign="top" key={idx}>
+            {columnDefs.map(({name, render, textAlign}, jdx) => (
+              <Table.Cell
+               key={jdx}
+               {...(textAlign === 'justify' ?
+                 {className: style.justify} :
+                 {textAlign}
+               )}
+            >
                 {render(nestedGet(row, name), row)}
               </Table.Cell>
             ))}

@@ -15,14 +15,20 @@ import {
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
   compoundColDef('Compound'),
-  new ColDef('targetName', 'Target'),
-  new ColDef(
-    'ic50', 'IC50',
-    (ic50, {ic50cmp, ic50unit, ic50inactive}) => (
+  new ColDef({
+    name: 'targetName',
+    label: 'Target'
+  }),
+  new ColDef({
+    name: 'ic50',
+    label: 'IC50 (\xb5M)',
+    render: (ic50, {ic50cmp, ic50unit, ic50inactive}) => (
       renderXX50(ic50, ic50cmp, ic50unit, ic50inactive)
     ),
-    data => sortBy(data, ['ic50unit', 'ic50', 'ic50cmp', 'ic50inactive'])
-  )
+    sort: data => sortBy(
+      data, ['ic50unit', 'ic50', 'ic50cmp', 'ic50inactive']
+    )
+  })
 ];
 
 

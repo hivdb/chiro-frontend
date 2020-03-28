@@ -1,0 +1,73 @@
+@import "../../styles/colors";
+@import "../../styles/variables";
+
+.header-container {
+  width: 75vw;
+  @media only screen and (max-width: 1200px) {
+    width: 95vw;
+  }
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header-bar {
+  background-color: $cardinal;
+  width: 100%;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 200;
+
+  nav {
+    display: block;
+  }
+
+  nav ul.nav {
+    display: block;
+    padding: 1rem .2rem;
+    margin: 0;
+  }
+
+  nav ul.nav li.nav-item {
+    display: inline-block;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 0;
+    margin-right: 1rem;
+    font-size: 1.1rem;
+
+    a {
+      color: white;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+}
+
+.header-logo {
+  background-color: white;
+  width: 100%;
+  height: $header-logo-height;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 400;
+  font-size: 2rem;
+
+  .brand-logo {
+    display: block;
+    float: left;
+    background: url(../../assets/brand-logo.svg) no-repeat center bottom;
+    text-indent: -9999px;
+    width: 180px;
+    height: 50px;
+    border-right: 1px black solid;
+  }
+
+  .brand-sitename {
+    color: black;
+    display: block;
+    float: left;
+    height: 50px;
+    padding-top: 30px;
+    padding-bottom: 0;
+  }
+}

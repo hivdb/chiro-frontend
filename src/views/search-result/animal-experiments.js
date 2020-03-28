@@ -46,13 +46,15 @@ const rxTimePattern = /-?(\d+)([dh]pi)/;
 
 const tableColumns = [
   authorYearColDef,
-  new ColDef('animalModelName', 'Host'),
+  new ColDef({name: 'animalModelName', label: 'Host'}),
   virusSpeciesDef,
-  new ColDef('inoculation', null, null, null, false),
+  new ColDef({name: 'inoculation', sortable: false}),
   compoundColDef('Drug(s)'),
-  new ColDef('dose', 'Dosage', null, null, false),
-  new ColDef('treatmentTime', 'Start',
-    (ts, {treatmentType: tt}) => {
+  new ColDef({name: 'dose', label: 'Dosage', sortable: false}),
+  new ColDef({
+    name: 'treatmentTime',
+    label: 'Start',
+    render: (ts, {treatmentType: tt}) => {
       tt = treatmentTypeMap[tt];
       if (rxTimePattern.test(ts)) {
         const match = rxTimePattern.exec(ts);
@@ -63,13 +65,14 @@ const tableColumns = [
       }
       return tt;
     },
-    null, false
-  ),
-  new ColDef(
-    'numSubjects',
-    <># Subjects /<br /># Controls</>,
-    (ns, {numControls: nc}) => `${ns} / ${nc}`,
-    null, false)
+    sortable: false
+  }),
+  new ColDef({
+    name: 'numSubjects',
+    label: <># Subjects /<br /># Controls</>,
+    render: (ns, {numControls: nc}) => `${ns} / ${nc}`,
+    sortable: false
+  })
 ];
 
 
@@ -90,9 +93,10 @@ function resultColDefs(rows) {
       if (!(resultName in displayResultNames)) {
         continue;
       }
-      colDefs[resultName] = new ColDef(
-        resultName, resultName,
-        (_, {resultObjs}) => {
+      colDefs[resultName] = new ColDef({
+        name: resultName,
+        label: resultName,
+        render: (_, {resultObjs}) => {
           const resultObj = arrayFind(
             resultObjs,
             r => r.resultName === resultName);
@@ -102,8 +106,9 @@ function resultColDefs(rows) {
           else {
             return '?';
           }
-        }, null, false
-      );
+        },
+        sortable: false
+      });
     }
   }
   return Object.values(colDefs);

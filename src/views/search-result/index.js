@@ -175,6 +175,7 @@ class SearchResultInner extends React.Component {
       qVirusName,
       qArticleNickname,
       compound,
+      compoundTarget,
       virus,
       article,
       virusExperiments,
@@ -208,7 +209,7 @@ class SearchResultInner extends React.Component {
               {[
                 {
                   title: 'Selection',
-                  width: 5,
+                  width: 3,
                   cells: [
                     {label: 'Virus', value: virusDropdown},
                     {label: 'Target', value: compoundTargetDropdown},
@@ -219,135 +220,128 @@ class SearchResultInner extends React.Component {
                   title: 'Results',
                   width: 3,
                   cells: [
-                    {
+                    ...(loading ? [{
+                      lable: '',
+                      value: <Loader active inline size="mini" />
+                    }] : []),
+                    ...(!loading && virusExperiments.totalCount > 0 ? [{
                       label: <a href="#invitro-cells">
                         Cell Culture
                       </a>,
-                      value: (
-                        loading ?
-                          <Loader active inline size="mini" /> :
-                          virusExperiments.totalCount
-                      )
-                    },
-                    {
+                      value: virusExperiments.totalCount
+                    }] : []),
+                    ...(!loading && entryAssayExperiments.totalCount > 0 ? [{
                       label: <a href="#invitro-entryassay">
                         Entry assay
                       </a>,
-                      value: (
-                        loading ?
-                          <Loader active inline size="mini" /> :
-                          entryAssayExperiments.totalCount
-                      )
-                    },
-                    {
+                      value: entryAssayExperiments.totalCount
+                    }] : []),
+                    ...(!loading && biochemExperiments.totalCount > 0 ? [{
                       label: <a href="#invitro-biochem">
                         Biochemistry
                       </a>,
-                      value: (
-                        loading ?
-                          <Loader active inline size="mini" /> :
-                          biochemExperiments.totalCount
-                      )
-                    },
-                    {
+                      value: biochemExperiments.totalCount
+                    }] : []),
+                    ...(!loading && animalExperiments.totalCount > 0 ? [{
                       label: <a href="#animal-models">
                         Animal models
                       </a>,
-                      value: (
-                        loading ?
-                          <Loader active inline size="mini" /> :
-                          animalExperiments.totalCount
-                      )
-                    },
-                    {
+                      value: animalExperiments.totalCount
+                    }] : []),
+                    ...(!loading && clinicalExperiments.totalCount > 0 ? [{
                       label: <a href="#clinical-trials">
                         Clinical Trials
                       </a>,
-                      value: (
-                        loading ?
-                          <Loader active inline size="mini" /> :
-                          clinicalExperiments.totalCount
-                      )
-                    },
+                      value: clinicalExperiments.totalCount
+                    }] : [])
                   ]
                 },
-                ...(compound ? [{
-                  description: compound.description,
-                  width: 8
+                ...(compound || virus || compoundTarget ? [{
+                  description: <>
+                    {compound ? <p>
+                      <strong>Compound</strong>:{' '}
+                      {compound.description || 'Pending.'}
+                    </p> : null}
+                    {compoundTarget ? <p>
+                      <strong>Target</strong>:{' '}
+                      {compoundTarget.description || 'Pending.'}
+                    </p> : null}
+                    {virus ? <p>
+                      <strong>Virus</strong>:{' '}
+                      {virus.description || 'Pending.'}
+                    </p> : null}
+                  </>,
+                  width: 10
                 }] : []),
-                ...(!compound && article ? [{
+                ...(!compound && !virus && !compoundTarget && article ? [{
                   description: <ArticleInfo {...article} />,
-                  width: 8
-                }] : []),
-                ...(!compound && !article && virus ? [{
-                  description: virus.description,
-                  width: 8
+                  width: 10
                 }] : [])
               ]}
             </StatTable>
           )}
         </InlineSearchBox>
       </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as="h2" dividing id="invitro-cells">
-            Cell Culture
-          </Header>
-          {loading ?
-            <Loader active inline="centered" /> :
-            <VirusExpTable
-             cacheKey={cacheKey}
-             data={virusExperiments} />}
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column withd={16}>
-          <Header as="h2" dividing id="invitro-entryassay">
-            Entry Assay
-          </Header>
-          {loading ?
-            <Loader active inline="centered" /> :
-            <EntryAssayExpTable
-             cacheKey={cacheKey}
-             data={entryAssayExperiments} />}
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as="h2" dividing id="invitro-biochem">
-            Biochemistry
-          </Header>
-          {loading ?
-            <Loader active inline="centered" /> :
-            <BiochemExpTable
-             cacheKey={cacheKey}
-             data={biochemExperiments} />}
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as="h2" dividing id="animal-models">
-            Animal Models
-          </Header>
-          {loading ?
-            <Loader active inline="centered" /> :
-            <AnimalExpTable
-             cacheKey={cacheKey}
-             data={animalExperiments} />}
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as="h2" dividing id="clinical-trials">
-            Cinical Trials
-          </Header>
-          {loading ?
-            <Loader active inline="centered" /> :
-            <ClinicalExpTable
-             cacheKey={cacheKey}
-             data={clinicalExperiments} />}
-        </Grid.Column>
-      </Grid.Row>
+      {loading ?
+        <Loader active inline="centered" /> : <>
+          {virusExperiments.totalCount > 0 ?
+            <Grid.Row centered>
+              <Grid.Column width={16}>
+                <Header as="h2" dividing id="invitro-cells">
+                  Cell Culture
+                </Header>
+                <VirusExpTable
+                 cacheKey={cacheKey}
+                 data={virusExperiments} />
+              </Grid.Column>
+            </Grid.Row> : null}
+          {entryAssayExperiments.totalCount > 0 ?
+            <Grid.Row centered>
+              <Grid.Column withd={16}>
+                <Header as="h2" dividing id="invitro-entryassay">
+                  Entry Assay
+                </Header>
+                <EntryAssayExpTable
+                 cacheKey={cacheKey}
+                 data={entryAssayExperiments} />
+              </Grid.Column>
+            </Grid.Row> : null}
+          {biochemExperiments.totalCount > 0 ?
+            <Grid.Row centered>
+              <Grid.Column width={16}>
+                <Header as="h2" dividing id="invitro-biochem">
+                  Biochemistry
+                </Header>
+                <BiochemExpTable
+                 cacheKey={cacheKey}
+                 data={biochemExperiments} />
+              </Grid.Column>
+            </Grid.Row> : null}
+          {animalExperiments.totalCount > 0 ?
+            <Grid.Row centered>
+              <Grid.Column width={16}>
+                <Header as="h2" dividing id="animal-models">
+                  Animal Models
+                </Header>
+                <AnimalExpTable
+                 cacheKey={cacheKey}
+                 data={animalExperiments} />
+              </Grid.Column>
+            </Grid.Row> : null}
+          {clinicalExperiments.totalCount > 0 ?
+            <Grid.Row centered>
+              <Grid.Column width={16}>
+                <Header as="h2" dividing id="clinical-trials">
+                  Cinical Trials
+                </Header>
+                <ClinicalExpTable
+                 cacheKey={cacheKey}
+                 data={clinicalExperiments} />
+              </Grid.Column>
+            </Grid.Row> : null
+          }
+        </>
+      }
     </Grid>;
   }
 

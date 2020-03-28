@@ -5,6 +5,9 @@
   // container width define.
   // See I am higher than you now!
   width: 75vw;
+  @media only screen and (max-width: 1200px) {
+    width: 95vw;
+  }
 }
 
 .main-content {

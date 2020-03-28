@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'found';
 import classnames from 'classnames';
 
-import style from './header.module.sass';
+import style from './header.module.scss';
 
 
 export default class Header extends React.Component {

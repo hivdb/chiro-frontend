@@ -11,23 +11,27 @@ import {
 
 
 function attachedTextColDef(type) {
-  return new ColDef(
-    type, type,
-    (_, {attachedTextObjs}) => {
+  return new ColDef({
+    name: type,
+    label: type,
+    render: (_, {attachedTextObjs}) => {
       for (const one of attachedTextObjs) {
         if (one.type === type) {
           return one.content;
         }
       }
-    }, null, false);
+    },
+    sortable: false,
+    textAlign: 'justify'
+  });
 }
 
 
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
-  new ColDef('regimenDetail', 'Regimen'),
-  new ColDef('studyType'),
-  new ColDef('numSubjects', '# Subjects'),
+  new ColDef({name: 'regimenDetail', label: 'Regimen'}),
+  new ColDef({name: 'studyType'}),
+  new ColDef({name: 'numSubjects', label: '#'}),
   attachedTextColDef('Population description'),
   attachedTextColDef('Findings'),
 ];
