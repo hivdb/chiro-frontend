@@ -17,12 +17,18 @@ export default class Header extends React.Component {
          )}>
           <nav className={style['header-container']}>
             <Link className={style['brand-logo']} to="/" />
-            <Link className={style['brand-sitename']} to="/">
-              Coronavirus Antiviral Research Database
-              <span className={style['brand-subtitle']}>
+            <div className={style['brand-sitename']}>
+              <Link className={style['brand-sitename-title']} to="/">
+                Coronavirus Antiviral Research Database
+              </Link>
+              <a
+               className={style['brand-sitename-subtitle']}
+               href="https://hivdb.stanford.edu/"
+               rel="noopener noreferrer"
+               target="_blank">
                 A Stanford HIVDB team website.
-              </span>
-            </Link>
+              </a>
+            </div>
           </nav>
 
         </header>
