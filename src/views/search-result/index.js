@@ -221,7 +221,7 @@ class SearchResultInner extends React.Component {
                   width: 3,
                   cells: [
                     ...(loading ? [{
-                      lable: '',
+                      label: '',
                       value: <Loader active inline size="mini" />
                     }] : []),
                     ...(!loading && virusExperiments.totalCount > 0 ? [{

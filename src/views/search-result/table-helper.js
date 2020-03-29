@@ -86,11 +86,16 @@ const authorYearColDef = new ColDef({
   name: 'articles',
   label: 'Author/Year',
   render: articles => articles.map(
-    ({nickname}, idx) => {
-      return <Link key={idx} to={{
-        pathname: '/search-result/',
-        query: {article: nickname[0]}
-      }}>{nickname[0]}</Link>;
+    ({nickname, journal, journalAbbr}, idx) => {
+      return [
+        <Link key={idx} to={{
+          pathname: '/search-result/',
+          query: {article: nickname[0]}
+        }}>{nickname[0]}</Link>,
+        journalAbbr ? <div key={`j${idx}`}>({journalAbbr})</div> : (
+          journal ? <div key={`j${idx}`}>({journal})</div> : null
+        )
+      ];
     }
   ),
   sort: data => sortBy(data, row => (

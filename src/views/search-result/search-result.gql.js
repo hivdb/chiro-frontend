@@ -168,7 +168,7 @@ export default gql`
       edges {
         node {
           articles {
-            nickname year
+            nickname year journal journalAbbr
           }
           virusName
           compoundNames

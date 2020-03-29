@@ -32,7 +32,7 @@ const tableColumns = [
     name: 'drugTiming',
     label: 'Timing',
     render: value => (
-      value && value.length > 0 ? <>
+      (value && value.length > 0) ? <>
         {value.map(({text}) => text).join(' and ')} hr
       </> : '?'
     ),
