@@ -5,7 +5,7 @@ import {Grid, Header} from 'semantic-ui-react';
 import style from './style.module.scss';
 
 
-export default class StatTable extends React.Component {
+export default class StatHeader extends React.Component {
 
   static propTypes = {
     children: PropTypes.arrayOf(PropTypes.shape({

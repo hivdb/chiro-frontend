@@ -1,0 +1,29 @@
+.stat-list {
+  > .stat-item {
+    display: flex;
+    margin: 0.6rem 0;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    > .item-label {
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+
+    > .item-value {
+      margin-left: 0.5rem;
+      > :global(.ui.dropdown) {
+        display: flex;
+        align-items: center;
+        background-color: rgba(0,0,0,.1);
+        border-radius: 4px;
+        padding-left: 1rem;
+        padding-right: 0.5rem;
+        &:hover, &:global(.active) {
+          background-color: rgba(0,0,0,.15);
+        }
+      }
+    }
+  }
+
+}

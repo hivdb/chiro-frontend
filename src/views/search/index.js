@@ -1,10 +1,12 @@
 import React from 'react';
+import {Link} from 'found';
 import {routerShape} from 'found';
 import {
-  Grid, Header, Breadcrumb
+  Grid, Breadcrumb
 } from 'semantic-ui-react';
 
 import {InlineSearchBox} from '../../components/search-box';
+import StatHeader from '../../components/stat-header';
 import style from './style.module.scss';
 
 
@@ -16,6 +18,7 @@ export default class ChiroSearch extends React.Component {
 
   handleSearchBoxChange = (value, category) => {
     if (value === null) {
+      this.props.router.push({pathname: '/search-result/'});
       return;
     }
     const query = {};
@@ -38,7 +41,7 @@ export default class ChiroSearch extends React.Component {
 
   renderBreadcrumb() {
     return <Breadcrumb>
-      <Breadcrumb.Section href="/">Home</Breadcrumb.Section>
+      <Breadcrumb.Section as={Link} to="/">Home</Breadcrumb.Section>
       <Breadcrumb.Divider icon="right angle" />
       <Breadcrumb.Section active>
         Experiment Search
@@ -48,48 +51,34 @@ export default class ChiroSearch extends React.Component {
 
   render() {
     return <Grid className={style.search}>
-      {/*<Grid.Row>{this.renderBreadcrumb()}</Grid.Row>*/}
-      <Grid.Row centered>
-        <Grid.Column width={6}>
-          <Header
-           textAlign="center"
-           as="h2">
-            Experiment Search
-            <Header.Subheader>
-              Search compounds, targets, and viruses.
-            </Header.Subheader>
-          </Header>
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row centered>
-        <Grid.Column width={10}>
-          <InlineSearchBox
-           noAny
-           articleValue={null}
-           compoundValue={null}
-           compoundTargetValue={null}
-           virusValue={null}
-           onChange={this.handleSearchBoxChange}
-           dropdownProps={{selection: true, fluid: true}}>
-            {({
-              compoundTargetDropdown,
-              compoundDropdown,
-              virusDropdown
-            }) => (
-              <Grid columns={3}>
-                <Grid.Column>
-                  {virusDropdown}
-                </Grid.Column>
-                <Grid.Column>
-                  {compoundTargetDropdown}
-                </Grid.Column>
-                <Grid.Column>
-                  {compoundDropdown}
-                </Grid.Column>
-              </Grid>
-            )}
-          </InlineSearchBox>
-        </Grid.Column>
+      <Grid.Row>{this.renderBreadcrumb()}</Grid.Row>
+      <Grid.Row>
+        <InlineSearchBox
+         articleValue={null}
+         compoundValue={null}
+         virusValue={null}
+         compoundTargetValue={null}
+         onChange={this.handleSearchBoxChange}>
+          {({
+            compoundDropdown,
+            compoundTargetDropdown,
+            virusDropdown
+          }) => (
+            <StatHeader>
+              {[
+                {
+                  title: 'Selection',
+                  width: 3,
+                  cells: [
+                    {label: 'Compound', value: compoundDropdown},
+                    {label: 'Target', value: compoundTargetDropdown},
+                    {label: 'Virus', value: virusDropdown},
+                  ]
+                }
+              ]}
+            </StatHeader>
+          )}
+        </InlineSearchBox>
       </Grid.Row>
     </Grid>;
   }

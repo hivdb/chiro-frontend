@@ -6,7 +6,6 @@ import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
 import {Grid, Header, Loader, Breadcrumb} from 'semantic-ui-react';
 
-import StatTable from './stat';
 import VirusExpTable from './virus-experiments';
 import BiochemExpTable from './biochem-experiments';
 import AnimalExpTable from './animal-experiments';
@@ -15,6 +14,7 @@ import ClinicalExpTable from './clinical-experiments';
 import searchResultQuery from './search-result.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
+import StatHeader from '../../components/stat-header';
 
 import ArticleInfo from './article-info';
 import style from './style.module.scss';
@@ -205,15 +205,15 @@ class SearchResultInner extends React.Component {
             compoundTargetDropdown,
             virusDropdown
           }) => (
-            <StatTable>
+            <StatHeader>
               {[
                 {
                   title: 'Selection',
                   width: 3,
                   cells: [
-                    {label: 'Virus', value: virusDropdown},
+                    {label: 'Compound', value: compoundDropdown},
                     {label: 'Target', value: compoundTargetDropdown},
-                    {label: 'Compound', value: compoundDropdown}
+                    {label: 'Virus', value: virusDropdown}
                   ]
                 },
                 {
@@ -278,7 +278,7 @@ class SearchResultInner extends React.Component {
                   width: 10
                 }] : [])
               ]}
-            </StatTable>
+            </StatHeader>
           )}
         </InlineSearchBox>
       </Grid.Row>
