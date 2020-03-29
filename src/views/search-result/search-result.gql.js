@@ -85,6 +85,7 @@ export default gql`
     entryAssayExperiments: entryAssayCellCultureExperiments(
       compoundName: $compoundName,
       virusName: $virusName,
+      compoundTargetName: $compoundTargetName,
       articleNickname: $articleNickname,
     ) {
       totalCount
