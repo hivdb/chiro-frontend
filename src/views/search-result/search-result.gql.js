@@ -173,7 +173,8 @@ export default gql`
           virusName
           compoundNames
           regimenDetail
-          studyType
+          studyTypeName
+          studyTypeOrdinal
           numSubjects
           attachedTextObjs {
             type

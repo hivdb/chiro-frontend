@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import orderBy from 'lodash/orderBy';
 
 import ExpTable from './exptable';
 import {clinicalExperimentsShape} from './prop-types';
@@ -30,7 +31,7 @@ function attachedTextColDef(type) {
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
   new ColDef({name: 'regimenDetail', label: 'Regimen'}),
-  new ColDef({name: 'studyType'}),
+  new ColDef({name: 'studyTypeName', label: 'Study Type'}),
   new ColDef({name: 'numSubjects', label: '#'}),
   attachedTextColDef('Population description'),
   attachedTextColDef('Findings'),
@@ -50,7 +51,10 @@ export default class ClinicalExpTable extends React.Component {
       <ExpTable
        cacheKey={cacheKey}
        columnDefs={tableColumns}
-       data={reformExpData(data)} />
+       data={reformExpData(data, data => orderBy(
+         data, [r => r.studyTypeOrdinal, r => r.numSubjects],
+         ['asc', 'desc']
+       ))} />
     );
   }
 

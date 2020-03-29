@@ -28,18 +28,26 @@ class ColDef {
 }
 
 
-function reformExpData(expData) {
+function reformExpData(expData, sort = true) {
   if (!expData || !expData.edges) {
     return [];
   }
   const data = expData.edges.map(({node}) => node);
-  return orderBy(
-    data, [
-      row => ((row.articles[0] || {}).year || 0),
-      row => ((row.articles[0] || {}).nickname || [''])[0]
-    ],
-    ['desc', 'asc']
-  );
+  if (sort === true) {
+    return orderBy(
+      data, [
+        row => ((row.articles[0] || {}).year || 0),
+        row => ((row.articles[0] || {}).nickname || [''])[0]
+      ],
+      ['desc', 'asc']
+    );
+  }
+  else if (typeof sort === 'function') {
+    return sort(data);
+  }
+  else {
+    return data;
+  }
 }
 
 
