@@ -1,8 +1,6 @@
 import React from 'react';
 // import {contextRef} from 'react';
 
-import './Home.css';
-
 import {Header, Grid, Statistic} from 'semantic-ui-react';
 
 // import SearchMenu from './components/search_menu';
