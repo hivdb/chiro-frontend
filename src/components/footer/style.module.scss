@@ -1,0 +1,53 @@
+@import "../../styles/colors";
+@import "../../styles/variables";
+
+$margin-top: 3rem;
+
+.footer {
+  position: absolute;
+  height: $footer-height - $margin-top;
+  margin-top: $margin-top;
+  width: 100vw;
+  box-sizing: border-box;
+  background-color: $hl-bg-color;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  :global(.ui.relaxed.grid) {
+    width: 75vw;
+    @media only screen and (max-width: 1200px) {
+      width: 95vw;
+    }
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+  }
+
+  :global(.ui.header) {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: .24rem;
+  }
+  ul {
+    padding-left: 1rem;
+    margin-top: .24rem;
+    margin-bottom: .5rem;
+    li {
+      font-size: .9rem;
+      line-height: 1.8;
+    }
+  }
+  .copyright {
+    background-color: $main-color;
+    line-height: 2.5;
+    text-align: center;
+    font-size: .9rem;
+    color: white;
+    a {
+      color: white;
+      text-decoration: underline;
+    }
+  }
+}

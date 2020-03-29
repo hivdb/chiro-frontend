@@ -2,7 +2,11 @@
 @import "./variables";
 
 :global(body.chiro-body) {
-  font-family: Source Sans Pro, Helvetica Neue, Helvetica,Segoe UI, Arial, freesans, sans-serif;
+  background-color: rgba(0, 0, 0, .05);
+  font-family: $font-family;
+  :global(.ui.header) {
+    font-family: $font-family;
+  }
   a {
     color: $link-color;
   }
@@ -23,7 +27,6 @@
 }
 
 .main-content {
-  background-color: rgba(0, 0, 0, .05);
-  min-height: calc(100vh - #{$header-bar-height + $header-logo-height});
+  min-height: calc(100vh - #{$header-bar-height + $header-logo-height + $footer-height});
   padding-top: 1.5rem;
 }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Container} from 'semantic-ui-react';
 
 import Header from './header';
+import Footer from './footer';
 import GAWrapper from './ga/gawrapper';
 
 import "source-sans-pro/source-sans-pro.css";
@@ -28,6 +29,7 @@ export default class Layout extends React.Component {
           {children}
         </Container>
       </div>
+      <Footer />
       <GAWrapper router={router} />
     </>;
   }
