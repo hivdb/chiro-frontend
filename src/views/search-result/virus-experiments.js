@@ -22,9 +22,18 @@ function renderSI(num, cmp) {
 const tableColumns = [
   authorYearColDef, virusSpeciesDef,
   new ColDef({
-    name: 'moi.mean',
+    name: 'moi',
     label: 'MOI',
-    render: readableNum,
+    render: (moi) => {
+      if (!moi) {
+        return '?';
+      }
+      const {mean, lower} = moi;
+      return isNaN(mean) ? '?' : (
+        Math.abs(mean - lower) < 1e-5 ?
+          readableNum(mean) : `~${readableNum(mean)}`
+      );
+    },
     sortable: false
   }),
   compoundColDef('Compound'),
