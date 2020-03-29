@@ -1,10 +1,9 @@
 import React from 'react';
-import {Link} from 'found';
 import defer from 'lodash/defer';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
-import {Grid, Header, Loader, Breadcrumb} from 'semantic-ui-react';
+import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import VirusExpTable from './virus-experiments';
 import BiochemExpTable from './biochem-experiments';
@@ -15,6 +14,7 @@ import searchResultQuery from './search-result.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
+import Breadcrumb from '../../components/breadcrumb';
 
 import ArticleInfo from './article-info';
 import style from './style.module.scss';
@@ -155,15 +155,11 @@ class SearchResultInner extends React.Component {
     }
 
     return <Breadcrumb>
-      <Breadcrumb.Section as={Link} to="/">Home</Breadcrumb.Section>
-      <Breadcrumb.Divider icon="right angle" />
-      <Breadcrumb.Section as={Link} to="/search/">
-        Experiment Search
-      </Breadcrumb.Section>
-      <Breadcrumb.Divider icon="right angle" />
-      <Breadcrumb.Section active>
-        Search {searches}
-      </Breadcrumb.Section>
+      {[
+        {linkTo: '/', label: 'Home'},
+        {linkTo: '/search/', label: 'Experiment Search'},
+        {active: true, label: `Search ${searches}`}
+      ]}
     </Breadcrumb>;
   }
 
@@ -190,9 +186,7 @@ class SearchResultInner extends React.Component {
       `@@${qVirusName}@@${qArticleNickname}`
     );
     return <Grid stackable className={style['search-result']}>
-      <Grid.Row>
-        {this.renderBreadcrumb()}
-      </Grid.Row>
+      {this.renderBreadcrumb()}
       <Grid.Row>
         <InlineSearchBox
          articleValue={qArticleNickname}

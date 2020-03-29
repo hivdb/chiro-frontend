@@ -1,12 +1,10 @@
 import React from 'react';
-import {Link} from 'found';
 import {routerShape} from 'found';
-import {
-  Grid, Breadcrumb
-} from 'semantic-ui-react';
+import {Grid} from 'semantic-ui-react';
 
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
+import Breadcrumb from '../../components/breadcrumb';
 import style from './style.module.scss';
 
 
@@ -39,19 +37,14 @@ export default class ChiroSearch extends React.Component {
     );
   }
 
-  renderBreadcrumb() {
-    return <Breadcrumb>
-      <Breadcrumb.Section as={Link} to="/">Home</Breadcrumb.Section>
-      <Breadcrumb.Divider icon="right angle" />
-      <Breadcrumb.Section active>
-        Experiment Search
-      </Breadcrumb.Section>
-    </Breadcrumb>;
-  }
-
   render() {
     return <Grid className={style.search}>
-      <Grid.Row>{this.renderBreadcrumb()}</Grid.Row>
+      <Breadcrumb>
+        {[
+          {linkTo: '/', label: 'Home'},
+          {active: true, label: 'Experiment Search'}
+        ]}
+      </Breadcrumb>
       <Grid.Row>
         <InlineSearchBox
          articleValue={null}
