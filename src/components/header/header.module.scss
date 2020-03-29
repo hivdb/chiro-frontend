@@ -69,7 +69,7 @@
   }
 
   .brand-sitename {
-    color: black;
+    color: white;
     display: block;
     height: 70px;
     background: url(../../assets/stanford.svg) no-repeat 15px 0;
@@ -78,14 +78,15 @@
     vertical-align: baseline;
     text-transform: uppercase;
     padding-left: 1rem;
+    a {
+      color: white;
+    }
     a.brand-sitename-title {
       display: block;
-      color: white;
       padding-top: 2rem;
     }
     .brand-sitename-subtitle {
       display: block;
-      color: white;
       margin-top: 0.5rem;
       font-weight: 400;
       font-style: italic;
