@@ -4,6 +4,8 @@ import {Container} from 'semantic-ui-react';
 
 import Header from './header';
 import GAWrapper from './ga/gawrapper';
+
+import "source-sans-pro/source-sans-pro.css";
 import globalStyle from '../styles/global.module.scss';
 
 

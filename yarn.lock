@@ -10153,6 +10153,11 @@ source-map@^0.5.0, source-map@^0.5.6:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
   integrity sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
 
+source-sans-pro@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/source-sans-pro/-/source-sans-pro-3.6.0.tgz#f4167065ebf096136b1b4f141dbd48886dda1486"
+  integrity sha512-C1RFUGu+YASuqpgDRInTM7Y6OwqeWNOuKn7v0P/4Kh66epTI4PYWwPWP5kdA4l/VqzBAWiqoz5dk0trof73R7w==
+
 spdx-correct@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/spdx-correct/-/spdx-correct-3.1.0.tgz#fb83e504445268f154b074e218c87c003cd31df4"

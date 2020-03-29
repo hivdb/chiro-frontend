@@ -1,4 +1,16 @@
+@import "./colors";
 @import "./variables";
+
+:global(body.chiro-body) {
+  font-family: Source Sans Pro, Helvetica Neue, Helvetica,Segoe UI, Arial, freesans, sans-serif;
+  a {
+    color: $link-color;
+  }
+
+  :global(.ui.breadcrumb) a {
+    color: $link-color;
+  }
+}
 
 :global(.he.is.dead.jim.ui.container) {
   // unfxxk SemanticUI's extremely high priority

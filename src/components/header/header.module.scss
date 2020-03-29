@@ -8,13 +8,18 @@
   }
   margin-left: auto;
   margin-right: auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .header-bar {
-  background-color: $cardinal;
+  background-color: $alto;
   width: 100%;
+  font-size: 1.2rem;
   font-family: "Source Sans Pro", sans-serif;
-  font-weight: 200;
+  text-transform: uppercase;
+  font-weight: 700;
 
   nav {
     display: block;
@@ -35,7 +40,7 @@
     font-size: 1.1rem;
 
     a {
-      color: white;
+      color: $main-color;
       &:hover {
         text-decoration: none;
       }
@@ -45,29 +50,43 @@
 }
 
 .header-logo {
-  background-color: white;
+  background-color: $main-color;
   width: 100%;
   height: $header-logo-height;
   font-family: "Source Sans Pro", sans-serif;
-  font-weight: 400;
-  font-size: 2rem;
+  font-weight: 700;
+  font-size: 1.8rem;
+  box-sizing: border-box;
+  padding: 1rem;
 
   .brand-logo {
     display: block;
-    float: left;
-    background: url(../../assets/brand-logo.svg) no-repeat center bottom;
+    background: url(../../assets/corona.svg) no-repeat center bottom;
     text-indent: -9999px;
-    width: 180px;
-    height: 50px;
-    border-right: 1px black solid;
+    width: 65px;
+    height: 65px;
   }
 
   .brand-sitename {
     color: black;
     display: block;
-    float: left;
-    height: 50px;
-    padding-top: 30px;
-    padding-bottom: 0;
+    color: white;
+    height: 70px;
+    background: url(../../assets/stanford.svg) no-repeat 15px 0;
+    background-clip: border-box;
+    background-size: 35% 35%;
+    padding-top: 2rem;
+    vertical-align: baseline;
+    text-transform: uppercase;
+    padding-left: 1rem;
+    .brand-subtitle {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: 400;
+      font-style: italic;
+      text-transform: none;
+      line-height: 1rem;
+      font-size: 1rem;
+    }
   }
 }
