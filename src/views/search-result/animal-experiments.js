@@ -104,7 +104,7 @@ function resultColDefs(rows) {
             return symbols[resultObj.result];
           }
           else {
-            return '?';
+            return resultName === 'Mortality' ? 'ND' : '?';
           }
         },
         sortable: false
