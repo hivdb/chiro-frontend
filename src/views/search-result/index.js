@@ -38,6 +38,7 @@ class SearchResultInner extends React.Component {
     qVirusName: PropTypes.string,
     qCompoundTargetName: PropTypes.string,
     qArticleNickname: PropTypes.string,
+    qStudyType: PropTypes.string,
     compound: compoundShape,
     virusExperiments: virusExperimentsShape,
     biochemExperiments: biochemExperimentsShape,
@@ -81,6 +82,10 @@ class SearchResultInner extends React.Component {
         newQuery.article = value;
         changed = true;
       }
+    }
+    else if (category === 'studyTypes') {
+      newQuery.study = value;
+      changed = true;
     }
     else {  // viruses
       if (value !== query.virus) {
@@ -138,7 +143,10 @@ class SearchResultInner extends React.Component {
 
   renderBreadcrumb() {
     const {
-      qCompoundTargetName, qCompoundName, qVirusName, qArticleNickname
+      qCompoundTargetName,
+      qCompoundName,
+      qVirusName,
+      qArticleNickname
     } = this.props;
     let searches = [
       ...(qArticleNickname ? [`article “${qArticleNickname}”`] : []),
@@ -169,11 +177,12 @@ class SearchResultInner extends React.Component {
 
   render() {
     this.props.loading || this.redirectIfNeeded();
-    const {
+    let {
       qCompoundTargetName,
       qCompoundName,
       qVirusName,
       qArticleNickname,
+      qStudyType,
       compound,
       compoundTarget,
       virus,
@@ -187,8 +196,25 @@ class SearchResultInner extends React.Component {
     } = this.props;
     const cacheKey = (
       `${qCompoundTargetName}@@${qCompoundName}` +
-      `@@${qVirusName}@@${qArticleNickname}`
+      `@@${qVirusName}@@${qArticleNickname}@@${qStudyType}`
     );
+    if (qStudyType) {
+      if (qStudyType !== 'invitro-cells') {
+        virusExperiments = {totalCount: 0, edges: []};
+      }
+      if (qStudyType !== 'invitro-entryassay') {
+        entryAssayExperiments = {totalCount: 0, edges: []};
+      }
+      if (qStudyType !== 'invitro-biochem') {
+        biochemExperiments = {totalCount: 0, edges: []};
+      }
+      if (qStudyType !== 'animal-models') {
+        animalExperiments = {totalCount: 0, edges: []};
+      }
+      if (qStudyType !== 'clinical-studies') {
+        clinicalExperiments = {totalCount: 0, edges: []};
+      }
+    }
     const noResult = !loading && (
       virusExperiments.totalCount +
       entryAssayExperiments.totalCount +
@@ -204,11 +230,13 @@ class SearchResultInner extends React.Component {
          compoundValue={qCompoundName}
          virusValue={qVirusName}
          compoundTargetValue={qCompoundTargetName}
+         studyTypeValue={qStudyType}
          onChange={this.handleQueryChange}>
           {({
             compoundTargetDropdown,
             compoundDropdown,
-            virusDropdown
+            virusDropdown,
+            studyTypeDropdown,
           }) => (
             <StatHeader>
               {[
@@ -218,7 +246,8 @@ class SearchResultInner extends React.Component {
                   cells: [
                     {label: 'Target', value: compoundTargetDropdown},
                     {label: 'Compound', value: compoundDropdown},
-                    {label: 'Virus', value: virusDropdown}
+                    {label: 'Virus', value: virusDropdown},
+                    {label: 'Study type', value: studyTypeDropdown},
                   ]
                 },
                 {
@@ -235,7 +264,7 @@ class SearchResultInner extends React.Component {
                     }] : []),
                     ...(!loading && virusExperiments.totalCount > 0 ? [{
                       label: <a href="#invitro-cells">
-                        Cell Culture
+                        Cell culture
                       </a>,
                       value: virusExperiments.totalCount
                     }] : []),
@@ -369,7 +398,8 @@ export default function SearchResult({match, ...props}) {
         compound: compoundName,
         virus: virusName,
         target: compoundTargetName,
-        article: articleNickname
+        article: articleNickname,
+        study: studyType
       } = {}
     }
   } = match;
@@ -390,6 +420,7 @@ export default function SearchResult({match, ...props}) {
        qVirusName={virusName}
        qArticleNickname={articleNickname}
        qCompoundTargetName={compoundTargetName}
+       qStudyType={studyType}
        match={match}
        loading
        {...props} />
@@ -404,6 +435,7 @@ export default function SearchResult({match, ...props}) {
      qVirusName={virusName}
      qArticleNickname={articleNickname}
      qCompoundTargetName={compoundTargetName}
+     qStudyType={studyType}
      match={match}
      {...props}
      {...data} />

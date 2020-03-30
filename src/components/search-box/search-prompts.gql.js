@@ -20,7 +20,12 @@ export default gql`
       edges {
         node {
           name
-          target
+          targetObj {
+            name
+            relatedCompoundTargets {
+              name
+            }
+          }
         }
       }
     }

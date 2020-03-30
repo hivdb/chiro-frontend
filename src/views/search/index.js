@@ -28,6 +28,9 @@ export default class ChiroSearch extends React.Component {
     else if (category === 'compoundTargets') {
       query.target = value;
     }
+    else if (category === 'studyTypes') {
+      query.study = value;
+    }
     else {
       query.virus = value;
     }
@@ -49,12 +52,14 @@ export default class ChiroSearch extends React.Component {
          articleValue={null}
          compoundValue={null}
          virusValue={null}
+         studyTypeValue={null}
          compoundTargetValue={null}
          onChange={this.handleSearchBoxChange}>
           {({
             compoundTargetDropdown,
             compoundDropdown,
-            virusDropdown
+            virusDropdown,
+            studyTypeDropdown
           }) => (
             <StatHeader>
               {[
@@ -66,14 +71,9 @@ export default class ChiroSearch extends React.Component {
                       with proven or potential anti-coronavirus activity
                     </Header>
                     <p className={style['header-content']}>
-                      TYPE OF COMPOUNDS: Targeted antivirals, investigational
+                      Targeted antivirals, investigational
                       agents, monoclonal antibodies, interferons, repurposed
                       drugs, and promising leads.
-                    </p>
-                    <p className={style['header-content']}>
-                      TYPES OF STUDIES: Cell culture, animal model, and clinical
-                      data on compounds with proven or potential
-                      anti-coronavirus activity.
                     </p>
                   </>
                 },
@@ -84,6 +84,7 @@ export default class ChiroSearch extends React.Component {
                     {label: 'Target', value: compoundTargetDropdown},
                     {label: 'Compound', value: compoundDropdown},
                     {label: 'Virus', value: virusDropdown},
+                    {label: 'Study Type', value: studyTypeDropdown},
                   ]
                 }
               ]}

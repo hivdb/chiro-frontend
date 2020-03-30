@@ -30,6 +30,7 @@ class SearchBoxInner extends React.Component {
     articleValue: PropTypes.string,
     compoundValue: PropTypes.string,
     virusValue: PropTypes.string,
+    studyTypeValue: PropTypes.string,
     compoundTargetValue: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
@@ -42,20 +43,23 @@ class SearchBoxInner extends React.Component {
     compoundValue: ANY,
     compoundTargetValue: ANY,
     virusValue: ANY,
+    studyTypeValue: ANY,
     children: ({
       articleDropdown,
       compoundTargetDropdown,
       compoundDropdown,
-      virusDropdown
+      virusDropdown,
+      studyTypeDropdown
     }) => (
       <span>
         Showing experiment data for{' '}
         {articleDropdown}{' '}article,{' '}
         {compoundTargetDropdown}{' '}target,{' '}
         {compoundDropdown}
-        {' '}compound and{' '}
+        {' '}compound,{' '}
         {virusDropdown}
-        {' '}virus.
+        {' '}virus and{' '}
+        {studyTypeDropdown}.
       </span>
     ),
     dropdownProps: {}
@@ -79,9 +83,9 @@ class SearchBoxInner extends React.Component {
     const {data, compoundTargetValue, noAny} = this.props;
     let filter = ({category}) => category === 'compounds';
     if (compoundTargetValue && compoundTargetValue !== ANY) {
-      filter = ({target, category}) => (
+      filter = ({displayTargets, category}) => (
         category === 'compounds' &&
-        target === compoundTargetValue
+        displayTargets.indexOf(compoundTargetValue) > -1
       );
     }
     return data2Options(
@@ -96,6 +100,42 @@ class SearchBoxInner extends React.Component {
       noAny && 'Input/select a virus...');
   }
 
+  get studyTypeOptions() {
+    const {noAny} = this.props;
+    return [
+      {
+        key: 'any',
+        text: noAny ? 'Input/select a study type...' : 'Any',
+        value: '__ANY'
+      },
+      {
+        key: 'invitro-cells',
+        text: 'Cell culture',
+        value: 'invitro-cells'
+      },
+      {
+        key: 'invitro-entryassay',
+        text: 'Entry assay',
+        value: 'invitro-entryassay'
+      },
+      {
+        key: 'invitro-biochem',
+        text: 'Biochemistry',
+        value: 'invitro-biochem'
+      },
+      {
+        key: 'animal-models',
+        text: 'Animal models',
+        value: 'animal-models'
+      },
+      {
+        key: 'clinical-studies',
+        text: 'Clinical studies',
+        value: 'clinical-studies'
+      }
+    ];
+  }
+
   handleChange = category => (event, {value}) => {
     if (value === ANY) {
       value = null;
@@ -108,6 +148,7 @@ class SearchBoxInner extends React.Component {
       articleValue,
       compoundTargetValue,
       compoundValue, virusValue,
+      studyTypeValue,
       children, dropdownProps
     } = this.props;
     return children({
@@ -146,6 +187,15 @@ class SearchBoxInner extends React.Component {
          options={this.virusOptions}
          onChange={this.handleChange('viruses')}
          value={virusValue} />
+      ),
+      studyTypeDropdown: (
+        <Dropdown
+         search direction="left"
+         {...dropdownProps}
+         placeholder="Select one..."
+         options={this.studyTypeOptions}
+         onChange={this.handleChange('studyTypes')}
+         value={studyTypeValue} />
       )
     });
   }
