@@ -20,6 +20,7 @@ export default gql`
       edges {
         node {
           name
+          target
         }
       }
     }

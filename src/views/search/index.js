@@ -1,10 +1,9 @@
 import React from 'react';
 import {routerShape} from 'found';
-import {Grid} from 'semantic-ui-react';
+import {Grid, Header} from 'semantic-ui-react';
 
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
-import Breadcrumb from '../../components/breadcrumb';
 import style from './style.module.scss';
 
 
@@ -39,12 +38,12 @@ export default class ChiroSearch extends React.Component {
 
   render() {
     return <Grid className={style.search}>
-      <Breadcrumb>
+      {/*<Breadcrumb>
         {[
           {linkTo: '/', label: 'Home'},
           {active: true, label: 'Experiment Search'}
         ]}
-      </Breadcrumb>
+      </Breadcrumb>*/}
       <Grid.Row>
         <InlineSearchBox
          articleValue={null}
@@ -53,18 +52,37 @@ export default class ChiroSearch extends React.Component {
          compoundTargetValue={null}
          onChange={this.handleSearchBoxChange}>
           {({
-            compoundDropdown,
             compoundTargetDropdown,
+            compoundDropdown,
             virusDropdown
           }) => (
             <StatHeader>
               {[
                 {
-                  title: 'Selection',
-                  width: 3,
+                  width: 12,
+                  description: <>
+                    <Header as="h2" textAlign="center">
+                      Cell culture, animal model, and clinical data on compounds
+                      with proven or potential anti-coronavirus activity
+                    </Header>
+                    <p className={style['header-content']}>
+                      TYPE OF COMPOUNDS: Targeted antivirals, investigational
+                      agents, monoclonal antibodies, interferons, repurposed
+                      drugs, and promising leads.
+                    </p>
+                    <p className={style['header-content']}>
+                      TYPES OF STUDIES: Cell culture, animal model, and clinical
+                      data on compounds with proven or potential
+                      anti-coronavirus activity.
+                    </p>
+                  </>
+                },
+                {
+                  title: 'Search',
+                  width: 4,
                   cells: [
-                    {label: 'Compound', value: compoundDropdown},
                     {label: 'Target', value: compoundTargetDropdown},
+                    {label: 'Compound', value: compoundDropdown},
                     {label: 'Virus', value: virusDropdown},
                   ]
                 }

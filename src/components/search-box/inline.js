@@ -8,11 +8,11 @@ import LoadSuggestions from './query';
 const ANY = '__ANY';
 
 
-function data2Options(data, categoryOnly, noAnyText) {
+function data2Options(data, filterFunc, noAnyText) {
   return [
     ...[{key: 'any', text: noAnyText || 'Any', value: '__ANY'}],
     ...(data
-      .filter(({category}) => category === categoryOnly)
+      .filter(filterFunc)
       .map(({title}) => ({key: title, text: title, value: title}))
     )
   ];
@@ -64,28 +64,35 @@ class SearchBoxInner extends React.Component {
   get articleOptions() {
     const {data, noAny} = this.props;
     return data2Options(
-      data, 'articles',
+      data, ({category}) => category === 'articles',
       noAny && 'Input/select an article...');
   }
 
   get targetOptions() {
     const {data, noAny} = this.props;
     return data2Options(
-      data, 'compoundTargets',
+      data, ({category}) => category === 'compoundTargets',
       noAny && 'Input/select a target...');
   }
 
   get compoundOptions() {
-    const {data, noAny} = this.props;
+    const {data, compoundTargetValue, noAny} = this.props;
+    let filter = ({category}) => category === 'compounds';
+    if (compoundTargetValue && compoundTargetValue !== ANY) {
+      filter = ({target, category}) => (
+        category === 'compounds' &&
+        target === compoundTargetValue
+      );
+    }
     return data2Options(
-      data, 'compounds',
+      data, filter,
       noAny && 'Input/select a compound...');
   }
 
   get virusOptions() {
     const {data, noAny} = this.props;
     return data2Options(
-      data, 'viruses',
+      data, ({category}) => category === 'viruses',
       noAny && 'Input/select a virus...');
   }
 
@@ -108,7 +115,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder="article"
+         placeholder="Select one..."
          options={this.articleOptions}
          onChange={this.handleChange('articles')}
          value={articleValue} />
@@ -117,7 +124,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder="Compound target"
+         placeholder="Select one..."
          options={this.targetOptions}
          onChange={this.handleChange('compoundTargets')}
          value={compoundTargetValue} />
@@ -126,7 +133,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder="Compound"
+         placeholder="Select one..."
          options={this.compoundOptions}
          onChange={this.handleChange('compounds')}
          value={compoundValue} />
@@ -135,7 +142,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder="Virus"
+         placeholder="Select one..."
          options={this.virusOptions}
          onChange={this.handleChange('viruses')}
          value={virusValue} />

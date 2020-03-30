@@ -21,8 +21,9 @@ function reformQueryData(data) {
       })
     ),
     ...compounds.edges.map(
-      ({node: {name}}) => ({
+      ({node: {name, target}}) => ({
         title: name,
+        target,
         category: 'compounds'
       })
     ),

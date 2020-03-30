@@ -18,6 +18,9 @@ export default gql`
       drugClassName
       category
       target
+      targetObj {
+        description
+      }
       molecularWeight
       isPrimaryCompound
       primaryCompound { name }

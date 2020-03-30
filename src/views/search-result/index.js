@@ -54,7 +54,8 @@ class SearchResultInner extends React.Component {
       router,
       match: {
         location: {pathname, query}
-      }
+      },
+      compound
     } = this.props;
     const newQuery = {...query};
     delete newQuery.article;
@@ -69,6 +70,9 @@ class SearchResultInner extends React.Component {
     else if (category === 'compoundTargets') {
       if (value !== query.target) {
         newQuery.target = value;
+        if (value && compound && value !== compound.target) {
+          delete newQuery.compound;
+        }
         changed = true;
       }
     }
@@ -185,8 +189,15 @@ class SearchResultInner extends React.Component {
       `${qCompoundTargetName}@@${qCompoundName}` +
       `@@${qVirusName}@@${qArticleNickname}`
     );
+    const noResult = !loading && (
+      virusExperiments.totalCount +
+      entryAssayExperiments.totalCount +
+      biochemExperiments.totalCount +
+      animalExperiments.totalCount +
+      clinicalExperiments.totalCount
+    ) === 0;
     return <Grid stackable className={style['search-result']}>
-      {this.renderBreadcrumb()}
+      {/*this.renderBreadcrumb()*/}
       <Grid.Row>
         <InlineSearchBox
          articleValue={qArticleNickname}
@@ -195,8 +206,8 @@ class SearchResultInner extends React.Component {
          compoundTargetValue={qCompoundTargetName}
          onChange={this.handleQueryChange}>
           {({
-            compoundDropdown,
             compoundTargetDropdown,
+            compoundDropdown,
             virusDropdown
           }) => (
             <StatHeader>
@@ -205,8 +216,8 @@ class SearchResultInner extends React.Component {
                   title: 'Selection',
                   width: 3,
                   cells: [
-                    {label: 'Compound', value: compoundDropdown},
                     {label: 'Target', value: compoundTargetDropdown},
+                    {label: 'Compound', value: compoundDropdown},
                     {label: 'Virus', value: virusDropdown}
                   ]
                 },
@@ -214,6 +225,10 @@ class SearchResultInner extends React.Component {
                   title: 'Results',
                   width: 3,
                   cells: [
+                    ...(noResult ? [{
+                      label: '',
+                      value: <div>No result.</div>
+                    }] : []),
                     ...(loading ? [{
                       label: '',
                       value: <Loader active inline size="mini" />
@@ -243,8 +258,8 @@ class SearchResultInner extends React.Component {
                       value: animalExperiments.totalCount
                     }] : []),
                     ...(!loading && clinicalExperiments.totalCount > 0 ? [{
-                      label: <a href="#clinical-trials">
-                        Clinical Trials
+                      label: <a href="#clinical-studies">
+                        Clinical studies
                       </a>,
                       value: clinicalExperiments.totalCount
                     }] : [])
@@ -252,13 +267,17 @@ class SearchResultInner extends React.Component {
                 },
                 ...(compound || virus || compoundTarget ? [{
                   description: <>
+                    {compoundTarget && !compound ? <p>
+                      <strong>Target</strong>:{' '}
+                      {compoundTarget.description || 'Pending.'}
+                    </p> : null}
+                    {compound ? <p>
+                      <strong>Target</strong>:{' '}
+                      {compound.targetObj.description || 'Pending.'}
+                    </p> : null}
                     {compound ? <p>
                       <strong>Compound</strong>:{' '}
                       {compound.description || 'Pending.'}
-                    </p> : null}
-                    {compoundTarget ? <p>
-                      <strong>Target</strong>:{' '}
-                      {compoundTarget.description || 'Pending.'}
                     </p> : null}
                     {virus ? <p>
                       <strong>Virus</strong>:{' '}
@@ -289,6 +308,7 @@ class SearchResultInner extends React.Component {
                  data={virusExperiments} />
               </Grid.Column>
             </Grid.Row> : null}
+          {noResult ? <div>No result.</div> : null}
           {entryAssayExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column withd={16}>
@@ -325,8 +345,8 @@ class SearchResultInner extends React.Component {
           {clinicalExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as="h2" dividing id="clinical-trials">
-                  Cinical Trials
+                <Header as="h2" dividing id="clinical-studies">
+                  Cinical Studies
                 </Header>
                 <ClinicalExpTable
                  cacheKey={cacheKey}
