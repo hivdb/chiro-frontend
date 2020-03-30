@@ -49,6 +49,7 @@ export default class ChiroSearch extends React.Component {
       </Breadcrumb>*/}
       <Grid.Row>
         <InlineSearchBox
+         allowEmpty
          articleValue={null}
          compoundValue={null}
          virusValue={null}

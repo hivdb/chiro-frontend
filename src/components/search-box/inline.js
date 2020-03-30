@@ -5,12 +5,20 @@ import {Dropdown} from 'semantic-ui-react';
 import LoadSuggestions from './query';
 
 
+const EMPTY = '__EMPTY';
 const ANY = '__ANY';
 
 
-function data2Options(data, filterFunc, noAnyText) {
+function data2Options(data, filterFunc, allowEmptyText) {
   return [
-    ...[{key: 'any', text: noAnyText || 'Any', value: '__ANY'}],
+    ...(allowEmptyText ? [
+      {
+        key: 'empty',
+        text: allowEmptyText,
+        value: EMPTY
+      }
+    ] : []),
+    ...[{key: 'any', text: 'Any', value: '__ANY'}],
     ...(data
       .filter(filterFunc)
       .map(({title}) => ({key: title, text: title, value: title}))
@@ -22,7 +30,7 @@ function data2Options(data, filterFunc, noAnyText) {
 class SearchBoxInner extends React.Component {
 
   static propTypes = {
-    noAny: PropTypes.bool.isRequired,
+    allowEmpty: PropTypes.bool.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
       category: PropTypes.string.isRequired
@@ -38,7 +46,7 @@ class SearchBoxInner extends React.Component {
   }
 
   static defaultProps = {
-    noAny: false,
+    allowEmpty: false,
     articleValue: ANY,
     compoundValue: ANY,
     compoundTargetValue: ANY,
@@ -66,21 +74,21 @@ class SearchBoxInner extends React.Component {
   }
 
   get articleOptions() {
-    const {data, noAny} = this.props;
+    const {data, allowEmpty} = this.props;
     return data2Options(
       data, ({category}) => category === 'articles',
-      noAny && 'Input/select an article...');
+      allowEmpty && 'Input/select an article...');
   }
 
   get targetOptions() {
-    const {data, noAny} = this.props;
+    const {data, allowEmpty} = this.props;
     return data2Options(
       data, ({category}) => category === 'compoundTargets',
-      noAny && 'Input/select a target...');
+      allowEmpty && 'Input/select a target...');
   }
 
   get compoundOptions() {
-    const {data, compoundTargetValue, noAny} = this.props;
+    const {data, compoundTargetValue, allowEmpty} = this.props;
     let filter = ({category}) => category === 'compounds';
     if (compoundTargetValue && compoundTargetValue !== ANY) {
       filter = ({displayTargets, category}) => (
@@ -90,23 +98,30 @@ class SearchBoxInner extends React.Component {
     }
     return data2Options(
       data, filter,
-      noAny && 'Input/select a compound...');
+      allowEmpty && 'Input/select a compound...');
   }
 
   get virusOptions() {
-    const {data, noAny} = this.props;
+    const {data, allowEmpty} = this.props;
     return data2Options(
       data, ({category}) => category === 'viruses',
-      noAny && 'Input/select a virus...');
+      allowEmpty && 'Input/select a virus...');
   }
 
   get studyTypeOptions() {
-    const {noAny} = this.props;
+    const {allowEmpty} = this.props;
     return [
+      ...(allowEmpty ? [
+        {
+          key: 'empty',
+          text: 'Input/select a study type...',
+          value: EMPTY
+        }
+      ] : []),
       {
         key: 'any',
-        text: noAny ? 'Input/select a study type...' : 'Any',
-        value: '__ANY'
+        text: 'Any',
+        value: ANY
       },
       {
         key: 'invitro-cells',
@@ -137,6 +152,9 @@ class SearchBoxInner extends React.Component {
   }
 
   handleChange = category => (event, {value}) => {
+    if (value === EMPTY) {
+      return;
+    }
     if (value === ANY) {
       value = null;
     }
