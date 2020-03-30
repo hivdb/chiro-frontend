@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'found';
 import {Grid, Header} from 'semantic-ui-react';
 
 import style from './style.module.scss';
@@ -12,7 +13,7 @@ export default class Footer extends React.Component {
         <Grid.Column>
           <Header as="h2">Databases</Header>
           <ul>
-            <li>Terms of Use</li>
+            <li><Link to="/terms-of-use/">Terms of Use</Link></li>
           </ul>
         </Grid.Column>
         <Grid.Column>
