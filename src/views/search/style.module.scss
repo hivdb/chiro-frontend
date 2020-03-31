@@ -1,7 +1,21 @@
-@import "../../styles/colors";
+.supplement-info {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, .4);
+}
 
-.header-content {
-  font-style: italic;
-  text-align: center;
+.nowrap {
+  white-space: nowrap;
+}
+
+.pubmed-link {
+  font-weight: 700;
+}
+
+.compound-description {
   font-size: 1.2rem;
+}
+
+:global(.ui.table td).justify {
+  text-align: justify;
+  text-justify: inter-word;
 }

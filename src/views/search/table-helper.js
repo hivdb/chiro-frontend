@@ -89,7 +89,7 @@ const authorYearColDef = new ColDef({
     ({nickname, journal, journalAbbr}, idx) => {
       return [
         <Link key={idx} to={{
-          pathname: '/search-result/',
+          pathname: '/search/',
           query: {article: nickname[0]}
         }}>{nickname[0]}</Link>,
         journalAbbr ? <div key={`j${idx}`}>({journalAbbr})</div> : (

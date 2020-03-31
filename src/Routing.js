@@ -5,8 +5,8 @@ import {
   Route,
 } from 'found';
 
+import Home from './views/home';
 import Search from './views/search';
-import SearchResult from './views/search-result';
 import TermsOfUse from './views/terms-of-use';
 
 import Layout from './components/layout';
@@ -15,8 +15,8 @@ const BrowserRouter = createBrowserRouter({
 
   routeConfig: makeRouteConfig(
     <Route path="/" Component={Layout}>
-      <Route Component={Search} />
-      <Route Component={SearchResult} path="/search-result/" />
+      <Route Component={Home} />
+      <Route Component={Search} path="/search/" />
       <Route Component={TermsOfUse} path="/terms-of-use/" />
     </Route>
   ),
