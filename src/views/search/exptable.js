@@ -90,6 +90,10 @@ export default class ExpTable extends React.Component {
   render() {
     const {color, columnDefs} = this.props;
     const {sortedByColumn, sortedData, sortDirection} = this.state;
+    const context = columnDefs.reduce((acc, {name}) => {
+      acc[name] = {};
+      return acc;
+    }, {});
 
     return <Table
      color={color} sortable celled compact selectable>
@@ -119,7 +123,7 @@ export default class ExpTable extends React.Component {
                  {textAlign}
                )}
             >
-                {render(nestedGet(row, name), row)}
+                {render(nestedGet(row, name), row, context[name])}
               </Table.Cell>
             ))}
           </Table.Row>

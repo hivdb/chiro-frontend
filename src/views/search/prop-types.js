@@ -33,7 +33,10 @@ const virusExperimentsShape = PropTypes.shape({
       compoundNames: PropTypes.arrayOf(
         PropTypes.string.isRequired
       ).isRequired,
-      cellsName: PropTypes.string.isRequired,
+      cellsObj: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        description: PropTypes.string
+      }).isRequired,
       virusInput: PropTypes.string,
       measurement: PropTypes.string,
       ec50cmp: PropTypes.string,

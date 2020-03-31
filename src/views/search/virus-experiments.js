@@ -6,7 +6,8 @@ import ExpTable from './exptable';
 import {virusExperimentsShape} from './prop-types';
 import {
   ColDef, reformExpData, readableNum, renderXX50,
-  authorYearColDef, virusSpeciesDef, compoundColDef
+  authorYearColDef, virusSpeciesDef, compoundColDef,
+  cellsColDef
 } from './table-helper';
 
 
@@ -49,10 +50,7 @@ const tableColumns = [
       'drugTiming[0].lower',
       'drugTiming[0].upper']),
   }),
-  new ColDef({
-    name: 'cellsName',
-    label: 'Cells'
-  }),
+  cellsColDef('cellsObj', 'Cells'),
   new ColDef({
     name: 'durationOfInfection.text',
     label: 'Culture',

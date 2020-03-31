@@ -70,7 +70,7 @@ export default gql`
           virusName
           virusStrainName
           compoundNames
-          cellsName
+          cellsObj { name description }
           moi { mean lower }
           measurement
           drugTiming { text lower upper }
@@ -99,14 +99,14 @@ export default gql`
           }
           virusName
           compoundNames
-          cellsName
+          cellsObj { name description }
           measurement
           drugTiming { text lower upper }
           ec50cmp
           ec50
           ec50unit
           ec50inactive
-          effectorCellsName
+          effectorCellsObj { name description }
         }
       }
     }

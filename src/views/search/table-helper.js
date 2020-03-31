@@ -3,6 +3,7 @@ import {Link} from 'found';
 import sortBy from 'lodash/sortBy';
 import orderBy from 'lodash/orderBy';
 import startCase from 'lodash/startCase';
+import {Popup, Icon} from 'semantic-ui-react';
 
 import style from './style.module.scss';
 
@@ -118,7 +119,31 @@ const compoundColDef = label => new ColDef({
 });
 
 
+const cellsColDef = (name, label, empty='?') => new ColDef({
+  name,
+  label,
+  render: (obj, data, context) => {
+    if (!obj) {
+      return empty;
+    }
+    const {name, description} = obj;
+    if (!description || name in context) {
+      return name;
+    }
+    context[name] = true;
+    return (
+      <Popup
+       header={name} content={description}
+       trigger={<span className={style['with-info']}>
+         {name}<sup><Icon name="question circle" /></sup>
+       </span>} />
+    );
+  },
+  sort: data => sortBy(data, ['cellsObj.name']),
+});
+
+
 export {
   ColDef, reformExpData, readableNum, renderXX50,
-  authorYearColDef, virusSpeciesDef, compoundColDef
+  authorYearColDef, virusSpeciesDef, compoundColDef, cellsColDef
 };
