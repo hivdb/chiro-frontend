@@ -63,7 +63,7 @@
 
   .brand-logo {
     display: block;
-    background: url(../../assets/corona.svg) no-repeat center bottom;
+    background: url(../../assets/corona.svg) no-repeat center center;
     text-indent: -9999px;
     width: 65px;
     height: 65px;
@@ -85,9 +85,11 @@
     a.brand-sitename-title {
       display: block;
       padding-top: 2rem;
+      white-space: nowrap;
     }
     .brand-sitename-subtitle {
       display: block;
+      white-space: nowrap;
       margin-top: 0.5rem;
       font-weight: 400;
       font-style: italic;
@@ -96,4 +98,11 @@
       font-size: 1rem;
     }
   }
+  @media only screen and (max-width: 700px) {
+    font-size: 1.4rem;
+    .brand-sitename .brand-sitename-subtitle {
+      font-size: 0.9rem;
+    }
+  }
+
 }

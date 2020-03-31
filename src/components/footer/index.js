@@ -9,7 +9,7 @@ export default class Footer extends React.Component {
   render() {
 
     return <footer className={style['footer']}>
-      <Grid columns={3} relaxed>
+      <Grid columns={3} relaxed stackable>
         <Grid.Column>
           <Header as="h2">Databases</Header>
           <ul>

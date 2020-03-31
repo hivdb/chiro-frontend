@@ -38,35 +38,33 @@ class CompoundListInner extends React.Component {
       compoundTarget, compounds
     } = this.props;
 
-    if (loading) {
-      return <Loader active inline="centered" />;
-    }
-    else {
-      return <Grid stackable className={style['compound-list']}>
-        <InlineSearchBox
-         onChange={this.handleQueryChange}
-         compoundTargetValue={qCompoundTargetName}>
-          {({compoundTargetDropdown}) => (
-            <StatHeader>
-              {[
-                {
-                  title: 'Selection',
-                  width: 4,
-                  cells: [
-                    {label: 'Target', value: compoundTargetDropdown}
-                  ]
-                },
-                ...(compoundTarget ? [{
-                  description: <p>
-                    <strong>Target</strong>:{' '}
-                    {compoundTarget.description || 'Pending'}
-                  </p>,
-                  width: 12
-                }] : [])
-              ]}
-            </StatHeader>
-          )}
-        </InlineSearchBox>
+    return <Grid stackable className={style['compound-list']}>
+      <InlineSearchBox
+       onChange={this.handleQueryChange}
+       compoundTargetValue={qCompoundTargetName}>
+        {({compoundTargetDropdown}) => (
+          <StatHeader>
+            {[
+              {
+                title: 'Selection',
+                width: 4,
+                cells: [
+                  {label: 'Target', value: compoundTargetDropdown}
+                ]
+              },
+              ...(!loading && compoundTarget ? [{
+                description: <p>
+                  <strong>Target</strong>:{' '}
+                  {compoundTarget.description || 'Pending'}
+                </p>,
+                width: 12
+              }] : [])
+            ]}
+          </StatHeader>
+        )}
+      </InlineSearchBox>
+      {loading ?
+        <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
             <Item.Group divided>
@@ -127,8 +125,9 @@ class CompoundListInner extends React.Component {
             </Item.Group>
           </Grid.Column>
         </Grid.Row>
-      </Grid>;
-    }
+      }
+    </Grid>;
+    
   }
 
 
