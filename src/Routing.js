@@ -7,6 +7,7 @@ import {
 
 import Home from './views/home';
 import Search from './views/search';
+import CompoundList from './views/compound-list';
 import TermsOfUse from './views/terms-of-use';
 
 import Layout from './components/layout';
@@ -17,6 +18,7 @@ const BrowserRouter = createBrowserRouter({
     <Route path="/" Component={Layout}>
       <Route Component={Home} />
       <Route Component={Search} path="/search/" />
+      <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={TermsOfUse} path="/terms-of-use/" />
     </Route>
   ),

@@ -14,33 +14,17 @@ export default gql`
   ) {
     compound(name: $compoundName) @include(if: $withCompound) {
       name
-      synonyms
-      drugClassName
-      category
-      target
-      targetObj {
-        description
-      }
-      molecularWeight
-      isPrimaryCompound
-      primaryCompound { name }
-      relatedCompounds { name }
       description
     }
 
     compoundTarget(name: $compoundTargetName)
     @include(if: $withCompoundTarget) {
       name
-      synonyms
-      relatedCompoundTargets { name }
       description
     }
 
     virus(name: $virusName) @include(if: $withVirus) {
       name
-      fullName
-      synonyms
-      typeName
       description
     }
 

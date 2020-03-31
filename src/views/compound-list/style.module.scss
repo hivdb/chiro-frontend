@@ -1,0 +1,41 @@
+:global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
+  > .target {
+    &::before {
+      content: 'Target: ';
+      font-weight: 600;
+    }
+  }
+  > .drug-class {
+    &::before {
+      content: 'Drug class: ';
+      font-weight: 600;
+    }
+  }
+  > .mw {
+    &::before {
+      content: 'MW: ';
+      font-weight: 600;
+    }
+  }
+  > .related-compounds {
+    &::before {
+      content: 'Related compounds: ';
+      font-weight: 600;
+    }
+  }
+  > .synonyms {
+    &::before {
+      content: 'Synonyms: ';
+      font-weight: 600;
+    }
+  }
+  > *:not(:last-child) {
+    &::after {
+      content: ';';
+    }
+  }
+}
+
+:global(.ui.items>.item .meta) {
+  
+}

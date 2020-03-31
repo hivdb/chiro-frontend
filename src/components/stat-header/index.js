@@ -34,7 +34,7 @@ export default class StatHeader extends React.Component {
           {title ? <Header as='h2' dividing>
             {title}
           </Header> : null}
-          {description ? <p>{description}</p> : null}
+          {description ? description : null}
           {cells ? (
             <div className={style['stat-list']}>
               {cells.map(({label, value}, jdx) => (

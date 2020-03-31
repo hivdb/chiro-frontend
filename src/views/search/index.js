@@ -1,5 +1,4 @@
 import React from 'react';
-import defer from 'lodash/defer';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
@@ -10,10 +9,12 @@ import BiochemExpTable from './biochem-experiments';
 import AnimalExpTable from './animal-experiments';
 import EntryAssayExpTable from './entry-assay-experiment';
 import ClinicalExpTable from './clinical-experiments';
-import searchResultQuery from './search.gql';
+import searchQuery from './search.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
+import redirectIfNeeded from '../../utils/redirect-if-needed';
+import handleQueryChange from '../../utils/handle-query-change';
 
 import ArticleInfo from './article-info';
 import style from './style.module.scss';
@@ -27,7 +28,7 @@ import {
 } from './prop-types';
 
 
-class SearchResultInner extends React.Component {
+class SearchInner extends React.Component {
 
   static propTypes = {
     loading: PropTypes.bool.isRequired,
@@ -49,99 +50,12 @@ class SearchResultInner extends React.Component {
     loading: false
   }
 
-  handleQueryChange = (value, category) => {
-    const {
-      router,
-      match: {
-        location: {pathname, query}
-      },
-      compound
-    } = this.props;
-    const newQuery = {...query};
-    delete newQuery.article;
-    value = value || undefined;
-    let changed = false;
-    if (category === 'compounds') {
-      if (value !== query.compound) {
-        newQuery.compound = value;
-        changed = true;
-      }
-    }
-    else if (category === 'compoundTargets') {
-      if (value !== query.target) {
-        newQuery.target = value;
-        if (value && compound && value !== compound.target) {
-          delete newQuery.compound;
-        }
-        changed = true;
-      }
-    }
-    else if (category === 'articles') {
-      if (value !== query.article) {
-        newQuery.article = value;
-        changed = true;
-      }
-    }
-    else if (category === 'studyTypes') {
-      newQuery.study = value;
-      changed = true;
-    }
-    else {  // viruses
-      if (value !== query.virus) {
-        newQuery.virus = value;
-        changed = true;
-      }
-    }
-    if (changed) {
-      defer(() => router.push({pathname, query: newQuery}));
-    }
-  }
-
-  redirectIfNeeded() {
-    const {
-      router,
-      match: {
-        location: {pathname, query}
-      },
-      qArticleNickname = null,
-      qCompoundTargetName = null,
-      qCompoundName = null,
-      qVirusName = null,
-      article:{nickname: [articleNickname]} = {nickname: [null]},
-      compoundTarget: {name: compoundTargetName} = {name: null},
-      compound: {name: compoundName} = {name: null},
-      virus: {name: virusName} = {name: null}
-    } = this.props;
-
-    const newQuery = {...query};
-    let changed = false;
-
-    if (articleNickname && qArticleNickname !== articleNickname) {
-      newQuery.article = articleNickname;
-      changed = true;
-    }
-
-    if (compoundTargetName && qCompoundTargetName !== compoundTargetName) {
-      newQuery.target = compoundTargetName;
-      changed = true;
-    }
-
-    if (compoundName && qCompoundName !== compoundName) {
-      newQuery.compound = compoundName;
-      changed = true;
-    }
-
-    if (virusName && qVirusName !== virusName) {
-      newQuery.virus = virusName;
-      changed = true;
-    }
-    if (changed) {
-      defer(() => router.push({pathname, query: newQuery}));
-    }
-  }
+  handleQueryChange = (value, category) => (
+    handleQueryChange(value, category, this.props)
+  )
 
   render() {
-    this.props.loading || this.redirectIfNeeded();
+    this.props.loading || redirectIfNeeded(this.props);
     let {
       qCompoundTargetName,
       qCompoundName,
@@ -266,7 +180,9 @@ class SearchResultInner extends React.Component {
                     </p> : null}
                     {compound ? <p>
                       <strong>Target</strong>:{' '}
-                      {compound.targetObj.description || 'Pending.'}
+                      {compound.targetObj ?
+                        compound.targetObj.description || 'Pending.' :
+                        null}
                     </p> : null}
                     {compound ? <p>
                       <strong>Compound</strong>:{' '}
@@ -355,7 +271,7 @@ class SearchResultInner extends React.Component {
 }
 
 
-export default function SearchResult({match, ...props}) {
+export default function Search({match, ...props}) {
   const {
     location: {
       query: {
@@ -367,7 +283,7 @@ export default function SearchResult({match, ...props}) {
       } = {}
     }
   } = match;
-  let {loading, error, data} = useQuery(searchResultQuery, {
+  let {loading, error, data} = useQuery(searchQuery, {
     variables: {
       compoundName, compoundTargetName, virusName, articleNickname,
       withCompound: Boolean(compoundName),
@@ -379,7 +295,7 @@ export default function SearchResult({match, ...props}) {
   if (loading) {
     // return <Loader active inline="centered" />;
     return (
-      <SearchResultInner
+      <SearchInner
        qCompoundName={compoundName}
        qVirusName={virusName}
        qArticleNickname={articleNickname}
@@ -394,7 +310,7 @@ export default function SearchResult({match, ...props}) {
     return `Error: ${error.message}`;
   }
   return (
-    <SearchResultInner
+    <SearchInner
      qCompoundName={compoundName}
      qVirusName={virusName}
      qArticleNickname={articleNickname}

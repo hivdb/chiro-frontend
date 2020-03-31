@@ -40,7 +40,7 @@ export default class ChiroSearch extends React.Component {
   }
 
   render() {
-    return <Grid className={style.home}>
+    return <Grid stackable className={style.home}>
       <Grid.Row>
         <InlineSearchBox
          allowEmpty
