@@ -30,3 +30,16 @@
   min-height: calc(100vh - #{$header-bar-height + $header-logo-height + $footer-height});
   padding-top: 1.5rem;
 }
+
+:global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
+  > *:not(:last-child) {
+    &::after {
+      content: ';';
+    }
+  }
+  a::after {
+    color: black;
+    cursor: default;
+    pointer-events: none;
+  }
+}

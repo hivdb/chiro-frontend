@@ -67,6 +67,10 @@ class CompoundListInner extends React.Component {
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
+            <p>
+              {compounds.totalCount} compound
+              {compounds.totalCount > 1 ? 's are' : ' is'} listed:
+            </p>
             <Item.Group divided>
               {compounds.edges.map(
                 ({node: {
@@ -104,7 +108,7 @@ class CompoundListInner extends React.Component {
                         </span>
                       </Item.Meta>
                       <Item.Description>
-                        {description}{' '}
+                        {description}
                       </Item.Description>
                       <Item.Extra>
                         {relatedCompounds.length > 0 ? (

@@ -29,11 +29,6 @@
       font-weight: 600;
     }
   }
-  > *:not(:last-child) {
-    &::after {
-      content: ';';
-    }
-  }
 }
 
 :global(.ui.items>.item .meta) {

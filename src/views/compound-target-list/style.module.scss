@@ -1,0 +1,8 @@
+:global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
+  > .related-compound-targets {
+    &::before {
+      content: 'Related targets: ';
+      font-weight: 600;
+    }
+  }
+}
