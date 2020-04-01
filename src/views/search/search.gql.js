@@ -56,7 +56,7 @@ export default gql`
           compoundNames
           cellsObj { name description }
           moi { mean lower }
-          measurement
+          measurementObj { name description }
           drugTiming { text lower upper }
           durationOfInfection { text lower upper }
           ec50cmp
@@ -84,7 +84,7 @@ export default gql`
           virusName
           compoundNames
           cellsObj { name description }
-          measurement
+          measurementObj { name description }
           drugTiming { text lower upper }
           ec50cmp
           ec50

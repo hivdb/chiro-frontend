@@ -7,7 +7,7 @@ import {virusExperimentsShape} from './prop-types';
 import {
   ColDef, reformExpData, readableNum, renderXX50,
   authorYearColDef, virusSpeciesDef, compoundColDef,
-  cellsColDef
+  nameAndDescColDef
 } from './table-helper';
 
 
@@ -50,13 +50,13 @@ const tableColumns = [
       'drugTiming[0].lower',
       'drugTiming[0].upper']),
   }),
-  cellsColDef('cellsObj', 'Cells'),
+  nameAndDescColDef('cellsObj', 'Cells'),
   new ColDef({
     name: 'durationOfInfection.text',
     label: 'Culture',
     render: h => h ? `${h} hr` : '?'
   }),
-  new ColDef({name: 'measurement'}),
+  nameAndDescColDef('measurementObj', 'Measurement'),
   new ColDef({
     name: 'ec50',
     label: 'EC50 (\xb5M)',

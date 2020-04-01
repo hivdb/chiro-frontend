@@ -119,7 +119,7 @@ const compoundColDef = label => new ColDef({
 });
 
 
-const cellsColDef = (name, label, empty='?') => new ColDef({
+const nameAndDescColDef = (name, label, empty='?') => new ColDef({
   name,
   label,
   render: (obj, data, context) => {
@@ -135,15 +135,16 @@ const cellsColDef = (name, label, empty='?') => new ColDef({
       <Popup
        header={name} content={description}
        trigger={<span className={style['with-info']}>
-         {name}<sup><Icon name="question circle" /></sup>
+         {name}<sup><Icon name="info circle" /></sup>
        </span>} />
     );
   },
-  sort: data => sortBy(data, ['cellsObj.name']),
+  sort: data => sortBy(data, [`${name}.name`]),
 });
 
 
 export {
   ColDef, reformExpData, readableNum, renderXX50,
-  authorYearColDef, virusSpeciesDef, compoundColDef, cellsColDef
+  authorYearColDef, virusSpeciesDef, compoundColDef,
+  nameAndDescColDef
 };

@@ -7,7 +7,7 @@ import ExpTable from './exptable';
 import {
   compoundColDef, ColDef,
   reformExpData, authorYearColDef,
-  virusSpeciesDef, cellsColDef,
+  virusSpeciesDef, nameAndDescColDef,
   renderXX50,
 } from './table-helper';
 
@@ -16,9 +16,9 @@ const tableColumns = [
   authorYearColDef,
   virusSpeciesDef,
   compoundColDef('Compound'),
-  cellsColDef('effectorCellsObj', 'Effector Cells', '-'),
-  cellsColDef('cellsObj', 'Target Cells'),
-  new ColDef({name: 'measurement'}),
+  nameAndDescColDef('effectorCellsObj', 'Effector Cells', '-'),
+  nameAndDescColDef('cellsObj', 'Target Cells'),
+  nameAndDescColDef('measurementObj', 'Measurement'),
   new ColDef({
     name: 'ec50',
     label: 'EC50 (\xb5M)',
