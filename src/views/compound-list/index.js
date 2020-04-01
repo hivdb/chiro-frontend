@@ -93,9 +93,17 @@ class CompoundListInner extends React.Component {
                           pathname: '/search/',
                           query: {'compound': name}
                         }}>
-                          {experimentCounts.reduce(
-                            (acc, {count}) => acc + count, 0
-                          )} experiment result(s)
+                          {(() => {
+                            const total = experimentCounts.reduce(
+                              (acc, {count}) => acc + count, 0
+                            );
+                            if (total > 1) {
+                              return `${total} experiment results`;
+                            }
+                            else {
+                               return `${total} experiment result`;
+                            }
+                          })()}
                         </Link>
                       </Item.Extra>
                       <Item.Meta>
