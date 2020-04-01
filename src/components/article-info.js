@@ -2,6 +2,9 @@ import React from 'react';
 
 
 function initials(name) {
+  if (!name) {
+    return '';
+  }
   name = name.split(/ /g);
   return name.map(n => n.slice(0, 1)).join('');
 }
@@ -30,7 +33,10 @@ function etInt(authors) {
 
 
 function normTitle(text) {
-  return text.trim().replace(/\.$/, '');
+  if (text) {
+    return text.trim().replace(/\.$/, '');
+  }
+  return text;
 }
 
 
