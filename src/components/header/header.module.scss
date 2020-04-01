@@ -99,9 +99,16 @@
     }
   }
   @media only screen and (max-width: 700px) {
-    font-size: 1.4rem;
-    .brand-sitename .brand-sitename-subtitle {
-      font-size: 0.9rem;
+    font-size: 1rem;
+    .brand-logo {
+      display: none;
+    }
+    .brand-sitename {
+      padding-left: 0;
+      background-position: 0 0;
+      .brand-sitename-subtitle {
+        font-size: 0.7rem;
+      }
     }
   }
 
