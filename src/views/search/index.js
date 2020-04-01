@@ -13,10 +13,10 @@ import searchQuery from './search.gql';
 
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
+import ArticleInfo from '../../components/article-info';
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
 
-import ArticleInfo from './article-info';
 import style from './style.module.scss';
 
 import {

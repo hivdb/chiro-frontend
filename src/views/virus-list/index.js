@@ -27,7 +27,7 @@ class VirusListInner extends React.Component {
       viruses
     } = this.props;
 
-    return <Grid stackable className={style['compound-target-list']}>
+    return <Grid stackable className={style['virus-list']}>
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
