@@ -48,6 +48,7 @@ export default gql`
       totalCount
       edges {
         node {
+          categoryName
           articles {
             nickname year
           }
@@ -63,6 +64,7 @@ export default gql`
           ec50
           ec50unit
           ec50inactive
+          pcntInhibition
           sicmp
           si
         }

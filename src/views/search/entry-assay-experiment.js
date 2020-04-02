@@ -16,9 +16,9 @@ const tableColumns = [
   authorYearColDef,
   virusSpeciesDef,
   compoundColDef('Compound'),
+  nameAndDescColDef('measurementObj', 'Measurement'),
   nameAndDescColDef('effectorCellsObj', 'Effector Cells', '-'),
   nameAndDescColDef('cellsObj', 'Target Cells'),
-  nameAndDescColDef('measurementObj', 'Measurement'),
   new ColDef({
     name: 'ec50',
     label: 'EC50 (\xb5M)',

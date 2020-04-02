@@ -12,14 +12,15 @@ class ColDef {
 
   constructor({
     name, label, render, sort,
-    sortable = true, textAlign = 'center'
+    sortable = true, textAlign = 'center',
+    none = '?'
   }) {
     this.name = name;
     this.label = label ? label : startCase(name);
     this.render = render ? render : cellData => (
       (cellData === undefined ||
         cellData === null ||
-        cellData === '') ? '?' : cellData
+        cellData === '') ? none : cellData
     );
     this.sort = sort ? sort : data => sortBy(data, [name]);
     this.sortable = Boolean(sortable);
@@ -68,17 +69,21 @@ function readableNum(num) {
 }
 
 
-function renderXX50(num, cmp, unit, inactive) {
+function renderXX50(
+  num, cmp, unit, inactive,
+  default_unit = '\xb5M',
+  none = '?'
+) {
   if (inactive) {
     return '>>>';
   }
   if (num === null) {
-    return '?';
+    return none;
   }
   num = readableNum(num);
   return <span className={style['nowrap']}>
     {cmp === '=' ? '' : cmp}{num}
-    {unit === '\xb5M' ? '' : ` ${unit}`}
+    {unit === default_unit ? '' : ` ${unit}`}
   </span>;
 }
 
@@ -119,12 +124,12 @@ const compoundColDef = label => new ColDef({
 });
 
 
-const nameAndDescColDef = (name, label, empty='?') => new ColDef({
+const nameAndDescColDef = (name, label, none='?') => new ColDef({
   name,
   label,
   render: (obj, data, context) => {
     if (!obj) {
-      return empty;
+      return none;
     }
     const {name, description} = obj;
     if (!description || name in context) {

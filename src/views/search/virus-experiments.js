@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
+import {Header} from 'semantic-ui-react';
 
 import ExpTable from './exptable';
 import {virusExperimentsShape} from './prop-types';
@@ -75,6 +76,26 @@ const tableColumns = [
   })
 ];
 
+const tableColumnsIFN = [
+  ...tableColumns.slice(0, tableColumns.length - 2),
+  new ColDef({
+    name: 'ec50',
+    label: 'EC50 (IU/ml)',
+    render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
+      renderXX50(ec50, ec50cmp, ec50unit, ec50inactive, 'IU/ml', '-')
+    ),
+    sort: data => sortBy(
+      data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive']
+    )
+  }),
+  new ColDef({
+    name: 'pcntInhibition',
+    label: '% Inhibition',
+    none: '-'
+  }),
+  tableColumns[tableColumns.length - 1]
+];
+
 
 export default class VirusExpTable extends React.Component {
 
@@ -85,12 +106,27 @@ export default class VirusExpTable extends React.Component {
 
   render() {
     const {cacheKey, data} = this.props;
-    return (
-      <ExpTable
-       cacheKey={cacheKey}
-       columnDefs={tableColumns}
-       data={reformExpData(data)} />
+    const reformed = reformExpData(data);
+    const ccData = (
+      reformed.filter(({categoryName}) => categoryName === 'CellCulture')
     );
+    const ifnData = (
+      reformed.filter(({categoryName}) => categoryName === 'CellCultureIFN')
+    );
+    return <>
+      {ccData.length > 0 ?
+        <ExpTable
+         cacheKey={cacheKey}
+         columnDefs={tableColumns}
+         data={ccData} /> : null}
+      {ifnData.length > 0 ? <>
+        <Header as="h3">Interferons</Header>
+        <ExpTable
+         cacheKey={`${cacheKey}@@IFN`}
+         columnDefs={tableColumnsIFN}
+         data={ifnData} />
+      </> : null}
+    </>;
   }
 
 }
