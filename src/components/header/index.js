@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link} from 'found';
 import classnames from 'classnames';
-import {Icon} from 'semantic-ui-react';
 
 import style from './style.module.scss';
 
@@ -80,7 +79,7 @@ export default class Header extends React.Component {
               </li>
               <li className={style['nav-item']}>
                 <Link to="/donation/" className={style.donation}>
-                  <Icon name="like" />Support CoVDB!
+                  Support CoVDB
                 </Link>
               </li>
 

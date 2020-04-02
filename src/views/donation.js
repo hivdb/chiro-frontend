@@ -19,7 +19,6 @@ export default class Donation extends React.Component {
         </p>
         <p>
           <Button
-           color="red" icon="heart"
            content="Donate to CoVDB"
            as="a" target="_blank"
            href="https://makeagift.stanford.edu/get/page/makeagift?stp=13" />
