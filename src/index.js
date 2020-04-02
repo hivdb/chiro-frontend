@@ -12,7 +12,7 @@ import * as serviceWorker from './serviceWorker';
 
 import 'semantic-ui-css/semantic.min.css';
 
-if (window.location.host === 'covrx.hivdb.org') {
+if (window.location.host === 'covdb.stanford.edu') {
   ReactGA.initialize('UA-443373-7');
 } else {
   ReactGA.initialize('UA-443373-6');
