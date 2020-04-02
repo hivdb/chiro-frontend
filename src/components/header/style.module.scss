@@ -43,8 +43,8 @@
 
     a {
       color: $main-color;
-      &:hover {
-        text-decoration: none;
+      &.donation {
+        color: #db2828;
       }
     }
   }

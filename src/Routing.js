@@ -12,6 +12,7 @@ import CompoundTargetList from './views/compound-target-list';
 import VirusList from './views/virus-list';
 import ArticleList from './views/article-list';
 import TermsOfUse from './views/terms-of-use';
+import Donation from './views/donation';
 
 import Layout from './components/layout';
 
@@ -26,6 +27,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={VirusList} path="/virus-list/" />
       <Route Component={ArticleList} path="/article-list/" />
       <Route Component={TermsOfUse} path="/terms-of-use/" />
+      <Route Component={Donation} path="/donation/" />
     </Route>
   ),
 
