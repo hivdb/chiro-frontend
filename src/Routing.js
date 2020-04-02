@@ -10,6 +10,9 @@ import Search from './views/search';
 import CompoundList from './views/compound-list';
 import CompoundTargetList from './views/compound-target-list';
 import VirusList from './views/virus-list';
+import CellsList from './views/cells-list';
+import AnimalModelList from './views/animal-model-list';
+import CellCultureMeasurementList from './views/cell-culture-measurement-list';
 import ArticleList from './views/article-list';
 import TermsOfUse from './views/terms-of-use';
 import Donation from './views/donation';
@@ -26,6 +29,11 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />
       <Route Component={VirusList} path="/virus-list/" />
+      <Route Component={CellsList} path="/cells-list/" />
+      <Route Component={AnimalModelList} path="/animal-model-list/" />
+      <Route
+       Component={CellCultureMeasurementList}
+       path="/cell-culture-measurement-list/" />
       <Route Component={ArticleList} path="/article-list/" />
       <Route Component={TermsOfUse} path="/terms-of-use/" />
       <Route Component={Donation} path="/donation/" />

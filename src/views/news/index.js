@@ -37,7 +37,7 @@ class NewsInner extends React.Component {
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h2" dividing>
+            <Header as="h1" dividing>
               <Header.Content>
                 Latest News
                 <Header.Subheader>

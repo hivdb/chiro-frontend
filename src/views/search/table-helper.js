@@ -3,7 +3,7 @@ import {Link} from 'found';
 import sortBy from 'lodash/sortBy';
 import orderBy from 'lodash/orderBy';
 import startCase from 'lodash/startCase';
-import {Popup, Icon} from 'semantic-ui-react';
+import {Popup} from 'semantic-ui-react';
 
 import style from './style.module.scss';
 
@@ -127,20 +127,19 @@ const compoundColDef = label => new ColDef({
 const nameAndDescColDef = (name, label, none='?') => new ColDef({
   name,
   label,
-  render: (obj, data, context) => {
+  render: (obj, data) => {
     if (!obj) {
       return none;
     }
     const {name, description} = obj;
-    if (!description || name in context) {
+    if (!description) {
       return name;
     }
-    context[name] = true;
     return (
       <Popup
        header={name} content={description}
        trigger={<span className={style['with-info']}>
-         {name}<sup><Icon name="info circle" /></sup>
+         {name}
        </span>} />
     );
   },

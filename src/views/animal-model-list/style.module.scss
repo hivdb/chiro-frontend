@@ -1,0 +1,8 @@
+:global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
+  > .synonyms {
+    &::before {
+      content: 'Synonyms: ';
+      font-weight: 600;
+    }
+  }
+}

@@ -32,7 +32,7 @@ class ArticleListInner extends React.Component {
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h2">References</Header>
+            <Header as="h1" dividing>References</Header>
             <ol>
               {articles.edges.map(
                 ({node: {experimentCounts, nickname, ...node}}, idx) => (

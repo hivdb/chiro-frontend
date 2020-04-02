@@ -1,0 +1,18 @@
+:global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
+  > .related-cells {
+    &::before {
+      content: 'Related cell lines: ';
+      font-weight: 600;
+    }
+  }
+  > .synonyms {
+    &::before {
+      content: 'Synonyms: ';
+      font-weight: 600;
+    }
+  }
+}
+
+:global(.ui.items>.item .meta) {
+  
+}

@@ -3,7 +3,7 @@ import {Link} from 'found';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 
-import {Grid, Item, Loader} from 'semantic-ui-react';
+import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
@@ -39,6 +39,11 @@ class CompoundListInner extends React.Component {
     } = this.props;
 
     return <Grid stackable className={style['compound-list']}>
+      <Grid.Row>
+        <Grid.Column width={16}>
+          <Header as="h1" dividing>Compound List</Header>
+        </Grid.Column>
+      </Grid.Row>
       <InlineSearchBox
        onChange={this.handleQueryChange}
        compoundTargetValue={qCompoundTargetName}>

@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 
-import {Grid, Item, Loader} from 'semantic-ui-react';
+import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
@@ -32,6 +32,7 @@ class VirusListInner extends React.Component {
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
+            <Header as="h1" dividing>Virus List</Header>
             <p>
               {viruses.totalCount} virus
               {viruses.totalCount > 1 ? 'es are' : ' is'} listed:
