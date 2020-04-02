@@ -1,0 +1,14 @@
+:global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
+  > .type {
+    &::before {
+      content: 'Type: ';
+      font-weight: 600;
+    }
+  }
+  > .related-viruses {
+    &::before {
+      content: 'Related viruses: ';
+      font-weight: 600;
+    }
+  }
+}

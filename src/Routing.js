@@ -13,6 +13,7 @@ import VirusList from './views/virus-list';
 import ArticleList from './views/article-list';
 import TermsOfUse from './views/terms-of-use';
 import Donation from './views/donation';
+import News from './views/news';
 
 import Layout from './components/layout';
 
@@ -28,6 +29,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={ArticleList} path="/article-list/" />
       <Route Component={TermsOfUse} path="/terms-of-use/" />
       <Route Component={Donation} path="/donation/" />
+      <Route Component={News} path="/news/" />
     </Route>
   ),
 
