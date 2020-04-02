@@ -198,7 +198,21 @@ class SearchInner extends React.Component {
                 ...(!compound && !virus && !compoundTarget && article ? [{
                   description: <ArticleInfo {...article} />,
                   width: 10
-                }] : [])
+                }] : []),
+                ...(!compound && !virus && !compoundTarget && !article ? [{
+                  description: <>
+                    <Header as="h2" textAlign="center">
+                      Cell culture, animal model, and clinical data on compounds
+                      with proven or potential anti-coronavirus activity
+                    </Header>
+                    <p className={style['header-content']}>
+                      Targeted antivirals, investigational
+                      agents, monoclonal antibodies, interferons, repurposed
+                      drugs, and promising leads.
+                    </p>
+                  </>,
+                  width: 10
+                }] : []),
               ]}
             </StatHeader>
           )}
