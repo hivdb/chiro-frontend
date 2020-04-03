@@ -12,6 +12,7 @@ import StatHeader from '../../components/stat-header';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 class CompoundListInner extends React.Component {
@@ -32,6 +33,7 @@ class CompoundListInner extends React.Component {
   )
 
   render() {
+    setTitle('Compound List');
     this.props.loading || redirectIfNeeded(this.props);
     const {
       loading, qCompoundTargetName,

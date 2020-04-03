@@ -8,6 +8,7 @@ import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 class NewsInner extends React.Component {
@@ -29,6 +30,7 @@ class NewsInner extends React.Component {
       loading,
       articles
     } = this.props;
+    setTitle('Coronavirus News');
 
     articles = sortBy(articles, ['publishedAt']).reverse();
 
@@ -39,7 +41,7 @@ class NewsInner extends React.Component {
           <Grid.Column width={16}>
             <Header as="h1" dividing>
               <Header.Content>
-                Latest News
+                Coronavirus News
                 <Header.Subheader>
                   Powered by{' '}
                   <a

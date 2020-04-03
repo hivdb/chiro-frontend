@@ -8,6 +8,7 @@ import {Grid, Header, Loader} from 'semantic-ui-react';
 import ArticleInfo from '../../components/article-info';
 import query from './query.gql.js';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 class ArticleListInner extends React.Component {
@@ -26,6 +27,8 @@ class ArticleListInner extends React.Component {
       loading,
       articles
     } = this.props;
+
+    setTitle('References');
 
     return <Grid stackable className={style['article-list']}>
       {loading ?

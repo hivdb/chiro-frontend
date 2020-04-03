@@ -1,10 +1,13 @@
 import React from 'react';
 import {Header, Button} from 'semantic-ui-react';
 
+import setTitle from '../utils/set-title';
+
 
 export default class Donation extends React.Component {
 
   render() {
+    setTitle('Donation');
 
     return <article>
       <Header as="h1" dividing>Support and Donation</Header>

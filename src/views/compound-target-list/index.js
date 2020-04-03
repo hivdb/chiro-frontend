@@ -8,6 +8,7 @@ import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 class CompoundTargetListInner extends React.Component {
@@ -26,6 +27,8 @@ class CompoundTargetListInner extends React.Component {
       loading,
       compoundTargets
     } = this.props;
+
+    setTitle('Compound Target List');
 
     return <Grid stackable className={style['compound-target-list']}>
       {loading ?

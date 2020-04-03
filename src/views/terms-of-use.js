@@ -1,10 +1,12 @@
 import React from 'react';
 import {Header} from 'semantic-ui-react';
+import setTitle from '../utils/set-title';
 
 
 export default class TermsOfUse extends React.Component {
 
   render() {
+    setTitle('Terms of Use');
 
     return <article>
       <Header as="h1" dividing>Terms of Use</Header>

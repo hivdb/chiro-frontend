@@ -5,6 +5,7 @@ import {Grid, Header} from 'semantic-ui-react';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 export default class ChiroSearch extends React.Component {
@@ -40,6 +41,7 @@ export default class ChiroSearch extends React.Component {
   }
 
   render() {
+    setTitle(null);
     return <Grid stackable className={style.home}>
       <Grid.Row>
         <InlineSearchBox

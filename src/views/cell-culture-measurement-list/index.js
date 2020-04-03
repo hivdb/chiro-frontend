@@ -6,6 +6,7 @@ import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 class CellCultureMeasurementListInner extends React.Component {
@@ -21,6 +22,7 @@ class CellCultureMeasurementListInner extends React.Component {
 
   render() {
     const {loading, cellCultureMeasurements} = this.props;
+    setTitle('Cell Culture Measurement List');
 
     return <Grid stackable className={style['cell-culture-measurement-list']}>
       {loading ?

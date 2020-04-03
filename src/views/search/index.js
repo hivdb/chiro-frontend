@@ -16,6 +16,7 @@ import StatHeader from '../../components/stat-header';
 import ArticleInfo from '../../components/article-info';
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
+import setTitle from '../../utils/set-title';
 
 import style from './style.module.scss';
 
@@ -55,6 +56,7 @@ class SearchInner extends React.Component {
   )
 
   render() {
+    setTitle('Search');
     this.props.loading || redirectIfNeeded(this.props);
     let {
       qCompoundTargetName,

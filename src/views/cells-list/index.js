@@ -6,6 +6,7 @@ import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 class CellsListInner extends React.Component {
@@ -21,6 +22,7 @@ class CellsListInner extends React.Component {
 
   render() {
     const {loading, multipleCells} = this.props;
+    setTitle('Cell Line List');
 
     return <Grid stackable className={style['cells-list']}>
       {loading ?

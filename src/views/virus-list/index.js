@@ -8,6 +8,7 @@ import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 class VirusListInner extends React.Component {
@@ -26,6 +27,8 @@ class VirusListInner extends React.Component {
       loading,
       viruses
     } = this.props;
+
+    setTitle('Virus List');
 
     return <Grid stackable className={style['virus-list']}>
       {loading ?

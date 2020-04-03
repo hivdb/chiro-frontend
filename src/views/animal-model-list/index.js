@@ -6,6 +6,7 @@ import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
+import setTitle from '../../utils/set-title';
 
 
 class AnimalModelListInner extends React.Component {
@@ -21,6 +22,7 @@ class AnimalModelListInner extends React.Component {
 
   render() {
     const {loading, animalModels} = this.props;
+    setTitle('Animal Model List');
 
     return <Grid stackable className={style['animal-models-list']}>
       {loading ?
