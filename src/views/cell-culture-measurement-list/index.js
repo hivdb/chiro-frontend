@@ -22,14 +22,14 @@ class CellCultureMeasurementListInner extends React.Component {
 
   render() {
     const {loading, cellCultureMeasurements} = this.props;
-    setTitle('Cell Culture Measurement List');
+    setTitle('Cell Culture Measurements');
 
     return <Grid stackable className={style['cell-culture-measurement-list']}>
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>Cell Culture Measurement List</Header>
+            <Header as="h1" dividing>Cell Culture Measurements</Header>
             <p>
               {cellCultureMeasurements.totalCount} measurement
               {cellCultureMeasurements.totalCount > 1 ? 's are' : ' is'} listed:

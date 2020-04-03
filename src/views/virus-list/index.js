@@ -28,14 +28,14 @@ class VirusListInner extends React.Component {
       viruses
     } = this.props;
 
-    setTitle('Virus List');
+    setTitle('Viruses');
 
     return <Grid stackable className={style['virus-list']}>
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>Virus List</Header>
+            <Header as="h1" dividing>Viruses</Header>
             <p>
               {viruses.totalCount} virus
               {viruses.totalCount > 1 ? 'es are' : ' is'} listed:

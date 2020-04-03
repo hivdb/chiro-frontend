@@ -42,13 +42,13 @@ const colors = [
   'black',
 ];
 
-const rxTimePattern = /-?(\d+)([dh]pi)/;
+const rxTimePattern = /-?(\d+)\s*((?:d|h|minute-)pi)/;
 
 const tableColumns = [
   authorYearColDef,
   new ColDef({name: 'animalModelName', label: 'Host'}),
   virusSpeciesDef,
-  new ColDef({name: 'inoculation', sortable: false}),
+  new ColDef({name: 'inoculation', label: 'Inoculum', sortable: false}),
   compoundColDef('Drug(s)'),
   new ColDef({name: 'dose', label: 'Dosage', sortable: false}),
   new ColDef({
@@ -60,7 +60,11 @@ const tableColumns = [
         const match = rxTimePattern.exec(ts);
         let [, num, unit] = match;
         num = parseInt(num);
-        unit = {'dpi': 'day', 'hpi': 'hour'}[unit.toLocaleLowerCase()];
+        unit = {
+          'dpi': 'day',
+          'hpi': 'hour',
+          'minute-pi': 'minute',
+        }[unit.toLocaleLowerCase()];
         return `${tt} (${num} ${unit})`;
       }
       return tt;
@@ -79,11 +83,11 @@ const tableColumns = [
 function resultColDefs(rows) {
   const colDefs = {};
   const displayResultNames = {
-    'Lung VL': true,
-    'Weight Loss': true,
-    'Mortality': true,
-    'Lung pathology': true,
-    'Clinical Diseases': true
+    'Lung VL': 'Lung VL',
+    'Weight Loss': <>Weight<br />Loss</>,
+    'Mortality': 'Mortality',
+    'Lung pathology': <>Lung<br />pathology</>,
+    'Clinical Diseases': <>Clinical<br />Diseases</>
   };
   for (const {resultObjs} of rows) {
     for (const {resultName} of resultObjs) {
@@ -95,7 +99,7 @@ function resultColDefs(rows) {
       }
       colDefs[resultName] = new ColDef({
         name: resultName,
-        label: resultName,
+        label: displayResultNames[resultName],
         render: (_, {resultObjs}) => {
           const resultObj = arrayFind(
             resultObjs,

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
+import {Icon, Popup} from 'semantic-ui-react';
 
 import ExpTable from './exptable';
 import {biochemExperimentsShape} from './prop-types';
@@ -10,6 +11,7 @@ import {
   authorYearColDef, virusSpeciesDef,
   compoundColDef
 } from './table-helper';
+import style from './style.module.scss';
 
 
 const tableColumns = [
@@ -21,7 +23,16 @@ const tableColumns = [
   }),
   new ColDef({
     name: 'ic50',
-    label: 'IC50 (\xb5M)',
+    label: (
+      <Popup
+       header={'IC50 (\xb5M)'}
+       content={
+         "Compound concentration required to inhibit the targeted " +
+         "enzyme by 50%."}
+       trigger={<span className={style['with-info']}>
+         {'IC50 (\xb5M)'}<sup><Icon name="info circle" /></sup>
+       </span>} />
+    ),
     render: (ic50, {ic50cmp, ic50unit, ic50inactive}) => (
       renderXX50(ic50, ic50cmp, ic50unit, ic50inactive)
     ),

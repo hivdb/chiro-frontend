@@ -22,14 +22,14 @@ class AnimalModelListInner extends React.Component {
 
   render() {
     const {loading, animalModels} = this.props;
-    setTitle('Animal Model List');
+    setTitle('Animal Models');
 
-    return <Grid stackable className={style['animal-models-list']}>
+    return <Grid stackable className={style['animal-model-list']}>
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>Animal Model List</Header>
+            <Header as="h1" dividing>Animal Models</Header>
             <p>
               {animalModels.totalCount} animal model
               {animalModels.totalCount > 1 ? 's are' : ' is'} listed:

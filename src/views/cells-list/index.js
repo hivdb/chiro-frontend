@@ -22,14 +22,14 @@ class CellsListInner extends React.Component {
 
   render() {
     const {loading, multipleCells} = this.props;
-    setTitle('Cell Line List');
+    setTitle('Cells');
 
     return <Grid stackable className={style['cells-list']}>
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>Cell Line List</Header>
+            <Header as="h1" dividing>Cells</Header>
             <p>
               {multipleCells.totalCount} cell line
               {multipleCells.totalCount > 1 ? 's are' : ' is'} listed:

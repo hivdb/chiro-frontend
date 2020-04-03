@@ -28,14 +28,14 @@ class CompoundTargetListInner extends React.Component {
       compoundTargets
     } = this.props;
 
-    setTitle('Compound Target List');
+    setTitle('Compound Targets');
 
     return <Grid stackable className={style['compound-target-list']}>
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>Compound Target List</Header>
+            <Header as="h1" dividing>Compound Targets</Header>
             <p>
               {compoundTargets.totalCount} compound target
               {compoundTargets.totalCount > 1 ? 's are' : ' is'} listed:

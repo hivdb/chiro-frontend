@@ -33,7 +33,7 @@ class CompoundListInner extends React.Component {
   )
 
   render() {
-    setTitle('Compound List');
+    setTitle('Compounds');
     this.props.loading || redirectIfNeeded(this.props);
     const {
       loading, qCompoundTargetName,
@@ -43,7 +43,7 @@ class CompoundListInner extends React.Component {
     return <Grid stackable className={style['compound-list']}>
       <Grid.Row>
         <Grid.Column width={16}>
-          <Header as="h1" dividing>Compound List</Header>
+          <Header as="h1" dividing>Compounds</Header>
         </Grid.Column>
       </Grid.Row>
       <InlineSearchBox
