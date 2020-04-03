@@ -2,10 +2,10 @@ import React from 'react';
 import {
   createBrowserRouter,
   makeRouteConfig,
-  Route, Redirect
+  Route
 } from 'found';
 
-// import Home from './views/home';
+import Home from './views/home';
 import Search from './views/search';
 import CompoundList from './views/compound-list';
 import CompoundTargetList from './views/compound-target-list';
@@ -24,7 +24,7 @@ const BrowserRouter = createBrowserRouter({
 
   routeConfig: makeRouteConfig(
     <Route path="/" Component={Layout}>
-      <Redirect from="/" to="/search/" />
+      <Route Component={Home} />
       <Route Component={Search} path="/search/" />
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />

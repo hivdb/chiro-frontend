@@ -59,6 +59,16 @@ export default class ChiroSearch extends React.Component {
             <StatHeader>
               {[
                 {
+                  title: 'Search',
+                  width: 4,
+                  cells: [
+                    {label: 'Target', value: compoundTargetDropdown},
+                    {label: 'Compound', value: compoundDropdown},
+                    {label: 'Virus', value: virusDropdown},
+                    {label: 'Study Type', value: studyTypeDropdown},
+                  ]
+                },
+                {
                   width: 12,
                   description: <>
                     <Header as="h2" textAlign="center">
@@ -71,16 +81,6 @@ export default class ChiroSearch extends React.Component {
                       drugs, and promising leads.
                     </p>
                   </>
-                },
-                {
-                  title: 'Search',
-                  width: 4,
-                  cells: [
-                    {label: 'Target', value: compoundTargetDropdown},
-                    {label: 'Compound', value: compoundDropdown},
-                    {label: 'Virus', value: virusDropdown},
-                    {label: 'Study Type', value: studyTypeDropdown},
-                  ]
                 }
               ]}
             </StatHeader>
