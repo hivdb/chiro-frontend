@@ -6,6 +6,7 @@ import {useQuery} from '@apollo/react-hooks';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import ArticleInfo from '../../components/article-info';
+import ArticleAbstractInfo from '../../components/article-abstract-info';
 import query from './query.gql.js';
 import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
@@ -57,6 +58,7 @@ class ArticleListInner extends React.Component {
                         }
                       })()}
                     </Link>)
+                    <ArticleAbstractInfo nickname={nickname[0]} />
                   </li>
                 )
               )}
@@ -65,7 +67,7 @@ class ArticleListInner extends React.Component {
         </Grid.Row>
       }
     </Grid>;
-    
+
   }
 
 
