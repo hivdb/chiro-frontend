@@ -11,6 +11,15 @@
       font-weight: 600;
     }
   }
+  > .formula {
+    sub {
+      margin-right: 0;
+    }
+    &::before {
+      content: 'Formula: ';
+      font-weight: 600;
+    }
+  }
   > .mw {
     &::before {
       content: 'MW: ';

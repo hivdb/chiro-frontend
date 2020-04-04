@@ -18,7 +18,10 @@ export default gql`
           synonyms
           target
           drugClassName
+          molecularFormula
           molecularWeight
+          smiles
+          pubchemCid
           relatedCompounds {
             name
           }

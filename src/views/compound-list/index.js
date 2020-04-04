@@ -15,6 +15,23 @@ import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
 
 
+function renderFormula(formula) {
+  const result = [];
+  let idx = 0;
+  for (const n of formula.split(/(\d+)/g)) {
+    const d = parseInt(n);
+    if (isNaN(d)) {
+      result.push(n);
+    }
+    else {
+      result.push(<sub key={idx}>{d}</sub>);
+    }
+    idx ++;
+  }
+  return result;
+}
+
+
 class CompoundListInner extends React.Component {
 
   static propTypes = {
@@ -82,7 +99,8 @@ class CompoundListInner extends React.Component {
               {compounds.edges.map(
                 ({node: {
                   name, synonyms, target, drugClassName,
-                  molecularWeight, relatedCompounds,
+                  molecularFormula, molecularWeight,
+                  pubchemCid, relatedCompounds, smiles,
                   experimentCounts, description
                 }}, idx) => (
                   <Item key={idx}>
@@ -118,12 +136,28 @@ class CompoundListInner extends React.Component {
                         <span className={style['drug-class']}>
                           {drugClassName || '?'}
                         </span>
-                        <span className={style['mw']}>
-                          {molecularWeight || '?'} g/mol
-                        </span>
+                        {molecularFormula ?
+                          <span className={style['formula']}>
+                            {renderFormula(molecularFormula)}
+                          </span> : null}
+                        {molecularWeight ?
+                          <span className={style['mw']}>
+                            {molecularWeight} g/mol
+                          </span> : null}
                       </Item.Meta>
                       <Item.Description>
                         {description}
+                        {pubchemCid ? <>
+                          {' '}[<a
+                           href={
+                             'https://pubchem.ncbi.nlm.nih.' +
+                             `gov/compound/${pubchemCid}`
+                           }
+                           rel="noopener noreferrer"
+                           target="_blank">
+                            PubChem
+                          </a>]
+                        </> : null}
                       </Item.Description>
                       <Item.Extra>
                         {relatedCompounds.length > 0 ? (
