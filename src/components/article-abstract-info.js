@@ -51,7 +51,7 @@ export default class ArticleAbstractInfo extends React.Component {
         <a href="#abstract"
          style={{'font-weight': 'bold'}}
          onClick={this.handleHide}>
-          VIEW ABSTRACT
+          view abstract
         </a>
         {' '}
         <Message hidden={this.state.hideAbstract}>
