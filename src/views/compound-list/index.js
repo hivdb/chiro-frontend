@@ -18,13 +18,18 @@ import setTitle from '../../utils/set-title';
 function renderFormula(formula) {
   const result = [];
   let idx = 0;
-  for (const n of formula.split(/(\d+)/g)) {
-    const d = parseInt(n);
-    if (isNaN(d)) {
-      result.push(n);
+  for (const n of formula.split(/(\+\d?|\d+)/g)) {
+    if (n.startsWith('+')) {
+      result.push(<sup key={idx}>{n}</sup>);
     }
     else {
-      result.push(<sub key={idx}>{d}</sub>);
+      const d = parseInt(n);
+      if (isNaN(d)) {
+        result.push(n);
+      }
+      else {
+        result.push(<sub key={idx}>{n}</sub>);
+      }
     }
     idx ++;
   }
