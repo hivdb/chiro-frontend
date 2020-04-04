@@ -27,16 +27,10 @@ function AbstractMessage(nickname) {
 
 
 export default class ArticleAbstractInfo extends React.Component {
-  constructor() {
-    super(...arguments);
 
-    this.state = {
-      hideAbstract: true
-    };
-    this.handleHide = this.handleHide.bind(this);
-  }
+  state = {hideAbstract: true}
 
-  handleHide(e) {
+  handleHide = e => {
     e.preventDefault();
     this.setState({
       hideAbstract: !this.state.hideAbstract,

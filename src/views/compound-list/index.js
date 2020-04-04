@@ -13,7 +13,7 @@ import setTitle from '../../utils/set-title';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
-import SmilesModal from './smiles';
+import Smiles from './smiles';
 
 
 function renderFormula(formula) {
@@ -165,19 +165,25 @@ class CompoundListInner extends React.Component {
                           </a>]
                         </> : null}
                       </Item.Description>
-                      <Item.Extra>
-                        {smiles ? <SmilesModal {...{smiles, name}} /> : null}
-                        {relatedCompounds.length > 0 ? (
-                          <span className={style['related-compounds']}>
-                            {relatedCompounds.map(({name}) => name).join(', ')}
-                          </span>
-                        ) : null}
-                        {synonyms.length > 0 ? (
-                          <span className={style.synonyms}>
-                            {synonyms.join(', ')}
-                          </span>
-                        ) : null}
-                      </Item.Extra>
+                      <Smiles {...{smiles, name}}>
+                        {(trigger, canvas) => <>
+                          <Item.Extra>
+                            {trigger}
+                            {relatedCompounds.length > 0 ? (
+                              <span className={style['related-compounds']}>
+                                {relatedCompounds
+                                 .map(({name}) => name).join(', ')}
+                              </span>
+                            ) : null}
+                            {synonyms.length > 0 ? (
+                              <span className={style.synonyms}>
+                                {synonyms.join(', ')}
+                              </span>
+                            ) : null}
+                          </Item.Extra>
+                          {canvas}
+                        </>}
+                      </Smiles>
                     </Item.Content>
                   </Item>
                 )

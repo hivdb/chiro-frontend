@@ -43,7 +43,20 @@ export default class ChiroSearch extends React.Component {
   render() {
     setTitle(null);
     return <Grid stackable className={style.home}>
-      <Grid.Row>
+      <Grid.Row centered>
+        <Grid.Column width={16}>
+          <Header as="h2" textAlign="center" className={style.title}>
+            Cell culture, animal model, and clinical data on compounds
+            with proven or potential anti-coronavirus activity
+          </Header>
+          <p className={style['header-content']}>
+            Targeted antivirals, investigational
+            agents, monoclonal antibodies, interferons, repurposed
+            drugs, and promising leads.
+          </p>
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row centered>
         <InlineSearchBox
          allowEmpty
          articleValue={null}
@@ -69,20 +82,6 @@ export default class ChiroSearch extends React.Component {
                     {label: 'Virus', value: virusDropdown},
                     {label: 'Study Type', value: studyTypeDropdown},
                   ]
-                },
-                {
-                  width: 12,
-                  description: <>
-                    <Header as="h2" textAlign="center">
-                      Cell culture, animal model, and clinical data on compounds
-                      with proven or potential anti-coronavirus activity
-                    </Header>
-                    <p className={style['header-content']}>
-                      Targeted antivirals, investigational
-                      agents, monoclonal antibodies, interferons, repurposed
-                      drugs, and promising leads.
-                    </p>
-                  </>
                 }
               ]}
             </StatHeader>

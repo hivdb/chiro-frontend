@@ -9,6 +9,8 @@ export default class StatHeader extends React.Component {
 
   static propTypes = {
     children: PropTypes.arrayOf(PropTypes.shape({
+      width: PropTypes.number,
+      className: PropTypes.string,
       title: PropTypes.string,
       description: PropTypes.node,
       cells: PropTypes.arrayOf(
@@ -29,8 +31,11 @@ export default class StatHeader extends React.Component {
     const {children, columnWidth} = this.props;
 
     return <>
-      {children.map(({title, description, width, cells}, idx) => (
-        <Grid.Column key={idx} width={width ? width : columnWidth}>
+      {children.map(({title, description, className, width, cells}, idx) => (
+        <Grid.Column
+         key={idx}
+         className={className}
+         width={width ? width : columnWidth}>
           {title ? <Header as='h2' dividing>
             {title}
           </Header> : null}

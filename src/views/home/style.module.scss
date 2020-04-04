@@ -5,3 +5,11 @@
   text-align: center;
   font-size: 1.2rem;
 }
+
+.limited-width {
+  max-width: 60rem;
+}
+
+:global(h2.ui.header).title {
+  font-size: 1.5rem;
+}

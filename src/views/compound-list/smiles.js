@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SmilesDrawer from 'smiles-drawer';
-import {Modal} from 'semantic-ui-react';
+import {Message} from 'semantic-ui-react';
+
+import style from './style.module.scss';
 
 const smilesDrawer = new SmilesDrawer.Drawer({
-  width: 800,
-  height: 400,
+  width: 400,
+  height: 200,
   bondLength: 20,
   compactDrawing: false,
   isometric: true,
@@ -15,36 +17,54 @@ const smilesDrawer = new SmilesDrawer.Drawer({
 });
 
 
-export default class SmilesModal extends React.Component {
+class SmilesCanvas extends React.Component {
 
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    smiles: PropTypes.string.isRequired
-  }
-
-  handleMount = () => {
+  componentDidMount() {
     const {smiles} = this.props;
     SmilesDrawer.parse(smiles, tree => {
-      smilesDrawer.draw(tree, "canvas-2d-struct", "light", false);
+      smilesDrawer.draw(tree, this.refs.canvas, "light", false);
     });
   }
 
   render() {
-    const {name} = this.props;
+    return <canvas ref="canvas" className={style['canvas-2d-struct']} />;
+  }
 
-    return (
-      <Modal
-       closeIcon
-       onMount={this.handleMount}
-       trigger={<a href="#smiles" onClick={e => e.preventDefault()}>
-         2D structure
-       </a>}
-       centered={false}>
-        <Modal.Header>2D structure of “{name}”</Modal.Header>
-        <Modal.Content>
-          <canvas id="canvas-2d-struct" />
-        </Modal.Content>
-      </Modal>
+}
+
+
+export default class Smiles extends React.Component {
+
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    smiles: PropTypes.string.isRequired,
+    children: PropTypes.func.isRequired
+  }
+
+  state = {active: false}
+
+  handleClick = e => {
+    e.preventDefault();
+    this.setState({active: !this.state.active});
+  }
+
+  render() {
+    const {smiles, children} = this.props;
+    if (!smiles) {
+      return children(null, null);
+    }
+
+    return children(
+      <a
+       href="#2d-struct"
+       onClick={this.handleClick}>
+        2D structure
+      </a>,
+      this.state.active ? <>
+        <Message>
+          <SmilesCanvas smiles={smiles} />
+        </Message>
+      </> : null
     );
 
   }
