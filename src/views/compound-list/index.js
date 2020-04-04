@@ -9,10 +9,11 @@ import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
+import setTitle from '../../utils/set-title';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
-import setTitle from '../../utils/set-title';
+import SmilesModal from './smiles';
 
 
 function renderFormula(formula) {
@@ -165,6 +166,7 @@ class CompoundListInner extends React.Component {
                         </> : null}
                       </Item.Description>
                       <Item.Extra>
+                        {smiles ? <SmilesModal {...{smiles, name}} /> : null}
                         {relatedCompounds.length > 0 ? (
                           <span className={style['related-compounds']}>
                             {relatedCompounds.map(({name}) => name).join(', ')}
