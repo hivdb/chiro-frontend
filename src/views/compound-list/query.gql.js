@@ -10,7 +10,10 @@ export default gql`
       name
       description
     }
-    compounds(compoundTargetName: $compoundTargetName) {
+    compounds(
+      compoundTargetName: $compoundTargetName
+      completeList: true
+    ) {
       totalCount
       edges {
         node {
