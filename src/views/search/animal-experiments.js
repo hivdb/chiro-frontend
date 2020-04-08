@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
 import arrayFind from 'lodash/find';
 
-import ExpTable from './exptable';
+import ChiroTable from '../../components/chiro-table';
 import {animalExperimentsShape} from './prop-types';
 
 import {
@@ -138,7 +138,7 @@ export default class AnimalExpTable extends React.Component {
         )
       )
     ).map(([aname, articleData], idx) => (
-      <ExpTable
+      <ChiroTable
        key={idx}
        color={colors[idx % colors.length]}
        cacheKey={cacheKey}

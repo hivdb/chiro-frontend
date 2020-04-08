@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import {Header, Icon, Popup} from 'semantic-ui-react';
 
-import ExpTable from './exptable';
+import ChiroTable from '../../components/chiro-table';
 import {virusExperimentsShape} from './prop-types';
 import {
   ColDef, reformExpData, readableNum, renderXX50,
@@ -186,13 +186,13 @@ export default class VirusExpTable extends React.Component {
     );
     return <>
       {ccData.length > 0 ?
-        <ExpTable
+        <ChiroTable
          cacheKey={cacheKey}
          columnDefs={tableColumns}
          data={ccData} /> : null}
       {ifnData.length > 0 ? <>
         <Header as="h3">Interferons</Header>
-        <ExpTable
+        <ChiroTable
          cacheKey={`${cacheKey}@@IFN`}
          columnDefs={tableColumnsIFN}
          data={ifnData} />

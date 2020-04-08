@@ -6,7 +6,11 @@ import searchPromptsQuery from './search-prompts.gql';
 
 
 function reformQueryData(data) {
-  const {articles, compoundTargets, compounds, viruses} = data;
+  const {
+    articles, compoundTargets,
+    compounds, viruses,
+    clinicalTrialCategories
+  } = data;
   return [
     ...articles.edges.map(
       ({node: {nickname: [nickname]}}) => ({
@@ -29,6 +33,12 @@ function reformQueryData(data) {
             .map(({name}) => name))
         ] : [],
         category: 'compounds'
+      })
+    ),
+    ...clinicalTrialCategories.edges.map(
+      ({node: {name}}) => ({
+        title: name,
+        category: 'clinicalTrialCategories'
       })
     ),
     ...viruses.edges.map(

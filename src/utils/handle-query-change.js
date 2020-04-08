@@ -37,6 +37,12 @@ export default function handleQueryChange(value, category, props) {
     newQuery.study = value;
     changed = true;
   }
+  else if (category === 'clinicalTrialCategories') {
+    if (value !== query.trialcat) {
+      newQuery.trialcat = value;
+      changed = true;
+    }
+  }
   else {  // viruses
     if (value !== query.virus) {
       newQuery.virus = value;

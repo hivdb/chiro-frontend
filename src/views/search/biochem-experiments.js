@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import {Icon, Popup} from 'semantic-ui-react';
 
-import ExpTable from './exptable';
+import ChiroTable from '../../components/chiro-table';
 import {biochemExperimentsShape} from './prop-types';
 
 import {
@@ -53,7 +53,7 @@ export default class BiochemExpTable extends React.Component {
   render() {
     const {cacheKey, data} = this.props;
     return (
-      <ExpTable
+      <ChiroTable
        cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data)} />

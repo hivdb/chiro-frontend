@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy';
 import {Icon, Popup} from 'semantic-ui-react';
 
 import {entryAssayExperimentsShape} from './prop-types';
-import ExpTable from './exptable';
+import ChiroTable from '../../components/chiro-table';
 import {
   compoundColDef, ColDef,
   reformExpData, authorYearColDef,
@@ -61,7 +61,7 @@ export default class EntryAssayExpTable extends React.Component {
   render() {
     const {cacheKey, data} = this.props;
     return (
-      <ExpTable
+      <ChiroTable
        cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data)}

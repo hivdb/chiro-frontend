@@ -36,5 +36,12 @@ export default gql`
         }
       }
     }
+    clinicalTrialCategories {
+      edges {
+        node {
+          name
+        }
+      }
+    }
   }
 `;

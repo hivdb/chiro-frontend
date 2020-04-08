@@ -1,0 +1,36 @@
+.header-content {
+  font-style: italic;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.trial-number {
+  &:not(:last-child)::after {
+    content: ';';
+  }
+}
+
+.supplement-info {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, .4);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.pubmed-link {
+  font-weight: 700;
+}
+
+.compound-description {
+  font-size: 1.2rem;
+}
+
+:global(.ui.table td).justify {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.with-info {
+}

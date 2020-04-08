@@ -41,6 +41,7 @@ class SearchBoxInner extends React.Component {
     virusValue: PropTypes.string,
     studyTypeValue: PropTypes.string,
     compoundTargetValue: PropTypes.string,
+    clinicalTrialCategoryValue: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
     dropdownProps: PropTypes.object.isRequired
@@ -53,6 +54,7 @@ class SearchBoxInner extends React.Component {
     compoundTargetValue: ANY,
     virusValue: ANY,
     studyTypeValue: ANY,
+    clinicalTrialCategoryValue: ANY,
     children: ({
       articleDropdown,
       compoundTargetDropdown,
@@ -104,6 +106,13 @@ class SearchBoxInner extends React.Component {
     const {data, allowEmpty} = this.props;
     return data2Options(
       data, ({category}) => category === 'viruses',
+      allowEmpty);
+  }
+
+  get clinicalTrialCategoryOptions() {
+    const {data, allowEmpty} = this.props;
+    return data2Options(
+      data, ({category}) => category === 'clinicalTrialCategories',
       allowEmpty);
   }
 
@@ -165,7 +174,7 @@ class SearchBoxInner extends React.Component {
       articleValue,
       compoundTargetValue,
       compoundValue, virusValue,
-      studyTypeValue,
+      studyTypeValue, clinicalTrialCategoryValue,
       children, dropdownProps
     } = this.props;
     return children({
@@ -213,6 +222,15 @@ class SearchBoxInner extends React.Component {
          options={this.studyTypeOptions}
          onChange={this.handleChange('studyTypes')}
          value={studyTypeValue} />
+      ),
+      clinicalTrialCategoryDropdown: (
+        <Dropdown
+         search direction="left"
+         {...dropdownProps}
+         placeholder={EMPTY_TEXT}
+         options={this.clinicalTrialCategoryOptions}
+         onChange={this.handleChange('clinicalTrialCategories')}
+         value={clinicalTrialCategoryValue} />
       )
     });
   }

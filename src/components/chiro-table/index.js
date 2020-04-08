@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import nestedGet from 'lodash/get';
 import {Table} from 'semantic-ui-react';
 import style from './style.module.scss';
+import ColumnDef from './column-def';
+
+export {ColumnDef};
 
 
 function getNextDirection(direction) {
@@ -18,7 +21,7 @@ function getNextDirection(direction) {
 }
 
 
-export default class ExpTable extends React.Component {
+export default class ChiroTable extends React.Component {
 
   static propTypes = {
     cacheKey: PropTypes.string,

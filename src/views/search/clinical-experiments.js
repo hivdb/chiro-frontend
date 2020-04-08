@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import orderBy from 'lodash/orderBy';
 
-import ExpTable from './exptable';
+import ChiroTable from '../../components/chiro-table';
 import {clinicalExperimentsShape} from './prop-types';
 
 import {
@@ -48,7 +48,7 @@ export default class ClinicalExpTable extends React.Component {
   render() {
     const {cacheKey, data} = this.props;
     return (
-      <ExpTable
+      <ChiroTable
        cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data, data => orderBy(
