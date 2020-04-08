@@ -94,40 +94,13 @@ export default class ChiroSearch extends React.Component {
             <StatHeader>
               {[
                 {
-                  title: 'Experiments',
+                  title: 'Search',
                   width: 4,
                   cells: [
                     {label: 'Target', value: compoundTargetDropdown},
                     {label: 'Compound', value: compoundDropdown},
                     {label: 'Virus', value: virusDropdown},
                     {label: 'Study Type', value: studyTypeDropdown},
-                  ]
-                },
-                {width: 4}
-              ]}
-            </StatHeader>
-          )}
-        </InlineSearchBox>
-        <InlineSearchBox
-         allowEmpty
-         compoundValue={null}
-         compoundTargetValue={null}
-         clinicalTrialCategoryValue={null}
-         onChange={this.handleTrialSearchBoxChange}>
-          {({
-            compoundTargetDropdown,
-            compoundDropdown,
-            clinicalTrialCategoryDropdown
-          }) => (
-            <StatHeader>
-              {[
-                {
-                  title: 'Clinical Trials',
-                  width: 4,
-                  cells: [
-                    {label: 'Target', value: compoundTargetDropdown},
-                    {label: 'Compound', value: compoundDropdown},
-                    {label: 'Category', value: clinicalTrialCategoryDropdown}
                   ]
                 }
               ]}

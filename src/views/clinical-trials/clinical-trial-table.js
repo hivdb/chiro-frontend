@@ -100,9 +100,10 @@ const tableColumns = [
   new ColDef({
     name: 'treatmentPopulation',
     label: 'Population',
-    render: (population, {hasTreatmentGroup: hasT}) => (
+    render: () => 'Pending'
+    /*render: (population, {hasTreatmentGroup: hasT}) => (
       hasT ? population : '-'
-    )
+    )*/
   }),
   new ColDef({
     name: 'intervention',
@@ -114,14 +115,16 @@ const tableColumns = [
   }),
   new ColDef({
     name: 'numParticipants',
-    label: '#'
+    label: 'Planned #'
   }),
   new ColDef({
     name: 'startDate',
+    label: 'Est. Start',
     render: monthYear
   }),
   new ColDef({
     name: 'stopDate',
+    label: 'Est. Stop',
     render: monthYear
   })
 ];
