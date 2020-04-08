@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import orderBy from 'lodash/orderBy';
 
 import ChiroTable, {ColumnDef as ColDef} from '../../components/chiro-table';
 import style from './style.module.scss';
@@ -141,7 +142,10 @@ export default class ClinicalTrialTable extends React.Component {
   }
 
   render() {
-    const {cacheKey, data} = this.props;
+    let {cacheKey, data} = this.props;
+    data = orderBy(
+      data, ['recruitmentStatus', 'numParticipants'], ['desc', 'desc']
+    );
     return (
       <ChiroTable
        cacheKey={cacheKey}
