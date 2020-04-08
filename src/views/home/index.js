@@ -14,7 +14,7 @@ export default class ChiroSearch extends React.Component {
     router: routerShape.isRequired
   }
 
-  handleSearchBoxChange = (value, category) => {
+  handleExpSearchBoxChange = (value, category) => {
     if (value === null) {
       this.props.router.push({pathname: '/search/'});
       return;
@@ -37,6 +37,26 @@ export default class ChiroSearch extends React.Component {
     }
     this.props.router.push(
       {pathname: '/search/', query}
+    );
+  }
+
+  handleTrialSearchBoxChange = (value, category) => {
+    if (value === null) {
+      this.props.router.push({pathname: '/clinical-trials/'});
+      return;
+    }
+    const query = {};
+    if (category === 'compounds') {
+      query.compound = value;
+    }
+    else if (category === 'compoundTargets') {
+      query.target = value;
+    }
+    else {
+      query.trialcat = value;
+    }
+    this.props.router.push(
+      {pathname: '/clinical-trials/', query}
     );
   }
 
@@ -64,7 +84,7 @@ export default class ChiroSearch extends React.Component {
          virusValue={null}
          studyTypeValue={null}
          compoundTargetValue={null}
-         onChange={this.handleSearchBoxChange}>
+         onChange={this.handleExpSearchBoxChange}>
           {({
             compoundTargetDropdown,
             compoundDropdown,
@@ -74,13 +94,40 @@ export default class ChiroSearch extends React.Component {
             <StatHeader>
               {[
                 {
-                  title: 'Search',
+                  title: 'Experiments',
                   width: 4,
                   cells: [
                     {label: 'Target', value: compoundTargetDropdown},
                     {label: 'Compound', value: compoundDropdown},
                     {label: 'Virus', value: virusDropdown},
                     {label: 'Study Type', value: studyTypeDropdown},
+                  ]
+                },
+                {width: 4}
+              ]}
+            </StatHeader>
+          )}
+        </InlineSearchBox>
+        <InlineSearchBox
+         allowEmpty
+         compoundValue={null}
+         compoundTargetValue={null}
+         clinicalTrialCategoryValue={null}
+         onChange={this.handleTrialSearchBoxChange}>
+          {({
+            compoundTargetDropdown,
+            compoundDropdown,
+            clinicalTrialCategoryDropdown
+          }) => (
+            <StatHeader>
+              {[
+                {
+                  title: 'Clinical Trials',
+                  width: 4,
+                  cells: [
+                    {label: 'Target', value: compoundTargetDropdown},
+                    {label: 'Compound', value: compoundDropdown},
+                    {label: 'Category', value: clinicalTrialCategoryDropdown}
                   ]
                 }
               ]}
