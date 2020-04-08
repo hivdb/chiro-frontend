@@ -43,7 +43,7 @@ class ClinicalTrialInner extends React.Component {
   )
 
   get clinicalTrialGroups() {
-    const {loading, clinicalTrials} = this.props;
+    const {loading, clinicalTrials, qCategoryName} = this.props;
     if (loading) {
       return {};
     }
@@ -53,7 +53,13 @@ class ClinicalTrialInner extends React.Component {
         allTrials.push({...trial, categoryName});
       }
     }
-    return groupBy(allTrials, t => t.categoryName);
+    let result = groupBy(allTrials, t => t.categoryName);
+    if (qCategoryName) {
+      const tmpResult = {};
+      tmpResult[qCategoryName] = result[qCategoryName];
+      result = tmpResult;
+    }
+    return result;
   }
 
   render() {
