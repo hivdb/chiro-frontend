@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
+import ReactMarkdown from 'react-markdown';
 import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import searchQuery from './query.gql';
 
-import {InlineSearchBox} from '../../components/search-box';
-import StatHeader from '../../components/stat-header';
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
 import setTitle from '../../utils/set-title';
@@ -21,6 +20,16 @@ import {
 } from './prop-types';
 
 
+function renderCategory(displayName) {
+  return <ReactMarkdown
+   renderers={{
+     paragraph: ({children}) => <>{children}</>
+   }}
+   source={displayName}
+   escapeHtml={false} />;
+}
+
+
 class ClinicalTrialInner extends React.Component {
 
   static propTypes = {
@@ -31,7 +40,8 @@ class ClinicalTrialInner extends React.Component {
     qCompoundTargetName: PropTypes.string,
     qCategoryName: PropTypes.string,
     compound: compoundShape,
-    clinicalTrials: PropTypes.object
+    clinicalTrials: PropTypes.object,
+    clinicalTrialCategories: PropTypes.object
   }
 
   static defaultProps = {
@@ -63,15 +73,14 @@ class ClinicalTrialInner extends React.Component {
   }
 
   render() {
-    setTitle('Search');
+    setTitle('Clinical Trials');
     this.props.loading || redirectIfNeeded(this.props);
     let {
       qCompoundTargetName,
       qCompoundName,
       qCategoryName,
-      compound,
-      compoundTarget,
-      loading
+      loading,
+      clinicalTrialCategories
     } = this.props;
     const {clinicalTrialGroups} = this;
     const cacheKey = (
@@ -81,85 +90,47 @@ class ClinicalTrialInner extends React.Component {
     const noResult = Object.keys(clinicalTrialGroups).length === 0;
     return <Grid stackable className={style['clinical-trials']}>
       <Grid.Row>
-        <InlineSearchBox
-         compoundValue={qCompoundName}
-         compoundTargetValue={qCompoundTargetName}
-         clinicalTrialCategoryValue={qCategoryName}
-         onChange={this.handleQueryChange}>
-          {({
-            compoundTargetDropdown,
-            compoundDropdown,
-            clinicalTrialCategoryDropdown
-          }) => (
-            <StatHeader>
-              {[
-                {
-                  title: 'Selection',
-                  width: 4,
-                  cells: [
-                    {label: 'Target', value: compoundTargetDropdown},
-                    {label: 'Compound', value: compoundDropdown},
-                    {label: 'Category', value: clinicalTrialCategoryDropdown}
-                  ]
-                },
-                {
-                  title: 'Results',
-                  width: 4,
-                  cells: [
-                    ...(noResult ? [{
-                      label: '',
-                      value: <div>No result.</div>
-                    }] : []),
-                    ...(loading ? [{
-                      label: '',
-                      value: <Loader active inline size="mini" />
-                    }] : []),
-                    ...Object.entries(clinicalTrialGroups).map(
-                      ([cat, trials]) => ({
-                        label: <a href={`#${cat}`}>{cat}</a>,
-                        value: trials.length
-                      })
-                    )
-                  ]
-                },
-                ...(compound || compoundTarget ? [{
-                  description: <>
-                    {compoundTarget && !compound ? <p>
-                      <strong>Target</strong>:{' '}
-                      {compoundTarget.description || 'Pending.'}
-                    </p> : null}
-                    {compound ? <p>
-                      <strong>Target</strong>:{' '}
-                      {compound.targetObj ?
-                        compound.targetObj.description || 'Pending.' :
-                        null}
-                    </p> : null}
-                    {compound ? <p>
-                      <strong>Compound</strong>:{' '}
-                      {compound.description || 'Pending.'}
-                    </p> : null}
-                  </>,
-                  width: 8
-                }] : [])
-              ]}
-            </StatHeader>
-          )}
-        </InlineSearchBox>
+        <Grid.Column width={16}>
+          <Header as="h1" dividing>
+            Onging and Planned Clinical Trials of Antiviral Compounds
+            <Header.Subheader>
+              from ClinicalTrials.gov and WHO ICTRP
+            </Header.Subheader>
+          </Header>
+          {loading ? <Loader active inline="centered" /> : <>
+            {noResult ? <div>No result.</div> : (
+              <ul className={style['category-stat']}>
+                {clinicalTrialCategories.edges.map(
+                  ({node: {name, displayName}}, idx) => (
+                    <li key={idx}>
+                      <a href={`#${name}`}>
+                        {renderCategory(displayName)}
+                      </a>
+                      <span>{(clinicalTrialGroups[name] || []).length}</span>
+                    </li>
+                  )
+                )}
+              </ul>
+            )}
+          </>}
+        </Grid.Column>
       </Grid.Row>
       {loading ?
         <Loader active inline="centered" /> : <>
           {!noResult ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                {Object.entries(clinicalTrialGroups)
-                  .map(([cat, catData], idx) => [
+                {clinicalTrialCategories.edges
+                  .map(({node: {name, displayName}}, idx) => [
                     <Header
                      key={`h${idx}`}
-                     as="h2" dividing id={cat}>{cat}</Header>,
+                     as="h2" dividing id={name}>
+                      {renderCategory(displayName)}
+                    </Header>,
                     <ClinicalTrialTable
                      key={`t${idx}`}
-                     cacheKey={`${cacheKey}@@${cat}`}
-                     data={catData} />
+                     cacheKey={`${cacheKey}@@${name}`}
+                     data={clinicalTrialGroups[name]} />
                 ])}
               </Grid.Column>
             </Grid.Row> : null
@@ -184,9 +155,7 @@ export default function ClinicalTrial({match, ...props}) {
   } = match;
   let {loading, error, data} = useQuery(searchQuery, {
     variables: {
-      compoundName, compoundTargetName, categoryName,
-      withCompound: Boolean(compoundName),
-      withCompoundTarget: Boolean(compoundTargetName)
+      compoundName, compoundTargetName, categoryName
     }
   });
   if (loading) {

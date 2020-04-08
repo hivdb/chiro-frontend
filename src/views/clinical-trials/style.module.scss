@@ -4,6 +4,16 @@
   font-size: 1.2rem;
 }
 
+.category-stat {
+  width: 30rem;
+  > li > a {
+    font-weight: 600;
+  }
+  > li > span {
+    float: right;
+  }
+}
+
 .trial-number {
   &:not(:last-child)::after {
     content: ';';

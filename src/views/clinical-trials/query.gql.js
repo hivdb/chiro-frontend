@@ -5,20 +5,17 @@ export default gql`
     $compoundName: String
     $compoundTargetName: String
     $categoryName: String
-    $withCompound: Boolean!
-    $withCompoundTarget: Boolean!
 
   ) {
-    compound(name: $compoundName) @include(if: $withCompound) {
-      name
-      description
-      targetObj { description }
-    }
 
-    compoundTarget(name: $compoundTargetName)
-    @include(if: $withCompoundTarget) {
-      name
-      description
+    clinicalTrialCategories {
+      edges {
+        node {
+          name
+          displayName
+          ordinal
+        }
+      }
     }
 
     clinicalTrials(

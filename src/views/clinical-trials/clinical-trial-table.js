@@ -10,7 +10,7 @@ function monthYear(date) {
   if (date.isValid()) {
     return date.format("MMM 'YY");
   }
-  return '?';
+  return '-';
 }
 
 function trialNumber(number) {
@@ -74,7 +74,7 @@ function shortenIntervention(text) {
 const tableColumns = [
   new ColDef({
     name: 'trialNumbers', label: 'Trial Number',
-    render: (tns) => (
+    render: tns => (
       tns.map((tn, idx) => (
         <div
          className={style['trial-number']}
@@ -83,9 +83,12 @@ const tableColumns = [
     )
   }),
   new ColDef({
-    name: 'recruitmentStatus', label: 'Status'
+    name: 'recruitmentStatus', label: 'Status',
+    render: status => (
+      status === 'Recruiting' ? 'Recruiting' : '-'
+    )
   }),
-  new ColDef({
+  /*new ColDef({
     name: 'hasTreatmentGroup',
     label: <>Treatment /<br />Prevention</>,
     render: (hasT, {hasPreventionGroup: hasP}) => (
@@ -96,7 +99,7 @@ const tableColumns = [
       )
     ),
     sortable: false
-  }),
+  }),*/
   new ColDef({
     name: 'treatmentPopulation',
     label: 'Population',
@@ -111,7 +114,7 @@ const tableColumns = [
   }),
   new ColDef({
     name: 'region',
-    label: <>Location /<br />Sponsor</>
+    label: 'Country'
   }),
   new ColDef({
     name: 'numParticipants',
