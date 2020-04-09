@@ -2,6 +2,8 @@ import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import orderBy from 'lodash/orderBy';
+import escapeRegExp from 'lodash/escapeRegExp';
+import {Popup} from 'semantic-ui-react';
 
 import ChiroTable, {ColumnDef as ColDef} from '../../components/chiro-table';
 import style from './style.module.scss';
@@ -63,13 +65,54 @@ function trialNumber(number) {
   return number;
 }
 
-function shortenIntervention(text) {
+function shortenCompound(name) {
   return (
-    text
+    name
       .replace(/Hydroxychloroquine/g, 'HCQ')
       .replace(/Chloroquine/g, 'CQ')
       .replace(/Lopinavir\/r/g, 'LPV/r')
   );
+}
+
+function renderIntervention(
+  text, {compoundSplitter, compoundDescMap, compoundNormMap}
+) {
+  const splitted = text.split(compoundSplitter);
+  const result = [];
+  const appeared = [];
+  for (let i = 0; i < splitted.length; i ++) {
+    if (i % 2 === 0) {
+      // even, not a compound
+      result.push(splitted[i]);
+    }
+    else {
+      // odd, a compound
+      const lower = splitted[i].toLocaleLowerCase();
+      const norm = compoundNormMap[lower];
+      const shorted = shortenCompound(splitted[i]);
+      if (appeared.indexOf(norm) > -1) {
+        result.push(shorted);
+      }
+      else {
+        appeared.push(norm);
+        const desc = compoundDescMap[lower];
+        result.push(
+          <Popup
+           key={i}
+           header={norm}
+           content={desc}
+           trigger={<span className={style['with-info']}>
+             {shorted}
+           </span>} />
+        );
+      }
+    }
+    result.push(' ');
+  }
+  if (result[result.length - 1] === ' ') {
+    result.pop();
+  }
+  return result;
 }
 
 const tableColumns = [
@@ -104,14 +147,13 @@ const tableColumns = [
   new ColDef({
     name: 'treatmentPopulation',
     label: 'Population',
-    render: () => 'Pending'
-    /*render: (population, {hasTreatmentGroup: hasT}) => (
-      hasT ? population : '-'
-    )*/
+    render: (population, {hasTreatmentGroup: hasT}) => (
+      (hasT && population) ? population : '-'
+    )
   }),
   new ColDef({
     name: 'intervention',
-    render: shortenIntervention
+    render: renderIntervention
   }),
   new ColDef({
     name: 'region',
@@ -134,18 +176,75 @@ const tableColumns = [
 ];
 
 
+function getCompoundSplitter(compounds) {
+  return new RegExp(`(?:^|\\s)(${
+    orderBy(
+      compounds.edges
+        .reduce(
+          (acc, {node: {name, synonyms}}) => ([...acc, name, ...synonyms]),
+          []
+        )
+        .map(escapeRegExp),
+      [({length}) => length, n => n],
+      ['desc']
+    ).join('|')
+  })(?:$|\\s)`, 'gi');
+}
+
+
+function getCompoundDescMap(compounds) {
+  return (
+    compounds.edges
+      .reduce(
+        (acc, {node: {name, synonyms, description}}) => {
+          acc[name.toLocaleLowerCase()] = description;
+          for (const syn of synonyms) {
+            acc[syn.toLocaleLowerCase()] = description;
+          }
+          return acc;
+        }, {}
+      )
+  );
+}
+
+
+function getCompoundNormMap(compounds) {
+  return (
+    compounds.edges
+      .reduce(
+        (acc, {node: {name, synonyms}}) => {
+          acc[name.toLocaleLowerCase()] = name;
+          for (const syn of synonyms) {
+            acc[syn.toLocaleLowerCase()] = name;
+          }
+          return acc;
+        }, {}
+      )
+  );
+}
+
+
 export default class ClinicalTrialTable extends React.Component {
 
   static propTypes = {
     cacheKey: PropTypes.string.isRequired,
+    compounds: PropTypes.object.isRequired,
     data: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
   }
 
   render() {
-    let {cacheKey, data} = this.props;
+    let {cacheKey, data, compounds} = this.props;
     data = orderBy(
       data, ['recruitmentStatus', 'numParticipants'], ['desc', 'desc']
     );
+    const compoundSplitter = getCompoundSplitter(compounds);
+    const compoundDescMap = getCompoundDescMap(compounds);
+    const compoundNormMap = getCompoundNormMap(compounds);
+    window.compoundSplitter = compoundSplitter;
+
+    data = data.map(d => ({
+      ...d, compoundSplitter, compoundDescMap, compoundNormMap
+    }));
     return (
       <ChiroTable
        cacheKey={cacheKey}

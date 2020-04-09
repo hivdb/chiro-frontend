@@ -5,8 +5,17 @@ export default gql`
     $compoundName: String
     $compoundTargetName: String
     $categoryName: String
-
   ) {
+
+    compounds(completeList: true) {
+      edges {
+        node {
+          name
+          synonyms
+          description
+        }
+      }
+    }
 
     clinicalTrialCategories {
       edges {

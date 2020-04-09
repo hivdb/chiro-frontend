@@ -80,6 +80,7 @@ class ClinicalTrialInner extends React.Component {
       qCompoundName,
       qCategoryName,
       loading,
+      compounds,
       clinicalTrialCategories
     } = this.props;
     const {clinicalTrialGroups} = this;
@@ -130,6 +131,7 @@ class ClinicalTrialInner extends React.Component {
                     <ClinicalTrialTable
                      key={`t${idx}`}
                      cacheKey={`${cacheKey}@@${name}`}
+                     compounds={compounds}
                      data={clinicalTrialGroups[name]} />
                 ])}
               </Grid.Column>
