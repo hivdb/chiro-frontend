@@ -92,7 +92,7 @@ class ClinicalTrialInner extends React.Component {
       <Grid.Row>
         <Grid.Column width={16}>
           <Header as="h1" dividing>
-            Onging and Planned Clinical Trials of Antiviral Compounds
+            Ongoing and Planned Clinical Trials of Antiviral Compounds
             <Header.Subheader>
               from ClinicalTrials.gov and WHO ICTRP
             </Header.Subheader>
