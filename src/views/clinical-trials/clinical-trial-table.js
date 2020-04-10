@@ -81,12 +81,12 @@ function renderIntervention(
   const result = [];
   const appeared = [];
   for (let i = 0; i < splitted.length; i ++) {
-    if (i % 2 === 0) {
-      // even, not a compound
+    if (i % 4 !== 2) {
+      // not a compound
       result.push(splitted[i]);
     }
     else {
-      // odd, a compound
+      // a compound
       const lower = splitted[i].toLocaleLowerCase();
       const norm = compoundNormMap[lower];
       const shorted = shortenCompound(splitted[i]);
@@ -107,7 +107,6 @@ function renderIntervention(
         );
       }
     }
-    result.push(' ');
   }
   if (result[result.length - 1] === ' ') {
     result.pop();
@@ -177,7 +176,7 @@ const tableColumns = [
 
 
 function getCompoundSplitter(compounds) {
-  return new RegExp(`(?:^|\\s)(${
+  return new RegExp(`(^|[\\s()])(${
     orderBy(
       compounds.edges
         .reduce(
@@ -188,7 +187,7 @@ function getCompoundSplitter(compounds) {
       [({length}) => length, n => n],
       ['desc']
     ).join('|')
-  })(?:$|\\s)`, 'gi');
+  })($|[\\s()])`, 'gi');
 }
 
 
