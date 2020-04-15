@@ -122,7 +122,7 @@ class SearchInner extends React.Component {
               {[
                 {
                   title: 'Selection',
-                  width: 3,
+                  width: 4,
                   cells: [
                     {label: 'Target', value: compoundTargetDropdown},
                     {label: 'Compound', value: compoundDropdown},
@@ -195,11 +195,11 @@ class SearchInner extends React.Component {
                       {virus.description || 'Pending.'}
                     </p> : null}
                   </>,
-                  width: 10
+                  width: 9
                 }] : []),
                 ...(!compound && !virus && !compoundTarget && article ? [{
                   description: <ArticleInfo {...article} />,
-                  width: 10
+                  width: 9
                 }] : [])
               ]}
             </StatHeader>
