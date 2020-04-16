@@ -1,6 +1,5 @@
 import React from 'react';
 import moment from 'moment';
-import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 
@@ -11,6 +10,11 @@ import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
 
 
+function removeCoVKeywords({keyword}) {
+  return !(/coronavirus|covid|^19$|sars|^2$/.test(keyword));
+}
+
+
 class NewsInner extends React.Component {
 
   static propTypes = {
@@ -18,7 +22,7 @@ class NewsInner extends React.Component {
     status: PropTypes.string.isRequired,
     code: PropTypes.string,
     message: PropTypes.string,
-    articles: PropTypes.object
+    news: PropTypes.object
   }
 
   static defaultProps = {
@@ -28,11 +32,9 @@ class NewsInner extends React.Component {
   render() {
     let {
       loading,
-      articles
+      news
     } = this.props;
     setTitle('Coronavirus News');
-
-    articles = sortBy(articles, ['publishedAt']).reverse();
 
     return <Grid stackable className={style['news']}>
       {loading ?
@@ -41,30 +43,22 @@ class NewsInner extends React.Component {
           <Grid.Column width={16}>
             <Header as="h1" dividing>
               <Header.Content>
-                Coronavirus News
-                <Header.Subheader>
-                  Powered by{' '}
-                  <a
-                   rel="noopener noreferrer"
-                   href="https://newsapi.org/pricing"
-                   target="_blank">
-                    NewsAPI.org
-                  </a>
-                </Header.Subheader>
+                Coronavirus Treatment News
               </Header.Content>
             </Header>
             <Item.Group divided>
-              {articles.filter(({source}) => source.name).map(
-                ({source,
+              {news.map(
+                ({publisher,
                   title,
                   description,
                   url,
-                  urlToImage,
-                  publishedAt
+                  image,
+                  date,
+                  matches
                 }, idx) => (
                   <Item key={idx}>
-                    {urlToImage ?
-                      <Item.Image size="small" src={urlToImage} /> : null}
+                    {image ?
+                      <Item.Image size="small" src={image} /> : null}
                     <Item.Content>
                       <Item.Header
                        as="a"
@@ -74,8 +68,8 @@ class NewsInner extends React.Component {
                         {title}
                       </Item.Header>
                       <Item.Meta>
-                        {source.name}{' '}&bull;{' '}
-                        {publishedAt ? moment(publishedAt).fromNow() : null}
+                        {publisher}{' '}&bull;{' '}
+                        {date ? moment(date).fromNow() : null}
                       </Item.Meta>
                       <Item.Description>
                         {description} (
@@ -86,6 +80,15 @@ class NewsInner extends React.Component {
                         </a>
                         )
                       </Item.Description>
+                      <Item.Extra>
+                        <span className={style['keywords']}>
+                          {matches
+                            .filter(removeCoVKeywords)
+                            .map(({keyword}) => keyword)
+                            .join(', ')
+                          }
+                        </span>
+                      </Item.Extra>
                     </Item.Content>
                   </Item>
                 )
@@ -118,6 +121,6 @@ export default function News({match, ...props}) {
   return (
     <NewsInner
      {...props}
-     {...data.news} />
+     news={data.news} />
   );
 }

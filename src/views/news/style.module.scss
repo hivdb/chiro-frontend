@@ -1,14 +1,15 @@
-:global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
-  > .type {
-    &::before {
-      content: 'Type: ';
-      font-weight: 600;
+.news {
+  :global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
+    > .keywords {
+      display: none;
+      &::before {
+        content: 'Keywords: ';
+        font-weight: 600;
+      }
     }
   }
-  > .related-viruses {
-    &::before {
-      content: 'Related viruses: ';
-      font-weight: 600;
-    }
+  :global(.ui.items>.item>.image) {
+    max-height: 7rem;
+    overflow-y: hidden;
   }
 }
