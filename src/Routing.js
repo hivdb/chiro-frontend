@@ -18,6 +18,7 @@ import TermsOfUse from './views/terms-of-use';
 import Donation from './views/donation';
 import ClinicalTrials from './views/clinical-trials';
 import News from './views/news';
+import Statistics from './views/statistics';
 
 import Layout from './components/layout';
 
@@ -40,6 +41,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={Donation} path="/donation/" />
       <Route Component={News} path="/news/" />
       <Route Component={ClinicalTrials} path="/clinical-trials/" />
+      <Route Component={Statistics} path="/statistics" />
     </Route>
   ),
 
