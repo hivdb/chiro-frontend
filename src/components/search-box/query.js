@@ -25,13 +25,14 @@ function reformQueryData(data) {
       })
     ),
     ...compounds.edges.map(
-      ({node: {name, targetObj}}) => ({
+      ({node: {name, status, targetObj}}) => ({
         title: name,
         displayTargets: targetObj ? [
           targetObj.name,
           ...(targetObj.relatedCompoundTargets
             .map(({name}) => name))
         ] : [],
+        status,
         category: 'compounds'
       })
     ),

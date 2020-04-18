@@ -92,7 +92,9 @@ class SearchBoxInner extends React.Component {
 
   get compoundOptions() {
     const {data, compoundTargetValue, allowEmpty} = this.props;
-    let filter = ({category}) => category === 'compounds';
+    let filter = ({status, category}) => (
+      status === 'visible' && category === 'compounds'
+    );
     if (compoundTargetValue && compoundTargetValue !== ANY) {
       filter = ({displayTargets, category}) => (
         category === 'compounds' &&

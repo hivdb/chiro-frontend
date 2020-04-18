@@ -16,10 +16,11 @@ export default gql`
         }
       }
     }
-    compounds {
+    compounds(completeList: true) {
       edges {
         node {
           name
+          status
           targetObj {
             name
             relatedCompoundTargets {
