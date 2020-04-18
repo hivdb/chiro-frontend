@@ -114,6 +114,15 @@ function renderIntervention(
   return result;
 }
 
+function renderRegion(region, {regionDetail}) {
+  if (regionDetail) {
+    return <Popup content={regionDetail} trigger={<span>{region}</span>} />;
+  }
+  else {
+    return region;
+  }
+}
+
 const tableColumns = [
   new ColDef({
     name: 'trialNumbers', label: 'Trial Number',
@@ -156,7 +165,8 @@ const tableColumns = [
   }),
   new ColDef({
     name: 'region',
-    label: 'Country'
+    label: 'Country',
+    render: renderRegion
   }),
   new ColDef({
     name: 'numParticipants',

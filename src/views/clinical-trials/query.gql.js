@@ -45,6 +45,7 @@ export default gql`
           dosage
           outcome
           region
+          regionDetail
           numParticipants
           startDate
           stopDate
