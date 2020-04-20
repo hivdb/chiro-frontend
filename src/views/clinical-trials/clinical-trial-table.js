@@ -155,10 +155,7 @@ const tableColumns = [
   }),*/
   new ColDef({
     name: 'treatmentPopulation',
-    label: 'Population',
-    render: (population, {hasTreatmentGroup: hasT}) => (
-      (hasT && population) ? population : '-'
-    )
+    label: 'Population'
   }),
   new ColDef({
     name: 'intervention',
