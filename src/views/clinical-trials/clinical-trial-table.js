@@ -71,6 +71,7 @@ function shortenCompound(name) {
       .replace(/Hydroxychloroquine/g, 'HCQ')
       .replace(/Chloroquine/g, 'CQ')
       .replace(/Lopinavir\/r/g, 'LPV/r')
+      .replace(/Convalescent plasma/g, 'CP')
   );
 }
 
