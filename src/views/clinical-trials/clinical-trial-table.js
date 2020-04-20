@@ -137,7 +137,8 @@ const tableColumns = [
   new ColDef({
     name: 'recruitmentStatus', label: 'Status',
     render: status => (
-      status === 'Recruiting' ? 'Recruiting' : '-'
+      ["Recruiting", "Suspended",
+       "Terminated", "Completed"].includes(status) ? status : '-'
     )
   }),
   /*new ColDef({
