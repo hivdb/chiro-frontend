@@ -59,7 +59,11 @@ class ClinicalTrialInner extends React.Component {
     }
     const allTrials = [];
     for (const {node: {categoryNames, ...trial}} of clinicalTrials.edges) {
+      let hasCQHCQTreatment = categoryNames.includes('CQHCQTreatment');
       for (const categoryName of categoryNames) {
+        if (hasCQHCQTreatment && categoryName === 'CQHCQPrevention') {
+          continue;
+        }
         allTrials.push({...trial, categoryName});
       }
     }
