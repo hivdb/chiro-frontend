@@ -124,6 +124,24 @@ function renderRegion(region, {regionDetail}) {
   }
 }
 
+function renderRecruitmentStatus(status, {attachedTextObjs}) {
+  const recruitment = [
+      "Recruiting", "Suspended",
+      "Terminated", "Completed"].includes(status) ? status : '-'
+
+  let stop_reason = '';
+  for (const one of attachedTextObjs) {
+    if (one.type === 'stop_reason') {
+      stop_reason = one.content;
+    }
+  }
+  if (stop_reason) {
+    return (<Popup content={stop_reason} trigger={<span>{recruitment}</span>} />)
+  } else {
+    return (recruitment)
+  }
+}
+
 const tableColumns = [
   new ColDef({
     name: 'trialNumbers', label: 'Trial Number',
@@ -137,10 +155,7 @@ const tableColumns = [
   }),
   new ColDef({
     name: 'recruitmentStatus', label: 'Status',
-    render: status => (
-      ["Recruiting", "Suspended",
-       "Terminated", "Completed"].includes(status) ? status : '-'
-    )
+    render: renderRecruitmentStatus
   }),
   /*new ColDef({
     name: 'hasTreatmentGroup',
