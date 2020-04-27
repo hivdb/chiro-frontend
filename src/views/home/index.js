@@ -14,26 +14,25 @@ export default class ChiroSearch extends React.Component {
     router: routerShape.isRequired
   }
 
-  handleExpSearchBoxChange = (value, category) => {
-    if (value === null) {
-      this.props.router.push({pathname: '/search/'});
-      return;
-    }
+  handleExpSearchBoxChange = (actions) => {
     const query = {};
-    if (category === 'articles') {
-      query.article = value;
-    }
-    else if (category === 'compounds') {
-      query.compound = value;
-    }
-    else if (category === 'compoundTargets') {
-      query.target = value;
-    }
-    else if (category === 'studyTypes') {
-      query.study = value;
-    }
-    else {
-      query.virus = value;
+    for (let [value, category] of actions) {
+      value = value || undefined;
+      if (category === 'articles') {
+        query.article = value;
+      }
+      else if (category === 'compounds') {
+        query.compound = value;
+      }
+      else if (category === 'compoundTargets') {
+        query.target = value;
+      }
+      else if (category === 'studyTypes') {
+        query.study = value;
+      }
+      else {
+        query.virus = value;
+      }
     }
     this.props.router.push(
       {pathname: '/search/', query}
