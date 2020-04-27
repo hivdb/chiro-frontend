@@ -104,6 +104,16 @@ class SearchBoxInner extends React.Component {
     return data2Options(data, filter, allowEmpty);
   }
 
+  getTargetFromCompound(compoundName) {
+    const {data} = this.props;
+    return (
+      data
+        .filter(({category, title}) => (
+          category === 'compounds' && title === compoundName
+        ))
+    )[0].directTarget;
+  }
+
   get virusOptions() {
     const {data, allowEmpty} = this.props;
     return data2Options(
@@ -168,7 +178,16 @@ class SearchBoxInner extends React.Component {
     if (value === ANY) {
       value = null;
     }
-    this.props.onChange(value, category);
+    const actions = [];
+    if (category === 'compoundTargets') {
+      actions.push([null, 'compounds']);
+    }
+    if (category === 'compounds' && value) {
+      const target = this.getTargetFromCompound(value);
+      actions.push([target, 'compoundTargets']);
+    }
+    actions.push([value, category]);
+    this.props.onChange(actions);
   }
 
   render() {

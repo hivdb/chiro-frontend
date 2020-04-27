@@ -1,6 +1,6 @@
 import defer from 'lodash/defer';
 
-export default function handleQueryChange(value, category, props) {
+export default function handleQueryChange(actions, props) {
   const {
     router,
     match: {
@@ -10,43 +10,45 @@ export default function handleQueryChange(value, category, props) {
   } = props;
   const newQuery = {...query};
   delete newQuery.article;
-  value = value || undefined;
   let changed = false;
-  if (category === 'compounds') {
-    if (value !== query.compound) {
-      newQuery.compound = value;
-      changed = true;
-    }
-  }
-  else if (category === 'compoundTargets') {
-    if (value !== query.target) {
-      newQuery.target = value;
-      if (value && compound && value !== compound.target) {
-        delete newQuery.compound;
+  for (let [value, category] of actions) {
+    value = value || undefined;
+    if (category === 'compounds') {
+      if (value !== query.compound) {
+        newQuery.compound = value;
+        changed = true;
       }
+    }
+    else if (category === 'compoundTargets') {
+      if (value !== query.target) {
+        newQuery.target = value;
+        if (value && compound && value !== compound.target) {
+          delete newQuery.compound;
+        }
+        changed = true;
+      }
+    }
+    else if (category === 'articles') {
+      if (value !== query.article) {
+        newQuery.article = value;
+        changed = true;
+      }
+    }
+    else if (category === 'studyTypes') {
+      newQuery.study = value;
       changed = true;
     }
-  }
-  else if (category === 'articles') {
-    if (value !== query.article) {
-      newQuery.article = value;
-      changed = true;
+    else if (category === 'clinicalTrialCategories') {
+      if (value !== query.trialcat) {
+        newQuery.trialcat = value;
+        changed = true;
+      }
     }
-  }
-  else if (category === 'studyTypes') {
-    newQuery.study = value;
-    changed = true;
-  }
-  else if (category === 'clinicalTrialCategories') {
-    if (value !== query.trialcat) {
-      newQuery.trialcat = value;
-      changed = true;
-    }
-  }
-  else {  // viruses
-    if (value !== query.virus) {
-      newQuery.virus = value;
-      changed = true;
+    else {  // viruses
+      if (value !== query.virus) {
+        newQuery.virus = value;
+        changed = true;
+      }
     }
   }
   if (changed) {

@@ -48,8 +48,8 @@ class ClinicalTrialInner extends React.Component {
     loading: false
   }
 
-  handleQueryChange = (value, category) => (
-    handleQueryChange(value, category, this.props)
+  handleQueryChange = (actions) => (
+    handleQueryChange(actions, this.props)
   )
 
   get clinicalTrialGroups() {

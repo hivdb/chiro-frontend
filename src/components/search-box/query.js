@@ -32,6 +32,7 @@ function reformQueryData(data) {
           ...(targetObj.relatedCompoundTargets
             .map(({name}) => name))
         ] : [],
+        directTarget: targetObj ? targetObj.name : null,
         status,
         category: 'compounds'
       })
