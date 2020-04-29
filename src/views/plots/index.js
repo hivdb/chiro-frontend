@@ -1,12 +1,12 @@
 import React from 'react';
-import CompoundChart from './compound.svg';
+// import CompoundChart from './compound.svg';
 import PolymeraseChart from './polymerase.svg';
 import ClinialChart from './clinical-trials.svg';
 import TargetChart from './target.svg';
 import VirusChart from './virus.svg';
 
 
-export default function Statistics() {
+export default function Plots() {
   // return <TargetChart />;
   return (<>
     <div>
