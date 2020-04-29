@@ -86,7 +86,8 @@ class ClinicalTrialInner extends React.Component {
       loading,
       compounds,
       clinicalTrialCategories,
-      updateTime
+      updateTime,
+      clinicalTrials
     } = this.props;
     const {clinicalTrialGroups} = this;
     const cacheKey = (
@@ -103,7 +104,9 @@ class ClinicalTrialInner extends React.Component {
           <Header as="h1" dividing>
             Ongoing and Planned Clinical Trials of Antiviral Compounds
             <Header.Subheader>
-              from ClinicalTrials.gov and WHO ICTRP
+              from ClinicalTrials.gov and WHO ICTRP {
+                clinicalTrials? "(No. " + clinicalTrials['totalCount'] + ")": ''
+              }
               {updateTime ?
                 <span className={style['last-update']}>
                   Last updated at {updateTime.toLocaleString('en-US')}
