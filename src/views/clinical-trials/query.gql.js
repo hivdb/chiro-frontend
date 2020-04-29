@@ -7,6 +7,10 @@ export default gql`
     $categoryName: String
   ) {
 
+    updateTime(title: "clinical-trials") {
+      updateTime
+    }
+
     compounds(completeList: true) {
       edges {
         node {

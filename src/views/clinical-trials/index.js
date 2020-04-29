@@ -85,7 +85,8 @@ class ClinicalTrialInner extends React.Component {
       qCategoryName,
       loading,
       compounds,
-      clinicalTrialCategories
+      clinicalTrialCategories,
+      updateTime
     } = this.props;
     const {clinicalTrialGroups} = this;
     const cacheKey = (
@@ -93,6 +94,9 @@ class ClinicalTrialInner extends React.Component {
       `@@${qCategoryName}`
     );
     const noResult = Object.keys(clinicalTrialGroups).length === 0;
+    if (updateTime) {
+      updateTime = new Date(updateTime.updateTime);
+    }
     return <Grid stackable className={style['clinical-trials']}>
       <Grid.Row>
         <Grid.Column width={16}>
@@ -100,6 +104,10 @@ class ClinicalTrialInner extends React.Component {
             Ongoing and Planned Clinical Trials of Antiviral Compounds
             <Header.Subheader>
               from ClinicalTrials.gov and WHO ICTRP
+              {updateTime ?
+                <span className={style['last-update']}>
+                  Last updated at {updateTime.toLocaleString('en-US')}
+                </span> : null}
             </Header.Subheader>
           </Header>
           {loading ? <Loader active inline="centered" /> : <>

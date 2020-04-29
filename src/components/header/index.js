@@ -50,7 +50,7 @@ export default class Header extends React.Component {
                   A Stanford HIVDB team website.
                 </a>
                 {lastUpdate === null ? null :
-                  ` Last updated at ${lastUpdate.toLocaleString()}.`}
+                  ` Last updated at ${lastUpdate.toLocaleString('en-US')}.`}
               </div>
             </div>
           </nav>
