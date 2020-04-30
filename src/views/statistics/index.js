@@ -9,7 +9,7 @@ import setTitle from '../../utils/set-title';
 import TargetTable from './target';
 import CompoundTable from './compound';
 
-import style from './style.module.scss';
+// import style from './style.module.scss';
 
 class StatisticsInner extends React.Component {
 

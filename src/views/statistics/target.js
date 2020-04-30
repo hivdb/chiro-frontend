@@ -14,7 +14,7 @@ function updateTargetName(name) {
   if (name === 'HIV PIs') {
     name = 'Protease - HIV PIs';
   }
-  if (name == 'Entry - Receptor binding') {
+  if (name === 'Entry - Receptor binding') {
     name = 'Entry - Miscellaneous';
   }
   if (name === 'Host Protease') {
