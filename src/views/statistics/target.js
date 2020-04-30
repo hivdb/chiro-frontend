@@ -9,7 +9,7 @@ const tableColumns = [
     label: 'Target',
   }),
   new ColumnDef({
-    name: 'compoundCount',
+    name: 'compoundCount2',
     label: 'Compounds',
   }),
   new ColumnDef({
