@@ -10,7 +10,7 @@ const tableColumns = [
   }),
   new ColumnDef({
     name: 'compoundCount',
-    label: 'Compound',
+    label: 'Compounds',
   }),
   new ColumnDef({
     name: 'Biochem',
@@ -30,7 +30,7 @@ const tableColumns = [
   }),
   new ColumnDef({
     name: 'Clinical',
-    label: 'Clinical trial',
+    label: 'Clinical study',
   }),
   new ColumnDef({
     name: 'articleCount',
