@@ -117,6 +117,7 @@ function reformExpData(expData) {
     }
 
     node['name'] = updateTargetName(node['name']);
+    node['compoundCount2'] = node['compoundObjs']['totalCount']
     return node;
   });
 

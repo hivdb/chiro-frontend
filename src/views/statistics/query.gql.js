@@ -27,6 +27,15 @@ query {
           category
         }
         compoundCount
+        compoundObjs {
+          totalCount
+          edges {
+            node {
+              name
+              status
+            }
+          }
+        }
       }
     }
   }
