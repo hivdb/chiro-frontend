@@ -14,6 +14,7 @@ export default class Footer extends React.Component {
           <Header as="h2">Databases</Header>
           <ul>
             <li><Link to="/terms-of-use/">Terms of Use</Link></li>
+            <li><Link to="/database-schema/">Database Schema</Link></li>
           </ul>
         </Grid.Column>
         <Grid.Column>

@@ -19,6 +19,7 @@ import Donation from './views/donation';
 import ClinicalTrials from './views/clinical-trials';
 import News from './views/news';
 import Statistics from './views/statistics';
+import DatabaseSchema from './views/database-schema';
 
 import Layout from './components/layout';
 
@@ -42,6 +43,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={News} path="/news/" />
       <Route Component={ClinicalTrials} path="/clinical-trials/" />
       <Route Component={Statistics} path="/statistics" />
+      <Route Component={DatabaseSchema} path="/database-schema/" />
     </Route>
   ),
 
