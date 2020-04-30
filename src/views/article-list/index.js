@@ -41,7 +41,6 @@ class ArticleListInner extends React.Component {
               #Total: {articles.edges.length},
               #Peer reviewed: {
                 articles.edges.filter(({node}) => {
-                  console.log(node);
                   return (node.pmid.length !== 0);
                 }).length},
               #preprint: {
