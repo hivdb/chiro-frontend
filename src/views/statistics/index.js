@@ -42,7 +42,8 @@ class StatisticsInner extends React.Component {
       selectedTarget
     } = this.state;
     setTitle('Statistics');
-    return <>{loading? <Loader active inline="centered" /> :
+    return <>{
+      loading? <Loader active inline="centered" /> :
       <Grid stackable>
         <Grid.Row centered>
           <Grid.Column width={16}>
@@ -55,14 +56,14 @@ class StatisticsInner extends React.Component {
           </Grid.Column>
         </Grid.Row>
         {selectedTarget?
-        <Grid.Row centered>
-          <Grid.Column width={16}>
-            <Header as="h2" dividing id="compound-stat">
+          <Grid.Row centered>
+            <Grid.Column width={16}>
+              <Header as="h2" dividing id="compound-stat">
                 Compound for {selectedTarget['showname']}
-            </Header>
-            <CompoundTable target={selectedTarget['name']}/>
-          </Grid.Column>
-        </Grid.Row>
+              </Header>
+              <CompoundTable selectedTarget={selectedTarget}/>
+            </Grid.Column>
+          </Grid.Row>
         : <></>}
 
         {/* <Grid.Row>
@@ -102,7 +103,7 @@ class StatisticsInner extends React.Component {
           </Table>
         </Grid.Row> */}
       </Grid>
-    }</>
+    }</>;
   }
 }
 
@@ -117,5 +118,5 @@ export default function Statistics({match, ...props}) {
   else if (error) {
     return `Error: ${error.message}`;
   }
-  return <StatisticsInner {...props} {...data}/>
+  return <StatisticsInner {...props} {...data}/>;
 }

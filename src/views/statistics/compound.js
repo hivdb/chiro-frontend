@@ -15,7 +15,7 @@ const tableColumns = [
     label: 'Compound',
   }),
   new ColumnDef({
-    name: 'target',
+    name: 'targetShowName',
     label: 'Target',
   }),
   new ColumnDef({
@@ -53,20 +53,24 @@ const tableColumns = [
   }),
 ];
 
-function reformExpData(expData) {
+function reformExpData(expData, selectedTarget) {
+  const targetName = selectedTarget['name'];
+  const targetShowName = selectedTarget['showname'];
   if (!expData || !expData.edges) {
     return [];
   }
   let data = expData.edges.map(({node}) => {
     const experimentCounts = node.experimentCounts;
-    let target_sum_exp_num = 0;
     for (const exp_counts of experimentCounts) {
       const {category, count} = exp_counts;
       node[category] = count;
-      target_sum_exp_num += count;
     }
-    node['target_sum_exp_num'] = target_sum_exp_num;
+    node['targetShowName'] = targetShowName;
     return node;
+  });
+
+  data = data.filter(node => {
+    return node['target'] === targetName;
   });
 
   return data;
@@ -78,6 +82,7 @@ class CompoundTableInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     compounds: PropTypes.object,
+    selectedTarget: PropTypes.object,
   }
 
   static defaultProps = {
@@ -85,22 +90,28 @@ class CompoundTableInner extends React.Component {
   }
 
   render() {
-    const {compounds, loading} = this.props;
+    const {
+      compounds,
+      selectedTarget,
+      loading
+    } = this.props;
 
     return (
-      <>{loading? <Loader active inline="centered" /> :
+      <>{
+        loading? <Loader active inline="centered" /> :
         <ChiroTable
-        columnDefs={tableColumns}
-        data={reformExpData(compounds)} />
+         columnDefs={tableColumns}
+         data={reformExpData(compounds, selectedTarget)} />
       }</>
     );
   }
 }
 
-export default function CompoundTable({target}) {
+export default function CompoundTable({selectedTarget}) {
+  const targetName = selectedTarget['name'];
   let {loading, error, data} = useQuery(SearchQuery, {
     variables: {
-      compoundTarget: target
+      compoundTarget: targetName
     }
   });
   if (loading) {
@@ -111,5 +122,6 @@ export default function CompoundTable({target}) {
   else if (error) {
     return `Error: ${error.message}`;
   }
-  return <CompoundTableInner {...data}/>
+
+  return <CompoundTableInner {...data} selectedTarget={selectedTarget}/>;
 }

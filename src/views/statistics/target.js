@@ -29,15 +29,15 @@ function updateTargetName(name) {
   if (name === 'Host') {
     name = 'Host - Miscellaneous';
   }
-  return name
+  return name;
 }
 
 function reformExpData(expData) {
   if (!expData || !expData.edges) {
     return [];
   }
-  let deleteEntry = {}
-  let deleteHost = {}
+  let deleteEntry = {};
+  let deleteHost = {};
   let data = expData.edges.map(({node}) => {
     const experimentCounts = node.experimentCounts;
     for (const exp_counts of experimentCounts) {
@@ -83,7 +83,7 @@ function reformExpData(expData) {
     }
 
     node['showname'] = updateTargetName(node['name']);
-    node['compoundCount2'] = node['compoundObjs']['totalCount']
+    node['compoundCount2'] = node['compoundObjs']['totalCount'];
     return node;
   });
 
@@ -97,7 +97,7 @@ export default class TargetTable extends React.Component {
     const {changeTarget} = this.props;
     return (e) => {
       changeTarget(target, showname);
-    }
+    };
   }
 
   render() {
@@ -108,8 +108,11 @@ export default class TargetTable extends React.Component {
         name: 'showname',
         label: 'Target',
         render: (showname, row) => {
-          const name = row['name']
-          return <a onClick={this.handleTarget(name, showname)} href="#compound-stat">{showname}</a>;
+          const name = row['name'];
+          return (
+            <a
+             onClick={this.handleTarget(name, showname)}
+             href="#compound-stat">{showname}</a>);
         }
       }),
       new ColumnDef({

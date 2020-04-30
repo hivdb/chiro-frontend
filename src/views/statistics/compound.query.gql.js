@@ -20,4 +20,4 @@ query compoundSearch(
     }
   }
 }
-`
+`;
