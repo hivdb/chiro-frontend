@@ -36,7 +36,21 @@ class ArticleListInner extends React.Component {
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>References</Header>
+            <Header as="h1" dividing>References
+            <Header.Subheader>
+              #Total: {articles.edges.length},
+              #Peer reviewed: {
+                articles.edges.filter(({node}) => {
+                  console.log(node);
+                  return (node.pmid.length !== 0);
+                }).length},
+              #preprint: {
+                articles.edges.filter(({node}) => {
+                  return node.pmid.length === 0;
+                }).length
+              }
+            </Header.Subheader>
+            </Header>
             <ol>
               {articles.edges.map(
                 ({node: {experimentCounts, nickname, ...node}}, idx) => (
