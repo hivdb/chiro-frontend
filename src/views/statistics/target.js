@@ -46,7 +46,7 @@ function updateTargetName(name) {
     name = 'Protease - PL';
   }
   if (name === 'HIV PIs') {
-    name = 'Entry - HIV PIs';
+    name = 'Protease - HIV PIs';
   }
   if (name == 'Entry - Receptor binding') {
     name = 'Entry - miscellaneous';
@@ -70,16 +70,53 @@ function reformExpData(expData) {
   if (!expData || !expData.edges) {
     return [];
   }
+  let deleteEntry = {}
+  let deleteHost = {}
   let data = expData.edges.map(({node}) => {
-    node['name'] = updateTargetName(node['name']);
     const experimentCounts = node.experimentCounts;
-    let target_sum_exp_num = 0;
     for (const exp_counts of experimentCounts) {
       const {category, count} = exp_counts;
       node[category] = count;
-      target_sum_exp_num += count;
+
+      if (node['name'] === 'Entry - Monoclonal antibody') {
+        if (category in deleteEntry) {
+          deleteEntry[category] += count;
+        } else {
+          deleteEntry[category] = 0;
+          deleteEntry[category] += count;
+        }
+      }
+      if (
+        node['name'] === 'Host Protease' ||
+        node['name'] === 'Host Endosomal Trafficking' ||
+        node['name'] === 'Host Cyclophilin Inhibition'
+      ) {
+        if (category in deleteHost) {
+          deleteHost[category] += count;
+        } else {
+          deleteHost[category] = 0;
+          deleteHost[category] += count;
+        }
+      }
     }
-    node['target_sum_exp_num'] = target_sum_exp_num;
+
+    return node;
+  });
+
+  data = data.map((node) => {
+    if (node['name'] === 'Entry - Receptor binding') {
+      for (const category in deleteEntry) {
+        node[category] -= deleteEntry[category];
+      }
+    }
+
+    if (node['name'] === 'Host') {
+      for (const category in deleteHost) {
+        node[category] -= deleteHost[category];
+      }
+    }
+
+    node['name'] = updateTargetName(node['name']);
     return node;
   });
 
