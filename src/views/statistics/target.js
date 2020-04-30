@@ -49,19 +49,19 @@ function updateTargetName(name) {
     name = 'Protease - HIV PIs';
   }
   if (name == 'Entry - Receptor binding') {
-    name = 'Entry - miscellaneous';
+    name = 'Entry - Miscellaneous';
   }
   if (name === 'Host Protease') {
     name = 'Entry - Host protease';
   }
   if (name === 'Host Endosomal Trafficking') {
-    name = 'Host - Endosomal Trafficking';
+    name = 'Host - Endosomal trafficking';
   }
   if (name === 'Host Cyclophilin Inhibition') {
-    name = 'Host - Cyclophilin Inhibition';
+    name = 'Host - Cyclophilin inhibition';
   }
   if (name === 'Host') {
-    name = 'Host - miscellaneous';
+    name = 'Host - Miscellaneous';
   }
   return name
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 // import CompoundChart from './compound.svg';
-import PolymeraseChart from './polymerase.svg';
-import ClinialChart from './clinical-trials.svg';
-import TargetChart from './target.svg';
-import VirusChart from './virus.svg';
+import PolymeraseChart from './polymerase.png';
+import ClinialChart from './clinical-trials.png';
+import TargetChart from './target.png';
+import VirusChart from './virus.png';
 
 
 export default function Plots() {
