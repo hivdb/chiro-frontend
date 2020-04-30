@@ -1,0 +1,8 @@
+.targetTable {
+    :global(.ui.accordion .active.content) {
+        display: table-row;
+        td {
+            padding: 0;
+        }
+    }
+}

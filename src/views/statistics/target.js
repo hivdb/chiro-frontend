@@ -3,40 +3,6 @@ import React from 'react';
 import ChiroTable from '../../components/chiro-table';
 import {ColumnDef} from '../../components/chiro-table';
 
-const tableColumns = [
-  new ColumnDef({
-    name: 'name',
-    label: 'Target',
-  }),
-  new ColumnDef({
-    name: 'compoundCount2',
-    label: 'Compounds',
-  }),
-  new ColumnDef({
-    name: 'Biochem',
-    label: 'Biochemistry',
-  }),
-  new ColumnDef({
-    name: 'CellCulture',
-    label: 'Cell culture',
-  }),
-  new ColumnDef({
-    name: 'EntryAssay',
-    label: 'Entry assay',
-  }),
-  new ColumnDef({
-    name: 'Animal',
-    label: 'Animal model',
-  }),
-  new ColumnDef({
-    name: 'Clinical',
-    label: 'Clinical study',
-  }),
-  new ColumnDef({
-    name: 'articleCount',
-    label: 'References',
-  }),
-];
 
 function updateTargetName(name) {
   if (name === '3CL Protease') {
@@ -116,7 +82,7 @@ function reformExpData(expData) {
       }
     }
 
-    node['name'] = updateTargetName(node['name']);
+    node['showname'] = updateTargetName(node['name']);
     node['compoundCount2'] = node['compoundObjs']['totalCount']
     return node;
   });
@@ -127,8 +93,55 @@ function reformExpData(expData) {
 
 export default class TargetTable extends React.Component {
 
+  handleTarget = (target, showname) => {
+    const {changeTarget} = this.props;
+    return (e) => {
+      changeTarget(target, showname);
+    }
+  }
+
   render() {
     const {data} = this.props;
+
+    const tableColumns = [
+      new ColumnDef({
+        name: 'showname',
+        label: 'Target',
+        render: (showname, row) => {
+          const name = row['name']
+          return <a onClick={this.handleTarget(name, showname)} href="#compound-stat">{showname}</a>;
+        }
+      }),
+      new ColumnDef({
+        name: 'compoundCount2',
+        label: 'Compounds',
+      }),
+      new ColumnDef({
+        name: 'Biochem',
+        label: 'Biochemistry',
+      }),
+      new ColumnDef({
+        name: 'CellCulture',
+        label: 'Cell culture',
+      }),
+      new ColumnDef({
+        name: 'EntryAssay',
+        label: 'Entry assay',
+      }),
+      new ColumnDef({
+        name: 'Animal',
+        label: 'Animal model',
+      }),
+      new ColumnDef({
+        name: 'Clinical',
+        label: 'Clinical study',
+      }),
+      new ColumnDef({
+        name: 'articleCount',
+        label: 'References',
+      }),
+    ];
+
 
     return (
       <ChiroTable

@@ -1,4 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {useQuery} from '@apollo/react-hooks';
+import {Loader} from 'semantic-ui-react';
+
+import SearchQuery from './compound.query.gql.js';
 
 import ChiroTable from '../../components/chiro-table';
 import {ColumnDef} from '../../components/chiro-table';
@@ -18,28 +23,29 @@ const tableColumns = [
     label: 'Biochemistry',
   }),
   new ColumnDef({
-    name: 'EntryAssay',
-    label: 'Entry assay',
-  }),
-  new ColumnDef({
     name: 'CellCulture',
     label: 'Cell culture',
   }),
+  new ColumnDef({
+    name: 'EntryAssay',
+    label: 'Entry assay',
+  }),
+
   new ColumnDef({
     name: 'Animal',
     label: 'Animal model',
   }),
   new ColumnDef({
     name: 'Clinical',
-    label: 'Clinical Study',
+    label: 'Clinical study',
   }),
-  new ColumnDef({
-    name: 'target_sum_exp_num',
-    label: 'Total',
-  }),
+  // new ColumnDef({
+  //   name: 'target_sum_exp_num',
+  //   label: 'Total',
+  // }),
   new ColumnDef({
     name: 'articleCount',
-    label: '#References',
+    label: 'References',
   }),
   new ColumnDef({
     name: 'clinicalTrialCount',
@@ -67,15 +73,43 @@ function reformExpData(expData) {
 }
 
 
-export default class CompoundTable extends React.Component {
+class CompoundTableInner extends React.Component {
+
+  static propTypes = {
+    loading: PropTypes.bool.isRequired,
+    compounds: PropTypes.object,
+  }
+
+  static defaultProps = {
+    loading: false
+  }
 
   render() {
-    const {data} = this.props;
+    const {compounds, loading} = this.props;
 
     return (
-      <ChiroTable
-       columnDefs={tableColumns}
-       data={reformExpData(data)} />
+      <>{loading? <Loader active inline="centered" /> :
+        <ChiroTable
+        columnDefs={tableColumns}
+        data={reformExpData(compounds)} />
+      }</>
     );
   }
+}
+
+export default function CompoundTable({target}) {
+  let {loading, error, data} = useQuery(SearchQuery, {
+    variables: {
+      compoundTarget: target
+    }
+  });
+  if (loading) {
+    return (
+      <CompoundTableInner loading />
+    );
+  }
+  else if (error) {
+    return `Error: ${error.message}`;
+  }
+  return <CompoundTableInner {...data}/>
 }

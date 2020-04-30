@@ -3,18 +3,30 @@ import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
-import SearchQuery from './query.gql.js';
+import SearchQuery from './target.query.gql.js';
 import setTitle from '../../utils/set-title';
 
 import TargetTable from './target';
 import CompoundTable from './compound';
 
+import style from './style.module.scss';
 
 class StatisticsInner extends React.Component {
+
+  state = {selectedTarget: null}
+
+  handleChangeTarget = (target, showname) => {
+    this.setState({
+      selectedTarget: {
+        name: target,
+        showname: showname,
+      },
+    });
+  }
+
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     compoundTargets: PropTypes.object,
-    compounds: PropTypes.object
   }
 
   static defaultProps = {
@@ -25,8 +37,10 @@ class StatisticsInner extends React.Component {
     const {
       loading,
       compoundTargets,
-      compounds
     } = this.props;
+    const {
+      selectedTarget
+    } = this.state;
     setTitle('Statistics');
     return <>{loading? <Loader active inline="centered" /> :
       <Grid stackable>
@@ -35,17 +49,58 @@ class StatisticsInner extends React.Component {
             <Header as="h2" dividing id="target-stat">
                 Target
             </Header>
-            <TargetTable data={compoundTargets} />
+            <TargetTable
+             data={compoundTargets}
+             changeTarget={this.handleChangeTarget} />
           </Grid.Column>
         </Grid.Row>
+        {selectedTarget?
         <Grid.Row centered>
           <Grid.Column width={16}>
             <Header as="h2" dividing id="compound-stat">
-                Compound
+                Compound for {selectedTarget['showname']}
             </Header>
-            <CompoundTable data={compounds} />
+            <CompoundTable target={selectedTarget['name']}/>
           </Grid.Column>
         </Grid.Row>
+        : <></>}
+
+        {/* <Grid.Row>
+          <Table celled className={style.targetTable}>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Header</Table.HeaderCell>
+                <Table.HeaderCell>Header</Table.HeaderCell>
+                <Table.HeaderCell>Header</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Accordion as={Table.Body} panels={
+              [
+                {
+                  key: 1,
+                  as: 'tr',
+                  title: {
+                    as: Table.Row,
+                    children: [
+                      <Table.Cell>Cell</Table.Cell>,
+                      <Table.Cell>Cell</Table.Cell>,
+                      <Table.Cell>Cell</Table.Cell>,
+                    ]
+                  },
+                  content: {
+                    as: Table.Row,
+                    children: [
+                    <Table.Cell colSpan={3}>
+                      <TargetTable data={compoundTargets} />
+                    </Table.Cell>
+                    ]
+                  }
+                }
+              ]
+            }>
+            </Accordion>
+          </Table>
+        </Grid.Row> */}
       </Grid>
     }</>
   }
