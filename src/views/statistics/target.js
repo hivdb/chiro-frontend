@@ -9,16 +9,20 @@ const tableColumns = [
     label: 'Target',
   }),
   new ColumnDef({
+    name: 'compoundCount',
+    label: 'Compound',
+  }),
+  new ColumnDef({
     name: 'Biochem',
     label: 'Biochemistry',
   }),
   new ColumnDef({
-    name: 'EntryAssay',
-    label: 'Entry assay',
-  }),
-  new ColumnDef({
     name: 'CellCulture',
     label: 'Cell culture',
+  }),
+  new ColumnDef({
+    name: 'EntryAssay',
+    label: 'Entry assay',
   }),
   new ColumnDef({
     name: 'Animal',
@@ -29,25 +33,45 @@ const tableColumns = [
     label: 'Clinical trial',
   }),
   new ColumnDef({
-    name: 'target_sum_exp_num',
-    label: 'Total',
-  }),
-  new ColumnDef({
-    name: 'compoundCount',
-    label: '#Compound',
-  }),
-  new ColumnDef({
     name: 'articleCount',
-    label: '#References',
+    label: 'References',
   }),
 ];
 
+function updateTargetName(name) {
+  if (name === '3CL Protease') {
+    name = 'Protease - 3CL';
+  }
+  if (name === 'PL Protease') {
+    name = 'Protease - PL';
+  }
+  if (name === 'HIV PIs') {
+    name = 'Entry - HIV PIs';
+  }
+  if (name == 'Entry - Receptor binding') {
+    name = 'Entry - miscellaneous';
+  }
+  if (name === 'Host Protease') {
+    name = 'Entry - Host protease';
+  }
+  if (name === 'Host Endosomal Trafficking') {
+    name = 'Host - Endosomal Trafficking';
+  }
+  if (name === 'Host Cyclophilin Inhibition') {
+    name = 'Host - Cyclophilin Inhibition';
+  }
+  if (name === 'Host') {
+    name = 'Host - miscellaneous';
+  }
+  return name
+}
 
 function reformExpData(expData) {
   if (!expData || !expData.edges) {
     return [];
   }
   let data = expData.edges.map(({node}) => {
+    node['name'] = updateTargetName(node['name']);
     const experimentCounts = node.experimentCounts;
     let target_sum_exp_num = 0;
     for (const exp_counts of experimentCounts) {
