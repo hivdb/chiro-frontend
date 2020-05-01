@@ -4,7 +4,9 @@ export default gql`
 query compoundSearch(
   $compoundTarget: String!
 ){
-  compounds(completeList: true, compoundTargetName: $compoundTarget) {
+  compounds(
+    withPendingList: true,
+    compoundTargetName: $compoundTarget) {
     edges {
       node {
         name
