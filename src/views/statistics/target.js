@@ -1,36 +1,9 @@
 import React from 'react';
-
+import {Link} from 'found';
 import ChiroTable from '../../components/chiro-table';
 import {ColumnDef} from '../../components/chiro-table';
 
-
-function updateTargetName(name) {
-  if (name === '3CL Protease') {
-    name = 'Protease - 3CL';
-  }
-  if (name === 'PL Protease') {
-    name = 'Protease - PL';
-  }
-  if (name === 'HIV PIs') {
-    name = 'Protease - HIV PIs';
-  }
-  if (name === 'Entry - Receptor binding') {
-    name = 'Entry - Miscellaneous';
-  }
-  if (name === 'Host Protease') {
-    name = 'Entry - Host protease';
-  }
-  if (name === 'Host Endosomal Trafficking') {
-    name = 'Host - Endosomal trafficking';
-  }
-  if (name === 'Host Cyclophilin Inhibition') {
-    name = 'Host - Cyclophilin inhibition';
-  }
-  if (name === 'Host') {
-    name = 'Host - Miscellaneous';
-  }
-  return name;
-}
+import getTargetShowName from './utils';
 
 function reformExpData(expData) {
   if (!expData || !expData.edges) {
@@ -82,7 +55,6 @@ function reformExpData(expData) {
       }
     }
 
-    node['showname'] = updateTargetName(node['name']);
     node['compoundCount2'] = node['compoundObjs']['totalCount'];
     return node;
   });
@@ -93,10 +65,10 @@ function reformExpData(expData) {
 
 export default class TargetTable extends React.Component {
 
-  handleTarget = (target, showname) => {
+  handleTarget = (target) => {
     const {changeTarget} = this.props;
     return (e) => {
-      changeTarget(target, showname);
+      changeTarget(target);
     };
   }
 
@@ -105,14 +77,14 @@ export default class TargetTable extends React.Component {
 
     const tableColumns = [
       new ColumnDef({
-        name: 'showname',
+        name: 'name',
         label: 'Target',
-        render: (showname, row) => {
-          const name = row['name'];
+        render: (name) => {
+          const showName = getTargetShowName(name);
           return (
             <a
-             onClick={this.handleTarget(name, showname)}
-             href="#compound-stat">{showname}</a>);
+            onClick={this.handleTarget(name)}
+            href="#compound-stat">{showName}</a>);
         }
       }),
       new ColumnDef({

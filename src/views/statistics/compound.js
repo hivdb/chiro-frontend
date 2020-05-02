@@ -8,6 +8,8 @@ import SearchQuery from './compound.query.gql.js';
 import ChiroTable from '../../components/chiro-table';
 import {ColumnDef} from '../../components/chiro-table';
 
+import getTargetShowName from './utils';
+
 
 const tableColumns = [
   new ColumnDef({
@@ -15,8 +17,11 @@ const tableColumns = [
     label: 'Compound',
   }),
   new ColumnDef({
-    name: 'targetShowName',
+    name: 'target',
     label: 'Target',
+    render: (name) => {
+      return getTargetShowName(name);
+    }
   }),
   new ColumnDef({
     name: 'Biochem',
@@ -54,8 +59,6 @@ const tableColumns = [
 ];
 
 function reformExpData(expData, selectedTarget) {
-  const targetName = selectedTarget['name'];
-  const targetShowName = selectedTarget['showname'];
   if (!expData || !expData.edges) {
     return [];
   }
@@ -65,12 +68,11 @@ function reformExpData(expData, selectedTarget) {
       const {category, count} = exp_counts;
       node[category] = count;
     }
-    node['targetShowName'] = targetShowName;
     return node;
   });
 
   data = data.filter(node => {
-    return node['target'] === targetName;
+    return node['target'] === selectedTarget;
   });
 
   return data;
@@ -82,7 +84,8 @@ class CompoundTableInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     compounds: PropTypes.object,
-    selectedTarget: PropTypes.object,
+    selectedTarget: PropTypes.string,
+    cacheKey: PropTypes.string,
   }
 
   static defaultProps = {
@@ -92,14 +95,16 @@ class CompoundTableInner extends React.Component {
   render() {
     const {
       compounds,
-      selectedTarget,
-      loading
+      loading,
+      cacheKey,
+      selectedTarget
     } = this.props;
 
     return (
       <>{
         loading? <Loader active inline="centered" /> :
         <ChiroTable
+          cacheKey={cacheKey}
          columnDefs={tableColumns}
          data={reformExpData(compounds, selectedTarget)} />
       }</>
@@ -108,10 +113,22 @@ class CompoundTableInner extends React.Component {
 }
 
 export default function CompoundTable({selectedTarget}) {
-  const targetName = selectedTarget['name'];
+  let countIndividualCompound = false;
+  let withPendingList = false;
+  if (
+    selectedTarget === 'Entry - Fusion inhibitor' ||
+    selectedTarget === 'Entry - Monoclonal antibody' ||
+    selectedTarget === 'Interferons'
+    ) {
+      countIndividualCompound = true;
+      withPendingList = true;
+  }
   let {loading, error, data} = useQuery(SearchQuery, {
     variables: {
-      compoundTarget: targetName
+      compoundTarget: selectedTarget,
+      countIndividualCompound: countIndividualCompound,
+      withPendingList: withPendingList,
+      completeList: !withPendingList
     }
   });
   if (loading) {
@@ -123,5 +140,9 @@ export default function CompoundTable({selectedTarget}) {
     return `Error: ${error.message}`;
   }
 
-  return <CompoundTableInner {...data} selectedTarget={selectedTarget}/>;
+  return (
+    <CompoundTableInner
+      cacheKey={selectedTarget}
+      {...data}
+      selectedTarget={selectedTarget}/>);
 }

@@ -2,10 +2,14 @@ import gql from 'graphql-tag';
 
 export default gql`
 query compoundSearch(
-  $compoundTarget: String!
+  $compoundTarget: String!,
+  $countIndividualCompound: Boolean!
+  $withPendingList: Boolean!
+  $completeList: Boolean!
 ){
   compounds(
-    withPendingList: true,
+    completeList: $completeList,
+    withPendingList: $withPendingList,
     compoundTargetName: $compoundTarget) {
     edges {
       node {
@@ -14,7 +18,7 @@ query compoundSearch(
         articleCount
         status
         clinicalTrialCount
-        experimentCounts {
+        experimentCounts(countIndividual: $countIndividualCompound) {
           count
           category
         }
