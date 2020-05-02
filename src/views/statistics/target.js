@@ -90,6 +90,19 @@ export default class TargetTable extends React.Component {
       new ColumnDef({
         name: 'compoundCount2',
         label: 'Compounds',
+        render: (obj, row) => {
+          const target = row['name'];
+          if (
+            target === 'Entry - Fusion inhibitor' ||
+            target === 'Entry - Monoclonal antibody' ||
+            target === 'Interferons'
+            ) {
+              return obj;
+            }
+          else {
+            return row['compoundCount'];
+          }
+        }
       }),
       new ColumnDef({
         name: 'Biochem',
