@@ -64,15 +64,21 @@ function reformExpData(expData, selectedTarget) {
   }
   let data = expData.edges.map(({node}) => {
     const experimentCounts = node.experimentCounts;
+    let totalExpCount = 0
     for (const exp_counts of experimentCounts) {
       const {category, count} = exp_counts;
       node[category] = count;
+      totalExpCount += count
     }
+    node['totalExpCount'] = totalExpCount
     return node;
   });
 
   data = data.filter(node => {
-    return node['target'] === selectedTarget;
+    return (
+      node['target'] === selectedTarget &&
+      node['totalExpCount'] !== 0
+      );
   });
 
   return data;
