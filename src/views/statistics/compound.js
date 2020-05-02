@@ -64,13 +64,13 @@ function reformExpData(expData, selectedTarget) {
   }
   let data = expData.edges.map(({node}) => {
     const experimentCounts = node.experimentCounts;
-    let totalExpCount = 0
+    let totalExpCount = 0;
     for (const exp_counts of experimentCounts) {
       const {category, count} = exp_counts;
       node[category] = count;
-      totalExpCount += count
+      totalExpCount += count;
     }
-    node['totalExpCount'] = totalExpCount
+    node['totalExpCount'] = totalExpCount;
     return node;
   });
 
@@ -78,7 +78,7 @@ function reformExpData(expData, selectedTarget) {
     return (
       node['target'] === selectedTarget &&
       node['totalExpCount'] !== 0
-      );
+    );
   });
 
   return data;
@@ -110,7 +110,7 @@ class CompoundTableInner extends React.Component {
       <>{
         loading? <Loader active inline="centered" /> :
         <ChiroTable
-          cacheKey={cacheKey}
+         cacheKey={cacheKey}
          columnDefs={tableColumns}
          data={reformExpData(compounds, selectedTarget)} />
       }</>
@@ -125,9 +125,9 @@ export default function CompoundTable({selectedTarget}) {
     selectedTarget === 'Entry - Fusion inhibitor' ||
     selectedTarget === 'Entry - Monoclonal antibody' ||
     selectedTarget === 'Interferons'
-    ) {
-      countIndividualCompound = true;
-      withPendingList = true;
+  ) {
+    countIndividualCompound = true;
+    withPendingList = true;
   }
   let {loading, error, data} = useQuery(SearchQuery, {
     variables: {
@@ -148,7 +148,7 @@ export default function CompoundTable({selectedTarget}) {
 
   return (
     <CompoundTableInner
-      cacheKey={selectedTarget}
-      {...data}
-      selectedTarget={selectedTarget}/>);
+     cacheKey={selectedTarget}
+     {...data}
+     selectedTarget={selectedTarget}/>);
 }

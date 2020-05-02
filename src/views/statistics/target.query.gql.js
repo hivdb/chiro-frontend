@@ -7,7 +7,7 @@ query {
       node {
         name
         articleCount
-        experimentCounts {
+        experimentCounts(countIndividual: true) {
           count
           category
         }
