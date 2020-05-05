@@ -1,0 +1,20 @@
+@import '../../styles/colors';
+
+a.ref-link {
+  color: $link-color;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+ol.references {
+  font-size: .9rem;
+  > li {
+    > a.cite-back-link {
+      text-decoration: none;
+    }
+    line-height: 1.5;
+    margin-top: .8rem;
+    margin-bottom: .8rem;
+  }
+}

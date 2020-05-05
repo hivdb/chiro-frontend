@@ -21,6 +21,7 @@ import News from './views/news';
 import Statistics from './views/statistics';
 import Plots from './views/plots';
 import DatabaseSchema from './views/database-schema';
+import Page from './views/page';
 
 import Layout from './components/layout';
 
@@ -46,6 +47,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={Statistics} path="/statistics/" />
       <Route Component={Plots} path="/plots/" />
       <Route Component={DatabaseSchema} path="/database-schema/" />
+      <Route Component={Page} path="/page/:pageName/" />
     </Route>
   ),
 
