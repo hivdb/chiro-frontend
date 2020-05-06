@@ -97,7 +97,7 @@ export default class ChiroSearch extends React.Component {
              virusValue={null}
              studyTypeValue={null}
              compoundTargetValue={null}
-             placeholder={'Select one...' + '\xa0'.repeat(100)}
+             placeholder={'Select one...' + '\xa0'.repeat(20)}
              onChange={this.handleExpSearchBoxChange}>
               {({
                 compoundTargetDropdown,

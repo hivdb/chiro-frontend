@@ -75,13 +75,21 @@
       margin-top: 1.5rem;
     }
     .search-box {
-      margin-left: 4rem;
-      margin-right: 4rem;
+      margin-left: 8rem;
+      margin-right: 8rem;
       margin-bottom: 1.5rem;
       font-size: 1.2rem;
       line-height: 1.5rem;
       :global(.ui.dropdown:not(.button)>.default.text) {
         color: rgba(0, 0, 0, .6);
+      }
+      @media only screen and (max-width: 1400px) {
+        margin-left: 4rem;
+        margin-right: 4rem;
+      }
+      @media only screen and (max-width: 1024px) {
+        margin-left: 2rem;
+        margin-right: 2rem;
       }
     }
   }
