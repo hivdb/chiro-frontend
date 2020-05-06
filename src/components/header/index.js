@@ -63,6 +63,9 @@ export default class Header extends React.Component {
                 <Link to="/">Home</Link>
               </li>
               <li className={style['nav-item']}>
+                <Link to="/search/">Search</Link>
+              </li>
+              {/*<li className={style['nav-item']}>
                 <Link to="/clinical-trials/">Clinical Trials</Link>
               </li>
               
@@ -87,7 +90,7 @@ export default class Header extends React.Component {
               <li className={style['nav-item']}>
                 <Link to="/article-list/">References</Link>
               </li>
-              {/*<li className={style['nav-item']}>
+              <li className={style['nav-item']}>
                 <Link to="/news/">Coronavirus News</Link>
               </li>*/}
 

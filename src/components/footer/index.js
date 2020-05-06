@@ -15,6 +15,7 @@ export default class Footer extends React.Component {
           <ul>
             <li><Link to="/terms-of-use/">Terms of Use</Link></li>
             <li><Link to="/database-schema/">Database Schema</Link></li>
+            <li><Link to="/page/acknowledgment/">Acknowledgment</Link></li>
           </ul>
         </Grid.Column>
         <Grid.Column>

@@ -10,6 +10,138 @@
   max-width: 60rem;
 }
 
-:global(h2.ui.header).title {
-  font-size: 1.5rem;
+.home-section {
+  h2:global(.ui.header) {
+    font-size: 2rem;
+  }
+  *[role="listitem"] {
+    font-size: 1.2rem;
+  }
+  p {
+    font-size: 1.2rem;
+  }
+  .section-covid-review {
+    background-image: linear-gradient(to right, $blue-lagoon, rgba($bondi-blue, .9));
+    background-clip: content-box;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url(../../assets/images/home-top-bg.png) bottom right no-repeat;
+      background-size: auto 100%;
+      background-clip: content-box;
+      @media only screen and (max-width: 1400px) {
+        background-size: 50%;
+      }
+      @media only screen and (max-width: 1024px) {
+        visibility: hidden;
+      }
+    }
+    > a {
+      padding: 0 1rem;
+      position: relative;
+      display: block;
+      height: 100%;
+      color: white;
+      z-index: 1;
+      h2:global(.ui.header) {
+        margin-top: 4rem;
+        color: white;
+        @media only screen and (max-width: 768px) {
+          margin-top: 1rem;
+        }
+      }
+      *[role="list"] {
+        margin-bottom: 4rem;
+        @media only screen and (max-width: 768px) {
+          margin-bottom: 1rem;
+        }
+      }
+      transition: transform 200ms ease-out;
+      transform-origin: center left;
+    }
+    &:hover > a {
+      transform: translateY(-4px);
+    }
+  }
+  .section-clinical-trials {
+    background-color: rgba(0,0,0,0.1);
+    background-clip: content-box;
+    > a {
+      color: black;
+      display: block;
+      height: 100%;
+      transition: transform 200ms ease-out;
+      transform-origin: center left;
+      h2:global(.ui.header) {
+        margin-top: 4rem;
+        padding: 0 1rem;
+        @media only screen and (max-width: 750px) {
+          margin-top: 1rem;
+        }
+      }
+      p {
+        text-align: center;
+        padding: 0 20%;
+        @media only screen and (max-width: 750px) {
+          padding: 0 1rem;
+        }
+      }
+      p:last-child {
+        margin-bottom: 4rem;
+        @media only screen and (max-width: 750px) {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+    &:hover > a {
+      transform: translateY(-4px);
+    }
+  }
+  .section-edu-pages {
+    img {
+      background-color: rgba($main-color, 0.9);
+      width: 100px;
+      display: block;
+      border-radius: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    a {
+      display: block;
+      transition: transform 200ms ease-out;
+      transform-origin: center left;
+      &:hover {
+        transform: translateY(-4px);
+      }
+    }
+    :global(.ui.list>.item .header) {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 1.4rem;
+      line-height: 1.6rem;
+    }
+    :global(.ui.horizontal.list) {
+      margin-left: 10%;
+      margin-right: 10%;
+      display: flex;
+      justify-content: space-between;
+      @media only screen and (max-width: 1400px) {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      @media only screen and (max-width: 1024px) {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+      @media only screen and (min-width: 1025px) {
+        > :global(.item) {
+          width: 14.2857%;
+        }
+      }
+    }
+  }
 }
