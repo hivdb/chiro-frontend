@@ -124,6 +124,8 @@
     background-clip: content-box;
     > a {
       display: block;
+      overflow: hidden;
+      height: 100%;
       h2:global(.ui.header) {
         margin-top: 5rem;
         padding: 0 1rem;
