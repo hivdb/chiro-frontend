@@ -16,13 +16,13 @@ const tableColumns = [
     name: 'name',
     label: 'Compound',
   }),
-  new ColumnDef({
-    name: 'target',
-    label: 'Target',
-    render: (name) => {
-      return getTargetShowName(name);
-    }
-  }),
+  // new ColumnDef({
+  //   name: 'target',
+  //   label: 'Target',
+  //   render: (name) => {
+  //     return getTargetShowName(name);
+  //   }
+  // }),
   new ColumnDef({
     name: 'Biochem',
     label: 'Biochemistry',

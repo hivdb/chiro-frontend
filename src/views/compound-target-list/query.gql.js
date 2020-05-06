@@ -10,12 +10,23 @@ export default gql`
           relatedCompoundTargets {
             name
           }
+          articleCount
           experimentCounts {
             count
+            category
           }
           compoundCount
           description
           ordinal
+          compoundObjs {
+            totalCount
+            edges {
+              node {
+                name
+                status
+              }
+            }
+          }
         }
       }
     }

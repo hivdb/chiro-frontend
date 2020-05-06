@@ -38,12 +38,12 @@ class ArticleListInner extends React.Component {
           <Grid.Column width={16}>
             <Header as="h1" dividing>References
             <Header.Subheader>
-              #Total: {articles.edges.length},
-              #Peer reviewed: {
+              # Total: {articles.edges.length},
+              # Peer reviewed: {
                 articles.edges.filter(({node}) => {
                   return (node.pmid.length !== 0);
                 }).length},
-              #preprint: {
+              # Preprint: {
                 articles.edges.filter(({node}) => {
                   return node.pmid.length === 0;
                 }).length

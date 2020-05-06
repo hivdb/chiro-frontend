@@ -9,6 +9,8 @@ import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 import query from './query.gql.js';
 import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
+import TargetTable from '../statistics/target';
+import CompoundTable from '../statistics/compound';
 
 
 class CompoundTargetListInner extends React.Component {
@@ -28,18 +30,21 @@ class CompoundTargetListInner extends React.Component {
       compoundTargets
     } = this.props;
 
-    setTitle('Compound Targets');
+    setTitle('Targets');
 
     return <Grid stackable className={style['compound-target-list']}>
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>Compound Targets</Header>
+            <Header as="h1" dividing>Targets</Header>
             <p>
               {compoundTargets.totalCount} compound target
               {compoundTargets.totalCount > 1 ? 's are' : ' is'} listed:
             </p>
+            <TargetTable
+             data={compoundTargets}
+             changeTarget={x => x} />
             <Item.Group divided>
               {sortBy(compoundTargets.edges, ['ordinal']).map(
                 ({node: {
@@ -88,6 +93,9 @@ class CompoundTargetListInner extends React.Component {
                         {description}
                       </Item.Description>
                       <Item.Extra>
+                        <CompoundTable selectedTarget={name}/>
+                      </Item.Extra>
+                      <Item.Extra>
                         {relatedCompoundTargets.length > 0 ? (
                           <span className={style['related-compound-targets']}>
                             {relatedCompoundTargets.map(
@@ -104,7 +112,6 @@ class CompoundTargetListInner extends React.Component {
         </Grid.Row>
       }
     </Grid>;
-    
   }
 
 

@@ -11,9 +11,6 @@ export default function getTargetShowName(name) {
   if (name === 'Entry - Receptor binding') {
     name = 'Entry - Miscellaneous';
   }
-  if (name === 'Host Protease') {
-    name = 'Entry - Host protease';
-  }
   if (name === 'Host Endosomal Trafficking') {
     name = 'Host - Endosomal trafficking';
   }
