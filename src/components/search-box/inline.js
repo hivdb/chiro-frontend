@@ -10,12 +10,12 @@ const ANY = '__ANY';
 const EMPTY_TEXT = 'Select one...';
 
 
-function data2Options(data, filterFunc, allowEmpty) {
+function data2Options(data, filterFunc, allowEmpty, placeholder) {
   return [
     ...(allowEmpty ? [
       {
         key: 'empty',
-        text: EMPTY_TEXT,
+        text: placeholder || EMPTY_TEXT,
         value: EMPTY
       }
     ] : []),
@@ -77,21 +77,21 @@ class SearchBoxInner extends React.Component {
   }
 
   get articleOptions() {
-    const {data, allowEmpty} = this.props;
+    const {data, allowEmpty, placeholder} = this.props;
     return data2Options(
       data, ({category}) => category === 'articles',
-      allowEmpty);
+      allowEmpty, placeholder);
   }
 
   get targetOptions() {
-    const {data, allowEmpty} = this.props;
+    const {data, allowEmpty, placeholder} = this.props;
     return data2Options(
       data, ({category}) => category === 'compoundTargets',
-      allowEmpty);
+      allowEmpty, placeholder);
   }
 
   get compoundOptions() {
-    const {data, compoundTargetValue, allowEmpty} = this.props;
+    const {data, compoundTargetValue, allowEmpty, placeholder} = this.props;
     let filter = ({status, category}) => (
       status === 'visible' && category === 'compounds'
     );
@@ -101,7 +101,7 @@ class SearchBoxInner extends React.Component {
         displayTargets.indexOf(compoundTargetValue) > -1
       );
     }
-    return data2Options(data, filter, allowEmpty);
+    return data2Options(data, filter, allowEmpty, placeholder);
   }
 
   getTargetFromCompound(compoundName) {
@@ -115,26 +115,26 @@ class SearchBoxInner extends React.Component {
   }
 
   get virusOptions() {
-    const {data, allowEmpty} = this.props;
+    const {data, allowEmpty, placeholder} = this.props;
     return data2Options(
       data, ({category}) => category === 'viruses',
-      allowEmpty);
+      allowEmpty, placeholder);
   }
 
   get clinicalTrialCategoryOptions() {
-    const {data, allowEmpty} = this.props;
+    const {data, allowEmpty, placeholder} = this.props;
     return data2Options(
       data, ({category}) => category === 'clinicalTrialCategories',
-      allowEmpty);
+      allowEmpty, placeholder);
   }
 
   get studyTypeOptions() {
-    const {allowEmpty} = this.props;
+    const {allowEmpty, placeholder} = this.props;
     return [
       ...(allowEmpty ? [
         {
           key: 'empty',
-          text: EMPTY_TEXT,
+          text: placeholder || EMPTY_TEXT,
           value: EMPTY
         }
       ] : []),
@@ -195,6 +195,7 @@ class SearchBoxInner extends React.Component {
       articleValue,
       compoundTargetValue,
       compoundValue, virusValue,
+      placeholder,
       studyTypeValue, clinicalTrialCategoryValue,
       children, dropdownProps
     } = this.props;
@@ -203,7 +204,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={EMPTY_TEXT}
+         placeholder={placeholder || EMPTY_TEXT}
          options={this.articleOptions}
          onChange={this.handleChange('articles')}
          value={articleValue} />
@@ -212,7 +213,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={EMPTY_TEXT}
+         placeholder={placeholder || EMPTY_TEXT}
          options={this.targetOptions}
          onChange={this.handleChange('compoundTargets')}
          value={compoundTargetValue} />
@@ -221,7 +222,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={EMPTY_TEXT}
+         placeholder={placeholder || EMPTY_TEXT}
          options={this.compoundOptions}
          onChange={this.handleChange('compounds')}
          value={compoundValue} />
@@ -230,7 +231,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={EMPTY_TEXT}
+         placeholder={placeholder || EMPTY_TEXT}
          options={this.virusOptions}
          onChange={this.handleChange('viruses')}
          value={virusValue} />
@@ -239,7 +240,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={EMPTY_TEXT}
+         placeholder={placeholder || EMPTY_TEXT}
          options={this.studyTypeOptions}
          onChange={this.handleChange('studyTypes')}
          value={studyTypeValue} />
@@ -248,7 +249,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={EMPTY_TEXT}
+         placeholder={placeholder || EMPTY_TEXT}
          options={this.clinicalTrialCategoryOptions}
          onChange={this.handleChange('clinicalTrialCategories')}
          value={clinicalTrialCategoryValue} />

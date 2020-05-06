@@ -1,12 +1,11 @@
 import React from 'react';
 import {Link, routerShape} from 'found';
-import {Grid, Header, List, Card} from 'semantic-ui-react';
+import {Grid, Header, List} from 'semantic-ui-react';
 
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
-import image3cl from '../../assets/images/3cl.png';
 import imageRemdesivir from '../../assets/images/remdesivir.png';
 import imageSARS2 from '../../assets/images/sars2.png';
 import imagePetriDish from '../../assets/images/petri-dish.png';
@@ -71,9 +70,11 @@ export default class ChiroSearch extends React.Component {
     return <>
       <Grid stackable className={style['home-section']}>
         <Grid.Row>
-          <Grid.Column width={11} className={style['section-covid-review']}>
+          <Grid.Column width={8} className={style['section-covid-review']}>
             <Link to="/page/covid-review/">
-              <Header as="h2">SARS-CoV-2 Antiviral Therapy</Header>
+              <Header as="h2" textAlign="center">
+                SARS-CoV-2 Antiviral Therapy
+              </Header>
               <List bulleted>
                 <List.Item>Mission statement</List.Item>
                 <List.Item>
@@ -82,49 +83,47 @@ export default class ChiroSearch extends React.Component {
               </List>
             </Link>
           </Grid.Column>
-          <Grid.Column floated="right" width={5}>
-            <Card fluid>
-              <Card.Content>
-                <Card.Header>Search</Card.Header>
-                <Card.Meta>
-                  Cell culture, animal model, and clinical data
-                </Card.Meta>
-              </Card.Content>
-              <Card.Content>
-                <InlineSearchBox
-                 allowEmpty
-                 articleValue={null}
-                 compoundValue={null}
-                 virusValue={null}
-                 studyTypeValue={null}
-                 compoundTargetValue={null}
-                 onChange={this.handleExpSearchBoxChange}>
-                  {({
-                    compoundTargetDropdown,
-                    compoundDropdown,
-                    virusDropdown,
-                    studyTypeDropdown
-                  }) => (
-                    <StatHeader>
-                      {[
-                        {
-                          cells: [
-                            {label: 'Target', value: compoundTargetDropdown},
-                            {label: 'Compound', value: compoundDropdown},
-                            {label: 'Virus', value: virusDropdown},
-                            {label: 'Study Type', value: studyTypeDropdown},
-                          ]
-                        }
-                      ]}
-                    </StatHeader>
-                  )}
-                </InlineSearchBox>
-              </Card.Content>
-            </Card>
+          <Grid.Column width={8} className={style['section-search']}>
+            <Header as="h2" textAlign="center">
+              Search
+              <Header.Subheader>
+                Cell culture, animal model, and clinical data
+              </Header.Subheader>
+            </Header>
+            <InlineSearchBox
+             allowEmpty
+             articleValue={null}
+             compoundValue={null}
+             virusValue={null}
+             studyTypeValue={null}
+             compoundTargetValue={null}
+             placeholder={'Select one...' + '\xa0'.repeat(100)}
+             onChange={this.handleExpSearchBoxChange}>
+              {({
+                compoundTargetDropdown,
+                compoundDropdown,
+                virusDropdown,
+                studyTypeDropdown
+              }) => (
+                <StatHeader>
+                  {[
+                    {
+                      className: style['search-box'],
+                      cells: [
+                        {label: 'Target', value: compoundTargetDropdown},
+                        {label: 'Compound', value: compoundDropdown},
+                        {label: 'Virus', value: virusDropdown},
+                        {label: 'Study Type', value: studyTypeDropdown},
+                      ]
+                    }
+                  ]}
+                </StatHeader>
+              )}
+            </InlineSearchBox>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={16} className={style['section-clinical-trials']}>
+          <Grid.Column width={8} className={style['section-clinical-trials']}>
             <Link to="/clinical-trials/">
               <Header as="h2" textAlign="center">Clinical Trials</Header>
               <p>
@@ -135,18 +134,15 @@ export default class ChiroSearch extends React.Component {
               </p>
             </Link>
           </Grid.Column>
+          <Grid.Column width={8} className={style['section-targets']}>
+            <Link to="/compound-target-list/">
+              <Header as="h2" textAlign="center">Targets</Header>
+            </Link>
+          </Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={16} className={style['section-edu-pages']}>
             <List horizontal>
-              <List.Item>
-                <Link to="/compound-target-list/">
-                  <List.Content>
-                    <img src={image3cl} alt="Targets" />
-                    <List.Header>Targets</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
               <List.Item>
                 <Link to="/compound-list/">
                   <List.Content>
