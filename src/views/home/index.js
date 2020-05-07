@@ -73,7 +73,7 @@ export default class ChiroSearch extends React.Component {
           <Grid.Column width={8} className={style['section-covid-review']}>
             <Link to="/page/covid-review/">
               <Header as="h2" textAlign="center">
-                SARS-CoV-2 Antiviral Therapy
+                Antiviral Therapy
               </Header>
               <List bulleted>
                 <List.Item>Mission statement</List.Item>
