@@ -123,20 +123,19 @@ export default class ChiroSearch extends React.Component {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
+          <Grid.Column width={8} className={style['section-targets']}>
+            <Link to="/compound-target-list/">
+              <Header as="h2" textAlign="center">Drug Targets</Header>
+            </Link>
+          </Grid.Column>
           <Grid.Column width={8} className={style['section-clinical-trials']}>
             <Link to="/clinical-trials/">
               <Header as="h2" textAlign="center">Clinical Trials</Header>
               <p>
                 Ongoing and planned SARS-CoV-2 clinical trials of potential
-                anti-coronavirus compounds annotated according to study design,
-                patient population, and planned clinical and virological
-                outcomes.
+                anti-coronavirus compounds annotated according to study design
+                and patient population.
               </p>
-            </Link>
-          </Grid.Column>
-          <Grid.Column width={8} className={style['section-targets']}>
-            <Link to="/compound-target-list/">
-              <Header as="h2" textAlign="center">Targets</Header>
             </Link>
           </Grid.Column>
         </Grid.Row>
