@@ -76,8 +76,8 @@ function reformExpData(expData, selectedTarget) {
 
   data = data.filter(node => {
     return (
-      node['target'] === selectedTarget &&
-      node['totalExpCount'] !== 0
+      node['target'] === selectedTarget
+      // node['totalExpCount'] !== 0
     );
   });
 
