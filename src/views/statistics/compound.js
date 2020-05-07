@@ -8,7 +8,7 @@ import SearchQuery from './compound.query.gql.js';
 import ChiroTable from '../../components/chiro-table';
 import {ColumnDef} from '../../components/chiro-table';
 
-import getTargetShowName from './utils';
+// import getTargetShowName from './utils';
 
 
 const tableColumns = [

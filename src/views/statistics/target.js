@@ -2,7 +2,7 @@ import React from 'react';
 import ChiroTable from '../../components/chiro-table';
 import {ColumnDef} from '../../components/chiro-table';
 
-import getTargetShowName from './utils';
+// import getTargetShowName from './utils';
 
 function reformExpData(expData) {
   if (!expData || !expData.edges) {
@@ -41,11 +41,11 @@ export default class TargetTable extends React.Component {
         name: 'name',
         label: 'Target',
         render: (name) => {
-          const showName = getTargetShowName(name);
+          // const showName = getTargetShowName(name);
           return (
             <a
              onClick={this.handleTarget(name)}
-             href="#compound-stat">{showName}</a>);
+             href={"#" + name}>{name}</a>);
         }
       }),
       new ColumnDef({

@@ -37,7 +37,7 @@ class CompoundTargetListInner extends React.Component {
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>Targets</Header>
+            <Header as="h1" dividing>Drug Targets</Header>
             <p>
               {compoundTargets.totalCount} compound target
               {compoundTargets.totalCount > 1 ? 's are' : ' is'} listed:
@@ -54,7 +54,7 @@ class CompoundTargetListInner extends React.Component {
                   relatedCompoundTargets,
                   description
                 }}, idx) => (
-                  <Item key={idx}>
+                  <Item key={idx} id={name}>
                     <Item.Content>
                       <Item.Header
                        as={Link}
