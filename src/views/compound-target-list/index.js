@@ -30,7 +30,7 @@ class CompoundTargetListInner extends React.Component {
       compoundTargets
     } = this.props;
 
-    setTitle('Targets');
+    setTitle('Drug Targets');
 
     return <Grid stackable className={style['compound-target-list']}>
       {loading ?
