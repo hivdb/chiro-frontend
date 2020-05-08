@@ -6,6 +6,7 @@ import {Header} from 'semantic-ui-react';
 import {loadPage} from '../../utils/cms';
 import setTitle from '../../utils/set-title';
 import Markdown from '../../components/markdown';
+import BackToTop from '../../components/back-to-top';
 import PromiseComponent from '../../utils/promise-component';
 import {
   ReferenceContext,
@@ -96,6 +97,7 @@ export default class CMSPage extends React.Component {
            referenceTitle={referenceTitle}>
             {content}
           </Markdown>
+          <BackToTop />
         </article>
       </ReferenceContext.Provider>
     );

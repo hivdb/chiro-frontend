@@ -11,6 +11,7 @@ import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
 import TargetTable from '../statistics/target';
 import CompoundTable from '../statistics/compound';
+import BackToTop from '../../components/back-to-top';
 
 
 class CompoundTargetListInner extends React.Component {
@@ -36,7 +37,7 @@ class CompoundTargetListInner extends React.Component {
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
-          <Grid.Column width={16}>
+          <Grid.Column width={16} className={style['content-container']}>
             <Header as="h1" dividing>Drug Targets</Header>
             <p>
               {compoundTargets.totalCount} compound target
@@ -108,6 +109,7 @@ class CompoundTargetListInner extends React.Component {
                 )
               )}
             </Item.Group>
+            <BackToTop />
           </Grid.Column>
         </Grid.Row>
       }

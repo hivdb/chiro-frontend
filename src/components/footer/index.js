@@ -22,7 +22,7 @@ export default class Footer extends React.Component {
           <Header as="h2">Team</Header>
           <ul>
             <li>
-              <a href="https://hivdb.stanford.edu/">
+              <a href="https://hivdb.stanford.edu/about/team/">
                 Who We Are
               </a>
             </li>

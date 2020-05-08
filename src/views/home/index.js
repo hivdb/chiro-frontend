@@ -68,19 +68,17 @@ export default class ChiroSearch extends React.Component {
   render() {
     setTitle(null);
     return <>
-      <Grid stackable className={style['home-section']}>
+      <Grid stackable className={style['home']}>
         <Grid.Row>
           <Grid.Column width={8} className={style['section-covid-review']}>
-            <Link to="/page/covid-review/">
+            <Link to="/page/covid-review/" className={style['section-link']}>
               <Header as="h2" textAlign="center">
                 Antiviral Therapy
               </Header>
-              <List bulleted>
-                <List.Item>Mission statement</List.Item>
-                <List.Item>
-                  Summary of most promising antiviral compounds
-                </List.Item>
-              </List>
+              <p>
+                Mission statement and a narrative summary of the purpose
+                and contents of this database
+              </p>
             </Link>
           </Grid.Column>
           <Grid.Column width={8} className={style['section-search']}>
@@ -124,12 +122,15 @@ export default class ChiroSearch extends React.Component {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={8} className={style['section-targets']}>
-            <Link to="/compound-target-list/">
+            <Link to="/compound-target-list/" className={style['section-link']}>
               <Header as="h2" textAlign="center">Drug Targets</Header>
+              <p>
+                Virus and host targets for categorizing each compound.
+              </p>
             </Link>
           </Grid.Column>
           <Grid.Column width={8} className={style['section-clinical-trials']}>
-            <Link to="/clinical-trials/">
+            <Link to="/clinical-trials/" className={style['section-link']}>
               <Header as="h2" textAlign="center">Clinical Trials</Header>
               <p>
                 Ongoing and planned SARS-CoV-2 clinical trials of potential
@@ -143,7 +144,7 @@ export default class ChiroSearch extends React.Component {
           <Grid.Column width={16} className={style['section-edu-pages']}>
             <List horizontal>
               <List.Item>
-                <Link to="/compound-list/">
+                <Link to="/compound-list/" className={style['section-link']}>
                   <List.Content>
                     <img src={imageRemdesivir} alt="Compounds" />
                     <List.Header>Compounds</List.Header>
@@ -151,7 +152,7 @@ export default class ChiroSearch extends React.Component {
                 </Link>
               </List.Item>
               <List.Item>
-                <Link to="/virus-list/">
+                <Link to="/virus-list/" className={style['section-link']}>
                   <List.Content>
                     <img src={imageSARS2} alt="Viruses" />
                     <List.Header>Viruses</List.Header>
@@ -159,7 +160,7 @@ export default class ChiroSearch extends React.Component {
                 </Link>
               </List.Item>
               <List.Item>
-                <Link to="/cells-list/">
+                <Link to="/cells-list/" className={style['section-link']}>
                   <List.Content>
                     <img src={imagePetriDish} alt="Cell lines" />
                     <List.Header>Cell lines</List.Header>
@@ -167,7 +168,8 @@ export default class ChiroSearch extends React.Component {
                 </Link>
               </List.Item>
               <List.Item>
-                <Link to="/animal-model-list/">
+                <Link to="/animal-model-list/"
+                 className={style['section-link']}>
                   <List.Content>
                     <img src={imageMouse} alt="Animal models" />
                     <List.Header>Animal models</List.Header>
@@ -175,7 +177,8 @@ export default class ChiroSearch extends React.Component {
                 </Link>
               </List.Item>
               <List.Item>
-                <Link to="/cell-culture-measurement-list/">
+                <Link to="/cell-culture-measurement-list/"
+                 className={style['section-link']}>
                   <List.Content>
                     <img src={imageMeasurement} alt="Measurements" />
                     <List.Header>Measurements</List.Header>
@@ -183,7 +186,7 @@ export default class ChiroSearch extends React.Component {
                 </Link>
               </List.Item>
               <List.Item>
-                <Link to="/article-list/">
+                <Link to="/article-list/" className={style['section-link']}>
                   <List.Content>
                     <img src={imageReferences} alt="References" />
                     <List.Header>References</List.Header>

@@ -14,6 +14,7 @@ import searchQuery from './search.gql';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import ArticleInfo from '../../components/article-info';
+import BackToTop from '../../components/back-to-top';
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
 import setTitle from '../../utils/set-title';
@@ -267,6 +268,7 @@ class SearchInner extends React.Component {
           }
         </>
       }
+      <BackToTop />
     </Grid>;
   }
 

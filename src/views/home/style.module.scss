@@ -10,7 +10,7 @@
   max-width: 60rem;
 }
 
-.home-section {
+.home {
   h2:global(.ui.header) {
     font-size: 2rem;
   }
@@ -19,33 +19,40 @@
   }
   p {
     font-size: 1.2rem;
+    text-align: center;
+    padding: 0 20%;
+    @media only screen and (max-width: 1400px) {
+      padding: 0 4rem;
+    }
+    @media only screen and (max-width: 1025px) {
+      padding: 0 2rem;
+    }
+    @media only screen and (max-width: 750px) {
+      padding: 0 1rem;
+    }
+  }
+  p:last-child {
+    margin-bottom: 1.5rem;
+    @media only screen and (max-width: 750px) {
+      margin-bottom: 1rem;
+    }
+  }
+  a.section-link {
+    display: block;
+    height: 100%;
+    color: black;
+    overflow: hidden;
+    transition: transform 200ms ease-out;
+    transform-origin: center left;
+    &:hover {
+      transform: translateY(-4px);
+    }
   }
   .section-covid-review {
-    // background-image: linear-gradient(to right, $blue-lagoon, rgba($bondi-blue, .9));
     background-clip: content-box;
     background-color: rgba(0,0,0,0.1);
-    /* &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url(../../assets/images/home-top-bg.png) bottom right no-repeat;
-      background-size: auto 100%;
-      background-clip: content-box;
-      @media only screen and (max-width: 1400px) {
-        background-size: 50%;
-      }
-      @media only screen and (max-width: 1024px) {
-        visibility: hidden;
-      }
-    } */
     > a {
       position: relative;
-      display: block;
-      height: 100%;
-      color: black;
       z-index: 1;
       h2:global(.ui.header) {
         margin-top: 4rem;
@@ -61,11 +68,6 @@
           margin-bottom: 1rem;
         }
       }
-      transition: transform 200ms ease-out;
-      transform-origin: center left;
-    }
-    &:hover > a {
-      transform: translateY(-4px);
     }
   }
   .section-search {
@@ -93,15 +95,24 @@
       }
     }
   }
+  .section-targets {
+    background-color: rgba(0,0,0,0.1);
+    background-clip: content-box;
+    > a {
+      h2:global(.ui.header) {
+        margin-top: 3rem;
+        padding: 0 1rem;
+        @media only screen and (max-width: 750px) {
+          margin-top: 1rem;
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
   .section-clinical-trials {
     background-color: rgba(0,0,0,0.1);
     background-clip: content-box;
     > a {
-      color: black;
-      display: block;
-      height: 100%;
-      transition: transform 200ms ease-out;
-      transform-origin: center left;
       h2:global(.ui.header) {
         margin-top: 1.5rem;
         padding: 0 1rem;
@@ -109,50 +120,6 @@
           margin-top: 1rem;
         }
       }
-      p {
-        text-align: center;
-        padding: 0 20%;
-        @media only screen and (max-width: 1400px) {
-          padding: 0 4rem;
-        }
-        @media only screen and (max-width: 1025px) {
-          padding: 0 2rem;
-        }
-        @media only screen and (max-width: 750px) {
-          padding: 0 1rem;
-        }
-      }
-      p:last-child {
-        margin-bottom: 1.5rem;
-        @media only screen and (max-width: 750px) {
-          margin-bottom: 1rem;
-        }
-      }
-    }
-    &:hover > a {
-      transform: translateY(-4px);
-    }
-  }
-  .section-targets {
-    background-color: rgba(0,0,0,0.1);
-    background-clip: content-box;
-    > a {
-      display: block;
-      overflow: hidden;
-      height: 100%;
-      h2:global(.ui.header) {
-        margin-top: 5rem;
-        padding: 0 1rem;
-        @media only screen and (max-width: 750px) {
-          margin-top: 1rem;
-          margin-bottom: 1rem;
-        }
-      }
-      transition: transform 200ms ease-out;
-      transform-origin: center left;
-    }
-    &:hover > a {
-      transform: translateY(-4px);
     }
   }
   .section-edu-pages {
@@ -163,14 +130,6 @@
       border-radius: 50%;
       margin-left: auto;
       margin-right: auto;
-    }
-    a {
-      display: block;
-      transition: transform 200ms ease-out;
-      transform-origin: center left;
-      &:hover {
-        transform: translateY(-4px);
-      }
     }
     :global(.ui.list>.item .header) {
       text-align: center;

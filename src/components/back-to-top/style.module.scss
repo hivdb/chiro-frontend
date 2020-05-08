@@ -1,0 +1,37 @@
+:global(body.chiro-body) .back-to-top-container {
+  display: block;
+  position: absolute;
+  top: 150vh; 
+  bottom: 0;
+  right: -8rem;
+  a.back-to-top {
+    border-radius: 10%;
+    box-sizing: border-box;
+    padding-left: 4px;
+    padding-top: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    top: calc(100vh - 10rem);
+    background-color: rgba(0,0,0,.4);
+    color: white;
+    width: 4rem;
+    height: 4rem;
+    transition: transform 200ms ease-out;
+    transform-origin: center-left;
+    &:hover {
+      transform: translateY(-4px);
+      text-decoration: none;
+    }
+  }
+  
+  @media only screen and (max-width: 1400px) {
+    right: 2rem;
+    opacity: .4;
+    &:hover {
+      opacity: .8;
+    }
+  }
+
+}
