@@ -4,8 +4,10 @@
   top: 150vh; 
   bottom: 0;
   right: -8rem;
+  pointer-events: none;
   a.back-to-top {
     border-radius: 10%;
+    pointer-events: all;
     box-sizing: border-box;
     padding-left: 4px;
     padding-top: 1px;
@@ -24,6 +26,7 @@
       transform: translateY(-4px);
       text-decoration: none;
     }
+    z-index: 100;
   }
   
   @media only screen and (max-width: 1400px) {

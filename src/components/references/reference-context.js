@@ -36,6 +36,10 @@ export class ReferenceContextValue {
     return this.reference_names.length > 0;
   }
 
+  getReference = (name) => {
+    return this.references[name];
+  }
+
   getReferences = () => {
     return this.reference_names.map((name, rn0) => {
       const {_count, ...ref} = this.references[name];

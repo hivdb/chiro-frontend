@@ -2,6 +2,7 @@ import React from 'react';
 import ReferenceContext, {ReferenceContextValue} from './reference-context';
 import RefLink from './reference-link';
 import RefDefinition from './reference-definition';
+import buildRef from './build-ref';
 import style from './style.module.scss';
 
 export {ReferenceContext, ReferenceContextValue, RefLink, RefDefinition};
@@ -10,25 +11,8 @@ export {ReferenceContext, ReferenceContextValue, RefLink, RefDefinition};
 class RefItem extends React.Component {
   
   render() {
-    let {
-      number, itemId, linkIds, authors, title,
-      journal, year, medlineId, url, children} = this.props;
-    if (children) {
-      if (children.length === 1 && children[0].type === 'p') {
-        children = children[0].props.children;
-      }
-    }
-    else {
-      if (medlineId) {
-        url = `https://www.ncbi.nlm.nih.gov/pubmed/${medlineId}`;
-      }
-      children = <>
-        {authors}. {title}.{' '}
-        <a href={url} rel="noopener noreferrer" target="_blank">
-          {journal} {year}
-        </a>.
-      </>;
-    }
+    const {number, itemId, linkIds} = this.props;
+    const children = buildRef(this.props);
     const multiLinks = linkIds.length > 1;
     return <li id={itemId}>
       {multiLinks ? <><span>^</span> </> : null}

@@ -84,6 +84,7 @@ export default class CMSPage extends React.Component {
         <article
          className={style['content-container']}
          data-page-name={pageName}>
+          <BackToTop />
           <Header as="h1" dividing>
             <Markdown inline>{introHeader}</Markdown>
             <Header.Subheader>
@@ -97,7 +98,6 @@ export default class CMSPage extends React.Component {
            referenceTitle={referenceTitle}>
             {content}
           </Markdown>
-          <BackToTop />
         </article>
       </ReferenceContext.Provider>
     );

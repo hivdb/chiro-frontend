@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Popup} from 'semantic-ui-react';
 
 import style from './style.module.scss';
 import ReferenceContext from './reference-context';
+import buildRef from './build-ref';
 
 
 export default class RefLink extends React.Component {
@@ -19,6 +21,10 @@ export default class RefLink extends React.Component {
     children: PropTypes.node
   }
 
+  handleClick = (evt) => {
+    evt && evt.preventDefault();
+  }
+
   render() {
     let {name, identifier, ...ref} = this.props;
     name = name || identifier;
@@ -28,13 +34,24 @@ export default class RefLink extends React.Component {
     }
 
     return <ReferenceContext.Consumer>
-      {({setReference}) => {
+      {({setReference, getReference}) => {
         const {number, itemId, linkId} = setReference(name, ref);
-        return <sup>
-          <a className={style['ref-link']} id={linkId} href={`#${itemId}`}>
-            [{number}]
-          </a>
-        </sup>;
+        return (
+          <Popup
+           on="click"
+           basic hoverable wide="very"
+           content={() => <>
+             <a href={`#${itemId}`}>{number}</a>.{' '}
+             {buildRef(getReference(name))}
+           </>}
+           trigger={
+             <sup><a className={style['ref-link']}
+              onClick={this.handleClick}
+              id={linkId} href={`#${itemId}`}>
+               [{number}]
+             </a></sup>
+           } />
+        );
       }}
     </ReferenceContext.Consumer>;
   }
