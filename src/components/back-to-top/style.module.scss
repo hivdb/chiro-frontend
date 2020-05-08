@@ -1,4 +1,4 @@
-:global(body.chiro-body) .back-to-top-container {
+:global(body.chiro-body #root[data-back-to-top]) .back-to-top-container {
   display: block;
   position: absolute;
   top: 150vh; 
@@ -28,10 +28,16 @@
   
   @media only screen and (max-width: 1400px) {
     right: 2rem;
-    opacity: .4;
-    &:hover {
-      opacity: .8;
+    a.back-to-top {
+      opacity: .4;
+      &:hover {
+        opacity: .8;
+      }
     }
   }
 
+}
+
+:global(body.chiro-body) .back-to-top-container {
+  display: none;
 }

@@ -19,6 +19,9 @@ import {
   compoundShape
 } from './prop-types';
 
+const HREF_CT = 'https://clinicaltrials.gov/ct2/results?cond=COVID-19';
+const HREF_ICTRP = 'https://www.who.int/ictrp/en/';
+
 
 function renderCategory(displayName) {
   return <ReactMarkdown
@@ -104,9 +107,12 @@ class ClinicalTrialInner extends React.Component {
           <Header as="h1" dividing>
             Ongoing and Planned Clinical Trials of Antiviral Compounds
             <Header.Subheader>
-              from ClinicalTrials.gov and WHO ICTRP {
-                clinicalTrials? "(No. " + clinicalTrials['totalCount'] + ")": ''
-              }
+              from <a href={HREF_CT} rel="noopener noreferrer" target="_blank">
+                ClinicalTrials.gov
+              </a> and{' '}
+              <a href={HREF_ICTRP} rel="noopener noreferrer" target="_blank">
+                WHO ICTRP
+              </a>
               {updateTime ?
                 <span className={style['last-update']}>
                   Last updated at {updateTime.toLocaleString('en-US')}

@@ -77,7 +77,7 @@ export default class ChiroSearch extends React.Component {
               </Header>
               <p>
                 Mission statement and a narrative summary of the purpose
-                and contents of this database
+                and contents of this database.
               </p>
             </Link>
           </Grid.Column>
@@ -125,7 +125,8 @@ export default class ChiroSearch extends React.Component {
             <Link to="/compound-target-list/" className={style['section-link']}>
               <Header as="h2" textAlign="center">Drug Targets</Header>
               <p>
-                Virus and host targets for categorizing each compound.
+                Summary of data associated with each compound according to
+                the targeted viral protein or host pathway.
               </p>
             </Link>
           </Grid.Column>
@@ -133,8 +134,8 @@ export default class ChiroSearch extends React.Component {
             <Link to="/clinical-trials/" className={style['section-link']}>
               <Header as="h2" textAlign="center">Clinical Trials</Header>
               <p>
-                Ongoing and planned SARS-CoV-2 clinical trials of potential
-                anti-coronavirus compounds annotated according to study design
+                Ongoing and planned SARS-CoV-2 trials of potential
+                anti-coronavirus compounds annotated by study design
                 and patient population.
               </p>
             </Link>

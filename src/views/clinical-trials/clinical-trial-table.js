@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'found';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import orderBy from 'lodash/orderBy';
@@ -72,6 +73,7 @@ function shortenCompound(name) {
       .replace(/Chloroquine/g, 'CQ')
       .replace(/Lopinavir\/r/g, 'LPV/r')
       .replace(/Convalescent plasma/g, 'CP')
+      .replace(/Azithromycin/g, 'AZ')
   );
 }
 
@@ -89,7 +91,13 @@ function renderIntervention(
     else {
       // a compound
       const lower = splitted[i].toLocaleLowerCase();
-      const norm = compoundNormMap[lower];
+      const compoundName = compoundNormMap[lower];
+      const norm = <Link className="header" to={{
+        pathname: '/search/',
+        query: {compound: compoundName}
+      }}>
+        {compoundName}
+      </Link>;
       const shorted = shortenCompound(splitted[i]);
       if (appeared.indexOf(norm) > -1) {
         result.push(shorted);
@@ -100,6 +108,7 @@ function renderIntervention(
         result.push(
           <Popup
            key={i}
+           hoverable
            header={norm}
            content={desc}
            trigger={<span className={style['with-info']}>
@@ -126,8 +135,8 @@ function renderRegion(region, {regionDetail}) {
 
 function renderRecruitmentStatus(status, {attachedTextObjs}) {
   const recruitment = [
-      "Recruiting", "Suspended",
-      "Terminated", "Completed"].includes(status) ? status : '-'
+    "Recruiting", "Suspended",
+    "Terminated", "Completed"].includes(status) ? status : '-';
 
   let stop_reason = '';
   for (const one of attachedTextObjs) {
@@ -136,9 +145,9 @@ function renderRecruitmentStatus(status, {attachedTextObjs}) {
     }
   }
   if (stop_reason) {
-    return (<Popup content={stop_reason} trigger={<span>{recruitment}</span>} />)
+    return <Popup content={stop_reason} trigger={<span>{recruitment}</span>} />;
   } else {
-    return (recruitment)
+    return recruitment;
   }
 }
 

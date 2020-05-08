@@ -12,6 +12,7 @@
     "apollo-link-http": "^1.5.16",
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
+    "css-element-queries": "^1.2.3",
     "found": "^0.4.9",
     "fuse.js": "^5.0.7-beta",
     "graphql-tag.macro": "^2.0.1",
