@@ -1,4 +1,29 @@
-:global(.ui.table td).justify {
-  text-align: justify;
-  text-justify: inter-word;
+.chiro-table:global(.ui.table:not(.unstackable)) {
+  .cell-label {
+    display: none;
+  }
+  td.justify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+  @media only screen and (max-width: 767px) {
+    .cell-label {
+      display: inline-block;
+      text-align: right;
+      width: 40%;
+      box-sizing: border-box;
+      padding-right: 2%;
+    }
+    .cell-value {
+      display: inline-block;
+      text-align: left;
+      width: 60%;
+      box-sizing: border-box;
+      padding: 2%;
+      background-color: rgba(0,0,0,.05);
+    }
+    thead {
+      display: none;
+    } 
+  }
 }

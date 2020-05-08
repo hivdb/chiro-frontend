@@ -24,7 +24,9 @@ html {
   // unfxxk SemanticUI's extremely high priority
   // container width define.
   // See I am higher than you now!
-  width: 75vw;
+  @media only screen {
+    width: 75vw;
+  }
   @media only screen and (max-width: 1200px) {
     width: 95vw;
   }

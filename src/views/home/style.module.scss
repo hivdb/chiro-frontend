@@ -134,6 +134,7 @@
     :global(.ui.list>.item .header) {
       text-align: center;
       margin-top: 1rem;
+      margin-bottom: 1rem;
       font-size: 1.2rem;
       line-height: 1.5rem;
     }
@@ -147,13 +148,15 @@
         margin-right: 0;
       }
       @media only screen and (max-width: 1024px) {
-        justify-content: flex-start;
         flex-wrap: wrap;
       }
       @media only screen and (min-width: 1025px) {
         > :global(.item) {
           width: 14.2857%;
         }
+      }
+      > :global(.item) {
+        margin-left: 0;
       }
     }
   }

@@ -99,7 +99,8 @@ export default class ChiroTable extends React.Component {
     }, {});
 
     return <Table
-     color={color} sortable celled compact selectable>
+     color={color} sortable celled compact selectable
+     className={style['chiro-table']}>
       <Table.Header>
         <Table.Row>
           {columnDefs.map(({name, label, sort, sortable}, idx) => (
@@ -118,15 +119,17 @@ export default class ChiroTable extends React.Component {
       <Table.Body>
         {sortedData.map((row, idx) => (
           <Table.Row verticalAlign="top" key={idx}>
-            {columnDefs.map(({name, render, textAlign}, jdx) => (
+            {columnDefs.map(({name, render, textAlign, label}, jdx) => (
               <Table.Cell
                key={jdx}
                {...(textAlign === 'justify' ?
                  {className: style.justify} :
                  {textAlign}
-               )}
-            >
-                {render(nestedGet(row, name), row, context[name])}
+               )}>
+                <span className={style['cell-label']}>{label}</span>
+                <span className={style['cell-value']}>
+                  {render(nestedGet(row, name), row, context[name])}
+                </span>
               </Table.Cell>
             ))}
           </Table.Row>

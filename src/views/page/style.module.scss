@@ -1,12 +1,30 @@
 @import "../../styles/colors";
 
-.last-update {
-  float: right;
-  font-size: 1rem;
-  margin-top: -1rem;
-}
-
 .content-container {
+
+  .last-update {
+    float: right;
+    font-size: 1rem;
+    margin-top: -1rem;
+  }
+
+  @media only screen and (max-width: 500px) {
+    :global(.sub.header) {
+      overflow: hidden;
+    }
+    .last-update {
+      margin-top: 0;
+    }
+    nav:global(.toc) {
+      display: none;
+    }
+  }
+
+  @media print {
+    nav:global(.toc) {
+      display: none;
+    }
+  }
   position: relative;
   line-height: 1.5;
   nav:global(.toc) {

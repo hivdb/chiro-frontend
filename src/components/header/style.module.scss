@@ -2,7 +2,9 @@
 @import "../../styles/variables";
 
 .header-container {
-  width: 75vw;
+  @media only screen {
+    width: 75vw;
+  }
   @media only screen and (max-width: 1200px) {
     width: 95vw;
   }
@@ -15,6 +17,9 @@
 }
 
 .header-bar {
+  @media print {
+    display: none;
+  }
   height: $header-bar-height;
   background-color: $alto;
   width: 100%;
@@ -44,11 +49,25 @@
     a {
       color: $main-color;
     }
+    @media only screen and (max-width: 500px) {
+      &:not(:first-child):not(:nth-child(3)):not(:last-child) {
+        display: none;
+      }
+    }
   }
 
 }
 
 .header-logo {
+  @media print {
+    background-color: transparent;
+    .brand-logo {
+      filter: drop-shadow(1px 0 4px $main-color) drop-shadow(0 1px 4px $main-color) drop-shadow(-1px 0 4px $main-color) drop-shadow(0 -1px 4px $main-color);
+    }
+    .header-container .brand-sitename {
+      filter: drop-shadow(1px 0 4px $main-color) drop-shadow(0 1px 4px $main-color) drop-shadow(-1px 0 4px $main-color) drop-shadow(0 -1px 4px $main-color);
+    }
+  }
   background-color: $main-color;
   width: 100%;
   height: $header-logo-height;

@@ -38,9 +38,13 @@
       }
     }
   }
+  @media print {
+    display: none;
+  }
 
 }
 
 :global(body.chiro-body) .back-to-top-container {
   display: none;
 }
+
