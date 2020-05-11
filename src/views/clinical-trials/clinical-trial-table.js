@@ -58,6 +58,12 @@ function trialNumber(number) {
   else if (number.startsWith('ACTRN')) {
     url = `https://apps.who.int/trialsearch/Trial2.aspx?TrialID=${number}`;
   }
+  else if (number.startsWith('NL')) {
+    url = 'https://www.trialregister.nl/trial/' + number.replace(/^NL/, '');
+  }
+  else if (number.startsWith('RPCEC')) {
+    url = `http://registroclinico.sld.cu/en/trials/${number}-en`;
+  }
   if (url) {
     return (
       <a href={url} rel="noopener noreferrer" target="_blank">{number}</a>
