@@ -90,7 +90,20 @@ const authorYearColDef = new ColumnDef({
 
 const virusSpeciesDef = new ColumnDef({
   name: 'virusName',
-  label: 'Virus'
+  label: 'Virus',
+  render: (virusName, {virusStrainName}) => {
+    if (virusStrainName) {
+      return (
+        <Popup
+         content={<>Strain: <strong>{virusStrainName}</strong></>}
+         trigger={<span className={style['with-info']}>
+           {virusName}
+         </span>} />
+      );
+    } else {
+      return virusName;
+    }
+  }
 });
 
 

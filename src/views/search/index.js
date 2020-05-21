@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
-import {matchShape, routerShape} from 'found';
+import {Link, matchShape, routerShape} from 'found';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import VirusExpTable from './virus-experiments';
@@ -74,6 +74,7 @@ class SearchInner extends React.Component {
       biochemExperiments,
       animalExperiments,
       clinicalExperiments,
+      clinicalTrials,
       loading
     } = this.props;
     const cacheKey = (
@@ -96,6 +97,7 @@ class SearchInner extends React.Component {
       if (qStudyType !== 'clinical-studies') {
         clinicalExperiments = {totalCount: 0, edges: []};
       }
+      clinicalTrials = {totalCount: 0};
     }
     const noResult = !loading && (
       virusExperiments.totalCount +
@@ -172,6 +174,18 @@ class SearchInner extends React.Component {
                         Clinical studies
                       </a>,
                       value: clinicalExperiments.totalCount
+                    }] : []),
+                    ...(!loading && clinicalTrials.totalCount > 0 ? [{
+                      label: <Link to={{
+                        pathname: '/clinical-trials/',
+                        query: {
+                          compound: qCompoundName,
+                          target: qCompoundTargetName
+                        }
+                      }}>
+                        Clinical trials
+                      </Link>,
+                      value: clinicalTrials.totalCount
                     }] : [])
                   ]
                 },

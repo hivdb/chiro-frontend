@@ -85,6 +85,7 @@ export default gql`
             nickname year
           }
           virusName
+          virusStrainName
           compoundNames
           cellsObj { name description }
           measurementObj { name description }
@@ -111,6 +112,7 @@ export default gql`
             nickname year
           }
           virusName
+          virusStrainName
           compoundNames
           targetName
           ic50cmp
@@ -133,6 +135,7 @@ export default gql`
             nickname year
           }
           virusName
+          virusStrainName
           compoundNames
           animalModelName
           animalModelDetail
@@ -173,6 +176,12 @@ export default gql`
           }
         }
       }
+    }
+    clinicalTrials(
+      compoundName: $compoundName,
+      compoundTargetName: $compoundTargetName
+    ) {
+      totalCount
     }
   }
 `;

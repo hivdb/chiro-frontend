@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
 import ReactMarkdown from 'react-markdown';
 import {useQuery} from '@apollo/react-hooks';
-import {matchShape, routerShape} from 'found';
+import {Link, matchShape, routerShape} from 'found';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import searchQuery from './query.gql';
@@ -89,8 +89,7 @@ class ClinicalTrialInner extends React.Component {
       loading,
       compounds,
       clinicalTrialCategories,
-      updateTime,
-      clinicalTrials
+      updateTime
     } = this.props;
     const {clinicalTrialGroups} = this;
     const cacheKey = (
@@ -119,18 +118,31 @@ class ClinicalTrialInner extends React.Component {
                 </span> : null}
             </Header.Subheader>
           </Header>
+          {!loading && (qCompoundTargetName || qCompoundName) ? <p>
+            Following results are filter by
+            {qCompoundName ? <> the drug <strong>
+              {qCompoundName}
+            </strong> </> : (qCompoundTargetName ? <> target <strong>
+              {qCompoundTargetName}
+            </strong> </> : null)}
+            (<Link to="/clinical-trials/">see all</Link>).
+          </p> : null}
           {loading ? <Loader active inline="centered" /> : <>
             {noResult ? <div>No result.</div> : (
               <ul className={style['category-stat']}>
                 {clinicalTrialCategories.edges.map(
-                  ({node: {name, displayName}}, idx) => (
-                    <li key={idx}>
+                  ({node: {name, displayName}}, idx) => {
+                    const count = (clinicalTrialGroups[name] || []).length;
+                    if (count === 0) {
+                      return null;
+                    }
+                    return <li key={idx}>
                       <a href={`#${name}`}>
                         {renderCategory(displayName)}
                       </a>
-                      <span>{(clinicalTrialGroups[name] || []).length}</span>
-                    </li>
-                  )
+                      <span>{count}</span>
+                    </li>;
+                  }
                 )}
               </ul>
             )}
