@@ -20,6 +20,7 @@ export default gql`
           name
           synonyms
           target
+          category
           drugClassName
           molecularFormula
           molecularWeight

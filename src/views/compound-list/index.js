@@ -106,7 +106,7 @@ class CompoundListInner extends React.Component {
                 ({node: {
                   name, synonyms, target, drugClassName,
                   molecularFormula, molecularWeight,
-                  pubchemCid, relatedCompounds, smiles,
+                  category, pubchemCid, relatedCompounds, smiles,
                   experimentCounts, description
                 }}, idx) => (
                   <Item key={idx}>
@@ -149,6 +149,10 @@ class CompoundListInner extends React.Component {
                         {molecularWeight ?
                           <span className={style['mw']}>
                             {molecularWeight} g/mol
+                          </span> : null}
+                        {category ?
+                          <span className={style['category']}>
+                            {category}
                           </span> : null}
                       </Item.Meta>
                       <Item.Description>
