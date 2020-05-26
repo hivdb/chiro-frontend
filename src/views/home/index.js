@@ -10,8 +10,13 @@ import imageRemdesivir from '../../assets/images/remdesivir.png';
 import imageSARS2 from '../../assets/images/sars2.png';
 import imagePetriDish from '../../assets/images/petri-dish.png';
 import imageMouse from '../../assets/images/mouse.png';
+import imagePK from '../../assets/images/pk.png';
 import imageMeasurement from '../../assets/images/measurement.png';
 import imageReferences from '../../assets/images/references.png';
+
+const URL_PK_NOTES = (
+  'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
+  'tDg7l0H3625fjrPSThbCRN2bt1BeJguD24SBfe9Rp6j5lR6dV1p4NR3YWpW3yh1/pub');
 
 
 export default class ChiroSearch extends React.Component {
@@ -176,6 +181,18 @@ export default class ChiroSearch extends React.Component {
                     <List.Header>Animal models</List.Header>
                   </List.Content>
                 </Link>
+              </List.Item>
+              <List.Item>
+                <a
+                 href={URL_PK_NOTES}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className={style['section-link']}>
+                  <List.Content>
+                    <img src={imagePK} alt="PK" />
+                    <List.Header>PK notes</List.Header>
+                  </List.Content>
+                </a>
               </List.Item>
               <List.Item>
                 <Link to="/cell-culture-measurement-list/"

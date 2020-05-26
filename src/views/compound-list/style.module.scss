@@ -26,6 +26,12 @@
       font-weight: 600;
     }
   }
+  > .category {
+    &::before {
+      content: 'Availability: ';
+      font-weight: 600;
+    }
+  }
   > .related-compounds {
     &::before {
       content: 'Related compounds: ';
