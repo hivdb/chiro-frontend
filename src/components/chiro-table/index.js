@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import nestedGet from 'lodash/get';
-import {Table} from 'semantic-ui-react';
+import {Table, Button} from 'semantic-ui-react';
 import style from './style.module.scss';
 import ColumnDef from './column-def';
 
@@ -45,6 +45,7 @@ export default class ChiroTable extends React.Component {
       sortedData: data,
       sortDirection: null
     };
+    this.table = React.createRef();
   }
 
   componentDidUpdate(prevProps) {
@@ -90,6 +91,16 @@ export default class ChiroTable extends React.Component {
     };
   }
 
+  handleCopy() {
+    const node = this.table.current;
+    let range = document.createRange();
+    range.selectNodeContents(node);
+    let sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    document.execCommand('copy');
+  }
+
   render() {
     const {color, columnDefs} = this.props;
     const {sortedByColumn, sortedData, sortDirection} = this.state;
@@ -98,7 +109,8 @@ export default class ChiroTable extends React.Component {
       return acc;
     }, {});
 
-    return <Table
+    return  <div ref={this.table}>
+    <Table
      color={color} sortable celled compact selectable
      className={style['chiro-table']}>
       <Table.Header>
@@ -135,6 +147,13 @@ export default class ChiroTable extends React.Component {
           </Table.Row>
         ))}
       </Table.Body>
-    </Table>;
+    </Table>
+    <Button
+     size="mini"
+     floated='right'
+     onClick={this.handleCopy.bind(this)}
+    >Copy to clipboard</Button>
+    </div>
+    ;
   }
 }
