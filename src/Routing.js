@@ -16,7 +16,7 @@ import CellCultureMeasurementList from './views/cell-culture-measurement-list';
 import ArticleList from './views/article-list';
 import TermsOfUse from './views/terms-of-use';
 import Donation from './views/donation';
-import ClinicalTrials from './views/clinical-trials';
+import ClinicalTrialsV1 from './views/clinical-trials';
 import ClinicalTrialsV2 from './views/clinical-trials-v2';
 import News from './views/news';
 import Plots from './views/plots';
@@ -43,8 +43,8 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={TermsOfUse} path="/terms-of-use/" />
       <Route Component={Donation} path="/donation/" />
       <Route Component={News} path="/news/" />
-      <Route Component={ClinicalTrials} path="/clinical-trials/" />
-      <Route Component={ClinicalTrialsV2} path="/clinical-trials-v2" />
+      <Route Component={ClinicalTrialsV1} path="/clinical-trials-v1/" />
+      <Route Component={ClinicalTrialsV2} path="/clinical-trials" />
       <Route Component={Plots} path="/plots/" />
       <Route Component={DatabaseSchema} path="/database-schema/" />
       <Route Component={Page} path="/page/:pageName/" />
