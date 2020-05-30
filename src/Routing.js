@@ -17,6 +17,7 @@ import ArticleList from './views/article-list';
 import TermsOfUse from './views/terms-of-use';
 import Donation from './views/donation';
 import ClinicalTrials from './views/clinical-trials';
+import ClinicalTrialsV2 from './views/clinical-trials-v2';
 import News from './views/news';
 import Plots from './views/plots';
 import DatabaseSchema from './views/database-schema';
@@ -43,6 +44,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={Donation} path="/donation/" />
       <Route Component={News} path="/news/" />
       <Route Component={ClinicalTrials} path="/clinical-trials/" />
+      <Route Component={ClinicalTrialsV2} path="/clinical-trials-v2" />
       <Route Component={Plots} path="/plots/" />
       <Route Component={DatabaseSchema} path="/database-schema/" />
       <Route Component={Page} path="/page/:pageName/" />
