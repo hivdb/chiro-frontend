@@ -157,6 +157,15 @@ function renderRecruitmentStatus(status, {attachedTextObjs}) {
   }
 }
 
+function renderArticle(articles) {
+  return <>
+    {articles.map(({nickname}, idx) => {
+      const url = `/search/?article=${nickname}`;
+      return <a key={idx} href={url}>{nickname}</a>;
+    })}
+  </>
+}
+
 const tableColumns = [
   new ColDef({
     name: 'trialNumbers', label: 'Trial Number',
@@ -211,10 +220,11 @@ const tableColumns = [
   //   label: 'Est. Stop',
   //   render: monthYear
   // })
-  // new ColDef({
-  //   name: 'reference',
-  //   label: 'publication'
-  // })
+  new ColDef({
+    name: 'articles',
+    label: 'Publication',
+    render: renderArticle,
+  })
 ];
 
 

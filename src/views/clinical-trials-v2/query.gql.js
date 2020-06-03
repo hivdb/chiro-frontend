@@ -68,6 +68,9 @@ export default gql`
           compoundObjs {
             target
           }
+          articles {
+            nickname
+          }
         }
       }
     }
