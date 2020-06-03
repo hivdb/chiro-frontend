@@ -140,9 +140,9 @@ function renderRegion(region, {regionDetail}) {
 }
 
 function renderRecruitmentStatus(status, {attachedTextObjs}) {
-  const recruitment = [
-    "Recruiting", "Suspended",
-    "Terminated", "Completed"].includes(status) ? status : '-';
+  // const recruitment = [
+  //   "Recruiting", "Suspended",
+  //   "Terminated", "Completed"].includes(status) ? status : '-';
 
   let stop_reason = '';
   for (const one of attachedTextObjs) {
@@ -151,9 +151,9 @@ function renderRecruitmentStatus(status, {attachedTextObjs}) {
     }
   }
   if (stop_reason) {
-    return <Popup content={stop_reason} trigger={<span>{recruitment}</span>} />;
+    return <Popup content={stop_reason} trigger={<span>{status}</span>} />;
   } else {
-    return recruitment;
+    return status;
   }
 }
 
