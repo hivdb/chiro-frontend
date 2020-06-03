@@ -168,10 +168,6 @@ const tableColumns = [
       ))
     )
   }),
-  new ColDef({
-    name: 'recruitmentStatus', label: 'Status',
-    render: renderRecruitmentStatus
-  }),
   /*new ColDef({
     name: 'hasTreatmentGroup',
     label: <>Treatment /<br />Prevention</>,
@@ -207,10 +203,18 @@ const tableColumns = [
     render: monthYear
   }),
   new ColDef({
-    name: 'stopDate',
-    label: 'Est. Stop',
-    render: monthYear
-  })
+    name: 'recruitmentStatus', label: 'Status',
+    render: renderRecruitmentStatus
+  }),
+  // new ColDef({
+  //   name: 'stopDate',
+  //   label: 'Est. Stop',
+  //   render: monthYear
+  // })
+  // new ColDef({
+  //   name: 'reference',
+  //   label: 'publication'
+  // })
 ];
 
 
