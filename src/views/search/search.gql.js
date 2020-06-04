@@ -163,6 +163,7 @@ export default gql`
         node {
           articles {
             nickname year journal journalAbbr
+            publishDate
           }
           virusName
           compoundNames
