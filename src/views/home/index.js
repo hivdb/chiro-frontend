@@ -81,7 +81,7 @@ export default class ChiroSearch extends React.Component {
                 Antiviral Therapy
               </Header>
               <p>
-                Mission statement and a narrative summary of the purpose
+                A narrative summary of the purpose
                 and contents of this database.
               </p>
             </Link>
