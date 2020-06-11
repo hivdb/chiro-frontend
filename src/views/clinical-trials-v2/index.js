@@ -11,6 +11,8 @@ import searchQuery from './query.gql';
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
 import setTitle from '../../utils/set-title';
+import {InlineSearchBox} from '../../components/search-box';
+import StatHeader from '../../components/stat-header';
 
 import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
@@ -56,16 +58,49 @@ class ClinicalTrialInner extends React.Component {
     handleQueryChange(actions, this.props)
   )
 
+  handleExpSearchBoxChange = (actions) => {
+    const query = {};
+    for (let [value, category] of actions) {
+      value = value || undefined;
+      if (category === 'compounds') {
+        query.compound = value;
+      }
+      else if (category === 'compoundTargets') {
+        query.target = value;
+      }
+      else {
+        query.virus = value;
+      }
+    }
+    this.props.router.push(
+      {pathname: '/clinical-trials/', query}
+    );
+  }
+
   get clinicalTrialGroups() {
-    const {loading, clinicalTrials} = this.props;
+    const {loading, clinicalTrials, qCompoundTargetName} = this.props;
     if (loading) {
       return {};
     }
-    const allTrials = [];
+    let allTrials = [];
     for (const {node: {compoundObjs, ...trial}} of clinicalTrials.edges) {
-      for (const {target} of compoundObjs) {
-        allTrials.push({...trial, target});
+      let used_target = []
+      for (const {target, primaryCompound, relatedCompounds} of compoundObjs) {
+        if (used_target.includes(target)) {
+          continue
+        }
+        allTrials.push({...trial, target, primaryCompound, relatedCompounds});
+        used_target.push(target);
       }
+    }
+    if (qCompoundTargetName) {
+      allTrials = allTrials.filter(({target}) => {
+        if (target === qCompoundTargetName) {
+          return true;
+        } else {
+          return false;
+        }
+      });
     }
     let result = groupBy(allTrials, t => t.target);
     return result;
@@ -111,8 +146,37 @@ class ClinicalTrialInner extends React.Component {
                 </span> : null}
             </Header.Subheader>
           </Header>
+        </Grid.Column>
+      </Grid.Row>
 
-          {loading ? <Loader active inline="centered" /> : <>
+      <Grid.Row>
+        <Grid.Column width={8}>
+          <InlineSearchBox
+           allowEmpty
+           compoundValue={qCompoundName}
+           compoundTargetValue={qCompoundTargetName}
+           onChange={this.handleExpSearchBoxChange}>
+            {({
+              compoundTargetDropdown,
+              compoundDropdown,
+            }) => (
+              <StatHeader>
+                {[
+                  {
+                    className: style['search-box'],
+                    cells: [
+                      {label: 'Target', value: compoundTargetDropdown},
+                      {label: 'Compound', value: compoundDropdown},
+                    ]
+                  }
+                ]}
+              </StatHeader>
+            )}
+          </InlineSearchBox>
+        </Grid.Column>
+        <Grid.Column width={8}>
+          {loading ? <Loader active inline="centered" /> :
+          <>
             {noResult ? <div>No result.</div> : (
               <ul className={style['category-stat']}>
                 {compoundTargets.edges.map(
@@ -134,6 +198,7 @@ class ClinicalTrialInner extends React.Component {
           </>}
         </Grid.Column>
       </Grid.Row>
+
       {loading ?
         <Loader active inline="centered" /> : <>
           {!noResult ?

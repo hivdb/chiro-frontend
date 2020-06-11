@@ -67,6 +67,12 @@ export default gql`
           }
           compoundObjs {
             target
+            primaryCompound {
+              name
+            }
+            relatedCompounds {
+              name
+            }
           }
           articles {
             nickname
