@@ -17,6 +17,7 @@ export default gql`
           name
           synonyms
           description
+          clinicalTrialCount
         }
       }
     }

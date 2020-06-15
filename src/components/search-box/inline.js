@@ -51,7 +51,8 @@ class SearchBoxInner extends React.Component {
     placeholder: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
-    dropdownProps: PropTypes.object.isRequired
+    dropdownProps: PropTypes.object.isRequired,
+    compoundListFilter: PropTypes.func,
   }
 
   static defaultProps = {
@@ -102,10 +103,14 @@ class SearchBoxInner extends React.Component {
   get compoundOptions() {
     const {
       data, compoundTargetValue, allowEmpty,
-      compoundPlaceholder, placeholder} = this.props;
+      compoundPlaceholder, placeholder, compoundListFilter} = this.props;
+
     let filter = ({status, category}) => (
       status === 'visible' && category === 'compounds'
     );
+    if (compoundListFilter) {
+      filter = compoundListFilter;
+    }
     if (compoundTargetValue && compoundTargetValue !== ANY) {
       filter = ({displayTargets, category}) => (
         category === 'compounds' &&

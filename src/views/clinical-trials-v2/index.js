@@ -45,6 +45,7 @@ class ClinicalTrialInner extends React.Component {
     qCompoundTargetName: PropTypes.string,
     qCategoryName: PropTypes.string,
     compound: compoundShape,
+    compounds: PropTypes.object,
     compoundTargets: PropTypes.object,
     clinicalTrials: PropTypes.object,
     clinicalTrialCategories: PropTypes.object
@@ -106,6 +107,20 @@ class ClinicalTrialInner extends React.Component {
     return result;
   }
 
+  get clinicalTrialCompoundList() {
+    const {compounds} = this.props;
+
+    if (!compounds) {
+      return [];
+    }
+
+    return compounds.edges.filter(
+      ({node: {clinicalTrialCount}}) => {
+        return clinicalTrialCount && parseInt(clinicalTrialCount) > 0;
+      }
+    ).map(({node: {name}}) => (name));
+  }
+
   render() {
     setTitle('Clinical Trials');
     this.props.loading || redirectIfNeeded(this.props);
@@ -119,7 +134,8 @@ class ClinicalTrialInner extends React.Component {
       clinicalTrialCategories,
       updateTime
     } = this.props;
-    const {clinicalTrialGroups} = this;
+
+    const {clinicalTrialGroups, clinicalTrialCompoundList} = this;
     const cacheKey = (
       `${qCompoundTargetName}@@${qCompoundName}` +
       `@@${qCategoryName}`
@@ -151,10 +167,14 @@ class ClinicalTrialInner extends React.Component {
 
       <Grid.Row>
         <Grid.Column width={8}>
+          {loading ? <Loader active inline="centered" /> :
           <InlineSearchBox
            allowEmpty
            compoundValue={qCompoundName}
            compoundTargetValue={qCompoundTargetName}
+           compoundListFilter={({title, status, category}) => (
+            status === 'visible' && category === 'compounds' && clinicalTrialCompoundList.includes(title)
+          )}
            onChange={this.handleExpSearchBoxChange}>
             {({
               compoundTargetDropdown,
@@ -173,6 +193,7 @@ class ClinicalTrialInner extends React.Component {
               </StatHeader>
             )}
           </InlineSearchBox>
+          }
         </Grid.Column>
         <Grid.Column width={8}>
           {loading ? <Loader active inline="centered" /> :
