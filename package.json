@@ -33,7 +33,7 @@
     "source-sans-pro": "^3.6.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3012 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

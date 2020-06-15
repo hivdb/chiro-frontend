@@ -66,7 +66,7 @@ export default class Header extends React.Component {
                 <Link to="/page/mission-statement/">Mission Statement</Link>
               </li>
               <li className={style['nav-item']}>
-                <Link to="/search/">Search</Link>
+                <Link to="/search/?form_only">Search</Link>
               </li>
               <li className={style['nav-item']}>
                 <Link to="/compound-target-list/">Drug Targets</Link>

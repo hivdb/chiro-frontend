@@ -10,7 +10,7 @@ export default gql`
     $withCompoundTarget: Boolean!
     $withVirus: Boolean!
     $withArticle: Boolean!
-
+    $enableQuery: Boolean!
   ) {
     compound(name: $compoundName) @include(if: $withCompound) {
       name
@@ -45,7 +45,7 @@ export default gql`
       compoundTargetName: $compoundTargetName,
       virusName: $virusName,
       articleNickname: $articleNickname
-    ) {
+    ) @include(if: $enableQuery) {
       totalCount
       edges {
         node {
@@ -77,7 +77,7 @@ export default gql`
       virusName: $virusName,
       compoundTargetName: $compoundTargetName,
       articleNickname: $articleNickname,
-    ) {
+    ) @include(if: $enableQuery) {
       totalCount
       edges {
         node {
@@ -104,7 +104,7 @@ export default gql`
       compoundTargetName: $compoundTargetName,
       virusName: $virusName,
       articleNickname: $articleNickname
-    ) {
+    ) @include(if: $enableQuery) {
       totalCount
       edges {
         node {
@@ -127,7 +127,7 @@ export default gql`
       compoundTargetName: $compoundTargetName,
       virusName: $virusName,
       articleNickname: $articleNickname
-    ) {
+    ) @include(if: $enableQuery) {
       totalCount
       edges {
         node {
@@ -157,7 +157,7 @@ export default gql`
       compoundTargetName: $compoundTargetName,
       virusName: $virusName,
       articleNickname: $articleNickname
-    ) {
+    ) @include(if: $enableQuery) {
       totalCount
       edges {
         node {
@@ -181,7 +181,7 @@ export default gql`
     clinicalTrials(
       compoundName: $compoundName,
       compoundTargetName: $compoundTargetName
-    ) {
+    ) @include(if: $enableQuery) {
       totalCount
     }
   }

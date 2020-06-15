@@ -5,6 +5,8 @@
 }
 
 .category-stat {
+  font-size: 1.2rem;
+  line-height: 1.5rem;
   width: 30rem;
   > li > a {
     font-weight: 600;
@@ -49,4 +51,9 @@
 .last-update {
   float: right;
   font-size: 1rem;
+}
+
+.search-box {
+  font-size: 1.2rem;
+  line-height: 1.5rem;
 }

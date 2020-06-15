@@ -42,6 +42,13 @@ class SearchBoxInner extends React.Component {
     studyTypeValue: PropTypes.string,
     compoundTargetValue: PropTypes.string,
     clinicalTrialCategoryValue: PropTypes.string,
+    articlePlaceholder: PropTypes.string,
+    compoundPlaceholder: PropTypes.string,
+    virusPlaceholder: PropTypes.string,
+    studyTypePlaceholder: PropTypes.string,
+    compoundTargetPlaceholder: PropTypes.string,
+    clinicalTrialCategoryPlaceholder: PropTypes.string,
+    placeholder: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
     dropdownProps: PropTypes.object.isRequired
@@ -77,21 +84,25 @@ class SearchBoxInner extends React.Component {
   }
 
   get articleOptions() {
-    const {data, allowEmpty, placeholder} = this.props;
+    const {data, allowEmpty, placeholder, articlePlaceholder} = this.props;
     return data2Options(
       data, ({category}) => category === 'articles',
-      allowEmpty, placeholder);
+      allowEmpty, articlePlaceholder || placeholder);
   }
 
   get targetOptions() {
-    const {data, allowEmpty, placeholder} = this.props;
+    const {
+      data, allowEmpty, placeholder,
+      compoundTargetPlaceholder} = this.props;
     return data2Options(
       data, ({category}) => category === 'compoundTargets',
-      allowEmpty, placeholder);
+      allowEmpty, compoundTargetPlaceholder || placeholder);
   }
 
   get compoundOptions() {
-    const {data, compoundTargetValue, allowEmpty, placeholder} = this.props;
+    const {
+      data, compoundTargetValue, allowEmpty,
+      compoundPlaceholder, placeholder} = this.props;
     let filter = ({status, category}) => (
       status === 'visible' && category === 'compounds'
     );
@@ -101,7 +112,9 @@ class SearchBoxInner extends React.Component {
         displayTargets.indexOf(compoundTargetValue) > -1
       );
     }
-    return data2Options(data, filter, allowEmpty, placeholder);
+    return data2Options(
+      data, filter, allowEmpty,
+      compoundPlaceholder || placeholder);
   }
 
   getTargetFromCompound(compoundName) {
@@ -115,26 +128,28 @@ class SearchBoxInner extends React.Component {
   }
 
   get virusOptions() {
-    const {data, allowEmpty, placeholder} = this.props;
+    const {data, allowEmpty, virusPlaceholder, placeholder} = this.props;
     return data2Options(
       data, ({category}) => category === 'viruses',
-      allowEmpty, placeholder);
+      allowEmpty, virusPlaceholder || placeholder);
   }
 
   get clinicalTrialCategoryOptions() {
-    const {data, allowEmpty, placeholder} = this.props;
+    const {
+      data, allowEmpty, placeholder,
+      clinicalTrialCategoryPlaceholder} = this.props;
     return data2Options(
       data, ({category}) => category === 'clinicalTrialCategories',
-      allowEmpty, placeholder);
+      allowEmpty, clinicalTrialCategoryPlaceholder || placeholder);
   }
 
   get studyTypeOptions() {
-    const {allowEmpty, placeholder} = this.props;
+    const {allowEmpty, studyTypePlaceholder, placeholder} = this.props;
     return [
       ...(allowEmpty ? [
         {
           key: 'empty',
-          text: placeholder || EMPTY_TEXT,
+          text: studyTypePlaceholder || placeholder || EMPTY_TEXT,
           value: EMPTY
         }
       ] : []),
@@ -195,8 +210,12 @@ class SearchBoxInner extends React.Component {
       articleValue,
       compoundTargetValue,
       compoundValue, virusValue,
-      placeholder,
       studyTypeValue, clinicalTrialCategoryValue,
+      articlePlaceholder,
+      compoundTargetPlaceholder,
+      compoundPlaceholder, virusPlaceholder,
+      studyTypePlaceholder, clinicalTrialCategoryPlaceholder,
+      placeholder,
       children, dropdownProps
     } = this.props;
     return children({
@@ -204,7 +223,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={placeholder || EMPTY_TEXT}
+         placeholder={articlePlaceholder || placeholder || EMPTY_TEXT}
          options={this.articleOptions}
          onChange={this.handleChange('articles')}
          value={articleValue} />
@@ -213,7 +232,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={placeholder || EMPTY_TEXT}
+         placeholder={compoundTargetPlaceholder || placeholder || EMPTY_TEXT}
          options={this.targetOptions}
          onChange={this.handleChange('compoundTargets')}
          value={compoundTargetValue} />
@@ -222,7 +241,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={placeholder || EMPTY_TEXT}
+         placeholder={compoundPlaceholder || placeholder || EMPTY_TEXT}
          options={this.compoundOptions}
          onChange={this.handleChange('compounds')}
          value={compoundValue} />
@@ -231,7 +250,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={placeholder || EMPTY_TEXT}
+         placeholder={virusPlaceholder || placeholder || EMPTY_TEXT}
          options={this.virusOptions}
          onChange={this.handleChange('viruses')}
          value={virusValue} />
@@ -240,7 +259,7 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={placeholder || EMPTY_TEXT}
+         placeholder={studyTypePlaceholder || placeholder || EMPTY_TEXT}
          options={this.studyTypeOptions}
          onChange={this.handleChange('studyTypes')}
          value={studyTypeValue} />
@@ -249,7 +268,10 @@ class SearchBoxInner extends React.Component {
         <Dropdown
          search direction="left"
          {...dropdownProps}
-         placeholder={placeholder || EMPTY_TEXT}
+         placeholder={
+           clinicalTrialCategoryPlaceholder ||
+           placeholder || EMPTY_TEXT
+         }
          options={this.clinicalTrialCategoryOptions}
          onChange={this.handleChange('clinicalTrialCategories')}
          value={clinicalTrialCategoryValue} />

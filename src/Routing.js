@@ -44,7 +44,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={Donation} path="/donation/" />
       <Route Component={News} path="/news/" />
       <Route Component={ClinicalTrialsV1} path="/clinical-trials-v1/" />
-      <Route Component={ClinicalTrialsV2} path="/clinical-trials" />
+      <Route Component={ClinicalTrialsV2} path="/clinical-trials/" />
       <Route Component={Plots} path="/plots/" />
       <Route Component={DatabaseSchema} path="/database-schema/" />
       <Route Component={Page} path="/page/:pageName/" />

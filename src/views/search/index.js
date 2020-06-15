@@ -33,6 +33,7 @@ import {
 class SearchInner extends React.Component {
 
   static propTypes = {
+    formOnly: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     match: matchShape.isRequired,
     router: routerShape.isRequired,
@@ -49,6 +50,7 @@ class SearchInner extends React.Component {
   }
 
   static defaultProps = {
+    formOnly: false,
     loading: false
   }
 
@@ -75,6 +77,7 @@ class SearchInner extends React.Component {
       animalExperiments,
       clinicalExperiments,
       clinicalTrials,
+      formOnly,
       loading
     } = this.props;
     const cacheKey = (
@@ -99,7 +102,7 @@ class SearchInner extends React.Component {
       }
       clinicalTrials = {totalCount: 0};
     }
-    const noResult = !loading && (
+    const noResult = !formOnly && !loading && (
       virusExperiments.totalCount +
       entryAssayExperiments.totalCount +
       biochemExperiments.totalCount +
@@ -125,6 +128,7 @@ class SearchInner extends React.Component {
               {[
                 {
                   title: 'Selection',
+                  className: style['search-box'],
                   width: 5,
                   cells: [
                     {label: 'Target', value: compoundTargetDropdown},
@@ -133,8 +137,9 @@ class SearchInner extends React.Component {
                     {label: 'Study type', value: studyTypeDropdown},
                   ]
                 },
-                {
+                ...(formOnly ? [] : [{
                   title: 'Results',
+                  className: style['search-summary'],
                   width: 3,
                   cells: [
                     ...(noResult ? [{
@@ -188,7 +193,7 @@ class SearchInner extends React.Component {
                       value: clinicalTrials.totalCount
                     }] : [])
                   ]
-                },
+                }]),
                 ...(compound || virus || compoundTarget ? [{
                   description: <>
                     {compoundTarget && !compound ? <p>
@@ -221,8 +226,8 @@ class SearchInner extends React.Component {
           )}
         </InlineSearchBox>
       </Grid.Row>
-      {loading ?
-        <Loader active inline="centered" /> : <>
+      {formOnly || loading ?
+        (loading ? <Loader active inline="centered" /> : null) : <>
           {virusExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
@@ -293,6 +298,7 @@ export default function Search({match, ...props}) {
   const {
     location: {
       query: {
+        form_only: formOnly,
         compound: compoundName,
         virus: virusName,
         target: compoundTargetName,
@@ -304,25 +310,15 @@ export default function Search({match, ...props}) {
   let {loading, error, data} = useQuery(searchQuery, {
     variables: {
       compoundName, compoundTargetName, virusName, articleNickname,
-      withCompound: Boolean(compoundName),
-      withVirus: Boolean(virusName),
-      withCompoundTarget: Boolean(compoundTargetName),
-      withArticle: Boolean(articleNickname)
+      withCompound: !!compoundName,
+      withVirus: !!virusName,
+      withCompoundTarget: !!compoundTargetName,
+      withArticle: !!articleNickname,
+      enableQuery: formOnly === undefined
     }
   });
   if (loading) {
-    // return <Loader active inline="centered" />;
-    return (
-      <SearchInner
-       qCompoundName={compoundName}
-       qVirusName={virusName}
-       qArticleNickname={articleNickname}
-       qCompoundTargetName={compoundTargetName}
-       qStudyType={studyType}
-       match={match}
-       loading
-       {...props} />
-    );
+    props = {};
   }
   else if (error) {
     return `Error: ${error.message}`;
@@ -335,6 +331,8 @@ export default function Search({match, ...props}) {
      qCompoundTargetName={compoundTargetName}
      qStudyType={studyType}
      match={match}
+     loading={loading}
+     formOnly={formOnly !== undefined}
      {...props}
      {...data} />
   );
