@@ -15,39 +15,16 @@
     .last-update {
       margin-top: 0;
     }
-    nav:global(.toc) {
-      display: none;
-    }
   }
 
-  @media print {
-    nav:global(.toc) {
-      display: none;
-    }
-  }
   position: relative;
   line-height: 1.5;
-  nav:global(.toc) {
-    border: 1px solid rgba(0,0,0,.7);
-    padding: 1rem;
-    margin-top: 1rem;
-    margin-left: 1rem;
-    margin-bottom: 1rem;
-    background-color: $hl-bg-color;
-    float: right;
-    min-width: 18rem;
-    width: 24rem;
-    font-size: .8rem;
-    line-height: 2;
-    position: relative;
-    z-index: 1;
-  }
   td {
     vertical-align: top;
     padding-top: .5rem;
     padding-bottom: .5rem;
   }
-  table ul, table ol, nav:global(.toc) ul, nav:global(.toc) li {
+  table ul, table ol {
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -107,17 +84,6 @@
   }
   p.pull-right {
     float: right;
-  }
-  @media only screen and (min-width: 641px) and (max-width: 1024px) {
-    nav:global(.toc) {
-      width: 18rem;
-    };
-  }
-  @media only screen and (max-width: 640px) {
-    nav:global(.toc) {
-      margin-right: 0;
-      float: none;
-    };
   }
   &[data-page-name="updates"] {
     p {

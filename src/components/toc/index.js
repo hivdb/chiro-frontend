@@ -1,8 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import makeClassNames from 'classnames';
+
+import style from './style.module.scss';
 
 
-export default class AutoTOC extends React.Component {
+export default class BasicTOC extends React.Component {
+
+  static propTypes = {
+    children: PropTypes.node.isRequired,
+    className: PropTypes.string
+  }
+
+  render() {
+    const {children, className} = this.props;
+    return (
+      <nav id="_toc" className={makeClassNames(style.toc, className)}>
+        {children}
+      </nav>
+    );
+  }
+
+}
+
+
+export class AutoTOC extends React.Component {
 
   static propTypes = {
     children: PropTypes.node.isRequired
@@ -69,9 +91,9 @@ export default class AutoTOC extends React.Component {
     const {tocArray} = this;
     return (
       <div>
-        <nav id="_toc" className="toc">
+        <BasicTOC>
           {this.tocArrayToDom(tocArray)}
-        </nav>
+        </BasicTOC>
         <div ref="children">{children}</div>
       </div>
     );

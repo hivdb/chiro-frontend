@@ -1,18 +1,27 @@
 import React from 'react';
 import {Link, routerShape} from 'found';
-import {Grid, Header, List} from 'semantic-ui-react';
+import {List, Loader, Button, Icon} from 'semantic-ui-react';
 
+import {H2} from '../../components/heading-tags';
+import BasicTOC from '../../components/toc';
+import Markdown from '../../components/markdown';
+import Banner from '../../components/banner';
 import {InlineSearchBox} from '../../components/search-box';
-import StatHeader from '../../components/stat-header';
 import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
+import imageBannerBg from '../../assets/images/home-top-bg.jpg';
 import imageRemdesivir from '../../assets/images/remdesivir.png';
 import imageSARS2 from '../../assets/images/sars2.png';
+import image3CL from '../../assets/images/3cl.png';
 import imagePetriDish from '../../assets/images/petri-dish.png';
 import imageMouse from '../../assets/images/mouse.png';
 import imagePK from '../../assets/images/pk.png';
 import imageMeasurement from '../../assets/images/measurement.png';
+import imageClinicalTrial from '../../assets/images/clinical-trial.png';
 import imageReferences from '../../assets/images/references.png';
+
+import PromiseComponent from '../../utils/promise-component';
+import {loadPage} from '../../utils/cms';
 
 const URL_PK_NOTES = (
   'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
@@ -70,155 +79,184 @@ export default class ChiroSearch extends React.Component {
     );
   }
 
-  render() {
+  thenRender = ({
+    bannerMenu = <Loader active />,
+    missionStatement = <Loader active />
+  } = {}) => {
     setTitle(null);
     return <>
-      <Grid stackable className={style['home']}>
-        <Grid.Row>
-          <Grid.Column width={8} className={style['section-covid-review']}>
-            <Link to="/page/covid-review/" className={style['section-link']}>
-              <Header as="h2" textAlign="center">
-                Antiviral Therapy
-              </Header>
-              <p>
-                A narrative summary of the purpose
-                and contents of this database.
-              </p>
+      <Banner bgImage={imageBannerBg}>
+        <Banner.Title as="h2">
+          Antiviral Therapy
+        </Banner.Title>
+        <Banner.Subtitle>
+          <p>
+            A narrative summary of the purpose and contents of this database.
+          </p>
+          <p>
+            <Button
+             size="huge"
+             as={Link} to="/page/covid-review/"
+             className={style['learn-more']}>
+              Learn more
+              <Icon
+               className={style['learn-more-icon']}
+               name="arrow right" />
+            </Button>
+          </p>
+        </Banner.Subtitle>
+        <Banner.Sidebar>
+          <BasicTOC className={style['scroll-toc']}>
+            {typeof bannerMenu === 'string' ?
+              <Markdown inline>{bannerMenu}</Markdown> : bannerMenu}
+          </BasicTOC>
+        </Banner.Sidebar>
+      </Banner>
+      <section className={style['home-section']}>
+        <H2 disableAnchor>Database Search</H2>
+        <p>
+          Cell culture, animal model, and clinical data
+        </p>
+        <div className={style['home-search-container']}>
+          <InlineSearchBox
+           allowEmpty
+           articleValue={null}
+           compoundValue={null}
+           virusValue={null}
+           studyTypeValue={null}
+           compoundTargetValue={null}
+           placeholder={'Select item'}
+           compoundPlaceholder={'Enter text of select item'}
+           onChange={this.handleExpSearchBoxChange}>
+            {({
+              compoundTargetDropdown,
+              compoundDropdown,
+              virusDropdown,
+              studyTypeDropdown
+            }) => <>
+              <div className={style['home-search-item']}>
+                <label className={style['home-search-label']}>Target</label>
+                {compoundTargetDropdown}
+              </div>
+              <div className={style['home-search-item']}>
+                <label className={style['home-search-label']}>Compound</label>
+                {compoundDropdown}
+              </div>
+              <div className={style['home-search-item']}>
+                <label className={style['home-search-label']}>Virus</label>
+                {virusDropdown}
+              </div>
+              <div className={style['home-search-item']}>
+                <label className={style['home-search-label']}>Study Type</label>
+                {studyTypeDropdown}
+              </div>
+            </>}
+          </InlineSearchBox>
+        </div>
+      </section>
+      <section className={style['home-section']}>
+        <H2 disableAnchor>Mission Statement</H2>
+        {typeof missionStatement === 'string' ?
+          <Markdown>{missionStatement}</Markdown> :
+          missionStatement}
+      </section>
+      <section className={style['home-section']}>
+        <H2 disableAnchor>Knowledge pages</H2>
+        <List horizontal className={style['list-edu-pages']}>
+          <List.Item>
+            <Link to="/compound-list/" className={style['section-link']}>
+              <List.Content>
+                <img src={imageRemdesivir} alt="Drugs" />
+                <List.Header>Drugs</List.Header>
+              </List.Content>
             </Link>
-          </Grid.Column>
-          <Grid.Column width={8} className={style['section-search']}>
-            <Header as="h2" textAlign="center">
-              Search
-              <Header.Subheader>
-                Cell culture, animal model, and clinical data
-              </Header.Subheader>
-            </Header>
-            <InlineSearchBox
-             allowEmpty
-             articleValue={null}
-             compoundValue={null}
-             virusValue={null}
-             studyTypeValue={null}
-             compoundTargetValue={null}
-             placeholder={'Select item' + '\xa0'.repeat(36)}
-             compoundPlaceholder={
-               'Enter text of select item' + '\xa0'.repeat(10)
-             }
-             onChange={this.handleExpSearchBoxChange}>
-              {({
-                compoundTargetDropdown,
-                compoundDropdown,
-                virusDropdown,
-                studyTypeDropdown
-              }) => (
-                <StatHeader>
-                  {[
-                    {
-                      className: style['search-box'],
-                      cells: [
-                        {label: 'Target', value: compoundTargetDropdown},
-                        {label: 'Compound', value: compoundDropdown},
-                        {label: 'Virus', value: virusDropdown},
-                        {label: 'Study Type', value: studyTypeDropdown},
-                      ]
-                    }
-                  ]}
-                </StatHeader>
-              )}
-            </InlineSearchBox>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={8} className={style['section-targets']}>
+          </List.Item>
+          <List.Item>
             <Link to="/compound-target-list/" className={style['section-link']}>
-              <Header as="h2" textAlign="center">Drug Targets</Header>
-              <p>
-                Summary of data associated with each compound according to
-                the targeted viral protein or host pathway.
-              </p>
+              <List.Content>
+                <img src={image3CL} alt="Drug Targets" />
+                <List.Header>Drug Targets</List.Header>
+              </List.Content>
             </Link>
-          </Grid.Column>
-          <Grid.Column width={8} className={style['section-clinical-trials']}>
+          </List.Item>
+          <List.Item>
+            <Link to="/virus-list/" className={style['section-link']}>
+              <List.Content>
+                <img src={imageSARS2} alt="Viruses" />
+                <List.Header>Viruses</List.Header>
+              </List.Content>
+            </Link>
+          </List.Item>
+          <List.Item>
+            <Link to="/cells-list/" className={style['section-link']}>
+              <List.Content>
+                <img src={imagePetriDish} alt="Cell lines" />
+                <List.Header>Cell lines</List.Header>
+              </List.Content>
+            </Link>
+          </List.Item>
+          <List.Item>
+            <Link to="/animal-model-list/"
+             className={style['section-link']}>
+              <List.Content>
+                <img src={imageMouse} alt="Animal models" />
+                <List.Header>Animal models</List.Header>
+              </List.Content>
+            </Link>
+          </List.Item>
+          <List.Item>
+            <a
+             href={URL_PK_NOTES}
+             target="_blank"
+             rel="noopener noreferrer"
+             className={style['section-link']}>
+              <List.Content>
+                <img src={imagePK} alt="PK" />
+                <List.Header>PK notes</List.Header>
+              </List.Content>
+            </a>
+          </List.Item>
+          <List.Item>
+            <Link to="/cell-culture-measurement-list/"
+             className={style['section-link']}>
+              <List.Content>
+                <img src={imageMeasurement} alt="Measurements" />
+                <List.Header>Measurements</List.Header>
+              </List.Content>
+            </Link>
+          </List.Item>
+          <List.Item>
             <Link to="/clinical-trials/" className={style['section-link']}>
-              <Header as="h2" textAlign="center">Clinical Trials</Header>
-              <p>
-                Ongoing and planned SARS-CoV-2 trials of potential
-                anti-coronavirus compounds annotated by study design
-                and patient population.
-              </p>
+              <List.Content>
+                <img src={imageClinicalTrial} alt="Clinical Trials" />
+                <List.Header>Clinical Trials</List.Header>
+              </List.Content>
             </Link>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={16} className={style['section-edu-pages']}>
-            <List horizontal>
-              <List.Item>
-                <Link to="/compound-list/" className={style['section-link']}>
-                  <List.Content>
-                    <img src={imageRemdesivir} alt="Compounds" />
-                    <List.Header>Compounds</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-              <List.Item>
-                <Link to="/virus-list/" className={style['section-link']}>
-                  <List.Content>
-                    <img src={imageSARS2} alt="Viruses" />
-                    <List.Header>Viruses</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-              <List.Item>
-                <Link to="/cells-list/" className={style['section-link']}>
-                  <List.Content>
-                    <img src={imagePetriDish} alt="Cell lines" />
-                    <List.Header>Cell lines</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-              <List.Item>
-                <Link to="/animal-model-list/"
-                 className={style['section-link']}>
-                  <List.Content>
-                    <img src={imageMouse} alt="Animal models" />
-                    <List.Header>Animal models</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-              <List.Item>
-                <a
-                 href={URL_PK_NOTES}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className={style['section-link']}>
-                  <List.Content>
-                    <img src={imagePK} alt="PK" />
-                    <List.Header>PK notes</List.Header>
-                  </List.Content>
-                </a>
-              </List.Item>
-              <List.Item>
-                <Link to="/cell-culture-measurement-list/"
-                 className={style['section-link']}>
-                  <List.Content>
-                    <img src={imageMeasurement} alt="Measurements" />
-                    <List.Header>Measurements</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-              <List.Item>
-                <Link to="/article-list/" className={style['section-link']}>
-                  <List.Content>
-                    <img src={imageReferences} alt="References" />
-                    <List.Header>References</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-            </List>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+          </List.Item>
+          <List.Item>
+            <Link to="/article-list/" className={style['section-link']}>
+              <List.Content>
+                <img src={imageReferences} alt="References" />
+                <List.Header>References</List.Header>
+              </List.Content>
+            </Link>
+          </List.Item>
+        </List>
+      </section>
     </>;
+  }
+
+  render() {
+    const promise = loadPage('home');
+
+    return (
+      <PromiseComponent
+       promise={promise}
+       error={this.errorRender}
+       then={this.thenRender}>
+        {this.thenRender()}
+      </PromiseComponent>
+    );
   }
 
 }

@@ -1,0 +1,14 @@
+@mixin full-width-container {
+  box-sizing: border-box;
+  @media only screen {
+    width: 100vw;
+    margin-left: #{($main-content-width - 100vw) / 2};
+  }
+  @media only screen and (max-width: 1200px) {
+    width: 100vw;
+    margin-left: #{($mobile-main-content-width - 100vw) / 2};
+  }
+  @media only screen and (max-width: 767px) {
+    margin-left: -1em !important;
+  }
+}

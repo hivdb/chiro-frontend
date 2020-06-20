@@ -3,7 +3,7 @@ import {Link} from 'found';
 import PropTypes from 'prop-types';
 import OrigMarkdown from 'react-markdown/with-html';
 
-import AutoToc from './toc';
+import {AutoTOC} from './toc';
 import {HeadingTag} from './heading-tags';
 import References, {
   ReferenceContext, ReferenceContextValue,
@@ -100,6 +100,7 @@ export default class Markdown extends React.Component {
 
   static propTypes = {
     toc: PropTypes.bool.isRequired,
+    children: PropTypes.string.isRequired,
     inline: PropTypes.bool.isRequired,
     renderers: PropTypes.object.isRequired,
     noHeadingStyle: PropTypes.bool.isRequired,
@@ -145,7 +146,7 @@ export default class Markdown extends React.Component {
       </ReferenceContext.Provider>
     );
     if (toc) {
-      return <AutoToc>{jsx}</AutoToc>;
+      return <AutoTOC>{jsx}</AutoTOC>;
     }
     else {
       return jsx;

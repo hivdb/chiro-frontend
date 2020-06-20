@@ -6,7 +6,7 @@ html {
 }
 
 :global(body.chiro-body) {
-  background-color: rgba(0, 0, 0, .01);
+  background-color: white;
   font-family: $font-family;
   :global(.ui.header) {
     font-family: $font-family;
@@ -25,16 +25,18 @@ html {
   // container width define.
   // See I am higher than you now!
   @media only screen {
-    width: 75vw;
+    width: $main-content-width;
   }
   @media only screen and (max-width: 1200px) {
-    width: 95vw;
+    width: $mobile-main-content-width;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: $font-family;
   }
 }
 
 .main-content {
   min-height: calc(100vh - #{$header-bar-height + $header-logo-height + $footer-height});
-  padding-top: 1.5rem;
 }
 
 :global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {

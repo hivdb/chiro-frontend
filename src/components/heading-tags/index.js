@@ -45,7 +45,12 @@ export class HeadingTag extends React.Component {
 
   static propTypes = {
     level: PropTypes.oneOf([1, 2, 3, 4, 5, 6]).isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
+    disableAnchor: PropTypes.bool.isRequired
+  }
+
+  static defaultProps = {
+    disableAnchor: false
   }
 
   get anchor() {
@@ -63,7 +68,7 @@ export class HeadingTag extends React.Component {
   }
 
   render() {
-    const {level, children, ...props} = this.props;
+    const {level, children, disableAnchor, ...props} = this.props;
     const Tag = `h${level}`;
     return (
       <Tag
@@ -71,11 +76,12 @@ export class HeadingTag extends React.Component {
        ref="elem"
        className={style['heading-tag']}
        id={this.anchor}>
+        {disableAnchor ? null :
         <a
          href={`#${this.anchor}`}
          className={style['anchor-link']}>
           <Icon name="linkify" />
-        </a>
+        </a>}
         {children}
       </Tag>
     );

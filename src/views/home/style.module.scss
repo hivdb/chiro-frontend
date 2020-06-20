@@ -1,4 +1,163 @@
 @import "../../styles/colors";
+@import "../../styles/variables";
+
+:global(.ui.huge.button).learn-more {
+  padding: .85rem 3.5rem;
+  text-transform: uppercase;
+  background-color: white;
+  border-radius: 0;
+  font-family: $font-family;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: rgba(0,0,0,.85);
+  font-size: 1.15rem;
+  line-height: 1.7em;
+  transition: background-color .2s ease-in-out;
+  &:global(:not(.icon)>.icon):not(.button):not(.dropdown).learn-more-icon {
+    transition: all .2s ease-in-out;
+    position: absolute;
+    margin-left: -1rem;
+    opacity: 0;
+  }
+  &:hover {
+    background-color: rgba(255, 255, 255, .8);
+    &:global(:not(.icon)>.icon):not(.button):not(.dropdown).learn-more-icon {
+      margin-left: .5rem;
+      opacity: 1;
+    }
+  }
+}
+
+.scroll-toc {
+  margin-right: 8rem;
+  @media only screen and (max-width: 1600px) {
+    margin-right: 0;
+  }
+  @media only screen and (min-width: 901px) {
+    max-height: $banner-height - 4rem;
+    overflow-y: scroll;
+  }
+}
+
+.home-section {
+  &:not(:last-child) {
+    margin-bottom: 3rem;
+  }
+  p {
+    font-size: 1.25rem;
+  }
+}
+
+@mixin search-item-sizing($width) {
+  
+  > :global(.ui.search.dropdown) {
+    width: $width;
+  }
+
+  :global(.menu) {
+    width: 100%;
+    > :global(.item) {
+      width: calc(100% - 1rem);
+    }
+  }
+
+}
+
+.home-search-container {
+  display: flex;
+  justify-content: space-between;
+
+  .home-search-item {
+    @include search-item-sizing(18rem);
+
+    > label.home-search-label {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    > :global(.ui.search.dropdown) {
+      margin-top: .5rem;
+      margin-bottom: 1rem;
+      border: 1px solid $main-color;
+      height: 2.85rem;
+      box-sizing: border-box;
+      line-height: 2rem;
+      padding: calc(calc(.85rem - 2px) / 2) 1rem;
+      position: relative;
+      font-size: 1.2rem;
+      > :global(.dropdown.icon) {
+        position: absolute;
+        top: calc(calc(.85rem - 2px) / 2);
+        line-height: 2rem;
+        right: 1rem;
+      }
+      :global(.menu > .item) {
+        box-sizing: border-box;
+        font-size: 1.1rem;
+      }
+    }
+    @media only screen and (max-width: 1400px) and (min-width: 1301px) {
+      @include search-item-sizing(16rem);
+    }
+    @media only screen and (max-width: 1300px) and (min-width: 1201px) {
+      @include search-item-sizing(14.5rem);
+    }
+    @media only screen and (max-width: 1100px) and (min-width: 1001px) {
+      @include search-item-sizing(16rem);
+    }
+    @media only screen and (max-width: 1000px) and (min-width: 901px) {
+      @include search-item-sizing(14.5rem);
+    }
+  }
+  @media only screen and (max-width: 900px) {
+    flex-wrap: wrap;
+    .home-search-item {
+      width: 50%;
+      @include search-item-sizing(100%);
+      &:nth-child(odd) {
+        padding-right: 1rem;
+      }
+      &:nth-child(even) {
+        padding-left: 1rem;
+      }
+    }
+  }
+}
+
+.list-edu-pages {
+  img {
+    background-color: rgba($main-color, 0.9);
+    width: 12rem;
+    height: 12rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  &:global(.ui.list>.item .header) {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+  }
+  &:global(.ui.horizontal.list) {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    @media only screen and (max-width: 1400px) {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    @media only screen and (min-width: 1025px) {
+      > :global(.item) {
+        width: 14.2857%;
+      }
+    }
+    > :global(.item) {
+      margin-left: 0;
+    }
+  }
+}
 
 .header-content {
   font-style: italic;
@@ -119,44 +278,6 @@
         @media only screen and (max-width: 750px) {
           margin-top: 1rem;
         }
-      }
-    }
-  }
-  .section-edu-pages {
-    img {
-      background-color: rgba($main-color, 0.9);
-      width: 80px;
-      display: block;
-      border-radius: 50%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    :global(.ui.list>.item .header) {
-      text-align: center;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-      line-height: 1.5rem;
-    }
-    :global(.ui.horizontal.list) {
-      margin-left: 10%;
-      margin-right: 10%;
-      display: flex;
-      justify-content: space-between;
-      @media only screen and (max-width: 1400px) {
-        margin-left: 0;
-        margin-right: 0;
-      }
-      @media only screen and (max-width: 1024px) {
-        flex-wrap: wrap;
-      }
-      @media only screen and (min-width: 1025px) {
-        > :global(.item) {
-          width: 14.2857%;
-        }
-      }
-      > :global(.item) {
-        margin-left: 0;
       }
     }
   }

@@ -30,7 +30,8 @@
     "semantic-ui-react": "^0.88.2",
     "sleep-promise": "^8.0.1",
     "smiles-drawer": "^1.2.0",
-    "source-sans-pro": "^3.6.0"
+    "source-sans-pro": "^3.6.0",
+    "typeface-poppins": "^0.0.72"
   },
   "scripts": {
     "start": "PORT=3012 react-scripts start",
