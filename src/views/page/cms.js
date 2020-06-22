@@ -16,7 +16,7 @@ import {
 import style from './style.module.scss';
 
 
-const _scrollTops = {};
+let _scrollTops = {};
 
 async function updateScroll(props) {
   const {pageName} = props;
@@ -56,8 +56,13 @@ export default class CMSPage extends React.Component {
     const {pageName} = props;
     if (pageName !== state.pageName) {
       state.promise = loadPage(`page-${pageName}`);
+      _scrollTops = {};
     }
-    _scrollTops[pageName] = window.pageYOffset;
+    else {
+      setTimeout(() => {
+        _scrollTops[pageName] = window.pageYOffset;
+      }, 0);
+    }
     updateScroll(props);
     return state;
   }
