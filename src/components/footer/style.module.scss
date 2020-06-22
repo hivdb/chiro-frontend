@@ -5,37 +5,39 @@ $margin-top: 3rem;
 
 .footer {
   position: absolute;
+  box-sizing: border-box;
+  width: 100vw;
+  padding-top: 5rem;
   min-height: $footer-height - $margin-top;
   margin-top: $margin-top;
   width: 100vw;
-  box-sizing: border-box;
-  background-color: $hl-bg-color;
-  padding-top: 1rem;
+  background-color: $main-color;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
   
   :global(.ui.relaxed.grid) {
-    width: 75vw;
-    @media only screen and (max-width: 1200px) {
-      width: 95vw;
-    }
-    margin-left: auto;
-    margin-right: auto;
+    min-width: 40%;
     margin-bottom: 0;
+    color: white;
+    a {
+      color: white;
+    }
   }
 
   :global(.ui.header) {
-    font-size: 1.1rem;
-    font-weight: 800;
-    margin-bottom: .24rem;
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: .8rem;
   }
   ul {
     padding-left: 1rem;
     margin-top: .24rem;
     margin-bottom: .5rem;
     li {
-      font-size: .9rem;
+      font-size: 1rem;
       line-height: 1.8;
     }
   }
@@ -43,11 +45,33 @@ $margin-top: 3rem;
     background-color: $main-color;
     line-height: 2.5;
     text-align: center;
-    font-size: .9rem;
     color: white;
+    min-width: 100%;
     a {
       color: white;
       text-decoration: underline;
+    }
+  }
+
+  @media only screen {
+    padding-left: #{(100vw - $main-content-width) / 2};
+    padding-right: #{(100vw - $main-content-width) / 2};
+  }
+  @media only screen and (max-width: 1200px) {
+    padding-left: #{(100vw - $mobile-main-content-width) / 2};
+    padding-right: #{(100vw - $mobile-main-content-width) / 2};
+  }
+  @media only screen and (max-width: 900px) {
+    display: block;
+    padding-top: 1rem;
+    .site-brand {
+      margin-bottom: 2rem;
+    }
+    :global(.ui.relaxed.grid) {
+      min-width: 90% !important;
+    }
+    .copyright {
+      text-align: left;
     }
   }
 }

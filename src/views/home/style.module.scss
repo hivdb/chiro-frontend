@@ -133,16 +133,21 @@
     margin-left: auto;
     margin-right: auto;
   }
-  &:global(.ui.list>.item .header) {
-    text-align: center;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    line-height: 1.5rem;
-  }
   &:global(.ui.horizontal.list) {
-    display: flex;
-    justify-content: flex-start;
+    > :global(.item) {
+      margin-left: 0rem;
+      :global(.header) {
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        line-height: 1.5rem;
+      }
+    }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, max-content));
+    grid-gap: 3rem;
+    justify-content: center;
     flex-wrap: wrap;
     @media only screen and (max-width: 1400px) {
       margin-left: 0;
@@ -151,133 +156,6 @@
     @media only screen and (min-width: 1025px) {
       > :global(.item) {
         width: 14.2857%;
-      }
-    }
-    > :global(.item) {
-      margin-left: 0;
-    }
-  }
-}
-
-.header-content {
-  font-style: italic;
-  text-align: center;
-  font-size: 1.2rem;
-}
-
-.limited-width {
-  max-width: 60rem;
-}
-
-.home {
-  h2:global(.ui.header) {
-    font-size: 2rem;
-  }
-  *[role="listitem"] {
-    font-size: 1.2rem;
-  }
-  p {
-    font-size: 1.2rem;
-    text-align: center;
-    padding: 0 20%;
-    @media only screen and (max-width: 1400px) {
-      padding: 0 4rem;
-    }
-    @media only screen and (max-width: 1025px) {
-      padding: 0 2rem;
-    }
-    @media only screen and (max-width: 750px) {
-      padding: 0 1rem;
-    }
-  }
-  p:last-child {
-    margin-bottom: 1.5rem;
-    @media only screen and (max-width: 750px) {
-      margin-bottom: 1rem;
-    }
-  }
-  a.section-link {
-    display: block;
-    height: 100%;
-    color: black;
-    overflow: hidden;
-    transition: transform 200ms ease-out;
-    transform-origin: center left;
-    &:hover {
-      transform: translateY(-4px);
-    }
-  }
-  .section-covid-review {
-    background-clip: content-box;
-    background-color: rgba(0,0,0,0.1);
-    > a {
-      position: relative;
-      z-index: 1;
-      h2:global(.ui.header) {
-        margin-top: 4rem;
-        // color: white;
-        @media only screen and (max-width: 768px) {
-          margin-top: 1rem;
-        }
-      }
-      *[role="list"] {
-        text-align: center;
-        margin-bottom: 4rem;
-        @media only screen and (max-width: 768px) {
-          margin-bottom: 1rem;
-        }
-      }
-    }
-  }
-  .section-search {
-    background-clip: content-box;
-    background-color: rgba(0,0,0,0.1);
-    h2:global(.ui.header) {
-      margin-top: 1.5rem;
-    }
-    .search-box {
-      margin-left: 8rem;
-      margin-right: 8rem;
-      margin-bottom: 1.5rem;
-      font-size: 1.2rem;
-      line-height: 1.5rem;
-      :global(.ui.dropdown:not(.button)>.default.text) {
-        color: rgba(0, 0, 0, .6);
-      }
-      @media only screen and (max-width: 1400px) {
-        margin-left: 4rem;
-        margin-right: 4rem;
-      }
-      @media only screen and (max-width: 1024px) {
-        margin-left: 2rem;
-        margin-right: 2rem;
-      }
-    }
-  }
-  .section-targets {
-    background-color: rgba(0,0,0,0.1);
-    background-clip: content-box;
-    > a {
-      h2:global(.ui.header) {
-        margin-top: 3rem;
-        padding: 0 1rem;
-        @media only screen and (max-width: 750px) {
-          margin-top: 1rem;
-          margin-bottom: 1rem;
-        }
-      }
-    }
-  }
-  .section-clinical-trials {
-    background-color: rgba(0,0,0,0.1);
-    background-clip: content-box;
-    > a {
-      h2:global(.ui.header) {
-        margin-top: 1.5rem;
-        padding: 0 1rem;
-        @media only screen and (max-width: 750px) {
-          margin-top: 1rem;
-        }
       }
     }
   }

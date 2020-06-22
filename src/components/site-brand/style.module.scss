@@ -1,0 +1,115 @@
+@import "../../styles/colors";
+@import "../../styles/variables";
+@import "../../styles/functions";
+
+
+@mixin brand-size($scale) {
+
+  font-weight: 700;
+  font-family: $font-family;
+  font-size: 1.8rem * $scale;
+  .brand-logo {
+    min-width: 65px * $scale;
+    min-height: 65px * $scale;
+  }
+
+  .brand-sitename {
+    height: 70px * $scale;
+    background-position: #{15px * $scale} 0;
+    background-size: #{35% * sqrt($scale)} #{35% * sqrt($scale)};
+    padding-left: 1rem * $scale;
+
+    .brand-sitename-title {
+      padding-top: 2rem * $scale;
+      font-size: 1.8rem * $scale;
+    }
+
+    .brand-sitename-subtitle {
+      margin-top: 0.5rem * $scale;
+      line-height: 1rem * $scale;
+      font-size: 1rem * $scale;
+    }
+
+  }
+  &.no-subtitle {
+    .brand-sitename {
+      background-position-y: #{6px * $scale};
+      background-size: #{50% * sqrt($scale)} #{50% * sqrt($scale)};
+      .brand-sitename-title {
+        padding-top: 3.1rem * $scale;
+        font-size: 1.2rem * $scale;
+      }
+    }
+  }
+
+}
+
+.brand-container {
+  @include brand-size(.92);
+  &.size-large {
+    @include brand-size(1.1);
+  }
+  &.size-small {
+    @include brand-size(.7);
+  }
+  &.responsive {
+    @media only screen and (max-width: 660px) {
+      @include brand-size(.7);
+    }
+  }
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  .brand-logo {
+    display: block;
+    background: url(../../assets/corona.svg) no-repeat center center;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .brand-sitename {
+    color: white;
+    display: block;
+    background-image: url(../../assets/stanford.svg);
+    background-repeat: no-repeat;
+    background-clip: border-box;
+    vertical-align: baseline;
+    text-transform: uppercase;
+    a {
+      color: white;
+    }
+    .brand-sitename-title {
+      font-family: "Source Sans Pro", sans-serif;
+      display: block;
+      white-space: nowrap;
+      line-height: 1em;
+      margin: 0;
+    }
+    .brand-sitename-subtitle {
+      display: block;
+      white-space: nowrap;
+      font-weight: 400;
+      font-style: italic;
+      text-transform: none;
+      a {
+        border-bottom: 1px solid transparent;
+        transition: border-bottom-color .2s ease-in-out;
+        &:hover {
+          border-bottom-color: white;
+        }
+      }
+    }
+  }
+
+  &.no-subtitle {
+    .brand-sitename {
+      color: #c9c9c9;
+      a {
+        color: #c9c9c9;
+      }
+    }
+  }
+  
+}
