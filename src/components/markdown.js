@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import OrigMarkdown from 'react-markdown/with-html';
 
 import {AutoTOC} from './toc';
+import Collapsable from './collapsable';
 import {HeadingTag} from './heading-tags';
 import References, {
   ReferenceContext, ReferenceContextValue,
@@ -70,10 +71,12 @@ class OptReferences extends React.Component {
   render() {
     const {referenceTitle} = this.props;
     return <ReferenceContext.Consumer>
-      {({hasReference}) => hasReference() ? <>
-        <HeadingTag level={2}>{referenceTitle}</HeadingTag>
-        <References />
-      </> : null}
+      {({hasReference}) => hasReference() ? (
+        <Collapsable.Section level={2} data-section-reference="">
+          <HeadingTag level={2}>{referenceTitle}</HeadingTag>
+          <References />
+        </Collapsable.Section>
+      ) : null}
     </ReferenceContext.Consumer>;
   }
 
@@ -96,6 +99,75 @@ function parsedHtml({element, escapeHtml, skipHtml, value}) {
 }
 
 
+function getHeadingLevel(node) {
+  if (node.type === HeadingTag) {
+    return node.props.level;
+  }
+  else if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.type)) {
+    return parseInt(node.type.slice(1, 2));
+  }
+  else {
+    return -1;
+  }
+}
+
+
+function groupSections(nodes, startIdx = 0, minLevel = 1) {
+  const sections = [];
+  let curSectionLevel = 0;
+  let curSectionParas = [];
+  for (let idx = startIdx; idx < nodes.length; idx ++) {
+    const node = nodes[idx];
+    const level = getHeadingLevel(node);
+    if (level < 0) {
+      // not a heading tag
+      curSectionParas.push(node);
+    }
+    else if (level >= minLevel) {
+      if (curSectionLevel === 0 || level <= curSectionLevel) {
+        // new section
+        pushSection(curSectionParas, curSectionLevel);
+        curSectionLevel = level;
+        curSectionParas = [node];
+      }
+      else {
+        // new subsection
+        const [subsections, endIdx] = groupSections(nodes, idx, level);
+        idx = endIdx;
+        curSectionParas = [
+          ...curSectionParas,
+          ...subsections
+        ];
+      }
+    }
+    else { // level > 0 and level < minLevel
+      pushSection(curSectionParas, curSectionLevel);
+      return [sections, idx - 1];
+    }
+  }
+  pushSection(curSectionParas, curSectionLevel);
+  return [sections, nodes.length];
+
+  function pushSection(sectionParas, level) {
+    if (sectionParas.length > 0) {
+      sections.push(
+        <Collapsable.Section
+         key={`section-${startIdx}-${sections.length}-${level}`}
+         level={level}>
+          {sectionParas}
+        </Collapsable.Section>
+      );
+    }
+  }
+}
+
+
+function renderRoot({children}) {
+  children = groupSections(children)[0];
+  return <>{children}</>;
+}
+
+
 export default class Markdown extends React.Component {
 
   static propTypes = {
@@ -104,6 +176,7 @@ export default class Markdown extends React.Component {
     tocClassName: PropTypes.string,
     inline: PropTypes.bool.isRequired,
     renderers: PropTypes.object.isRequired,
+    collapsableLevels: PropTypes.array,
     noHeadingStyle: PropTypes.bool.isRequired,
     referenceTitle: PropTypes.string.isRequired
   }
@@ -120,6 +193,7 @@ export default class Markdown extends React.Component {
     const {
       children, noHeadingStyle, toc,
       referenceTitle, inline, tocClassName,
+      collapsableLevels,
       renderers: addRenderers, ...props
     } = this.props;
     const renderers = {
@@ -129,12 +203,13 @@ export default class Markdown extends React.Component {
       footnoteDefinition: RefDefinition,
       // table: SimpleTableContainer,
       parsedHtml,
+      ...(inline ? {} : {root: renderRoot}),
       ...(noHeadingStyle ? null : {heading: HeadingTag}),
       ...(inline ? {paragraph: ({children}) => <>{children}</>} : null),
       ...addRenderers
     };
     const context = new ReferenceContextValue();
-    const jsx = (
+    let jsx = (
       <ReferenceContext.Provider value={context}>
         <OrigMarkdown
          source={children}
@@ -146,6 +221,9 @@ export default class Markdown extends React.Component {
         <OptReferences {...{referenceTitle}} />
       </ReferenceContext.Provider>
     );
+    if (collapsableLevels && collapsableLevels.length > 0) {
+      jsx = <Collapsable levels={collapsableLevels}>{jsx}</Collapsable>;
+    }
     if (toc) {
       return <AutoTOC className={tocClassName}>{jsx}</AutoTOC>;
     }

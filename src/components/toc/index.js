@@ -33,14 +33,19 @@ export class AutoTOC extends React.Component {
     className: PropTypes.string
   }
 
+  constructor() {
+    super(...arguments);
+    this.childrenRef = React.createRef();
+  }
+
   get tocArray() {
-    if (this.refs['children'] === undefined) {
+    if (!this.childrenRef.current) {
       setTimeout(() => this.forceUpdate());
       return [];
     }
     else {
       return this._getTocArray(
-        this.refs['children'].querySelectorAll('h1,h2,h3,h4,h5,h6')
+        this.childrenRef.current.querySelectorAll('h1,h2,h3,h4,h5,h6')
       );
     }
   }
@@ -97,7 +102,7 @@ export class AutoTOC extends React.Component {
         <BasicTOC className={className}>
           {this.tocArrayToDom(tocArray)}
         </BasicTOC>
-        <div ref="children">{children}</div>
+        <div ref={this.childrenRef}>{children}</div>
       </>
     );
   }

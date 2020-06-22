@@ -42,6 +42,21 @@
   p {
     font-size: 1.15rem;
   }
+  section[data-level="1"] {
+    margin-top: .6rem;
+  }
+  section[data-level="2"] {
+    margin-top: 1.8rem;
+  }
+  section[data-level="3"] {
+    margin-top: 1.5rem;
+  }
+  section[data-level="4"] {
+    margin-top: 1rem;
+  }
+  section[data-level]:first-child {
+    margin-top: 0;
+  }
   h1 {
     &:global(.ui.header) {
       font-size: 2.3rem;

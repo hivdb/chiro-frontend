@@ -53,6 +53,11 @@ export class HeadingTag extends React.Component {
     disableAnchor: false
   }
 
+  constructor() {
+    super(...arguments);
+    this.elemRef = React.createRef();
+  }
+
   get anchor() {
     return getAnchor(this.props.children);
   }
@@ -61,7 +66,7 @@ export class HeadingTag extends React.Component {
     if (window.location.hash.replace(/^#/, '') === this.anchor) {
       await sleep(0);
       const top = (
-        this.refs.elem.getBoundingClientRect().top + window.pageYOffset
+        this.elemRef.current.getBoundingClientRect().top + window.pageYOffset
       );
       window.scrollTo(0, top);
     }
@@ -73,13 +78,14 @@ export class HeadingTag extends React.Component {
     return (
       <Tag
        {...props}
-       ref="elem"
+       ref={this.elemRef}
        className={style['heading-tag']}
        id={this.anchor}>
         {disableAnchor ? null :
         <a
          href={`#${this.anchor}`}
-         className={style['anchor-link']}>
+         className={style['anchor-link']}
+         data-anchor-link="">
           <Icon name="linkify" />
         </a>}
         {children}

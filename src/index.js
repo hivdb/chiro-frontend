@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {ApolloProvider} from '@apollo/react-hooks';
-import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 
 import ReactGA from 'react-ga';
 
@@ -28,7 +27,7 @@ ReactDOM.render(
 serviceWorker.unregister();
 
 const rootElem = document.querySelector('#root');
-new ResizeSensor(rootElem, ({height}) => {
+const resizeObserver = new ResizeObserver(([{contentRect: {height}}]) => {
   if (height > window.innerHeight * 1.7) {
     rootElem.setAttribute('data-back-to-top', '');
   }
@@ -36,3 +35,4 @@ new ResizeSensor(rootElem, ({height}) => {
     rootElem.removeAttribute('data-back-to-top');
   }
 });
+resizeObserver.observe(rootElem);

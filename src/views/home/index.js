@@ -114,9 +114,6 @@ export default class ChiroSearch extends React.Component {
       </Banner>
       <section className={style['home-section']}>
         <H2 disableAnchor>Database Search</H2>
-        <p>
-          Cell culture, animal model, and clinical data
-        </p>
         <div className={style['home-search-container']}>
           <InlineSearchBox
            allowEmpty
