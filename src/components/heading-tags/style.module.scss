@@ -2,6 +2,8 @@
 
 $anchor-width: 1.5rem;
 
+$anchor-font-size: 1rem;
+
 .heading-tag {
   position: relative;
   padding-left: $anchor-width;
@@ -28,8 +30,12 @@ $anchor-width: 1.5rem;
 }
 
 h2.heading-tag {
-  font-size: 2.15rem;
-  padding-bottom: 1.8rem;
+  $padding-bottom: 1.8rem;
+  padding-bottom: $padding-bottom;
+
+  .anchor-link {
+    top: calc(50% - #{$padding-bottom / 2 + $anchor-font-size / 2});
+  }
 
   &::after {
     content: "";
@@ -39,5 +45,6 @@ h2.heading-tag {
     left: $anchor-width;
     bottom: 0.8rem;
     border-bottom: 2px solid $main-color;
+    z-index: -1;
   }
 }

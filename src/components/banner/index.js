@@ -29,9 +29,18 @@ export default class Banner extends React.Component {
 
   static propTypes = {
     bgImage: PropTypes.string.isRequired,
+    narrow: PropTypes.bool.isRequired,
     children: PropTypes.arrayOf(
       PropTypes.node.isRequired
     ).isRequired
+  }
+
+  static defaultProps = {
+    bgImage: (
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQ' +
+      'AAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
+    ),
+    narrow: false
   }
 
   static Title = SubComponent('h1', 'banner-header-title');
@@ -54,12 +63,16 @@ export default class Banner extends React.Component {
   }
 
   render() {
-    const {bgImage} = this.props;
+    const {bgImage, narrow} = this.props;
     const {titleElement, subtitleElement, sidebarElement} = this;
+    const classNames = makeClassNames(
+      style['banner-section'],
+      narrow ? style['narrow'] : null
+    );
 
     return(
       <section
-       className={style['banner-section']}>
+       className={classNames}>
         <div className={style['banner-img-container']}>
           <img className={style['banner-img']} src={bgImage} alt={bgImage} />
         </div>

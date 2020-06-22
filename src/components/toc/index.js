@@ -8,16 +8,18 @@ import style from './style.module.scss';
 export default class BasicTOC extends React.Component {
 
   static propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
     className: PropTypes.string
   }
 
   render() {
     const {children, className} = this.props;
     return (
-      <nav id="_toc" className={makeClassNames(style.toc, className)}>
-        {children}
-      </nav>
+      <div className={makeClassNames(style['toc-container'], className)}>
+        <nav id="_toc" className={makeClassNames(style.toc)}>
+          {children}
+        </nav>
+      </div>
     );
   }
 
@@ -27,7 +29,8 @@ export default class BasicTOC extends React.Component {
 export class AutoTOC extends React.Component {
 
   static propTypes = {
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
+    className: PropTypes.string
   }
 
   get tocArray() {
@@ -87,15 +90,15 @@ export class AutoTOC extends React.Component {
   }
   
   render() {
-    const {children} = this.props;
+    const {children, className} = this.props;
     const {tocArray} = this;
     return (
-      <div>
-        <BasicTOC>
+      <>
+        <BasicTOC className={className}>
           {this.tocArrayToDom(tocArray)}
         </BasicTOC>
         <div ref="children">{children}</div>
-      </div>
+      </>
     );
   }
 

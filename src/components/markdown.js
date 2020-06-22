@@ -101,6 +101,7 @@ export default class Markdown extends React.Component {
   static propTypes = {
     toc: PropTypes.bool.isRequired,
     children: PropTypes.string.isRequired,
+    tocClassName: PropTypes.string,
     inline: PropTypes.bool.isRequired,
     renderers: PropTypes.object.isRequired,
     noHeadingStyle: PropTypes.bool.isRequired,
@@ -118,7 +119,7 @@ export default class Markdown extends React.Component {
   render() {
     const {
       children, noHeadingStyle, toc,
-      referenceTitle, inline,
+      referenceTitle, inline, tocClassName,
       renderers: addRenderers, ...props
     } = this.props;
     const renderers = {
@@ -146,7 +147,7 @@ export default class Markdown extends React.Component {
       </ReferenceContext.Provider>
     );
     if (toc) {
-      return <AutoTOC>{jsx}</AutoTOC>;
+      return <AutoTOC className={tocClassName}>{jsx}</AutoTOC>;
     }
     else {
       return jsx;

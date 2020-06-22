@@ -33,10 +33,13 @@ html {
   h1, h2, h3, h4, h5, h6 {
     font-family: $font-family;
   }
+  :global(.ui.grid):first-child {
+    margin-top: 0;
+  }
 }
 
 .main-content {
-  min-height: calc(100vh - #{$header-bar-height + $header-logo-height + $footer-height});
+  min-height: calc(100vh - #{$header-height + $footer-height});
 }
 
 :global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {

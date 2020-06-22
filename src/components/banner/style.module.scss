@@ -10,6 +10,15 @@
   height: $banner-height;
   margin-bottom: 3rem;
 
+  &.narrow {
+    height: $narrow-banner-height;
+    .banner-img-container {
+      img.banner-img {
+        max-height: $narrow-banner-height;
+      }
+    }
+  }
+
   .banner-img-container {
     position: absolute;
     width: 100%;
@@ -34,12 +43,24 @@
     flex-direction: column;
     justify-content: center;
     color: white;
+    margin-left: auto;
+    margin-right: auto;
     .banner-header-title {
+      text-align: center;
       font-size: 4rem;
     }
     .banner-header-subtitle {
+      text-align: center;
       font-family: 'Poppins',$font-family;
       font-size: 1.25rem;
+    }
+    &:not(:last-child) {
+      .banner-header-title {
+        text-align: left;
+      }
+      .banner-header-subtitle {
+        text-align: left;
+      }
     }
   }
 
@@ -50,9 +71,8 @@
 
   @media only screen {
     .banner-header {
-      margin-left: #{(100vw - $main-content-width) / 2};
-      margin-right: #{(100vw - $main-content-width) / 2};
       &:not(:last-child) {
+        margin-left: #{(100vw - $main-content-width) / 2};
         margin-right: 0;
         max-width: #{50vw - (100vw - $main-content-width) / 2};
       }
@@ -63,9 +83,8 @@
   }
   @media only screen and (max-width: 1200px) {
     .banner-header {
-      margin-left: #{(100vw - $mobile-main-content-width) / 2};
-      margin-right: #{(100vw - $mobile-main-content-width) / 2};
       &:not(:last-child) {
+        margin-left: #{(100vw - $mobile-main-content-width) / 2};
         max-width: $mobile-main-content-width - 50vw;
       }
     }
@@ -88,6 +107,12 @@
       height: $narrow-banner-height;
       &:not(:last-child) {
         max-width: $mobile-main-content-width;
+        .banner-header-title {
+          text-align: center;
+        }
+        .banner-header-subtitle {
+          text-align: center;
+        }
       }
     }
     .banner-sidebar {

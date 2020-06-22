@@ -9,7 +9,6 @@ import Banner from '../../components/banner';
 import {InlineSearchBox} from '../../components/search-box';
 import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
-import imageBannerBg from '../../assets/images/home-top-bg.jpg';
 import imageRemdesivir from '../../assets/images/remdesivir.png';
 import imageSARS2 from '../../assets/images/sars2.png';
 import image3CL from '../../assets/images/3cl.png';
@@ -20,6 +19,7 @@ import imageMeasurement from '../../assets/images/measurement.png';
 import imageClinicalTrial from '../../assets/images/clinical-trial.png';
 import imageReferences from '../../assets/images/references.png';
 
+import {getFullLink} from '../../utils/cms';
 import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';
 
@@ -80,19 +80,18 @@ export default class ChiroSearch extends React.Component {
   }
 
   thenRender = ({
-    bannerMenu = <Loader active />,
-    missionStatement = <Loader active />
+    banner,
+    missionStatement
   } = {}) => {
     setTitle(null);
     return <>
-      <Banner bgImage={imageBannerBg}>
+      <Banner
+       bgImage={banner ? getFullLink(`images/${banner.image}`) : undefined}>
         <Banner.Title as="h2">
-          Antiviral Therapy
+          {banner ? <Markdown>{banner.title}</Markdown> : null}
         </Banner.Title>
         <Banner.Subtitle>
-          <p>
-            A narrative summary of the purpose and contents of this database.
-          </p>
+          {banner ? <Markdown>{banner.subtitle}</Markdown> : null}
           <p>
             <Button
              size="huge"
@@ -107,8 +106,9 @@ export default class ChiroSearch extends React.Component {
         </Banner.Subtitle>
         <Banner.Sidebar>
           <BasicTOC className={style['scroll-toc']}>
-            {typeof bannerMenu === 'string' ?
-              <Markdown inline>{bannerMenu}</Markdown> : bannerMenu}
+            {banner ?
+              <Markdown inline>{banner.menuContent}</Markdown> :
+              <Loader active />}
           </BasicTOC>
         </Banner.Sidebar>
       </Banner>
@@ -156,9 +156,9 @@ export default class ChiroSearch extends React.Component {
       </section>
       <section className={style['home-section']}>
         <H2 disableAnchor>Mission Statement</H2>
-        {typeof missionStatement === 'string' ?
+        {missionStatement ?
           <Markdown>{missionStatement}</Markdown> :
-          missionStatement}
+          <Loader active />}
       </section>
       <section className={style['home-section']}>
         <H2 disableAnchor>Knowledge pages</H2>

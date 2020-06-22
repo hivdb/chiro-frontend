@@ -34,8 +34,10 @@
     margin-right: 0;
   }
   @media only screen and (min-width: 901px) {
-    max-height: $banner-height - 4rem;
-    overflow-y: scroll;
+    > nav {
+      max-height: $banner-height - 4rem;
+      overflow-y: scroll;
+    }
   }
 }
 
@@ -43,8 +45,11 @@
   &:not(:last-child) {
     margin-bottom: 3rem;
   }
+  h2 {
+    font-size: 2.15rem;
+  }
   p {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
 }
 
@@ -135,12 +140,14 @@
   }
   &:global(.ui.horizontal.list) {
     > :global(.item) {
+      min-width: 12rem;
       margin-left: 0rem;
       :global(.header) {
         text-align: center;
         margin-top: 1rem;
         margin-bottom: 1rem;
-        font-size: 1.2rem;
+        font-size: 1.6rem;
+        font-family: $font-family;
         line-height: 1.5rem;
       }
     }
@@ -152,11 +159,6 @@
     @media only screen and (max-width: 1400px) {
       margin-left: 0;
       margin-right: 0;
-    }
-    @media only screen and (min-width: 1025px) {
-      > :global(.item) {
-        width: 14.2857%;
-      }
     }
   }
 }

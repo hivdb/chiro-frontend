@@ -1,34 +1,40 @@
 @import '../../styles/colors';
 
-nav.toc {
-  border: 0.8rem solid rgba(0,0,0,.05);
-  padding: 1rem;
-  margin-top: 1rem;
-  margin-left: 1rem;
-  margin-bottom: 1rem;
-  background-color: white;
+.toc-container {
   float: right;
-  min-width: 18rem;
-  width: 32rem;
-  font-size: 1.1rem;
-  line-height: 2;
-  position: relative;
-  z-index: 1;
-
-  ul, li {
-    margin-top: 0;
-    margin-bottom: 0;
+  nav.toc {
+    border: 0.8rem solid rgba(0,0,0,.05);
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    background-color: white;
+    min-width: 18rem;
+    width: 32rem;
+    font-size: 1.1rem;
+    line-height: 2;
+    position: relative;
+    z-index: 1;
+  
+    ul, li {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  
   }
-
   @media only screen and (min-width: 901px) and (max-width: 1024px) {
-    width: 28rem;
+    nav.toc {
+      width: 28rem;
+    }
   }
   @media only screen and (max-width: 900px) {
-    margin-left: auto;
-    margin-right: auto;
     float: none;
-    width: calc(100% - 2rem);
-    max-width: 40rem;
+    nav.toc {
+      margin-left: auto;
+      margin-right: auto;
+      width: calc(100% - 2rem);
+      max-width: 40rem;
+    }
   }
   @media print {
     display: none;
