@@ -88,10 +88,10 @@ export default class ChiroSearch extends React.Component {
       <Banner
        bgImage={banner ? getFullLink(`images/${banner.image}`) : undefined}>
         <Banner.Title as="h2">
-          {banner ? <Markdown>{banner.title}</Markdown> : null}
+          {banner ? <Markdown inline>{banner.title}</Markdown> : null}
         </Banner.Title>
         <Banner.Subtitle>
-          {banner ? <Markdown>{banner.subtitle}</Markdown> : null}
+          {banner ? <p><Markdown inline>{banner.subtitle}</Markdown></p> : null}
           <p>
             <Button
              size="huge"
