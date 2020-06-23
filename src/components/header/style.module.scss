@@ -85,9 +85,18 @@ header.chiro-header {
     }
 
   }
-
   @media only screen and (max-width: 1280px) {
-    padding-right: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    .nav-container {
+      ul.nav {
+        padding-right: 1rem;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 1023px) {
+    padding-right: 0rem;
     .nav-container {
       position: relative;
       a.menu-toggle {
@@ -127,8 +136,7 @@ header.chiro-header {
       }
     }
   }
-  @media only screen and (max-width: 1024px) {
-    padding-left: 1rem;
+  @media only screen and (max-width: 1023px) {
     .nav-container {
       ul.nav {
         width: 60vw;

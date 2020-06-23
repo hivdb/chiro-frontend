@@ -46,17 +46,6 @@
 
 .brand-container {
   @include brand-size(.92);
-  &.size-large {
-    @include brand-size(1.1);
-  }
-  &.size-small {
-    @include brand-size(.7);
-  }
-  &.responsive {
-    @media only screen and (max-width: 660px) {
-      @include brand-size(.7);
-    }
-  }
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -109,6 +98,17 @@
       a {
         color: #c9c9c9;
       }
+    }
+  }
+  &.size-large {
+    @include brand-size(1.1);
+  }
+  &.size-small {
+    @include brand-size(.7);
+  }
+  &.responsive {
+    @media only screen and (max-width: 1280px) {
+      @include brand-size(.7);
     }
   }
   
