@@ -14,13 +14,19 @@ export default class Footer extends React.Component {
       <SiteBrand
        className={style['site-brand']}
        hideSubtitle size="large" />
-      <Grid columns={2} relaxed stackable>
+      <Grid columns={3} relaxed stackable>
         <Grid.Column>
-          <Header as="h2">Databases</Header>
+          <Header as="h2">Database</Header>
           <ul>
-            <li><Link to="/terms-of-use/">Terms of Use</Link></li>
-            <li><Link to="/database-schema/">Database Schema</Link></li>
+            <li><Link to="/page/terms-of-use/">Terms of Use</Link></li>
+            <li><Link to="/page/database-schema/">Database Schema</Link></li>
             <li><Link to="/page/acknowledgment/">Acknowledgment</Link></li>
+          </ul>
+        </Grid.Column>
+        <Grid.Column>
+          <Header as="h2">Resources</Header>
+          <ul>
+            <li><Link to="/page/links/">COVID-19 Websites and Links</Link></li>
           </ul>
         </Grid.Column>
         <Grid.Column>

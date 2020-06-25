@@ -17,7 +17,7 @@ $margin-top: 3rem;
   justify-content: space-between;
   
   :global(.ui.relaxed.grid) {
-    min-width: 40%;
+    min-width: 60%;
     margin-bottom: 0;
     color: white;
     a {
@@ -56,21 +56,23 @@ $margin-top: 3rem;
     padding-left: #{(100vw - $main-content-width) / 2};
     padding-right: #{(100vw - $main-content-width) / 2};
   }
-  @media only screen and (max-width: 1200px) {
-    padding-left: #{(100vw - $mobile-main-content-width) / 2};
-    padding-right: #{(100vw - $mobile-main-content-width) / 2};
+  @media only screen and (max-width: 1500px) {
+    :global(.ui.relaxed.grid) {
+      min-width: 50%;
+    }
   }
-  @media only screen and (max-width: 900px) {
-    display: block;
-    padding-top: 1rem;
+  @media only screen and (max-width: 1350px) {
     .site-brand {
       margin-bottom: 2rem;
     }
+    display: block;
+    padding-top: 1rem;
     :global(.ui.relaxed.grid) {
       min-width: 90% !important;
     }
-    .copyright {
-      text-align: left;
-    }
+  }
+  @media only screen and (max-width: 1200px) {
+    padding-left: #{(100vw - $mobile-main-content-width) / 2};
+    padding-right: #{(100vw - $mobile-main-content-width) / 2};
   }
 }

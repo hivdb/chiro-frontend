@@ -168,6 +168,14 @@ function renderRoot({children}) {
 }
 
 
+function renderImage(imagePrefix) {
+  return ({src, alt, ...props}) => {
+    src = src && /https?:\/\//i.test(src) ? src : `${imagePrefix}${src}`;
+    return <img {...props} alt={alt} src={src} />;
+  };
+}
+
+
 export default class Markdown extends React.Component {
 
   static propTypes = {
@@ -193,11 +201,12 @@ export default class Markdown extends React.Component {
     const {
       children, noHeadingStyle, toc,
       referenceTitle, inline, tocClassName,
-      collapsableLevels,
+      collapsableLevels, imagePrefix,
       renderers: addRenderers, ...props
     } = this.props;
     const renderers = {
       link: MarkdownLink,
+      image: renderImage(imagePrefix),
       footnote: RefLink,
       footnoteReference: RefLink,
       footnoteDefinition: RefDefinition,
