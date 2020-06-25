@@ -84,6 +84,14 @@ class SearchInner extends React.Component {
       `${qCompoundTargetName}@@${qCompoundName}` +
       `@@${qVirusName}@@${qArticleNickname}@@${qStudyType}`
     );
+    if (qArticleNickname) {
+      clinicalTrials = {totalCount: 0};
+    }
+    if (qVirusName) {
+      if (qVirusName !== 'SARS-CoV-2') {
+        clinicalTrials = {totalCount: 0};
+      }
+    }
     if (qStudyType) {
       if (qStudyType !== 'invitro-cells') {
         virusExperiments = {totalCount: 0, edges: []};

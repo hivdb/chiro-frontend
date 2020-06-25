@@ -105,6 +105,11 @@
     .banner-header {
       text-align: center;
       height: $narrow-banner-height;
+      margin-left: #{(100vw - $mobile-main-content-width) / 2};
+      margin-right: #{(100vw - $mobile-main-content-width) / 2};
+      .banner-header-title {
+        font-size: 3rem;
+      }
       &:not(:last-child) {
         max-width: $mobile-main-content-width;
         .banner-header-title {

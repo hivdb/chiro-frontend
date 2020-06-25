@@ -13,9 +13,22 @@
   h#{$level}:first-of-type {
     margin-top: 0;
     margin-bottom: 0;
-    line-height: calc(#{$accordion-height} - #{2 * $border-width});
+    max-width: calc(100% - 1rem);
+    line-height: 1.1em;
+    padding-top: calc(calc(calc(#{$accordion-height} - #{2 * $border-width}) - 1.1em) / 2);
+    padding-bottom: calc(calc(calc(#{$accordion-height} - #{2 * $border-width}) - 1.1em) / 2);
     > a[data-anchor-link] {
       visibility: hidden;
+    }
+    &::after {
+      display: none;
+    }
+  }
+  &:not([data-expanded]) {
+    h#{$level}:first-of-type {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
   }
   > .toggle-display {
@@ -30,7 +43,7 @@
     left: 0;
     right: 0;
     top: 0;
-    bottom: 0;
+    height: $accordion-height;
     margin-left: 1rem;
     margin-right: 1rem;
   }
