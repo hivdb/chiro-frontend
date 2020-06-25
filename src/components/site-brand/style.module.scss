@@ -102,6 +102,14 @@
   }
   &.size-large {
     @include brand-size(1.1);
+    &.responsive {
+      @media only screen and (max-width: 1280px) {
+        @include brand-size(.9);
+      }
+      @media only screen and (max-width: 600px) {
+        @include brand-size(.8);
+      }
+    }
   }
   &.size-small {
     @include brand-size(.7);
@@ -109,6 +117,9 @@
   &.responsive {
     @media only screen and (max-width: 1280px) {
       @include brand-size(.7);
+    }
+    @media only screen and (max-width: 600px) {
+      @include brand-size(.5);
     }
   }
   

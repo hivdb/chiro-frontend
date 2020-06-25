@@ -13,7 +13,7 @@ export default class Footer extends React.Component {
     return <footer className={style['footer']}>
       <SiteBrand
        className={style['site-brand']}
-       hideSubtitle size="large" />
+       responsive hideSubtitle size="large" />
       <Grid columns={3} relaxed stackable>
         <Grid.Column>
           <Header as="h2">Database</Header>
