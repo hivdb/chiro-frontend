@@ -17,7 +17,7 @@ export default class GAWrapper extends React.Component {
     super(...arguments);
 
     this.logPageView();
-    this.props.router.addTransitionHook(() => {
+    this.props.router.addNavigationListener(() => {
       this.logPageView();
       return true;
     });

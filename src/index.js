@@ -4,7 +4,7 @@ import {ApolloProvider} from '@apollo/react-hooks';
 
 import ReactGA from 'react-ga';
 
-import './index.css';
+import './index.module.scss';
 import BrowserRouter from './Routing';
 import chiroClient from './apollo';
 

@@ -1,0 +1,21 @@
+@import "styles/colors";
+@import "styles/variables";
+
+body {
+  margin: 0;
+  font-family: $font-family;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.sierra-sars2-webui {
+  --sierra-color-type-main: #{$main-color} !important;
+  --sierra-color-type-main-lighter: #{$bondi-blue} !important;
+
+  margin-top: 1.5rem;
+}

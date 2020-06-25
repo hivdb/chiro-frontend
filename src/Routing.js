@@ -5,6 +5,8 @@ import {
   Route
 } from 'found';
 
+import SARS2Routes from 'sierra-frontend/dist/views/sars2';
+
 import Home from './views/home';
 import Search from './views/search';
 import CompoundList from './views/compound-list';
@@ -23,6 +25,8 @@ import Plots from './views/plots';
 import DatabaseSchema from './views/database-schema';
 import Page from './views/page';
 
+import style from './index.module.scss';
+
 import Layout from './components/layout';
 
 const BrowserRouter = createBrowserRouter({
@@ -30,6 +34,14 @@ const BrowserRouter = createBrowserRouter({
   routeConfig: makeRouteConfig(
     <Route path="/" Component={Layout}>
       <Route Component={Home} />
+      <Route path="sierra/">
+        {SARS2Routes({
+          graphqlURI: window.__NODE_ENV === 'production' ?
+            '/sierra-sars2/graphql' :
+            'http://localhost:8113/Sierra-SARS2/graphql',
+          className: style['sierra-sars2-webui']
+        })}
+      </Route>
       <Route Component={Search} path="/search/" />
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />

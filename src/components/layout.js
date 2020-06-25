@@ -7,8 +7,8 @@ import Header from './header';
 import Footer from './footer';
 import GAWrapper from './ga/gawrapper';
 
-import "source-sans-pro/source-sans-pro.css";
 import "typeface-poppins";
+import "typeface-source-sans-pro";
 import globalStyle from '../styles/global.module.scss';
 
 
