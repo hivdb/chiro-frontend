@@ -288,7 +288,22 @@ export default class ClinicalTrialTable extends React.Component {
     let {cacheKey, data, compounds} = this.props;
 
     data = orderBy(
-      data, ['recruitmentStatus', 'numParticipants'], ['desc', 'desc']
+      data, [function(o) {
+        if (o['recruitmentStatus'] === 'Published') {
+          return 1;
+        } else if (o['recruitmentStatus'] === 'Completed') {
+          return 2;
+        } else if (o['recruitmentStatus'] === 'Withdrawn') {
+          return 3;
+        } else if (o['recruitmentStatus'] === 'Active') {
+          return 4;
+        } else {
+          return 5;
+        }
+      }, function(o) {
+        return - o['numPatients'];
+      }
+    ],
     );
     const compoundSplitter = getCompoundSplitter(compounds);
     const compoundDescMap = getCompoundDescMap(compounds);
