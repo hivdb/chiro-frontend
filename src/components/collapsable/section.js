@@ -26,7 +26,9 @@ export default class Section extends React.Component {
     const {expanded} = this.state;
     this.setState({
       expanded: !expanded,
-      maxHeight: expanded ? null : this.sectionRef.current.scrollHeight
+      maxHeight: expanded ? null : (
+        this.sectionRef.current.scrollHeight + 20
+      )
     });
   }
 
