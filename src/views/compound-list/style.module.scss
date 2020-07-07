@@ -1,3 +1,5 @@
+@import "../../styles/dropdown";
+
 :global(.ui.items>.item .meta), :global(.ui.items>.item .extra) {
   > .target {
     &::before {
@@ -51,4 +53,16 @@
   margin-left: auto;
   margin-right: auto;
   max-height: 50vh;
+}
+
+:global(.ui > .grid > .row) > .search-box {
+  @include chiro-dropdown(18rem);
+  @media only screen and (max-width: 900px) {
+    &[class*="four wide"]:global(.column) {
+      width: 100%!important;
+      margin: 0 0!important;
+      box-shadow: none!important;
+      padding: 1rem 1rem!important;
+    }
+  }
 }

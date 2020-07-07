@@ -120,12 +120,15 @@ class SearchInner extends React.Component {
     return <Grid stackable className={style['search']}>
       <Grid.Row>
         <InlineSearchBox
-         articleValue={qArticleNickname}
-         compoundValue={qCompoundName}
-         virusValue={qVirusName}
-         compoundTargetValue={qCompoundTargetName}
-         studyTypeValue={qStudyType}
-         onChange={this.handleQueryChange}>
+         articleValue={formOnly ? null : qArticleNickname}
+         compoundValue={formOnly ? null : qCompoundName}
+         virusValue={formOnly ? null : qVirusName}
+         compoundTargetValue={formOnly ? null : qCompoundTargetName}
+         studyTypeValue={formOnly ? null : qStudyType}
+         placeholder={'Select item'}
+         compoundPlaceholder={'Enter text of select item'}
+         onChange={this.handleQueryChange}
+         allowEmpty>
           {({
             compoundTargetDropdown,
             compoundDropdown,
@@ -135,9 +138,8 @@ class SearchInner extends React.Component {
             <StatHeader>
               {[
                 {
-                  title: 'Selection',
                   className: style['search-box'],
-                  width: 5,
+                  width: 4,
                   cells: [
                     {label: 'Target', value: compoundTargetDropdown},
                     {label: 'Compound', value: compoundDropdown},
@@ -145,90 +147,101 @@ class SearchInner extends React.Component {
                     {label: 'Study type', value: studyTypeDropdown},
                   ]
                 },
-                ...(formOnly ? [] : [{
-                  title: 'Results',
+                {
+                  width: 12,
                   className: style['search-summary'],
-                  width: 3,
-                  cells: [
-                    ...(noResult ? [{
-                      label: '',
-                      value: <div>No result.</div>
-                    }] : []),
-                    ...(loading ? [{
-                      label: '',
-                      value: <Loader active inline size="mini" />
-                    }] : []),
-                    ...(!loading && virusExperiments.totalCount > 0 ? [{
-                      label: <a href="#invitro-cells">
-                        Cell culture
-                      </a>,
-                      value: virusExperiments.totalCount
-                    }] : []),
-                    ...(!loading && entryAssayExperiments.totalCount > 0 ? [{
-                      label: <a href="#invitro-entryassay">
-                        Entry assay
-                      </a>,
-                      value: entryAssayExperiments.totalCount
-                    }] : []),
-                    ...(!loading && biochemExperiments.totalCount > 0 ? [{
-                      label: <a href="#invitro-biochem">
-                        Biochemistry
-                      </a>,
-                      value: biochemExperiments.totalCount
-                    }] : []),
-                    ...(!loading && animalExperiments.totalCount > 0 ? [{
-                      label: <a href="#animal-models">
-                        Animal models
-                      </a>,
-                      value: animalExperiments.totalCount
-                    }] : []),
-                    ...(!loading && clinicalExperiments.totalCount > 0 ? [{
-                      label: <a href="#clinical-studies">
-                        Clinical studies
-                      </a>,
-                      value: clinicalExperiments.totalCount
-                    }] : []),
-                    ...(!loading && clinicalTrials.totalCount > 0 ? [{
-                      label: <Link to={{
-                        pathname: '/clinical-trials/',
-                        query: {
-                          compound: qCompoundName,
-                          target: qCompoundTargetName
-                        }
-                      }}>
-                        Clinical trials
-                      </Link>,
-                      value: clinicalTrials.totalCount
-                    }] : [])
-                  ]
-                }]),
-                ...(compound || virus || compoundTarget ? [{
-                  description: <>
-                    {compoundTarget && !compound ? <p>
-                      <strong>Target</strong>:{' '}
-                      {compoundTarget.description || 'Pending.'}
-                    </p> : null}
-                    {compound ? <p>
-                      <strong>Target</strong>:{' '}
-                      {compound.targetObj ?
-                        compound.targetObj.description || 'Pending.' :
-                        null}
-                    </p> : null}
-                    {compound ? <p>
-                      <strong>Compound</strong>:{' '}
-                      {compound.description || 'Pending.'}
-                    </p> : null}
-                    {virus ? <p>
-                      <strong>Virus</strong>:{' '}
-                      {virus.description || 'Pending.'}
-                    </p> : null}
-                  </>,
-                  width: 8
-                }] : []),
-                ...(!compound && !virus && !compoundTarget && article ? [{
-                  description: <ArticleInfo {...article} />,
-                  width: 8
-                }] : [])
+                  description: formOnly ? <>
+                    <Header as="h1" dividing>Database Search</Header>
+                    <p>
+                      Select an option from left drop down
+                      lists to start searching.
+                    </p>
+                  </> : <>
+                    {compound || virus || compoundTarget ? <>
+                      {compoundTarget && !compound ? <>
+                        <Header as="h2" dividing>
+                          Target: {compoundTarget.name}
+                        </Header>
+                        <p>{compoundTarget.description || 'Pending.'}</p>
+                      </> : null}
+                      {compound ? <>
+                        <Header as="h2" dividing>
+                          Target: {compound.targetObj.name}
+                        </Header>
+                        <p>{compound.targetObj ?
+                          compound.targetObj.description || 'Pending.' :
+                          null}</p>
+                      </> : null}
+                      {compound ? <>
+                        <Header as="h2" dividing>
+                          Compound: {compound.name}
+                        </Header>
+                        <p>{compound.description || 'Pending.'}</p>
+                      </> : null}
+                      {virus ? <>
+                        <Header as="h2" dividing>
+                          Virus: {virus.name}
+                        </Header>
+                        <p>{virus.description || 'Pending.'}</p>
+                      </> : null}
+                    </> : null}
+                    {!compound && !virus && !compoundTarget && article ?
+                      <ArticleInfo {...article} /> : null}
+                    {noResult ? null : <>
+                      <Header as="h2" dividing>
+                        Results
+                      </Header>
+                      <ul>
+                        {!loading && virusExperiments.totalCount > 0 ? <li>
+                          <a href="#invitro-cells" className={style['label']}>
+                            Cell culture
+                          </a>
+                          {virusExperiments.totalCount}
+                        </li> : null}
+                        {!loading && entryAssayExperiments.totalCount > 0 ? <li>
+                          <a
+                           href="#invitro-entryassay"
+                           className={style['label']}>
+                            Entry assay
+                          </a>
+                          {entryAssayExperiments.totalCount}
+                        </li> : null}
+                        {!loading && biochemExperiments.totalCount > 0 ? <li>
+                          <a href="#invitro-biochem" className={style['label']}>
+                            Biochemistry
+                          </a>
+                          {biochemExperiments.totalCount}
+                        </li> : null}
+                        {!loading && animalExperiments.totalCount > 0 ? <li>
+                          <a href="#animal-models" className={style['label']}>
+                            Animal models
+                          </a>
+                          {animalExperiments.totalCount}
+                        </li> : null}
+                        {!loading && clinicalExperiments.totalCount > 0 ? <li>
+                          <a
+                           href="#clinical-studies"
+                           className={style['label']}>
+                            Clinical studies
+                          </a>
+                          {clinicalExperiments.totalCount}
+                        </li> : null}
+                        {!loading && clinicalTrials.totalCount > 0 ? <li>
+                          <Link to={{
+                            pathname: '/clinical-trials/',
+                            query: {
+                              compound: qCompoundName,
+                              target: qCompoundTargetName
+                            }
+                          }} className={style['label']}>
+                            Clinical trials
+                          </Link>
+                          {clinicalTrials.totalCount}
+                        </li> : null}
+                      </ul>
+                    </>}
+                  </>
+                },
               ]}
             </StatHeader>
           )}

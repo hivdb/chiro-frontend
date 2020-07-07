@@ -1,3 +1,5 @@
+@import "../../styles/dropdown";
+
 .header-content {
   font-style: italic;
   text-align: center;
@@ -53,7 +55,14 @@
   font-size: 1rem;
 }
 
-.search-box {
-  font-size: 1.2rem;
-  line-height: 1.5rem;
+:global(.ui > .grid > .row) > .search-box {
+  @include chiro-dropdown(18rem);
+  @media only screen and (max-width: 900px) {
+    &[class*="four wide"]:global(.column) {
+      width: 100%!important;
+      margin: 0 0!important;
+      box-shadow: none!important;
+      padding: 1rem 1rem!important;
+    }
+  }
 }

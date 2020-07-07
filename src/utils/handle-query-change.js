@@ -9,9 +9,12 @@ export default function handleQueryChange(actions, props) {
     compound
   } = props;
   const newQuery = {...query};
-  delete newQuery.article;
-  delete newQuery.form_only;
   let changed = false;
+  delete newQuery.article;
+  if ('form_only' in newQuery) {
+    delete newQuery.form_only;
+    changed = true;
+  }
   for (let [value, category] of actions) {
     value = value || undefined;
     if (category === 'compounds') {

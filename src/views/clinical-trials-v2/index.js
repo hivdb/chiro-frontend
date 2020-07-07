@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
-import ReactMarkdown from 'react-markdown';
 import {useQuery} from '@apollo/react-hooks';
-import {Link, matchShape, routerShape} from 'found';
+import {matchShape, routerShape} from 'found';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import searchQuery from './query.gql';
@@ -24,16 +23,6 @@ import {
 
 const HREF_CT = 'https://clinicaltrials.gov/ct2/results?cond=COVID-19';
 const HREF_ICTRP = 'https://www.who.int/ictrp/en/';
-
-
-function renderCategory(displayName) {
-  return <ReactMarkdown
-   renderers={{
-     paragraph: ({children}) => <>{children}</>
-   }}
-   source={displayName}
-   escapeHtml={false} />;
-}
 
 
 class ClinicalTrialInner extends React.Component {
@@ -86,10 +75,10 @@ class ClinicalTrialInner extends React.Component {
     }
     let allTrials = [];
     for (const {node: {compoundObjs, ...trial}} of clinicalTrials.edges) {
-      let used_target = []
+      let used_target = [];
       for (const {target, primaryCompound, relatedCompounds} of compoundObjs) {
         if (used_target.includes(target)) {
-          continue
+          continue;
         }
         allTrials.push({...trial, target, primaryCompound, relatedCompounds});
         used_target.push(target);
@@ -132,7 +121,6 @@ class ClinicalTrialInner extends React.Component {
       loading,
       compounds,
       compoundTargets,
-      clinicalTrialCategories,
       updateTime
     } = this.props;
 
@@ -165,22 +153,16 @@ class ClinicalTrialInner extends React.Component {
           </Header>
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row>
-        <img src={getFullLink('images/clinical-trials/TargetTotals.png')} />
-      </Grid.Row>
-      <Grid.Row>
-        <img src={getFullLink('images/clinical-trials/DrugTotals.png')} />
-      </Grid.Row>
 
       <Grid.Row>
-        <Grid.Column width={8}>
+        <Grid.Column width={4} className={style['search-box']}>
           {loading ? <Loader active inline="centered" /> :
           <InlineSearchBox
-           allowEmpty
            compoundValue={qCompoundName}
            compoundTargetValue={qCompoundTargetName}
            compoundListFilter={({title, status, category}) => (
-            status === 'visible' && category === 'compounds' && clinicalTrialCompoundList.includes(title)
+            status === 'visible' && category === 'compounds' &&
+            clinicalTrialCompoundList.includes(title)
           )}
            onChange={this.handleExpSearchBoxChange}>
             {({
@@ -190,7 +172,6 @@ class ClinicalTrialInner extends React.Component {
               <StatHeader>
                 {[
                   {
-                    className: style['search-box'],
                     cells: [
                       {label: 'Target', value: compoundTargetDropdown},
                       {label: 'Compound', value: compoundDropdown},
@@ -202,7 +183,7 @@ class ClinicalTrialInner extends React.Component {
           </InlineSearchBox>
           }
         </Grid.Column>
-        <Grid.Column width={8}>
+        <Grid.Column width={12}>
           {loading ? <Loader active inline="centered" /> :
           <>
             {noResult ? <div>No result.</div> : (
@@ -226,6 +207,16 @@ class ClinicalTrialInner extends React.Component {
           </>}
         </Grid.Column>
       </Grid.Row>
+      <Grid.Row>
+        <img
+         src={getFullLink('images/clinical-trials/TargetTotals.png')}
+         alt="target totals" />
+      </Grid.Row>
+      <Grid.Row>
+        <img
+         src={getFullLink('images/clinical-trials/DrugTotals.png')}
+         alt="drug totals" />
+      </Grid.Row>
 
       {loading ?
         <Loader active inline="centered" /> : <>
@@ -240,16 +231,16 @@ class ClinicalTrialInner extends React.Component {
                     }
                     return [
                       <Header
-                      key={`h${idx}`}
-                      as="h2" dividing id={name}>
+                       key={`h${idx}`}
+                       as="h2" dividing id={name}>
                         {name}
                       </Header>,
                       <ClinicalTrialTable
-                      key={`t${idx}`}
-                      cacheKey={`${cacheKey}@@${name}`}
-                      compounds={compounds}
-                      data={clinicalTrialGroups[name]} />
-                    ]
+                       key={`t${idx}`}
+                       cacheKey={`${cacheKey}@@${name}`}
+                       compounds={compounds}
+                       data={clinicalTrialGroups[name]} />
+                    ];
                 })}
               </Grid.Column>
             </Grid.Row> : null

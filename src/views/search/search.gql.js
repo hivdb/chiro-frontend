@@ -15,7 +15,7 @@ export default gql`
     compound(name: $compoundName) @include(if: $withCompound) {
       name
       description
-      targetObj { description }
+      targetObj { name description }
     }
 
     compoundTarget(name: $compoundTargetName)

@@ -1,0 +1,81 @@
+@import "./colors";
+
+@mixin search-item-sizing($width) {
+  
+  :global(.ui.search.dropdown) {
+    width: $width;
+  }
+
+  :global(.menu) {
+    width: 100%;
+    > :global(.item) {
+      width: calc(100% - 1rem);
+    }
+  }
+
+}
+
+
+@mixin chiro-dropdown($width) {
+
+  *[data-type-item-container] {
+    @include search-item-sizing($width);
+    display: block;
+  }
+
+  label, *[data-type-item-label] {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  *[data-type-item-value] {
+    margin-left: 0 !important;
+  }
+
+  :global(.ui.search.dropdown) {
+    margin-top: .5rem;
+    margin-bottom: 1rem;
+    border: 1px solid $main-color;
+    height: 2.85rem;
+    box-sizing: border-box;
+    line-height: 2rem;
+    padding: calc(calc(.85rem - 2px) / 2) 1rem;
+    position: relative;
+    font-size: 1.2rem;
+    > :global(.dropdown.icon) {
+      position: absolute;
+      top: calc(calc(.85rem - 2px) / 2);
+      line-height: 2rem;
+      right: 1rem;
+    }
+    :global(.menu > .item) {
+      box-sizing: border-box;
+      font-size: 1.1rem;
+    }
+  }
+  *[data-type-item-container] {
+    @media only screen and (max-width: 1400px) and (min-width: 1301px) {
+      @include search-item-sizing($width * 8 / 9);
+    }
+    @media only screen and (max-width: 1300px) and (min-width: 1201px) {
+      @include search-item-sizing($width * 29 / 36);
+    }
+    @media only screen and (max-width: 1100px) and (min-width: 1001px) {
+      @include search-item-sizing($width * 8 / 9);
+    }
+    @media only screen and (max-width: 1000px) and (min-width: 901px) {
+      @include search-item-sizing($width * 29 / 36);
+    }
+    @media only screen and (max-width: 900px) {
+      width: 50%;
+      @include search-item-sizing(100%);
+      &:nth-child(odd) {
+        padding-right: 1rem;
+      }
+      &:nth-child(even) {
+        padding-left: 1rem;
+      }
+    }
+  }
+}

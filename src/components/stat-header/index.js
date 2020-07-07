@@ -43,9 +43,17 @@ export default class StatHeader extends React.Component {
           {cells ? (
             <div className={style['stat-list']}>
               {cells.map(({label, value}, jdx) => (
-                <div className={style['stat-item']} key={jdx}>
-                  <div className={style['item-label']}>{label}</div>
-                  <div className={style['item-value']}>
+                <div
+                 className={style['stat-item']}
+                 key={jdx} data-type-item-container>
+                  <div
+                   className={style['item-label']}
+                   data-type-item-label>
+                    {label}
+                  </div>
+                  <div
+                   className={style['item-value']}
+                   data-type-item-value>
                     {value}
                   </div>
                 </div>

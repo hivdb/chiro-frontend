@@ -69,30 +69,32 @@ class CompoundListInner extends React.Component {
           <Header as="h1" dividing>Compounds</Header>
         </Grid.Column>
       </Grid.Row>
-      <InlineSearchBox
-       onChange={this.handleQueryChange}
-       compoundTargetValue={qCompoundTargetName}>
-        {({compoundTargetDropdown}) => (
-          <StatHeader>
-            {[
-              {
-                title: 'Selection',
-                width: 4,
-                cells: [
-                  {label: 'Target', value: compoundTargetDropdown}
-                ]
-              },
-              ...(!loading && compoundTarget ? [{
-                description: <p>
-                  <strong>Target</strong>:{' '}
-                  {compoundTarget.description || 'Pending'}
-                </p>,
-                width: 12
-              }] : [])
-            ]}
-          </StatHeader>
-        )}
-      </InlineSearchBox>
+      <Grid.Row>
+        <InlineSearchBox
+         onChange={this.handleQueryChange}
+         compoundTargetValue={qCompoundTargetName}>
+          {({compoundTargetDropdown}) => (
+            <StatHeader>
+              {[
+                {
+                  width: 4,
+                  className: style['search-box'],
+                  cells: [
+                    {label: 'Target', value: compoundTargetDropdown}
+                  ]
+                },
+                ...(!loading && compoundTarget ? [{
+                  description: <p>
+                    <strong>Target</strong>:{' '}
+                    {compoundTarget.description || 'Pending'}
+                  </p>,
+                  width: 12
+                }] : [])
+              ]}
+            </StatHeader>
+          )}
+        </InlineSearchBox>
+      </Grid.Row>
       {loading ?
         <Loader active inline="centered" /> :
         <Grid.Row>
