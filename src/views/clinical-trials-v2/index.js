@@ -10,6 +10,7 @@ import searchQuery from './query.gql';
 
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
+import {getFullLink} from '../../utils/cms';
 import setTitle from '../../utils/set-title';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
@@ -163,6 +164,12 @@ class ClinicalTrialInner extends React.Component {
             </Header.Subheader>
           </Header>
         </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <img src={getFullLink('images/clinical-trials/TargetTotals.png')} />
+      </Grid.Row>
+      <Grid.Row>
+        <img src={getFullLink('images/clinical-trials/DrugTotals.png')} />
       </Grid.Row>
 
       <Grid.Row>
