@@ -101,27 +101,24 @@
 
 .subscribe-section {
   background-color: rgba(0, 0, 0, .05);
-  padding: 7rem;
+  padding: 7rem 0;
   @include full-width-container;
+  @media only screen and (max-width: 640px) {
+    padding: 2rem 0;
+  }
   .subscribe-section-inner {
     margin-left: auto;
     margin-right: auto;
     display: flex;
     justify-content: space-between;
-    @media only screen {
-      width: $main-content-width;
-    }
-    @media only screen and (max-width: 1200px) {
-      width: $mobile-main-content-width;
-    }
     > .description {
       max-width: 48%;
-    }
-    h2 {
-      font-size: 2.25rem;
-    }
-    p {
-      font-size: 1.15rem;
+      h2 {
+        font-size: 2.25rem;
+      }
+      p {
+        font-size: 1.15rem;
+      }
     }
     > form {
       min-width: 36rem;
@@ -164,6 +161,30 @@
           background-color: rgba(0, 0, 0, 0.3);
           cursor: not-allowed;
         }
+      }
+    }
+    @media only screen {
+      width: $main-content-width;
+    }
+    @media only screen and (max-width: 1200px) {
+      width: $mobile-main-content-width;
+      flex-wrap: wrap;
+    }
+    @media only screen and (max-width: 1024px) {
+      > .description, > form {
+        max-width: calc(48%);
+        min-width: calc(48%);
+      }
+    }
+    @media only screen and (max-width: 640px) {
+      > .description, > form {
+        max-width: calc(100% - 2rem);
+        min-width: calc(100% - 2rem);
+        margin-left: auto;
+        margin-right: auto;
+      }
+      > .description {
+        margin-bottom: 2rem;
       }
     }
   }
