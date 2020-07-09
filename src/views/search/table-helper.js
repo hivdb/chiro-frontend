@@ -50,13 +50,17 @@ function readableNum(num) {
 function renderXX50(
   num, cmp, unit, inactive,
   default_unit = '\xb5M',
-  none = '?'
+  none = '?', converters = {}
 ) {
   if (inactive) {
     return '>>>';
   }
   if (num === null) {
     return none;
+  }
+  if (`${unit}-to-${default_unit}` in converters) {
+    num = converters[`${unit}-to-${default_unit}`](num);
+    unit = default_unit;
   }
   num = readableNum(num);
   return <span className={style['nowrap']}>
@@ -110,7 +114,11 @@ const virusSpeciesDef = new ColumnDef({
 const compoundColDef = label => new ColumnDef({
   name: 'compoundNames',
   label,
-  render: compoundNames => compoundNames.join(' + '),
+  render: compoundNames => compoundNames.map(
+    name => name.replace(
+      /^MAb-(SARS-CoV-2-|SARS-CoV-|MERS-CoV-)?/, ''
+    )
+  ).join(' + '),
   sort: data => sortBy(data, ['compoundNames[0]'])
 });
 

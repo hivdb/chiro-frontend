@@ -92,7 +92,7 @@ export default class ChiroTable extends React.Component {
   }
 
   handleCopy() {
-    const node = this.table.current;
+    const node = this.table.current.querySelector('table');
     let range = document.createRange();
     range.selectNodeContents(node);
     let sel = window.getSelection();
@@ -109,50 +109,52 @@ export default class ChiroTable extends React.Component {
       return acc;
     }, {});
 
-    return  <div ref={this.table}>
-    <Table
-     color={color} sortable celled compact selectable
-     className={style['chiro-table']}>
-      <Table.Header>
-        <Table.Row>
-          {columnDefs.map(({name, label, sort, sortable}, idx) => (
-            <Table.HeaderCell
-             {...(sortable ? {
-               sorted: sortedByColumn === name ? sortDirection : null,
-               onClick: this.handleSort(name, sort)
-             } : {})}
-             textAlign="center"
-             key={idx}>
-              {label}
-            </Table.HeaderCell>
-          ))}
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {sortedData.map((row, idx) => (
-          <Table.Row verticalAlign="top" key={idx}>
-            {columnDefs.map(({name, render, textAlign, label}, jdx) => (
-              <Table.Cell
-               key={jdx}
-               {...(textAlign === 'justify' ?
-                 {className: style.justify} :
-                 {textAlign}
-               )}>
-                <span className={style['cell-label']}>{label}</span>
-                <span className={style['cell-value']}>
-                  {render(nestedGet(row, name), row, context[name])}
-                </span>
-              </Table.Cell>
+    return  <div ref={this.table} className={style['chiro-table-container']}>
+      <Button
+       size="mini"
+       floated='right'
+       className={style['copy-button']}
+       onClick={this.handleCopy.bind(this)}>
+        Copy to clipboard
+      </Button>
+      <Table
+       color={color} sortable celled compact selectable
+       className={style['chiro-table']}>
+        <Table.Header>
+          <Table.Row>
+            {columnDefs.map(({name, label, sort, sortable}, idx) => (
+              <Table.HeaderCell
+               {...(sortable ? {
+                 sorted: sortedByColumn === name ? sortDirection : null,
+                 onClick: this.handleSort(name, sort)
+               } : {})}
+               textAlign="center"
+               key={idx}>
+                {label}
+              </Table.HeaderCell>
             ))}
           </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
-    <Button
-     size="mini"
-     floated='right'
-     onClick={this.handleCopy.bind(this)}
-    >Copy to clipboard</Button>
+        </Table.Header>
+        <Table.Body>
+          {sortedData.map((row, idx) => (
+            <Table.Row verticalAlign="top" key={idx}>
+              {columnDefs.map(({name, render, textAlign, label}, jdx) => (
+                <Table.Cell
+                 key={jdx}
+                 {...(textAlign === 'justify' ?
+                   {className: style.justify} :
+                   {textAlign}
+                 )}>
+                  <span className={style['cell-label']}>{label}</span>
+                  <span className={style['cell-value']}>
+                    {render(nestedGet(row, name), row, context[name])}
+                  </span>
+                </Table.Cell>
+              ))}
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
     </div>
     ;
   }

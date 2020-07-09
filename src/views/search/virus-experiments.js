@@ -167,6 +167,32 @@ const tableColumnsIFN = [
   tableColumns[tableColumns.length - 1]
 ];
 
+const tableColumnsMAb = [
+  ...tableColumns.slice(0, tableColumns.length - 2),
+  new ColDef({
+    name: 'ec50',
+    label: (
+      <Popup
+       header={'EC50 (ng/ml)'}
+       content={
+         "The compound concentration required to inhibit virus " +
+         "replication by 50%."}
+       trigger={<span className={style['with-info']}>
+         {'EC50 (ng/ml)'}<sup><Icon name="info circle" /></sup>
+       </span>} />
+    ),
+    render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
+      renderXX50(
+        ec50, ec50cmp, ec50unit, ec50inactive, 'ng/ml', '-',
+        {'\xb5M-to-ng/ml': num => num * 150000}
+      )
+    ),
+    sort: data => sortBy(
+      data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive']
+    )
+  })
+];
+
 
 export default class VirusExpTable extends React.Component {
 
@@ -179,7 +205,16 @@ export default class VirusExpTable extends React.Component {
     const {cacheKey, data} = this.props;
     const reformed = reformExpData(data);
     const ccData = (
-      reformed.filter(({categoryName}) => categoryName === 'CellCulture')
+      reformed.filter(({categoryName, compoundObjs}) => (
+        categoryName === 'CellCulture' &&
+        compoundObjs.some(({target}) => target !== 'Monoclonal antibody')
+      ))
+    );
+    const mabData = (
+      reformed.filter(({categoryName, compoundObjs}) => (
+        categoryName === 'CellCulture' &&
+        compoundObjs.some(({target}) => target === 'Monoclonal antibody')
+      ))
     );
     const ifnData = (
       reformed.filter(({categoryName}) => categoryName === 'CellCultureIFN')
@@ -190,8 +225,17 @@ export default class VirusExpTable extends React.Component {
          cacheKey={cacheKey}
          columnDefs={tableColumns}
          data={ccData} /> : null}
+      {mabData.length > 0 ? <>
+        <Header as="h3" id="monoclonal-antibodies">
+          Monoclonal antibodies
+        </Header>
+        <ChiroTable
+         cacheKey={cacheKey}
+         columnDefs={tableColumnsMAb}
+         data={mabData} />
+      </> : null}
       {ifnData.length > 0 ? <>
-        <Header as="h3">Interferons</Header>
+        <Header as="h3" id="interferons">Interferons</Header>
         <ChiroTable
          cacheKey={`${cacheKey}@@IFN`}
          columnDefs={tableColumnsIFN}

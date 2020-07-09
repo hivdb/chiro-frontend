@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Link, matchShape} from 'found';
 import {useQuery} from '@apollo/react-hooks';
-import {Link, matchShape, routerShape} from 'found';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import VirusExpTable from './virus-experiments';
@@ -36,7 +36,6 @@ class SearchInner extends React.Component {
     formOnly: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     match: matchShape.isRequired,
-    router: routerShape.isRequired,
     qCompoundName: PropTypes.string,
     qVirusName: PropTypes.string,
     qCompoundTargetName: PropTypes.string,
@@ -197,6 +196,33 @@ class SearchInner extends React.Component {
                             Cell culture
                           </a>
                           {virusExperiments.totalCount}
+                          <ul>
+                            <li>
+                              <a
+                               href="#monoclonal-antibodies"
+                               className={style['label']}>
+                                Monoclonal antibodies
+                              </a>
+                              {virusExperiments.edges.filter(({
+                                node: {categoryName, compoundObjs}
+                              }) => (
+                                categoryName === 'CellCulture' &&
+                                compoundObjs.some(
+                                  ({target}) => target === 'Monoclonal antibody'
+                                )
+                              )).length}
+                            </li>
+                            <li>
+                              <a href="#interferons" className={style['label']}>
+                                Interferons
+                              </a>
+                              {virusExperiments.edges.filter(({
+                                node: {categoryName}
+                              }) => (
+                                categoryName === 'CellCultureIFN'
+                              )).length}
+                            </li>
+                          </ul>
                         </li> : null}
                         {!loading && entryAssayExperiments.totalCount > 0 ? <li>
                           <a

@@ -27,3 +27,24 @@
     } 
   }
 }
+
+.chiro-table-container {
+  position: relative;
+  .copy-button {
+    top: -2.5rem;
+    right: 0;
+    position: absolute;
+  }
+}
+
+h2:global(.ui.dividing.header) + .chiro-table-container {
+  .copy-button {
+    top: -3.5rem;
+  }
+}
+
+h3:global(.ui.header) + .chiro-table-container {
+  .copy-button {
+    top: -3rem;
+  }
+}

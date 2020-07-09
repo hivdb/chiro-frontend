@@ -63,7 +63,6 @@ const entryAssayExperimentsShape = PropTypes.shape({
         PropTypes.string.isRequired
       ).isRequired,
       measurement: PropTypes.string,
-      cellsName: PropTypes.string.isRequired,
       effectorCellsName: PropTypes.string,
       ec50cm: PropTypes.string,
       ec50: PropTypes.number,

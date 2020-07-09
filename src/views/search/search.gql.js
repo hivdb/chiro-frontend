@@ -56,6 +56,9 @@ export default gql`
           virusName
           virusStrainName
           compoundNames
+          compoundObjs {
+            target
+          }
           cellsObj { name description }
           moi { mean lower }
           measurementObj { name description }
@@ -87,6 +90,9 @@ export default gql`
           virusName
           virusStrainName
           compoundNames
+          compoundObjs {
+            target
+          }
           cellsObj { name description }
           measurementObj { name description }
           drugTiming { text lower upper }

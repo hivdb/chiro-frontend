@@ -43,13 +43,19 @@
       font-size: 1.1rem;
       line-height: 1.5em;
       ul {
-        > li > a.label {
-          display: inline-block;
-          font-weight: 700;
-          &::after {
-            content: ':';
+        padding-left: 1.2rem;
+        > li {
+          > a.label {
+            display: inline-block;
+            font-weight: 700;
+            &::after {
+              content: ':';
+            }
+            min-width: 16rem;
           }
-          min-width: 14rem;
+          > ul > li > a.label {
+            min-width: 16rem - 1.2rem;
+          }
         }
       }
     }
