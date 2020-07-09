@@ -1,5 +1,6 @@
 @import "../../styles/colors";
 @import "../../styles/variables";
+@import "../../styles/mixins";
 @import "../../styles/dropdown";
 
 :global(.ui.huge.button).learn-more {
@@ -94,6 +95,76 @@
     @media only screen and (max-width: 1400px) {
       margin-left: 0;
       margin-right: 0;
+    }
+  }
+}
+
+.subscribe-section {
+  background-color: rgba(0, 0, 0, .05);
+  padding: 7rem;
+  @include full-width-container;
+  .subscribe-section-inner {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    @media only screen {
+      width: $main-content-width;
+    }
+    @media only screen and (max-width: 1200px) {
+      width: $mobile-main-content-width;
+    }
+    > .description {
+      max-width: 48%;
+    }
+    h2 {
+      font-size: 2.25rem;
+    }
+    p {
+      font-size: 1.15rem;
+    }
+    > form {
+      min-width: 36rem;
+      input[type="email"], input[type="text"] {
+        border: none;
+        border-radius: 3px;
+        background-color: white;
+        padding: 1.15rem 1.5rem;
+        font-size: 1.15rem;
+        font-family: $font-family;
+        margin-bottom: 1.15rem;
+        width: 100%;
+        display: block;
+        &:focus {
+          outline: 0;
+        }
+      }
+      button[type="submit"] {
+        width: 100%;
+        background-color: $main-color;
+        padding: 1.5rem 1.5rem;
+        font-size: 1rem;
+        font-family: $font-family;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 1.15rem;
+        border: none;
+        border-radius: 0;
+        color: white;
+        text-transform: uppercase;
+        transition: background-color .2s ease-in-out;
+        cursor: pointer;
+        &:focus {
+          outline: 0;
+        }
+        &:hover {
+          background-color: $cerulean;
+        }
+        &:disabled, &:hover:disabled {
+          background-color: rgba(0, 0, 0, 0.3);
+          cursor: not-allowed;
+        }
+      }
     }
   }
 }

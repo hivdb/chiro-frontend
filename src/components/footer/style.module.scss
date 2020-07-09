@@ -1,15 +1,12 @@
 @import "../../styles/colors";
 @import "../../styles/variables";
 
-$margin-top: 3rem;
-
 .footer {
   position: absolute;
   box-sizing: border-box;
   width: 100vw;
   padding-top: 5rem;
-  min-height: $footer-height - $margin-top;
-  margin-top: $margin-top;
+  min-height: $footer-height;
   background-color: $main-color;
   display: flex;
   flex-direction: row;

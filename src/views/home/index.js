@@ -23,6 +23,8 @@ import {getFullLink} from '../../utils/cms';
 import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';
 
+import Subscribe from './subscribe';
+
 const URL_PK_NOTES = (
   'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
   'tDg7l0H3625fjrPSThbCRN2bt1BeJguD24SBfe9Rp6j5lR6dV1p4NR3YWpW3yh1/pub');
@@ -244,6 +246,7 @@ export default class ChiroSearch extends React.Component {
           </List.Item>
         </List>
       </section>
+      <Subscribe />
     </>;
   }
 
