@@ -133,6 +133,10 @@ class ClinicalTrialInner extends React.Component {
     if (updateTime) {
       updateTime = new Date(updateTime.updateTime);
     }
+    const hasFilter = (
+      !!qCompoundTargetName ||
+      !!qCompoundName ||
+      !!qCategoryName);
     return <Grid stackable className={style['clinical-trials']}>
       <Grid.Row>
         <Grid.Column width={16}>
@@ -207,16 +211,18 @@ class ClinicalTrialInner extends React.Component {
           </>}
         </Grid.Column>
       </Grid.Row>
-      <Grid.Row>
-        <img
-         src={getFullLink('images/clinical-trials/TargetTotals.png')}
-         alt="target totals" />
-      </Grid.Row>
-      <Grid.Row>
-        <img
-         src={getFullLink('images/clinical-trials/DrugTotals.png')}
-         alt="drug totals" />
-      </Grid.Row>
+      {hasFilter ? null : <>
+        <Grid.Row>
+          <img
+           src={getFullLink('images/clinical-trials/TargetTotals.png')}
+           alt="target totals" />
+        </Grid.Row>
+        <Grid.Row>
+          <img
+           src={getFullLink('images/clinical-trials/DrugTotals.png')}
+           alt="drug totals" />
+        </Grid.Row>
+      </>}
 
       {loading ?
         <Loader active inline="centered" /> : <>
