@@ -49,7 +49,7 @@ const virusExperimentsShape = PropTypes.shape({
 });
 
 
-const entryAssayExperimentsShape = PropTypes.shape({
+const fusionAssayExperimentsShape = PropTypes.shape({
   totalCount: PropTypes.number.isRequired,
   edges: PropTypes.arrayOf(PropTypes.shape({
     node: PropTypes.shape({
@@ -132,7 +132,7 @@ const clinicalExperimentsShape = PropTypes.shape({
 
 export {
   compoundShape, virusExperimentsShape,
-  entryAssayExperimentsShape,
+  fusionAssayExperimentsShape,
   biochemExperimentsShape, animalExperimentsShape,
   clinicalExperimentsShape
 };

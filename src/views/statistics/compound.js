@@ -32,8 +32,8 @@ const tableColumns = [
     label: 'Cell culture',
   }),
   new ColumnDef({
-    name: 'EntryAssay',
-    label: 'Entry assay',
+    name: 'FusionAssay',
+    label: 'Fusion assay',
   }),
 
   new ColumnDef({

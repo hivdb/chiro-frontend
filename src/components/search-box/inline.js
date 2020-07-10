@@ -169,9 +169,9 @@ class SearchBoxInner extends React.Component {
         value: 'invitro-cells'
       },
       {
-        key: 'invitro-entryassay',
-        text: 'Entry assay',
-        value: 'invitro-entryassay'
+        key: 'invitro-fusionassay',
+        text: 'Fusion assay',
+        value: 'invitro-fusionassay'
       },
       {
         key: 'invitro-biochem',

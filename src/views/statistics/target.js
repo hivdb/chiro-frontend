@@ -73,8 +73,12 @@ export default class TargetTable extends React.Component {
         label: 'Cell culture',
       }),
       new ColumnDef({
-        name: 'EntryAssay',
+        name: 'FusionAssay',
         label: 'Entry assay',
+      }),
+      new ColumnDef({
+        name: 'Pseudovirus',
+        label: 'Pseudovirus',
       }),
       new ColumnDef({
         name: 'Animal',

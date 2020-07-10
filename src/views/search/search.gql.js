@@ -75,7 +75,40 @@ export default gql`
       }
     }
 
-    entryAssayExperiments: entryAssayCellCultureExperiments(
+    pseudovirusExperiments: pseudovirusExperiments(
+      compoundName: $compoundName,
+      compoundTargetName: $compoundTargetName,
+      virusName: $virusName,
+      articleNickname: $articleNickname
+    ) @include(if: $enableQuery) {
+      totalCount
+      edges {
+        node {
+          articles {
+            nickname year
+          }
+          virusName
+          virusStrainName
+          compoundNames
+          compoundObjs {
+            target
+          }
+          cellsObj { name description }
+          numberOfCells { mean lower } 
+          moi { mean lower }
+          drugTiming { text lower upper }
+          durationOfInfection { text lower upper }
+          ec50cmp
+          ec50
+          ec50unit
+          ec50inactive
+          sicmp
+          si
+        }
+      }
+    }
+
+    fusionAssayExperiments: fusionAssayCellCultureExperiments(
       compoundName: $compoundName,
       virusName: $virusName,
       compoundTargetName: $compoundTargetName,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import {Icon, Popup} from 'semantic-ui-react';
 
-import {entryAssayExperimentsShape} from './prop-types';
+import {fusionAssayExperimentsShape} from './prop-types';
 import ChiroTable from '../../components/chiro-table';
 import {
   compoundColDef, ColDef,
@@ -51,11 +51,11 @@ const tableColumns = [
 ];
 
 
-export default class EntryAssayExpTable extends React.Component {
+export default class FusionAssayExpTable extends React.Component {
 
   static propTypes = {
     cacheKey: PropTypes.string.isRequired,
-    data: entryAssayExperimentsShape.isRequired
+    data: fusionAssayExperimentsShape.isRequired
   }
 
   render() {

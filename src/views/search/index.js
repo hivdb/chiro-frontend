@@ -7,7 +7,8 @@ import {Grid, Header, Loader} from 'semantic-ui-react';
 import VirusExpTable from './virus-experiments';
 import BiochemExpTable from './biochem-experiments';
 import AnimalExpTable from './animal-experiments';
-import EntryAssayExpTable from './entry-assay-experiment';
+import FusionAssayExpTable from './fusion-assay-experiments';
+import PseudovirusExpTable from './pseudovirus-experiments';
 import ClinicalExpTable from './clinical-experiments';
 import searchQuery from './search.gql';
 
@@ -24,7 +25,7 @@ import style from './style.module.scss';
 import {
   compoundShape,
   virusExperimentsShape,
-  entryAssayExperimentsShape,
+  fusionAssayExperimentsShape,
   biochemExperimentsShape,
   animalExperimentsShape
 } from './prop-types';
@@ -45,7 +46,7 @@ class SearchInner extends React.Component {
     virusExperiments: virusExperimentsShape,
     biochemExperiments: biochemExperimentsShape,
     animalExperiments: animalExperimentsShape,
-    entryAssayExperiments: entryAssayExperimentsShape,
+    fusionAssayExperiments: fusionAssayExperimentsShape,
   }
 
   static defaultProps = {
@@ -71,7 +72,8 @@ class SearchInner extends React.Component {
       virus,
       article,
       virusExperiments,
-      entryAssayExperiments,
+      fusionAssayExperiments,
+      pseudovirusExperiments,
       biochemExperiments,
       animalExperiments,
       clinicalExperiments,
@@ -95,8 +97,11 @@ class SearchInner extends React.Component {
       if (qStudyType !== 'invitro-cells') {
         virusExperiments = {totalCount: 0, edges: []};
       }
-      if (qStudyType !== 'invitro-entryassay') {
-        entryAssayExperiments = {totalCount: 0, edges: []};
+      if (qStudyType !== 'invitro-fusionassay') {
+        fusionAssayExperiments = {totalCount: 0, edges: []};
+      }
+      if (qStudyType !== 'invitro-pseudovirus') {
+        pseudovirusExperiments = {totalCount: 0, edges: []};
       }
       if (qStudyType !== 'invitro-biochem') {
         biochemExperiments = {totalCount: 0, edges: []};
@@ -111,11 +116,38 @@ class SearchInner extends React.Component {
     }
     const noResult = !formOnly && !loading && (
       virusExperiments.totalCount +
-      entryAssayExperiments.totalCount +
+      fusionAssayExperiments.totalCount +
+      pseudovirusExperiments.totalCount +
       biochemExperiments.totalCount +
       animalExperiments.totalCount +
       clinicalExperiments.totalCount
     ) === 0;
+    const virusMAbCount = virusExperiments ? (
+      virusExperiments.edges.filter(({
+        node: {categoryName, compoundObjs}
+      }) => (
+        categoryName === 'CellCulture' &&
+        compoundObjs.some(
+          ({target}) => target === 'Monoclonal antibody'
+        )
+      )).length
+    ) : 0;
+    const virusIFNCount = virusExperiments ? (
+      virusExperiments.edges.filter(({
+        node: {categoryName}
+      }) => (
+        categoryName === 'CellCultureIFN'
+      )).length
+    ) : 0;
+    const pseudovirusMAbCount = pseudovirusExperiments ? (
+      pseudovirusExperiments.edges.filter(({
+        node: {categoryName, compoundObjs}
+      }) => (
+        compoundObjs.some(
+          ({target}) => target === 'Monoclonal antibody'
+        )
+      )).length
+    ) : 0;
     return <Grid stackable className={style['search']}>
       <Grid.Row>
         <InlineSearchBox
@@ -196,41 +228,55 @@ class SearchInner extends React.Component {
                             Cell culture
                           </a>
                           {virusExperiments.totalCount}
-                          <ul>
-                            <li>
-                              <a
-                               href="#monoclonal-antibodies"
-                               className={style['label']}>
-                                Monoclonal antibodies
-                              </a>
-                              {virusExperiments.edges.filter(({
-                                node: {categoryName, compoundObjs}
-                              }) => (
-                                categoryName === 'CellCulture' &&
-                                compoundObjs.some(
-                                  ({target}) => target === 'Monoclonal antibody'
-                                )
-                              )).length}
-                            </li>
-                            <li>
-                              <a href="#interferons" className={style['label']}>
-                                Interferons
-                              </a>
-                              {virusExperiments.edges.filter(({
-                                node: {categoryName}
-                              }) => (
-                                categoryName === 'CellCultureIFN'
-                              )).length}
-                            </li>
-                          </ul>
+                          {virusMAbCount + virusIFNCount > 0 ?
+                            <ul>
+                              {virusMAbCount > 0 ?
+                                <li>
+                                  <a
+                                   href="#monoclonal-antibodies"
+                                   className={style['label']}>
+                                    Monoclonal antibodies
+                                  </a>
+                                  {virusMAbCount}
+                                </li> : null}
+                              {virusIFNCount > 0 ?
+                                <li>
+                                  <a
+                                   href="#interferons"
+                                   className={style['label']}>
+                                    Interferons
+                                  </a>
+                                  {virusIFNCount}
+                                </li> : null}
+                            </ul> : null}
                         </li> : null}
-                        {!loading && entryAssayExperiments.totalCount > 0 ? <li>
-                          <a
-                           href="#invitro-entryassay"
-                           className={style['label']}>
-                            Entry assay
+                        {!loading &&
+                          fusionAssayExperiments.totalCount > 0 ? <li>
+                            <a
+                             href="#invitro-fusionassay"
+                             className={style['label']}>
+                              Fusion assay
+                            </a>
+                            {fusionAssayExperiments.totalCount}
+                          </li> : null}
+                        {(
+                          !loading && pseudovirusExperiments.totalCount > 0
+                        ) ? <li>
+                          <a href="#pseudovirus" className={style['label']}>
+                            Pseudovirus
                           </a>
-                          {entryAssayExperiments.totalCount}
+                          {pseudovirusExperiments.totalCount}
+                          {pseudovirusMAbCount > 0 ?
+                            <ul>
+                              <li>
+                                <a
+                                 href="#monoclonal-antibodies-pseudovirus"
+                                 className={style['label']}>
+                                  Monoclonal antibodies
+                                </a>
+                                {pseudovirusMAbCount}
+                              </li>
+                            </ul> : null}
                         </li> : null}
                         {!loading && biochemExperiments.totalCount > 0 ? <li>
                           <a href="#invitro-biochem" className={style['label']}>
@@ -275,6 +321,7 @@ class SearchInner extends React.Component {
       </Grid.Row>
       {formOnly || loading ?
         (loading ? <Loader active inline="centered" /> : null) : <>
+          {noResult ? <div>No result.</div> : null}
           {virusExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
@@ -286,16 +333,26 @@ class SearchInner extends React.Component {
                  data={virusExperiments} />
               </Grid.Column>
             </Grid.Row> : null}
-          {noResult ? <div>No result.</div> : null}
-          {entryAssayExperiments.totalCount > 0 ?
+          {fusionAssayExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column withd={16}>
-                <Header as="h2" dividing id="invitro-entryassay">
-                  Entry Assay
+                <Header as="h2" dividing id="invitro-fusionassay">
+                  Fusion Assay
                 </Header>
-                <EntryAssayExpTable
+                <FusionAssayExpTable
                  cacheKey={cacheKey}
-                 data={entryAssayExperiments} />
+                 data={fusionAssayExperiments} />
+              </Grid.Column>
+            </Grid.Row> : null}
+          {pseudovirusExperiments.totalCount > 0 ?
+            <Grid.Row centered>
+              <Grid.Column width={16}>
+                <Header as="h2" dividing id="pseudovirus">
+                  Pseudovirus
+                </Header>
+                <PseudovirusExpTable
+                 cacheKey={cacheKey}
+                 data={pseudovirusExperiments} />
               </Grid.Column>
             </Grid.Row> : null}
           {biochemExperiments.totalCount > 0 ?

@@ -24,7 +24,6 @@ class VirusTableInner extends React.Component {
       viruses,
     } = this.props;
 
-    console.log(viruses);
     return <>{
       loading? <Loader active inline="centered" /> :
       <TargetTable data={viruses}/>
@@ -55,8 +54,8 @@ class TargetTable extends React.Component {
         label: 'Cell culture',
       }),
       new ColumnDef({
-        name: 'EntryAssay',
-        label: 'Entry assay',
+        name: 'FusionAssay',
+        label: 'Fusion assay',
       }),
       new ColumnDef({
         name: 'Animal',
