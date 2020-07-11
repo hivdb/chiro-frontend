@@ -174,6 +174,11 @@ class SearchBoxInner extends React.Component {
         value: 'invitro-fusionassay'
       },
       {
+        key: 'invitro-pseudovirus',
+        text: 'Pseudovirus',
+        value: 'invitro-pseudovirus'
+      },
+      {
         key: 'invitro-biochem',
         text: 'Biochemistry',
         value: 'invitro-biochem'
