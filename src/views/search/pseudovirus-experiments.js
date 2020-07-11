@@ -179,7 +179,6 @@ export default class PseudovirusExpTable extends React.Component {
   render() {
     const {cacheKey, data} = this.props;
     const reformed = reformExpData(data);
-    console.log(reformed);
     const vData = (
       reformed.filter(({categoryName, compoundObjs}) => (
         compoundObjs.some(({target}) => target !== 'Monoclonal antibody')
