@@ -114,7 +114,6 @@ class SearchBoxInner extends React.Component {
         displayTargets.indexOf(compoundTargetValue) > -1
       );
     }
-    // Customized compound filter
     if (compoundListFilter) {
       const origFilter = filter;
       filter = (args) => (
