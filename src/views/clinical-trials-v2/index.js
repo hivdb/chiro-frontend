@@ -164,10 +164,8 @@ class ClinicalTrialInner extends React.Component {
           <InlineSearchBox
            compoundValue={qCompoundName}
            compoundTargetValue={qCompoundTargetName}
-           compoundListFilter={({title, category, displayTargets}) => (
-            category === 'compounds' &&
-            clinicalTrialCompoundList.includes(title) &&
-            displayTargets.indexOf(qCompoundTargetName) > -1
+           compoundListFilter={({title}) => (
+            clinicalTrialCompoundList.includes(title)
           )}
            onChange={this.handleExpSearchBoxChange}>
             {({
