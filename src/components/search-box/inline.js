@@ -116,7 +116,10 @@ class SearchBoxInner extends React.Component {
     }
     // Customized compound filter
     if (compoundListFilter) {
-      filter = compoundListFilter;
+      const origFilter = filter;
+      filter = (args) => (
+        origFilter(args) && compoundListFilter(args)
+      );
     }
     return data2Options(
       data, filter, allowEmpty,
