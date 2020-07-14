@@ -108,14 +108,15 @@ class SearchBoxInner extends React.Component {
     let filter = ({status, category}) => (
       status === 'visible' && category === 'compounds'
     );
-    if (compoundListFilter) {
-      filter = compoundListFilter;
-    }
     if (compoundTargetValue && compoundTargetValue !== ANY) {
       filter = ({displayTargets, category}) => (
         category === 'compounds' &&
         displayTargets.indexOf(compoundTargetValue) > -1
       );
+    }
+    // Customized compound filter
+    if (compoundListFilter) {
+      filter = compoundListFilter;
     }
     return data2Options(
       data, filter, allowEmpty,
