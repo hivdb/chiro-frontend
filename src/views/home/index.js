@@ -125,7 +125,7 @@ export default class ChiroSearch extends React.Component {
            studyTypeValue={null}
            compoundTargetValue={null}
            placeholder={'Select item'}
-           compoundPlaceholder={'Enter text of select item'}
+           compoundPlaceholder={'Enter text or select item'}
            onChange={this.handleExpSearchBoxChange}>
             {({
               compoundTargetDropdown,

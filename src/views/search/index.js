@@ -157,7 +157,7 @@ class SearchInner extends React.Component {
          compoundTargetValue={formOnly ? null : qCompoundTargetName}
          studyTypeValue={formOnly ? null : qStudyType}
          placeholder={'Select item'}
-         compoundPlaceholder={'Enter text of select item'}
+         compoundPlaceholder={'Enter text or select item'}
          onChange={this.handleQueryChange}
          allowEmpty>
           {({
