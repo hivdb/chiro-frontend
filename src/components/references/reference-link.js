@@ -30,7 +30,12 @@ export default class RefLink extends React.Component {
     name = name || identifier;
     if (!name) {
       const {authors, year} = ref;
-      name = `${authors.split(' ', 2)[0]}${year}`;
+      if (authors) {
+        name = `${authors.split(' ', 2)[0]}${year}`;
+      }
+      else {
+        name = 'UnknownRef';
+      }
     }
 
     return <ReferenceContext.Consumer>
