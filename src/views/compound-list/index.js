@@ -80,7 +80,7 @@ class CompoundListInner extends React.Component {
                   width: 4,
                   className: style['search-box'],
                   cells: [
-                    {label: 'Target', value: compoundTargetDropdown}
+                    {label: 'Filter by Target', value: compoundTargetDropdown}
                   ]
                 },
                 ...(!loading && compoundTarget ? [{
@@ -199,7 +199,7 @@ class CompoundListInner extends React.Component {
         </Grid.Row>
       }
     </Grid>;
-    
+
   }
 
 
