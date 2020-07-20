@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import sleep from 'sleep-promise';
+// import sleep from 'sleep-promise';
 import {Header} from 'semantic-ui-react';
 
 import {loadPage} from '../../utils/cms';
@@ -16,7 +16,7 @@ import {
 import style from './style.module.scss';
 
 
-let _scrollTops = {};
+/* let _scrollTops = {};
 
 async function updateScroll(props) {
   const {pageName} = props;
@@ -42,7 +42,7 @@ async function updateScroll(props) {
       break;
     }
   }
-}
+} */
 
 
 export default class CMSPage extends React.Component {
@@ -56,14 +56,14 @@ export default class CMSPage extends React.Component {
     const {pageName} = props;
     if (pageName !== state.pageName) {
       state.promise = loadPage(`page-${pageName}`);
-      _scrollTops = {};
+      // _scrollTops = {};
     }
-    else {
+    /* else {
       setTimeout(() => {
         _scrollTops[pageName] = window.pageYOffset;
       }, 0);
-    }
-    updateScroll(props);
+    } */
+    // updateScroll(props);
     return state;
   }
 

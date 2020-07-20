@@ -1,24 +1,64 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Icon} from 'semantic-ui-react';
+import {withRouter, matchShape, routerShape} from 'found';
+
+import {getAnchor, HeadingTag} from '../heading-tags';
 
 import style from './style.module.scss';
 
 
-export default class Section extends React.Component {
+class Section extends React.Component {
 
   static propTypes = {
     level: PropTypes.number.isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
+    match: matchShape.isRequired,
+    router: routerShape.isRequired
+  }
+
+  static getDefaultState(props) {
+    let {match: {location}, children} = props;
+    let curHash = null;
+    let anchor = null;
+    if (location.hash) {
+      curHash = location.hash.replace(/^#/, '');
+    }
+    if (!(children instanceof Array)) {
+      children = [children];
+    }
+    for (const child of children) {
+      if (child && child.type === HeadingTag) {
+        anchor = getAnchor(child);
+      }
+    }
+    return {
+      expanded: anchor === curHash,
+      isDefaultState: true,
+      curHash
+    };
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const newState = Section.getDefaultState(props);
+    if (newState.curHash !== state.curHash) {
+      return newState;
+    }
+    return state;
   }
 
   constructor() {
     super(...arguments);
-    this.state = {
-      expanded: false,
-      maxHeight: null
-    };
+    this.state = this.constructor.getDefaultState(this.props);
     this.sectionRef = React.createRef();
+  }
+
+  get maxHeight() {
+    return (
+      this.sectionRef.current ?
+        this.sectionRef.current.scrollHeight + 20 :
+        null
+    );
   }
 
   toggleDisplay = (e) => {
@@ -26,15 +66,14 @@ export default class Section extends React.Component {
     const {expanded} = this.state;
     this.setState({
       expanded: !expanded,
-      maxHeight: expanded ? null : (
-        this.sectionRef.current.scrollHeight + 20
-      )
+      isDefaultState: false
     });
   }
 
   render() {
     const {level, children, ...props} = this.props;
-    const {maxHeight, expanded} = this.state;
+    const {expanded, isDefaultState} = this.state;
+    const {maxHeight} = this;
     if (expanded) {
       props['data-expanded'] = '';
     }
@@ -44,8 +83,15 @@ export default class Section extends React.Component {
       onTouchEnd: e => e.preventDefault(),
       onClick: this.toggleDisplay
     };
-    if (maxHeight) {
+    if (expanded) {
       props.style = {maxHeight};
+    }
+    if (isDefaultState) {
+      props.style = props.style || {};
+      props.style.transition = 'none';
+    }
+    if (maxHeight === null) {
+      setTimeout(() => this.forceUpdate(), 0);
     }
 
     return <section {...props} ref={this.sectionRef}>
@@ -62,3 +108,6 @@ export default class Section extends React.Component {
   }
 
 }
+
+
+export default withRouter(Section);

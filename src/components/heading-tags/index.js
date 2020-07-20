@@ -37,6 +37,9 @@ export function getChildrenText(elem) {
 
 
 export function getAnchor(elem) {
+  if (elem.type === HeadingTag) {
+    elem = elem.props.children;
+  }
   return getChildrenText(elem).toLowerCase().replace(/[^\w-]+/g, '.');
 }
 
