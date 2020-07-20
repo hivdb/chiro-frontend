@@ -84,6 +84,13 @@ class SearchBoxInner extends React.Component {
     dropdownProps: {}
   }
 
+  constructor() {
+    super(...arguments);
+    this.state = {
+      searching: null
+    };
+  }
+
   get articleOptions() {
     const {data, allowEmpty, placeholder, articlePlaceholder} = this.props;
     return data2Options(
@@ -103,11 +110,18 @@ class SearchBoxInner extends React.Component {
   get compoundOptions() {
     const {
       data, compoundTargetValue, allowEmpty,
-      compoundPlaceholder, placeholder, compoundListFilter} = this.props;
+      compoundPlaceholder, placeholder, compoundListFilter
+    } = this.props;
 
-    let filter = ({status, category}) => (
-      status === 'visible' && category === 'compounds'
-    );
+    let filter = ({status, category}) => {
+      const {searching} = this.state;
+      if (searching) {
+        return category === 'compounds';
+      }
+      else {
+        return status === 'visible' && category === 'compounds';
+      }
+    };
     if (compoundTargetValue && compoundTargetValue !== ANY) {
       filter = ({displayTargets, category}) => (
         category === 'compounds' &&
@@ -200,6 +214,7 @@ class SearchBoxInner extends React.Component {
   }
 
   handleChange = category => (event, {value}) => {
+    this.setState({searching: null});
     if (value === EMPTY) {
       return;
     }
@@ -216,6 +231,15 @@ class SearchBoxInner extends React.Component {
     }
     actions.push([value, category]);
     this.props.onChange(actions);
+  }
+
+  handleSearchChange = category => (event, {searchQuery}) => {
+    if (searchQuery === '') {
+      this.setState({searching: null});
+    }
+    else {
+      this.setState({searching: category});
+    }
   }
 
   render() {
@@ -257,6 +281,7 @@ class SearchBoxInner extends React.Component {
          placeholder={compoundPlaceholder || placeholder || EMPTY_TEXT}
          options={this.compoundOptions}
          onChange={this.handleChange('compounds')}
+         onSearchChange={this.handleSearchChange('compounds')}
          value={compoundValue} />
       ),
       virusDropdown: (
