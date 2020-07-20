@@ -9,3 +9,7 @@
     position: relative;
   }
 }
+
+:global(.ui.grid).compound-target-list {
+  margin-bottom: 3rem;
+}

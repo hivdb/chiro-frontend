@@ -18,6 +18,10 @@
   }
 }
 
+:global(.ui.grid).clinical-trials {
+  margin-bottom: 3rem;
+}
+
 .trial-number {
   &:not(:last-child)::after {
     content: ';';

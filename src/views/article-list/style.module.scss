@@ -1,4 +1,5 @@
-.article-list {
+:global(.ui.grid).article-list {
+  margin-bottom: 3rem;
   ol > li:not(:last-child) {
     margin-bottom: 1rem;
   }
