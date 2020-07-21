@@ -192,7 +192,7 @@ class SearchBoxInner extends React.Component {
       },
       {
         key: 'invitro-pseudovirus',
-        text: 'Pseudovirus',
+        text: 'Pseudovirus Entry',
         value: 'invitro-pseudovirus'
       },
       {

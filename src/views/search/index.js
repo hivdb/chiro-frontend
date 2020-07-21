@@ -263,7 +263,7 @@ class SearchInner extends React.Component {
                           !loading && pseudovirusExperiments.totalCount > 0
                         ) ? <li>
                           <a href="#pseudovirus" className={style['label']}>
-                            Pseudovirus
+                            Pseudovirus Entry
                           </a>
                           {pseudovirusExperiments.totalCount}
                           {pseudovirusMAbCount > 0 ?
@@ -348,7 +348,7 @@ class SearchInner extends React.Component {
             <Grid.Row centered>
               <Grid.Column width={16}>
                 <Header as="h2" dividing id="pseudovirus">
-                  Pseudovirus
+                  Pseudovirus Entry
                 </Header>
                 <PseudovirusExpTable
                  cacheKey={cacheKey}
