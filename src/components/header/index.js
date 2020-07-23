@@ -100,6 +100,13 @@ export default class Header extends React.Component {
             <NavItem to="/clinical-trials/" {...navItemProps}>
               Clinical Trials
             </NavItem>
+            <NavItem>
+              <a
+               href="https://www.preprints.org/manuscript/202007.0551/v1"
+               target="_blank" rel="noopener noreferrer">
+                Citation
+              </a>
+            </NavItem>
             <NavItem highlighted>
               <a
                href="https://makeagift.stanford.edu/goto/covid19antiviral"
