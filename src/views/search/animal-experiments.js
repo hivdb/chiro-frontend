@@ -143,7 +143,9 @@ export default class AnimalExpTable extends React.Component {
        color={colors[idx % colors.length]}
        cacheKey={cacheKey}
        columnDefs={[...tableColumns, ...resultColDefs(articleData)]}
-       data={articleData} />
+       data={articleData}
+       disableCopy={true}
+       />
     ));
   }
 

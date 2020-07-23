@@ -34,8 +34,13 @@ export default class ChiroTable extends React.Component {
     })),
     data: PropTypes.arrayOf(
       PropTypes.object.isRequired
-    ).isRequired
+    ).isRequired,
+    disableCopy: PropTypes.bool.isRequired,
   }
+
+  static defaultProps = {
+    disableCopy: false,
+  };
 
   constructor() {
     super(...arguments);
@@ -109,7 +114,10 @@ export default class ChiroTable extends React.Component {
       return acc;
     }, {});
 
+    const {disableCopy} = this.props;
+
     return  <div ref={this.table} className={style['chiro-table-container']}>
+      {disableCopy? null:
       <Button
        size="mini"
        floated='right'
@@ -117,6 +125,7 @@ export default class ChiroTable extends React.Component {
        onClick={this.handleCopy.bind(this)}>
         Copy to clipboard
       </Button>
+      }
       <Table
        color={color} sortable celled compact selectable
        className={style['chiro-table']}>
