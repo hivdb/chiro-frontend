@@ -13,6 +13,7 @@ import {getFullLink} from '../../utils/cms';
 import setTitle from '../../utils/set-title';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
+import BackToTop from '../../components/back-to-top';
 
 import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
@@ -247,6 +248,7 @@ class ClinicalTrialInner extends React.Component {
                        data={clinicalTrialGroups[name]} />
                     ];
                 })}
+                <BackToTop />
               </Grid.Column>
             </Grid.Row> : null
           }
