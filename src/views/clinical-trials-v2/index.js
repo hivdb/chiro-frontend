@@ -9,11 +9,12 @@ import searchQuery from './query.gql';
 
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
-import {getFullLink} from '../../utils/cms';
+import {getFullLink, loadPage} from '../../utils/cms';
 import setTitle from '../../utils/set-title';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import BackToTop from '../../components/back-to-top';
+import PromiseComponent from '../../utils/promise-component';
 
 import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
@@ -112,7 +113,10 @@ class ClinicalTrialInner extends React.Component {
     ).map(({node: {name}}) => (name));
   }
 
-  render() {
+  thenRender = (
+    {
+      figureCaption,
+    }) => {
     setTitle('Clinical Trials');
     this.props.loading || redirectIfNeeded(this.props);
     let {
@@ -216,11 +220,16 @@ class ClinicalTrialInner extends React.Component {
           <img
            src={getFullLink('images/clinical-trials/TargetTotals.png')}
            alt="target totals" />
+          <p className={style['figure-name']}>Figure A</p>
         </Grid.Row>
         <Grid.Row>
           <img
            src={getFullLink('images/clinical-trials/DrugTotals.png')}
            alt="drug totals" />
+          <p className={style['figure-name']}>Figure B</p>
+        </Grid.Row>
+        <Grid.Row>
+          <p className={style['figure-caption']}>{figureCaption}</p>
         </Grid.Row>
       </>}
 
@@ -255,6 +264,17 @@ class ClinicalTrialInner extends React.Component {
         </>
       }
     </Grid>;
+  }
+
+  render() {
+    const promise = loadPage('page-clinical-trials');
+
+    return (
+      <PromiseComponent
+       promise={promise}
+       error={this.errorRender}
+       then={this.thenRender} />
+    );
   }
 
 }
