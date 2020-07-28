@@ -47,6 +47,20 @@ class ClinicalTrialInner extends React.Component {
     loading: false
   }
 
+  constructor() {
+    super(...arguments);
+    this.state = {
+      figureCaption: '',
+    };
+  }
+
+  async componentDidMount() {
+    const promise = await loadPage('page-clinical-trials');
+    this.setState({
+      figureCaption: promise.figureCaption || ''
+    });
+  }
+
   handleQueryChange = (actions) => (
     handleQueryChange(actions, this.props)
   )
@@ -113,10 +127,7 @@ class ClinicalTrialInner extends React.Component {
     ).map(({node: {name}}) => (name));
   }
 
-  thenRender = (
-    {
-      figureCaption,
-    }) => {
+  render() {
     setTitle('Clinical Trials');
     this.props.loading || redirectIfNeeded(this.props);
     let {
@@ -128,6 +139,8 @@ class ClinicalTrialInner extends React.Component {
       compoundTargets,
       updateTime
     } = this.props;
+
+    const {figureCaption} = this.state;
 
     const {clinicalTrialGroups, clinicalTrialCompoundList} = this;
     const cacheKey = (
@@ -168,6 +181,7 @@ class ClinicalTrialInner extends React.Component {
           {loading ? <Loader active inline="centered" /> :
           <InlineSearchBox
            compoundValue={qCompoundName}
+           placeholder={"Select item"}
            compoundTargetValue={qCompoundTargetName}
            compoundListFilter={({title}) => (
             clinicalTrialCompoundList.includes(title)
@@ -264,17 +278,6 @@ class ClinicalTrialInner extends React.Component {
         </>
       }
     </Grid>;
-  }
-
-  render() {
-    const promise = loadPage('page-clinical-trials');
-
-    return (
-      <PromiseComponent
-       promise={promise}
-       error={this.errorRender}
-       then={this.thenRender} />
-    );
   }
 
 }
