@@ -161,7 +161,12 @@ function renderArticle(articles) {
   return <>
     {articles.map(({nickname}, idx) => {
       const url = `/search/?article=${nickname}`;
-      return <a key={idx} href={url}>{nickname}</a>;
+      return (
+        <span key={idx}>
+          <Link to={url}>{nickname}</Link>
+          {idx < (articles.length - 1) ? '; ': null}
+        </span>
+      );
     })}
   </>
 }

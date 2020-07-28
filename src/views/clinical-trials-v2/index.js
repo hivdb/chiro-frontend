@@ -14,7 +14,6 @@ import setTitle from '../../utils/set-title';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import BackToTop from '../../components/back-to-top';
-import PromiseComponent from '../../utils/promise-component';
 
 import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
