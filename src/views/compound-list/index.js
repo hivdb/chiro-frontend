@@ -10,6 +10,8 @@ import handleQueryChange from '../../utils/handle-query-change';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import setTitle from '../../utils/set-title';
+import PromiseComponent from '../../utils/promise-component';
+import {loadPage} from '../../utils/cms';
 
 import query from './query.gql.js';
 import style from './style.module.scss';
@@ -55,7 +57,9 @@ class CompoundListInner extends React.Component {
     handleQueryChange(actions, this.props)
   )
 
-  render() {
+  thenRender = ({
+    content,
+  } = {}) => {
     setTitle('Compounds');
     this.props.loading || redirectIfNeeded(this.props);
     const {
@@ -68,6 +72,11 @@ class CompoundListInner extends React.Component {
         <Grid.Column width={16}>
           <Header as="h1" dividing>Compounds</Header>
         </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <div className={style['compound-list-desc']}>
+          {content}
+        </div>
       </Grid.Row>
       <Grid.Row>
         <InlineSearchBox
@@ -202,6 +211,17 @@ class CompoundListInner extends React.Component {
 
   }
 
+  render() {
+    const promise = loadPage('page-compound-list');
+
+    return (
+      <PromiseComponent
+       promise={promise}
+       then={this.thenRender}>
+        {this.thenRender()}
+      </PromiseComponent>
+    );
+  }
 
 }
 
