@@ -119,11 +119,19 @@
       margin-bottom: 0;
     }
   }
-  p.center {
-    text-align: center;
-  }
-  p.pull-right {
-    float: right;
+  p {
+    &.center {
+      text-align: center;
+    }
+    &.pull-right {
+      float: right;
+    }
+    img {
+      display: block;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
   &[data-page-name="updates"] {
     p {

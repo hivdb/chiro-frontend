@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'found';
 import PropTypes from 'prop-types';
+import * as queryString from 'query-string';
 import OrigMarkdown from 'react-markdown/with-html';
 
 import {AutoTOC} from './toc';
@@ -170,8 +171,14 @@ function renderRoot({children}) {
 
 function renderImage(imagePrefix) {
   return ({src, alt, ...props}) => {
+    let style;
+    [src, style] = src.split(/#!(?=[^#]+$)/);
+    if (style) {
+      style = queryString.parse(style);
+      style = {...style};  // the object from queryString is null-prototype
+    }
     src = src && /https?:\/\//i.test(src) ? src : `${imagePrefix}${src}`;
-    return <img {...props} alt={alt} src={src} />;
+    return <img {...props} alt={alt} src={src} style={style} />;
   };
 }
 
