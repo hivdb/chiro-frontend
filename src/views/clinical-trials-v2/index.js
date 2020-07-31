@@ -54,7 +54,7 @@ class ClinicalTrialInner extends React.Component {
   }
 
   async componentDidMount() {
-    const promise = await loadPage('page-clinical-trials');
+    const promise = await loadPage('clinical-trials');
     this.setState({
       figureCaption: promise.figureCaption || ''
     });

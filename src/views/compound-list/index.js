@@ -212,7 +212,7 @@ class CompoundListInner extends React.Component {
   }
 
   render() {
-    const promise = loadPage('page-compound-list');
+    const promise = loadPage('compound-list');
 
     return (
       <PromiseComponent
