@@ -54,11 +54,13 @@ class Section extends React.Component {
   }
 
   get maxHeight() {
-    return (
-      this.sectionRef.current ?
-        this.sectionRef.current.scrollHeight + 20 :
-        null
-    );
+    if (this.state.isDefaultState) {
+      return 'max-content';
+    }
+    else if (this.sectionRef.current) {
+      return this.sectionRef.current.scrollHeight + 20;
+    }
+    return null;
   }
 
   toggleDisplay = (e) => {
@@ -71,7 +73,7 @@ class Section extends React.Component {
   }
 
   render() {
-    const {level, children, ...props} = this.props;
+    const {level, children, match, router, ...props} = this.props;
     const {expanded, isDefaultState} = this.state;
     const {maxHeight} = this;
     if (expanded) {
