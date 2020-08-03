@@ -81,6 +81,9 @@ class SearchInner extends React.Component {
       formOnly,
       loading
     } = this.props;
+    if (qCompoundName) {
+      setTitle(`Search | ${qCompoundName}`);
+    }
     const cacheKey = (
       `${qCompoundTargetName}@@${qCompoundName}` +
       `@@${qVirusName}@@${qArticleNickname}@@${qStudyType}`
