@@ -197,7 +197,7 @@ class SearchInner extends React.Component {
                       </> : null}
                       {compound ? <>
                         <Header as="h2" dividing>
-                          Target: {compound.targetObj.name}
+                          Target: {compound.targetObj? compound.targetObj.name : 'NA'}
                         </Header>
                         <p>{compound.targetObj ?
                           compound.targetObj.description || 'Pending.' :
