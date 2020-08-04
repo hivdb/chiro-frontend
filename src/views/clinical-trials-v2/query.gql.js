@@ -11,7 +11,10 @@ export default gql`
       updateTime
     }
 
-    compounds(completeList: true) {
+    compounds(
+      completeList: true,
+      withNonantiviral: true
+      ) {
       edges {
         node {
           name
