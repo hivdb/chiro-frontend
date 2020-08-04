@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://covdb.stanford.edu/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/page/covid-review/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/compound-list/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/clinical-trials/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/compound-target-list/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/virus-list/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/cells-list/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/animal-model-list/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/cell-culture-measurement-list/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/article-list/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/page/links/</loc>
+  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+</url>
+</urlset>
