@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Dropdown, Menu} from 'semantic-ui-react';
+import {Dropdown, Menu} from 'semantic-ui-react';
 
-import DOMAIN from '../../config';
+import {backendPrefix} from '../../config';
 
 import './search_menu_horizontal.sass';
 
@@ -23,7 +23,7 @@ class SearchMenu extends React.Component {
   }
 
   componentDidMount() {
-    let url = DOMAIN + '/categories';
+    let url = `${backendPrefix}/categories`;
 
     fetch(url)
       .then(res => res.json())
