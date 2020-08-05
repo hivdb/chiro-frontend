@@ -100,15 +100,15 @@
   <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
-  <loc>https://covdb.stanford.edu/search/?compound=Remdesivir&target=Polymerase</loc>
+  <loc>https://covdb.stanford.edu/search/?compound=Remdesivir&amp;target=Polymerase</loc>
   <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
-  <loc>https://covdb.stanford.edu/search/?compound=REGN10933&target=Monoclonal%20antibody</loc>
+  <loc>https://covdb.stanford.edu/search/?compound=REGN10933&amp;target=Monoclonal%20antibody</loc>
   <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
-  <loc>https://covdb.stanford.edu/search/?compound=Hydroxychloroquine&target=Host%20endosomes</loc>
+  <loc>https://covdb.stanford.edu/search/?compound=Hydroxychloroquine&amp;target=Host%20endosomes</loc>
   <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 </urlset>
