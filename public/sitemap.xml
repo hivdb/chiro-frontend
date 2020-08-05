@@ -9,50 +9,106 @@
 
 <url>
   <loc>https://covdb.stanford.edu/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/page/covid-review/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/search</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/compound-list/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/clinical-trials/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/compound-target-list/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/virus-list/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/cells-list/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/animal-model-list/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/cell-culture-measurement-list/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/article-list/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 <url>
   <loc>https://covdb.stanford.edu/page/links/</loc>
-  <lastmod>2020-08-04T03:44:56+00:00</lastmod>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Polymerase</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Monoclonal%20antibody</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Fusion%20inhibitor</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Viral%20protease</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Receptor%20binding</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Convalescent%20plasma</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Interferons</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Immunostimulatory</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Host%20proteases</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?target=Host%20endosomes</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?virus=SARS-CoV-2</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?compound=Remdesivir&target=Polymerase</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?compound=REGN10933&target=Monoclonal%20antibody</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
+</url>
+<url>
+  <loc>https://covdb.stanford.edu/search/?compound=Hydroxychloroquine&target=Host%20endosomes</loc>
+  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
 </url>
 </urlset>
