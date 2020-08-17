@@ -30,10 +30,41 @@ const URL_PK_NOTES = (
   'tDg7l0H3625fjrPSThbCRN2bt1BeJguD24SBfe9Rp6j5lR6dV1p4NR3YWpW3yh1/pub');
 
 
-export default class ChiroSearch extends React.Component {
+function UpdatesSection(props) {
+  const {updates = ''} = props;
+  const [content, refs] = updates.split(/<!-- start of references details -->/);
+  return <section className={style['home-section']}>
+    <H2 disableAnchor>Updates</H2>
+    {updates ?
+      <div className={style['scrollable']}>
+        {content.split(/(?=^###[^#])/m).map((part, idx) => (
+          part.trim() ?
+            <Markdown
+             key={idx}
+             escapeHtml={false}
+             referenceHeadingTagLevel={4}
+             disableHeadingTagAnchor>
+              {`${part}${refs}`}
+            </Markdown> : null
+        ))}
+      </div> :
+      <Loader active />}
+  </section>;
+}
+
+
+
+export default class HomeStaging extends React.Component {
 
   static propTypes = {
     router: routerShape.isRequired
+  }
+
+  constructor() {
+    super(...arguments);
+    this.state = {
+      promise: loadPage('home')
+    };
   }
 
   handleExpSearchBoxChange = (actions) => {
@@ -157,19 +188,7 @@ export default class ChiroSearch extends React.Component {
           </InlineSearchBox>
         </div>
       </section>
-      <section className={style['home-section']}>
-        <H2 disableAnchor>Updates</H2>
-        {updates ?
-          <div className={style['scrollable']}>
-            <Markdown
-             escapeHtml={false}
-             referenceHeadingTagLevel={3}
-             disableHeadingTagAnchor>
-              {updates}
-            </Markdown>
-          </div> :
-          <Loader active />}
-      </section>
+      <UpdatesSection updates={updates} />
       <section className={style['home-section']}>
         <H2 disableAnchor>Mission Statement</H2>
         {missionStatement ?
@@ -264,7 +283,7 @@ export default class ChiroSearch extends React.Component {
   }
 
   render() {
-    const promise = loadPage('home');
+    const {promise} = this.state;
 
     return (
       <PromiseComponent

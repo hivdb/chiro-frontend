@@ -33,7 +33,7 @@ export class ReferenceContextValue {
   }
 
   hasReference = () => {
-    return this.reference_names.length > 0;
+    return this.getReferences().some(({linkIds}) => linkIds.length > 0);
   }
 
   getReference = (name) => {
