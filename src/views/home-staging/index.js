@@ -162,6 +162,7 @@ export default class ChiroSearch extends React.Component {
         {updates ?
           <div className={style['scrollable']}>
             <Markdown
+             escapeHtml={false}
              referenceHeadingTagLevel={3}
              disableHeadingTagAnchor>
               {updates}
