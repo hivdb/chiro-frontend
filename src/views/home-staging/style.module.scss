@@ -1,0 +1,201 @@
+@import "../../styles/colors";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+@import "../../styles/dropdown";
+
+:global(.ui.huge.button).learn-more {
+  padding: .85rem 3.5rem;
+  text-transform: uppercase;
+  background-color: white;
+  border-radius: 0;
+  font-family: $font-family;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: rgba(0,0,0,.85);
+  font-size: 1.15rem;
+  line-height: 1.7em;
+  transition: background-color .2s ease-in-out;
+  &:global(:not(.icon)>.icon):not(.button):not(.dropdown).learn-more-icon {
+    transition: all .2s ease-in-out;
+    position: absolute;
+    margin-left: -1rem;
+    opacity: 0;
+  }
+  &:hover {
+    background-color: rgba(255, 255, 255, .8);
+    &:global(:not(.icon)>.icon):not(.button):not(.dropdown).learn-more-icon {
+      margin-left: .5rem;
+      opacity: 1;
+    }
+  }
+}
+
+.scroll-toc {
+  margin-right: 8rem;
+  @media only screen and (max-width: 1600px) {
+    margin-right: 0;
+  }
+  @media only screen and (min-width: 901px) {
+    > nav {
+      max-height: $banner-height - 4rem;
+      overflow-y: scroll;
+    }
+  }
+}
+
+.home-section {
+  &:not(:last-child) {
+    margin-bottom: 4rem;
+  }
+  h2 {
+    font-size: 2.15rem;
+  }
+  p {
+    font-size: 1.15rem;
+    > iframe {
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+  }
+  > .scrollable {
+    max-height: 25rem;
+    overflow-y: auto;
+  }
+}
+
+.home-search-container {
+  display: flex;
+  justify-content: space-between;
+
+  @include chiro-dropdown(18rem);
+  @media only screen and (max-width: 900px) {
+    flex-wrap: wrap;
+  }
+}
+
+.list-edu-pages {
+  img {
+    background-color: rgba($main-color, 0.9);
+    width: 12rem;
+    height: 12rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  &:global(.ui.horizontal.list) {
+    > :global(.item) {
+      min-width: 12rem;
+      margin-left: 0rem;
+      :global(.header) {
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        font-size: 1.6rem;
+        font-family: $font-family;
+        line-height: 1.5rem;
+      }
+    }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, max-content));
+    grid-gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    @media only screen and (max-width: 1400px) {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+.subscribe-section {
+  background-color: rgba(0, 0, 0, .05);
+  padding: 7rem 0;
+  @include full-width-container;
+  @media only screen and (max-width: 640px) {
+    padding: 2rem 0;
+  }
+  .subscribe-section-inner {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    > .description {
+      max-width: 48%;
+      h2 {
+        font-size: 2.25rem;
+      }
+      p {
+        font-size: 1.15rem;
+      }
+    }
+    > form {
+      min-width: 36rem;
+      input[type="email"], input[type="text"] {
+        border: none;
+        border-radius: 3px;
+        background-color: white;
+        padding: 1.15rem 1.5rem;
+        font-size: 1.15rem;
+        font-family: $font-family;
+        margin-bottom: 1.15rem;
+        width: 100%;
+        display: block;
+        &:focus {
+          outline: 0;
+        }
+      }
+      button[type="submit"] {
+        width: 100%;
+        background-color: $main-color;
+        padding: 1.5rem 1.5rem;
+        font-size: 1rem;
+        font-family: $font-family;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 1.15rem;
+        border: none;
+        border-radius: 0;
+        color: white;
+        text-transform: uppercase;
+        transition: background-color .2s ease-in-out;
+        cursor: pointer;
+        &:focus {
+          outline: 0;
+        }
+        &:hover {
+          background-color: $cerulean;
+        }
+        &:disabled, &:hover:disabled {
+          background-color: rgba(0, 0, 0, 0.3);
+          cursor: not-allowed;
+        }
+      }
+    }
+    @media only screen {
+      width: $main-content-width;
+    }
+    @media only screen and (max-width: 1200px) {
+      width: $mobile-main-content-width;
+      flex-wrap: wrap;
+    }
+    @media only screen and (max-width: 1024px) {
+      > .description, > form {
+        max-width: calc(48%);
+        min-width: calc(48%);
+      }
+    }
+    @media only screen and (max-width: 640px) {
+      > .description, > form {
+        max-width: calc(100% - 2rem);
+        min-width: calc(100% - 2rem);
+        margin-left: auto;
+        margin-right: auto;
+      }
+      > .description {
+        margin-bottom: 2rem;
+      }
+    }
+  }
+}

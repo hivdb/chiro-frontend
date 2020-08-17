@@ -3,6 +3,7 @@ import {Link} from 'found';
 import PropTypes from 'prop-types';
 import * as queryString from 'query-string';
 import OrigMarkdown from 'react-markdown/with-html';
+import * as youtubeUrl from 'youtube-url';
 
 import {AutoTOC} from './toc';
 import Collapsable from './collapsable';
@@ -67,20 +68,21 @@ class MarkdownLink extends React.Component {
 }
 
 
-class OptReferences extends React.Component {
+function OptReferences(props) {
+  const {level, disableAnchor, referenceTitle} = props;
+  return <ReferenceContext.Consumer>
+    {({hasReference}) => hasReference() ? (
+      <Collapsable.Section level={level} data-section-reference="">
+        <HeadingTag {...{disableAnchor, level}}>{referenceTitle}</HeadingTag>
+        <References />
+      </Collapsable.Section>
+    ) : null}
+  </ReferenceContext.Consumer>;
+}
 
-  render() {
-    const {referenceTitle} = this.props;
-    return <ReferenceContext.Consumer>
-      {({hasReference}) => hasReference() ? (
-        <Collapsable.Section level={2} data-section-reference="">
-          <HeadingTag level={2}>{referenceTitle}</HeadingTag>
-          <References />
-        </Collapsable.Section>
-      ) : null}
-    </ReferenceContext.Consumer>;
-  }
 
+function MdHeadingTag(disableAnchor) {
+  return props => <HeadingTag {...{disableAnchor}} {...props} />;
 }
 
 
@@ -177,6 +179,19 @@ function renderImage(imagePrefix) {
       style = queryString.parse(style);
       style = {...style};  // the object from queryString is null-prototype
     }
+    if (youtubeUrl.valid(src)) {
+      const youtubeId = youtubeUrl.extractId(src);
+      return (
+        <iframe
+         {...props}
+         style={style}
+         title={alt}
+         src={`https://www.youtube.com/embed/${youtubeId}`}
+         frameBorder="0"
+         allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+         allowFullScreen />
+      );
+    }
     src = src && /https?:\/\//i.test(src) ? src : `${imagePrefix}${src}`;
     return <img {...props} alt={alt} src={src} style={style} />;
   };
@@ -192,8 +207,10 @@ export default class Markdown extends React.Component {
     inline: PropTypes.bool.isRequired,
     renderers: PropTypes.object.isRequired,
     collapsableLevels: PropTypes.array,
+    disableHeadingTagAnchor: PropTypes.bool.isRequired,
     noHeadingStyle: PropTypes.bool.isRequired,
-    referenceTitle: PropTypes.string.isRequired
+    referenceTitle: PropTypes.string.isRequired,
+    referenceHeadingTagLevel: PropTypes.number.isRequired
   }
 
   static defaultProps = {
@@ -201,13 +218,17 @@ export default class Markdown extends React.Component {
     inline: false,
     renderers: {},
     noHeadingStyle: false,
-    referenceTitle: 'References'
+    referenceTitle: 'References',
+    disableHeadingTagAnchor: false,
+    referenceHeadingTagLevel: 2
   }
 
   render() {
     const {
       children, noHeadingStyle, toc,
       referenceTitle, inline, tocClassName,
+      disableHeadingTagAnchor,
+      referenceHeadingTagLevel,
       collapsableLevels, imagePrefix,
       renderers: addRenderers, ...props
     } = this.props;
@@ -220,7 +241,9 @@ export default class Markdown extends React.Component {
       // table: SimpleTableContainer,
       parsedHtml,
       ...(inline ? {} : {root: renderRoot}),
-      ...(noHeadingStyle ? null : {heading: HeadingTag}),
+      ...(noHeadingStyle ? null : {
+        heading: MdHeadingTag(disableHeadingTagAnchor)
+      }),
       ...(inline ? {paragraph: ({children}) => <>{children}</>} : null),
       ...addRenderers
     };
@@ -234,7 +257,10 @@ export default class Markdown extends React.Component {
          transformLinkUri={false}
          {...props}
         />
-        <OptReferences {...{referenceTitle}} />
+        <OptReferences
+         disableAnchor={disableHeadingTagAnchor}
+         level={referenceHeadingTagLevel}
+         {...{referenceTitle}} />
       </ReferenceContext.Provider>
     );
     if (collapsableLevels && collapsableLevels.length > 0) {

@@ -10,6 +10,7 @@ import SARS2Routes from 'sierra-frontend/dist/views/sars2';
 import MutAnnotEditorRoutes from 'sierra-frontend/dist/views/mut-annot-editor';
 
 import Home from './views/home';
+import HomeStaging from './views/home-staging';
 import Search from './views/search';
 import CompoundList from './views/compound-list';
 import CompoundTargetList from './views/compound-target-list';
@@ -35,6 +36,7 @@ const BrowserRouter = createBrowserRouter({
   routeConfig: makeRouteConfig(
     <Route path="/" Component={Layout}>
       <Route Component={Home} />
+      <Route path="home-staging/" Component={HomeStaging} />
       <Route path="sierra/">
         {SARS2Routes({
           graphqlURI: window.__NODE_ENV === 'production' ?

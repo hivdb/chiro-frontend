@@ -57,7 +57,8 @@
     "smiles-drawer": "^1.2.0",
     "typeface-poppins": "^0.0.72",
     "typeface-source-sans-pro": "^1.1.5",
-    "typescript": ">=2.8.0"
+    "typescript": ">=2.8.0",
+    "youtube-url": "^0.5.0"
   },
   "scripts": {
     "start": "PORT=3012 react-scripts start",
