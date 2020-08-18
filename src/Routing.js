@@ -7,8 +7,10 @@ import {
 } from 'found';
 
 import SARS2Routes from 'sierra-frontend/dist/views/sars2';
+import MutAnnotEditorRoutes from 'sierra-frontend/dist/views/mut-annot-editor';
 
 import Home from './views/home';
+import HomeStaging from './views/home-staging';
 import Search from './views/search';
 import CompoundList from './views/compound-list';
 import CompoundTargetList from './views/compound-target-list';
@@ -24,6 +26,7 @@ import News from './views/news';
 import Plots from './views/plots';
 import Page from './views/page';
 
+import {mutAnnotEditorConfig} from './config';
 import style from './index.module.scss';
 
 import Layout from './components/layout';
@@ -33,6 +36,7 @@ const BrowserRouter = createBrowserRouter({
   routeConfig: makeRouteConfig(
     <Route path="/" Component={Layout}>
       <Route Component={Home} />
+      <Route path="home-staging/" Component={HomeStaging} />
       <Route path="sierra/">
         {SARS2Routes({
           graphqlURI: window.__NODE_ENV === 'production' ?
@@ -41,6 +45,11 @@ const BrowserRouter = createBrowserRouter({
           className: style['sierra-sars2-webui']
         })}
       </Route>
+      {MutAnnotEditorRoutes({
+        ...mutAnnotEditorConfig,
+        pathPrefix: 'mut-annot-editor/',
+        className: style['mut-annot-editor-ui']
+      })}
       <Route Component={Search} path="/search/" />
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />

@@ -14,6 +14,9 @@ class RefItem extends React.Component {
     const {number, itemId, linkIds} = this.props;
     const children = buildRef(this.props);
     const multiLinks = linkIds.length > 1;
+    if (linkIds.length === 0) {
+      return null;
+    }
     return <li id={itemId}>
       {multiLinks ? <><span>^</span> </> : null}
       {linkIds.map((linkId, idx) => [

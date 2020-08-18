@@ -8965,6 +8965,11 @@ lodash.without@~4.4.0:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
+lodash@^4.17.19:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
+
 loglevel@^1.6.6:
   version "1.6.7"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.7.tgz#b3e034233188c68b889f5b862415306f565e2c56"
@@ -11682,6 +11687,11 @@ randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   dependencies:
     safe-buffer "^5.1.0"
 
+randomcolor@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/randomcolor/-/randomcolor-0.6.2.tgz#7a57362ae1a1278439aeed2c15e5deb8ea33f56d"
+  integrity sha512-Mn6TbyYpFgwFuQ8KJKqf3bqqY9O1y37/0jgSK/61PUxV4QfIMv0+K2ioq8DfOjkBslcjwSzRfIDEXfzA9aCx7A==
+
 randomfill@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/randomfill/-/randomfill-1.0.4.tgz#c92196fc86ab42be983f1bf31778224931d61458"
@@ -12657,6 +12667,11 @@ rework@1.0.1:
     convert-source-map "^0.3.3"
     css "^2.0.0"
 
+rfdc@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/rfdc/-/rfdc-1.1.4.tgz#ba72cc1367a0ccd9cf81a870b3b58bd3ad07f8c2"
+  integrity sha512-5C9HXdzK8EAqN7JDif30jqsBzavB7wLpaubisuQIGHWf2gUXSpzy6ArX/+Da8RjFpagWsCn+pIgxTMAmKw9Zug==
+
 rgb-regex@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/rgb-regex/-/rgb-regex-1.0.1.tgz#c0e0d6882df0e23be254a475e8edd41915feaeb1"
@@ -13076,9 +13091,9 @@ side-channel@^1.0.2:
     es-abstract "^1.17.0-next.1"
     object-inspect "^1.7.0"
 
-sierra-frontend@hivdb/sierra-frontend#ce81b7d:
+sierra-frontend@hivdb/sierra-frontend#6b77394:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#ce81b7d8980f216cba35a2b8b1d4871dbad223dc"
+  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#6b773946e24b665f128040b70e1f93cbf5879799"
   dependencies:
     "@vx/axis" "^0.0.197"
     "@vx/scale" "^0.0.197"
@@ -13096,9 +13111,11 @@ sierra-frontend@hivdb/sierra-frontend#ce81b7d:
     griddle-react "^1.13.1"
     jszip "^3.4.0"
     localforage "^1.7.4"
+    lodash "^4.17.19"
     node-sass "^4.14.1"
     normalize-scss "^7.0.1"
     object-merge "^2.5.1"
+    randomcolor "^0.6.2"
     react-dropdown "^1.7.0"
     react-dropzone "^11.0.1"
     react-icons "^3.10.0"
@@ -13106,6 +13123,7 @@ sierra-frontend@hivdb/sierra-frontend#ce81b7d:
     react-progressbar "^15.4.1"
     react-tabs "^3.1.1"
     resolve-pathname "^3.0.0"
+    rfdc "^1.1.4"
     sleep-promise "^8.0.1"
     typeface-source-sans-pro "^1.1.5"
     typescript "^3.9.5"
@@ -15187,6 +15205,11 @@ yargs@^8.0.2:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
+
+youtube-url@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/youtube-url/-/youtube-url-0.5.0.tgz#935107efafefd20ea5efc014d8f9c8f385e0ed1a"
+  integrity sha1-k1EH76/v0g6l78AU2PnI84Xg7Ro=
 
 zen-observable-ts@^0.8.20:
   version "0.8.20"
