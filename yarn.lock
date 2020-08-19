@@ -13114,9 +13114,9 @@ side-channel@^1.0.2:
     es-abstract "^1.17.0-next.1"
     object-inspect "^1.7.0"
 
-sierra-frontend@hivdb/sierra-frontend#a70d1e8:
+sierra-frontend@hivdb/sierra-frontend#a209c9d:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#a70d1e8a602871bfd3a676ffd72e3e89f7bb69a9"
+  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#a209c9db2824c36ea99ecb955c727de2c1c63a03"
   dependencies:
     "@vx/axis" "^0.0.197"
     "@vx/scale" "^0.0.197"
