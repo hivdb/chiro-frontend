@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
@@ -21,6 +22,7 @@ import style from './style.module.scss';
 import {
   compoundShape
 } from './prop-types';
+import { from } from 'apollo-link';
 
 const HREF_CT = 'https://clinicaltrials.gov/ct2/results?cond=COVID-19';
 const HREF_ICTRP = 'https://www.who.int/ictrp/en/';
@@ -84,12 +86,27 @@ class ClinicalTrialInner extends React.Component {
   }
 
   get clinicalTrialGroups() {
-    const {loading, clinicalTrials, qCompoundTargetName} = this.props;
+    let {loading, clinicalTrials, qCompoundTargetName,
+      match: {location: {query: {fromDate}}}} = this.props;
     if (loading) {
       return {};
     }
+
+    clinicalTrials = clinicalTrials.edges;
+
+    if (fromDate) {
+      fromDate = moment(fromDate);
+      if (fromDate.isValid()) {
+        clinicalTrials = clinicalTrials.filter((trial) => {
+          let {node: {dateEntered}} = trial;
+          dateEntered = moment(dateEntered);
+          return dateEntered.isSameOrAfter(fromDate)
+        });
+      }
+    }
+
     let allTrials = [];
-    for (const {node: {compoundObjs, ...trial}} of clinicalTrials.edges) {
+    for (const {node: {compoundObjs, ...trial}} of clinicalTrials) {
       let used_target = [];
       for (const {target, primaryCompound, relatedCompounds} of compoundObjs) {
         if (used_target.includes(target)) {
@@ -288,7 +305,8 @@ export default function ClinicalTrial({match, ...props}) {
       query: {
         compound: compoundName,
         target: compoundTargetName,
-        trialcat: categoryName
+        trialcat: categoryName,
+        fromDate: fromDate,
       } = {}
     }
   } = match;

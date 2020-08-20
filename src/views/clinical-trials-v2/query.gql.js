@@ -65,6 +65,7 @@ export default gql`
           numParticipants
           startDate
           stopDate
+          dateEntered
           attachedTextObjs {
             type
             content

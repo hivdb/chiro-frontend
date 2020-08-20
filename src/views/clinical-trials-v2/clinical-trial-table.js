@@ -17,6 +17,14 @@ function monthYear(date) {
   return '-';
 }
 
+function monthDay(date) {
+  date = moment(date);
+  if (date.isValid()) {
+    return date.format("MMM DD");
+  }
+  return '-';
+}
+
 function trialNumber(number) {
   let url;
   if (number.startsWith('NCT')) {
@@ -217,14 +225,14 @@ const tableColumns = [
     render: monthYear
   }),
   new ColDef({
+    name: 'dateEntered',
+    label: 'Add Date',
+    render: monthDay
+  }),
+  new ColDef({
     name: 'recruitmentStatus', label: 'Status',
     render: renderRecruitmentStatus
   }),
-  // new ColDef({
-  //   name: 'stopDate',
-  //   label: 'Est. Stop',
-  //   render: monthYear
-  // })
   new ColDef({
     name: 'articles',
     label: 'Publication',
