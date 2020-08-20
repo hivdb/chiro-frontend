@@ -52,6 +52,16 @@
   }
   p {
     font-size: 1.15rem;
+    > iframe {
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+  }
+  > .scrollable {
+    max-height: 25rem;
+    overflow-y: auto;
   }
 }
 
