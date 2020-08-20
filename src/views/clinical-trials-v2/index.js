@@ -4,7 +4,7 @@ import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import {useQuery} from '@apollo/react-hooks';
 import {matchShape, routerShape} from 'found';
-import {Grid, Header, Loader} from 'semantic-ui-react';
+import {Grid, Header, Loader, Button} from 'semantic-ui-react';
 
 import searchQuery from './query.gql';
 
@@ -15,6 +15,7 @@ import setTitle from '../../utils/set-title';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import BackToTop from '../../components/back-to-top';
+import Modal from '../../components/modal';
 
 import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
@@ -22,7 +23,6 @@ import style from './style.module.scss';
 import {
   compoundShape
 } from './prop-types';
-import { from } from 'apollo-link';
 
 const HREF_CT = 'https://clinicaltrials.gov/ct2/results?cond=COVID-19';
 const HREF_ICTRP = 'https://www.who.int/ictrp/en/';
@@ -52,19 +52,50 @@ class ClinicalTrialInner extends React.Component {
     super(...arguments);
     this.state = {
       figureCaption: '',
+      modal: null,
     };
   }
 
   async componentDidMount() {
     const promise = await loadPage('clinical-trials');
     this.setState({
-      figureCaption: promise.figureCaption || ''
+      figureCaption: promise.figureCaption || '',
+      figureACaption: promise.figureACaption || '',
+      figureBCaption: promise.figureBCaption || '',
     });
   }
 
   handleQueryChange = (actions) => (
     handleQueryChange(actions, this.props)
   )
+
+  handleOpenFigure(e) {
+    e && e.preventDefault();
+    const figureURI = e.target.getAttribute('data-figureuri');
+    const figureName = e.target.getAttribute('data-figurename');
+    const captionName = e.target.getAttribute('data-figurecaption');
+    this.setState({
+      modal: <Modal
+        onClose={this.handleCloseFigure.bind(this)}
+        closeOnBlur={false}
+        >
+        <div>
+          <img
+          className={style['figure-image']}
+          src={getFullLink(figureURI)}
+          alt="clinical trials totals statistics" />
+        </div>
+        <p className={style['figure-name']}>{figureName}</p>
+        <p>
+          {this.state[captionName] || ''}
+        </p>
+      </Modal>
+    })
+  }
+
+  handleCloseFigure() {
+    this.setState({modal: null});
+  }
 
   handleExpSearchBoxChange = (actions) => {
     const query = {};
@@ -156,8 +187,6 @@ class ClinicalTrialInner extends React.Component {
       updateTime
     } = this.props;
 
-    const {figureCaption} = this.state;
-
     const {clinicalTrialGroups, clinicalTrialCompoundList} = this;
     const cacheKey = (
       `${qCompoundTargetName}@@${qCompoundName}` +
@@ -167,10 +196,6 @@ class ClinicalTrialInner extends React.Component {
     if (updateTime) {
       updateTime = new Date(updateTime.updateTime);
     }
-    const hasFilter = (
-      !!qCompoundTargetName ||
-      !!qCompoundName ||
-      !!qCategoryName);
     return <Grid stackable className={style['clinical-trials']}>
       <Grid.Row>
         <Grid.Column width={16}>
@@ -221,7 +246,7 @@ class ClinicalTrialInner extends React.Component {
           </InlineSearchBox>
           }
         </Grid.Column>
-        <Grid.Column width={12}>
+        <Grid.Column width={8}>
           {loading ? <Loader active inline="centered" /> :
           <>
             {noResult ? <div>No result.</div> : (
@@ -244,24 +269,32 @@ class ClinicalTrialInner extends React.Component {
             )}
           </>}
         </Grid.Column>
+        <Grid.Column width={4} className={style['figure-panel']}>
+        {loading ? <Loader active inline="centered" /> :
+          <>
+            <div className={style['figure-button']}>
+              <Button
+               type="button"
+               data-figureuri={'images/clinical-trials/TargetTotals.png'}
+               data-figurename={'Figure A'}
+               data-figurecaption={'figureACaption'}
+               onClick={this.handleOpenFigure.bind(this)}
+               size="medium">Studies of targes</Button>
+            </div>
+            <div className={style['figure-button']}>
+             <Button
+               type="button"
+               data-figureuri={'images/clinical-trials/DrugTotals.png'}
+               data-figurename={'Figure B'}
+               data-figurecaption={'figureBCaption'}
+               onClick={this.handleOpenFigure.bind(this)}
+               size="medium">Studies of compounds</Button>
+            </div>
+            {this.state.modal}
+          </>
+        }
+        </Grid.Column>
       </Grid.Row>
-      {hasFilter ? null : <>
-        <Grid.Row>
-          <img
-           src={getFullLink('images/clinical-trials/TargetTotals.png')}
-           alt="target totals" />
-          <p className={style['figure-name']}>Figure A</p>
-        </Grid.Row>
-        <Grid.Row>
-          <img
-           src={getFullLink('images/clinical-trials/DrugTotals.png')}
-           alt="drug totals" />
-          <p className={style['figure-name']}>Figure B</p>
-        </Grid.Row>
-        <Grid.Row>
-          <p className={style['figure-caption']}>{figureCaption}</p>
-        </Grid.Row>
-      </>}
 
       {loading ?
         <Loader active inline="centered" /> : <>
@@ -306,7 +339,6 @@ export default function ClinicalTrial({match, ...props}) {
         compound: compoundName,
         target: compoundTargetName,
         trialcat: categoryName,
-        fromDate: fromDate,
       } = {}
     }
   } = match;

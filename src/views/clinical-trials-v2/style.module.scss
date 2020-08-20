@@ -71,12 +71,20 @@
   }
 }
 
+.figure-panel {
+  padding-top: 2rem;
+}
+.figure-image {
+  max-width: 100%;
+}
 .figure-name {
   font-size: 1rem;
   font-weight: bold;
   margin: auto;
 }
-
 .figure-caption {
   padding: 0 2rem;
+}
+.figure-button {
+  margin-bottom: 0.5rem;
 }
