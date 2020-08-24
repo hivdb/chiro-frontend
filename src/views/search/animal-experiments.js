@@ -87,7 +87,8 @@ function resultColDefs(rows) {
     'Weight Loss': <>Weight<br />Loss</>,
     'Mortality': 'Mortality',
     'Lung pathology': <>Lung<br />pathology</>,
-    'Clinical Diseases': <>Clinical<br />Diseases</>
+    'Clinical Diseases': <>Clinical<br />Diseases</>,
+    'Xenograft VL': <>Xenograft VL</>
   };
   for (const {resultObjs} of rows) {
     for (const {resultName} of resultObjs) {
