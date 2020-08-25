@@ -29,5 +29,8 @@ const POSSIBLE_FUTURE_MAB_NAMES = [
 ];
 
 export default function isTargetMAb(targetName) {
-  return POSSIBLE_FUTURE_MAB_NAMES.includes(targetName.toLocaleLowerCase());
+  if (targetName) {
+    return POSSIBLE_FUTURE_MAB_NAMES.includes(targetName.toLocaleLowerCase());
+  }
+  return false;
 }
