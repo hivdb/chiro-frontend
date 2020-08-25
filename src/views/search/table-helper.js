@@ -80,8 +80,8 @@ const authorYearColDef = new ColumnDef({
           pathname: '/search/',
           query: {article: nickname[0]}
         }}>{nickname[0]}</Link>,
-        journalAbbr ? <div key={`j${idx}`}>({journalAbbr})</div> : (
-          journal ? <div key={`j${idx}`}>({journal})</div> : null
+        journalAbbr ? <span key={`j${idx}`}>&#8232;({journalAbbr})</span> : (
+          journal ? <span key={`j${idx}`}>&#8232;({journal})</span> : null
         )
       ];
     }
