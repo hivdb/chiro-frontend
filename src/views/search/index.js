@@ -17,6 +17,7 @@ import StatHeader from '../../components/stat-header';
 import ArticleInfo from '../../components/article-info';
 import BackToTop from '../../components/back-to-top';
 import redirectIfNeeded from '../../utils/redirect-if-needed';
+import isTargetMAb from '../../utils/is-target-mab';
 import handleQueryChange from '../../utils/handle-query-change';
 import setTitle from '../../utils/set-title';
 
@@ -131,7 +132,7 @@ class SearchInner extends React.Component {
       }) => (
         categoryName === 'CellCulture' &&
         compoundObjs.some(
-          ({target}) => target === 'Monoclonal antibody'
+          ({target}) => isTargetMAb(target)
         )
       )).length
     ) : 0;
@@ -147,7 +148,7 @@ class SearchInner extends React.Component {
         node: {categoryName, compoundObjs}
       }) => (
         compoundObjs.some(
-          ({target}) => target === 'Monoclonal antibody'
+          ({target}) => isTargetMAb(target)
         )
       )).length
     ) : 0;
@@ -200,7 +201,10 @@ class SearchInner extends React.Component {
                       </> : null}
                       {compound ? <>
                         <Header as="h2" dividing>
-                          Target: {compound.targetObj? compound.targetObj.name : 'NA'}
+                          Target: {
+                            compound.targetObj ?
+                            compound.targetObj.name : 'NA'
+                          }
                         </Header>
                         <p>{compound.targetObj ?
                           compound.targetObj.description || 'Pending.' :

@@ -43,7 +43,7 @@ const tableColumns = [
       if (publishDate) {
         return publishDate.slice(0, 10);
       } else {
-        return ''
+        return '';
       }
     },
     sort: (data) => {
@@ -60,7 +60,7 @@ const tableColumns = [
         } else {
           return (
             new Date(publishDate1) - new Date(publishDate2)
-          )
+          );
         }
       });
     }

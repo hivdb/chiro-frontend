@@ -5,6 +5,7 @@ import sortBy from 'lodash/sortBy';
 import {Header, Icon, Popup} from 'semantic-ui-react';
 
 import ChiroTable from '../../components/chiro-table';
+import isTargetMAb from '../../utils/is-target-mab';
 import {virusExperimentsShape} from './prop-types';
 import {
   ColDef, reformExpData, readableNum, renderXX50,
@@ -207,13 +208,13 @@ export default class VirusExpTable extends React.Component {
     const ccData = (
       reformed.filter(({categoryName, compoundObjs}) => (
         categoryName === 'CellCulture' &&
-        compoundObjs.some(({target}) => target !== 'Monoclonal antibody')
+        compoundObjs.some(({target}) => !isTargetMAb(target))
       ))
     );
     const mabData = (
       reformed.filter(({categoryName, compoundObjs}) => (
         categoryName === 'CellCulture' &&
-        compoundObjs.some(({target}) => target === 'Monoclonal antibody')
+        compoundObjs.some(({target}) => isTargetMAb(target))
       ))
     );
     const ifnData = (

@@ -5,6 +5,7 @@ import {useQuery} from '@apollo/react-hooks';
 
 import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 
+import isTargetMAb from '../../utils/is-target-mab';
 import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
 import {InlineSearchBox} from '../../components/search-box';
@@ -16,6 +17,7 @@ import {loadPage} from '../../utils/cms';
 import query from './query.gql.js';
 import style from './style.module.scss';
 import Smiles from './smiles';
+import AntibodyTable from './antibody-table';
 
 
 function renderFormula(formula) {
@@ -67,6 +69,118 @@ class CompoundListInner extends React.Component {
       compoundTarget, compounds
     } = this.props;
 
+    let inner;
+    if (!loading) {
+      if (isTargetMAb(qCompoundTargetName)) {
+        inner = <AntibodyTable compounds={
+          compounds.edges.map(({node}) => node)} />;
+      }
+      else {
+        inner = (
+          <Grid.Row>
+            <Grid.Column width={16}>
+              <p>
+                {compounds.totalCount} compound
+                {compounds.totalCount > 1 ? 's are' : ' is'} listed:
+              </p>
+              <Item.Group divided>
+                {compounds.edges.map(
+                  ({node: {
+                    name, synonyms, target, drugClassName,
+                    molecularFormula, molecularWeight,
+                    category, pubchemCid, relatedCompounds, smiles,
+                    experimentCounts = [], description
+                  }}, idx) => (
+                    <Item key={idx}>
+                      <Item.Content>
+                        <Item.Header
+                         as={Link}
+                         to={{
+                           pathname: '/search/',
+                           query: {'compound': name}
+                         }}>
+                          {name}
+                        </Item.Header>
+                        <Item.Extra>
+                          <Link to={{
+                            pathname: '/search/',
+                            query: {'compound': name}
+                          }}>
+                            {(() => {
+                              const total = experimentCounts.reduce(
+                                (acc, {count}) => acc + count, 0
+                              );
+                              if (total > 1) {
+                                return `${total} experiment results`;
+                              }
+                              else {
+                                 return `${total} experiment result`;
+                              }
+                            })()}
+                          </Link>
+                        </Item.Extra>
+                        <Item.Meta>
+                          <span className={style.target}>{target || '?'}</span>
+                          <span className={style['drug-class']}>
+                            {drugClassName || '?'}
+                          </span>
+                          {molecularFormula ?
+                            <span className={style['formula']}>
+                              {renderFormula(molecularFormula)}
+                            </span> : null}
+                          {molecularWeight ?
+                            <span className={style['mw']}>
+                              {molecularWeight} g/mol
+                            </span> : null}
+                          {category ?
+                            <span className={style['category']}>
+                              {category}
+                            </span> : null}
+                        </Item.Meta>
+                        <Item.Description>
+                          {description}
+                          {pubchemCid ? <>
+                            {' '}[<a
+                             href={
+                               'https://pubchem.ncbi.nlm.nih.' +
+                               `gov/compound/${pubchemCid}`
+                             }
+                             rel="noopener noreferrer"
+                             target="_blank">
+                              PubChem
+                            </a>]
+                          </> : null}
+                        </Item.Description>
+                        <Smiles {...{smiles, name}}>
+                          {(trigger, canvas) => <>
+                            <Item.Extra>
+                              {trigger}
+                              {relatedCompounds.length > 0 ? (
+                                <span className={style['related-compounds']}>
+                                  {relatedCompounds
+                                   .map(({name}) => name).join(', ')}
+                                </span>
+                              ) : null}
+                              {synonyms.length > 0 ? (
+                                <span className={style.synonyms}>
+                                  {synonyms.join(', ')}
+                                </span>
+                              ) : null}
+                            </Item.Extra>
+                            {canvas}
+                          </>}
+                        </Smiles>
+                      </Item.Content>
+                    </Item>
+                  )
+                )}
+              </Item.Group>
+            </Grid.Column>
+          </Grid.Row>
+        );
+      }
+    }
+
     return <Grid stackable className={style['compound-list']}>
       <Grid.Row>
         <Grid.Column width={16}>
@@ -104,109 +218,7 @@ class CompoundListInner extends React.Component {
           )}
         </InlineSearchBox>
       </Grid.Row>
-      {loading ?
-        <Loader active inline="centered" /> :
-        <Grid.Row>
-          <Grid.Column width={16}>
-            <p>
-              {compounds.totalCount} compound
-              {compounds.totalCount > 1 ? 's are' : ' is'} listed:
-            </p>
-            <Item.Group divided>
-              {compounds.edges.map(
-                ({node: {
-                  name, synonyms, target, drugClassName,
-                  molecularFormula, molecularWeight,
-                  category, pubchemCid, relatedCompounds, smiles,
-                  experimentCounts, description
-                }}, idx) => (
-                  <Item key={idx}>
-                    <Item.Content>
-                      <Item.Header
-                       as={Link}
-                       to={{
-                         pathname: '/search/',
-                         query: {'compound': name}
-                       }}>
-                        {name}
-                      </Item.Header>
-                      <Item.Extra>
-                        <Link to={{
-                          pathname: '/search/',
-                          query: {'compound': name}
-                        }}>
-                          {(() => {
-                            const total = experimentCounts.reduce(
-                              (acc, {count}) => acc + count, 0
-                            );
-                            if (total > 1) {
-                              return `${total} experiment results`;
-                            }
-                            else {
-                               return `${total} experiment result`;
-                            }
-                          })()}
-                        </Link>
-                      </Item.Extra>
-                      <Item.Meta>
-                        <span className={style.target}>{target || '?'}</span>
-                        <span className={style['drug-class']}>
-                          {drugClassName || '?'}
-                        </span>
-                        {molecularFormula ?
-                          <span className={style['formula']}>
-                            {renderFormula(molecularFormula)}
-                          </span> : null}
-                        {molecularWeight ?
-                          <span className={style['mw']}>
-                            {molecularWeight} g/mol
-                          </span> : null}
-                        {category ?
-                          <span className={style['category']}>
-                            {category}
-                          </span> : null}
-                      </Item.Meta>
-                      <Item.Description>
-                        {description}
-                        {pubchemCid ? <>
-                          {' '}[<a
-                           href={
-                             'https://pubchem.ncbi.nlm.nih.' +
-                             `gov/compound/${pubchemCid}`
-                           }
-                           rel="noopener noreferrer"
-                           target="_blank">
-                            PubChem
-                          </a>]
-                        </> : null}
-                      </Item.Description>
-                      <Smiles {...{smiles, name}}>
-                        {(trigger, canvas) => <>
-                          <Item.Extra>
-                            {trigger}
-                            {relatedCompounds.length > 0 ? (
-                              <span className={style['related-compounds']}>
-                                {relatedCompounds
-                                 .map(({name}) => name).join(', ')}
-                              </span>
-                            ) : null}
-                            {synonyms.length > 0 ? (
-                              <span className={style.synonyms}>
-                                {synonyms.join(', ')}
-                              </span>
-                            ) : null}
-                          </Item.Extra>
-                          {canvas}
-                        </>}
-                      </Smiles>
-                    </Item.Content>
-                  </Item>
-                )
-              )}
-            </Item.Group>
-          </Grid.Column>
-        </Grid.Row>
-      }
+      {loading ? <Loader active inline="centered" /> : inner}
     </Grid>;
 
   }

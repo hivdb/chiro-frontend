@@ -29,8 +29,20 @@ export default gql`
           relatedCompounds {
             name
           }
+          articles {
+            nickname
+            doi
+          }
           experimentCounts {
             count
+          }
+          antibodyData {
+            targetVirusName
+            abdabAvailability
+            source
+            pdb
+            epitope
+            animalModel
           }
           description
         }
