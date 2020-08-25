@@ -279,7 +279,7 @@ class ClinicalTrialInner extends React.Component {
                data-figurename={'Figure A'}
                data-figurecaption={'figureACaption'}
                onClick={this.handleOpenFigure.bind(this)}
-               size="medium">Studies of targes</Button>
+               size="medium">Studies of targets</Button>
             </div>
             <div className={style['figure-button']}>
              <Button
