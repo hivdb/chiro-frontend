@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
 import arrayFind from 'lodash/find';
+import {Popup, Icon} from 'semantic-ui-react';
 
 import ChiroTable from '../../components/chiro-table';
 import {animalExperimentsShape} from './prop-types';
+import style from './style.module.scss';
 
 import {
   ColDef, reformExpData,
@@ -92,6 +94,26 @@ function resultColDefs(rows) {
     'Clinical Diseases': <>Clinical<br />Diseases</>,
     'Xenograft VL': <>Xenograft VL</>
   };
+
+  for (const key in displayResultNames) {
+    displayResultNames[key] = (
+      <Popup
+       header={key}
+       content={<ul className={style['result-col-popup']}>
+         <li>↓, ↓↓↓ decreased; </li>
+         <li>↑, ↑↑↑ increased; </li>
+         <li>
+           {'<=>'} no discernable difference;{' '}
+         </li>
+         <li>ND not done; </li>
+         <li>? could not determine</li>
+       </ul>}
+       trigger={<span className={style['with-info']}>
+         {displayResultNames[key]}<sup><Icon name="info circle" /></sup>
+       </span>} />
+    );
+  }
+
   for (const {resultObjs} of rows) {
     for (const {resultName} of resultObjs) {
       if (resultName in colDefs) {
