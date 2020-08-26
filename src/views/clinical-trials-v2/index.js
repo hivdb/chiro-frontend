@@ -139,16 +139,35 @@ class ClinicalTrialInner extends React.Component {
     let allTrials = [];
     for (const {node: {compoundObjs, ...trial}} of clinicalTrials) {
       let used_target = [];
-      for (const {target, primaryCompound, relatedCompounds} of compoundObjs) {
+      let thisTrials = [];
+      for (let {target, primaryCompound, relatedCompounds} of compoundObjs) {
+        let compoundNames = primaryCompound? [primaryCompound.name]: [];
+        for (const {name} of relatedCompounds) {
+          if (name) {
+            compoundNames.push(name);
+          }
+        }
+        if (compoundNames.includes('Hydroxychloroquine') || compoundNames.includes('Chloroquine')) {
+          const oldTarget = target;
+          target = "Hydroxychloroquine";
+          thisTrials = [{...trial, target, primaryCompound, relatedCompounds, oldTarget}];
+          break;
+        }
+
         if (used_target.includes(target)) {
           continue;
         }
-        allTrials.push({...trial, target, primaryCompound, relatedCompounds});
+        thisTrials.push({...trial, target, primaryCompound, relatedCompounds});
         used_target.push(target);
       }
+
+      allTrials = allTrials.concat(thisTrials);
     }
     if (qCompoundTargetName) {
-      allTrials = allTrials.filter(({target}) => {
+      allTrials = allTrials.filter(({target, oldTarget}) => {
+        if (target === 'Hydroxychloroquine') {
+          target = oldTarget;
+        }
         if (target === qCompoundTargetName) {
           return true;
         } else {
@@ -196,6 +215,10 @@ class ClinicalTrialInner extends React.Component {
     if (updateTime) {
       updateTime = new Date(updateTime.updateTime);
     }
+
+    let tableHeaders = compoundTargets? compoundTargets.edges.map(({node: {name}}) => name): [];
+    tableHeaders.push('Hydroxychloroquine');
+
     return <Grid stackable className={style['clinical-trials']}>
       <Grid.Row>
         <Grid.Column width={16}>
@@ -251,8 +274,8 @@ class ClinicalTrialInner extends React.Component {
           <>
             {noResult ? <div>No result.</div> : (
               <ul className={style['category-stat']}>
-                {compoundTargets.edges.map(
-                  ({node: {name}}, idx) => {
+                {tableHeaders.map(
+                  (name, idx) => {
                     const count = (clinicalTrialGroups[name] || []).length;
                     if (count === 0) {
                       return null;
@@ -301,8 +324,8 @@ class ClinicalTrialInner extends React.Component {
           {!noResult ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                {compoundTargets.edges
-                  .map(({node: {name}}, idx) => {
+                {tableHeaders
+                  .map((name, idx) => {
                     const count = (clinicalTrialGroups[name] || []).length;
                     if (count === 0) {
                       return [];
