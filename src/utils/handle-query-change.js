@@ -15,6 +15,10 @@ export default function handleQueryChange(actions, props) {
     delete newQuery.form_only;
     changed = true;
   }
+  if ('no_related_compounds' in newQuery) {
+    delete newQuery.no_related_compounds;
+    changed = true;
+  }
   for (let [value, category] of actions) {
     value = value || undefined;
     if (category === 'compounds') {

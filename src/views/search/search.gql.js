@@ -11,6 +11,7 @@ export default gql`
     $withVirus: Boolean!
     $withArticle: Boolean!
     $enableQuery: Boolean!
+    $noRelatedCompounds: Boolean!
   ) {
     compound(name: $compoundName) @include(if: $withCompound) {
       name
@@ -43,6 +44,7 @@ export default gql`
     virusExperiments: virusInCellCultureExperiments(
       compoundName: $compoundName,
       compoundTargetName: $compoundTargetName,
+      noRelatedCompounds: $noRelatedCompounds,
       virusName: $virusName,
       articleNickname: $articleNickname
     ) @include(if: $enableQuery) {
@@ -78,6 +80,7 @@ export default gql`
     pseudovirusExperiments: pseudovirusExperiments(
       compoundName: $compoundName,
       compoundTargetName: $compoundTargetName,
+      noRelatedCompounds: $noRelatedCompounds,
       virusName: $virusName,
       articleNickname: $articleNickname
     ) @include(if: $enableQuery) {
@@ -112,6 +115,7 @@ export default gql`
       compoundName: $compoundName,
       virusName: $virusName,
       compoundTargetName: $compoundTargetName,
+      noRelatedCompounds: $noRelatedCompounds,
       articleNickname: $articleNickname,
     ) @include(if: $enableQuery) {
       totalCount
@@ -141,6 +145,7 @@ export default gql`
     biochemExperiments(
       compoundName: $compoundName,
       compoundTargetName: $compoundTargetName,
+      noRelatedCompounds: $noRelatedCompounds,
       virusName: $virusName,
       articleNickname: $articleNickname
     ) @include(if: $enableQuery) {
@@ -164,6 +169,7 @@ export default gql`
     animalExperiments (
       compoundName: $compoundName,
       compoundTargetName: $compoundTargetName,
+      noRelatedCompounds: $noRelatedCompounds,
       virusName: $virusName,
       articleNickname: $articleNickname
     ) @include(if: $enableQuery) {
@@ -194,6 +200,7 @@ export default gql`
     clinicalExperiments (
       compoundName: $compoundName,
       compoundTargetName: $compoundTargetName,
+      noRelatedCompounds: $noRelatedCompounds,
       virusName: $virusName,
       articleNickname: $articleNickname
     ) @include(if: $enableQuery) {
@@ -219,7 +226,8 @@ export default gql`
     }
     clinicalTrials(
       compoundName: $compoundName,
-      compoundTargetName: $compoundTargetName
+      compoundTargetName: $compoundTargetName,
+      noRelatedCompounds: $noRelatedCompounds
     ) @include(if: $enableQuery) {
       totalCount
     }

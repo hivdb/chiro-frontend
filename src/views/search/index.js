@@ -43,6 +43,7 @@ class SearchInner extends React.Component {
     qCompoundTargetName: PropTypes.string,
     qArticleNickname: PropTypes.string,
     qStudyType: PropTypes.string,
+    noRelatedCompounds: PropTypes.bool.isRequired,
     compound: compoundShape,
     virusExperiments: virusExperimentsShape,
     biochemExperiments: biochemExperimentsShape,
@@ -80,6 +81,7 @@ class SearchInner extends React.Component {
       clinicalExperiments,
       clinicalTrials,
       formOnly,
+      noRelatedCompounds,
       loading
     } = this.props;
     if (qCompoundName) {
@@ -228,6 +230,8 @@ class SearchInner extends React.Component {
                     {noResult ? null : <>
                       <Header as="h2" dividing>
                         Results
+                        {noRelatedCompounds ?
+                          ' (without closely related compounds)' : null}
                       </Header>
                       <ul>
                         {!loading && virusExperiments.totalCount > 0 ? <li>
@@ -414,13 +418,15 @@ export default function Search({match, ...props}) {
         virus: virusName,
         target: compoundTargetName,
         article: articleNickname,
-        study: studyType
+        study: studyType,
+        no_related_compounds: noRelatedCompounds
       } = {}
     }
   } = match;
   let {loading, error, data} = useQuery(searchQuery, {
     variables: {
       compoundName, compoundTargetName, virusName, articleNickname,
+      noRelatedCompounds: !!noRelatedCompounds,
       withCompound: !!compoundName,
       withVirus: !!virusName,
       withCompoundTarget: !!compoundTargetName,
@@ -444,6 +450,7 @@ export default function Search({match, ...props}) {
      match={match}
      loading={loading}
      formOnly={formOnly !== undefined}
+     noRelatedCompounds={!!noRelatedCompounds}
      {...props}
      {...data} />
   );

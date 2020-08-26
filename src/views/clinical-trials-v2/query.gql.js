@@ -5,6 +5,7 @@ export default gql`
     $compoundName: String
     $compoundTargetName: String
     $categoryName: String
+    $noRelatedCompounds: Boolean!
   ) {
 
     updateTime(title: "clinical-trials") {
@@ -46,6 +47,7 @@ export default gql`
     clinicalTrials(
       compoundName: $compoundName,
       compoundTargetName: $compoundTargetName,
+      noRelatedCompounds: $noRelatedCompounds,
       categoryName: $categoryName
     ) {
       totalCount

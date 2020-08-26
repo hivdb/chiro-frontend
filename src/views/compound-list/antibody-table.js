@@ -1,10 +1,12 @@
 import React from 'react';
 import {Link} from 'found';
 import PropTypes from 'prop-types';
+import sortBy from 'lodash/sortBy';
 import groupBy from 'lodash/groupBy';
 import {Header} from 'semantic-ui-react';
 
 import ChiroTable, {ColumnDef} from '../../components/chiro-table';
+import TrialLink from '../../components/clinical-trial-link';
 
 import style from './style.module.scss';
 
@@ -15,16 +17,6 @@ const orderedViruses = [
 
 
 const columnDefs = [
-  new ColumnDef({name: 'name'}),
-  /*new ColumnDef({
-    name: 'synonyms',
-    render: synonyms => ', '.join(synonyms),
-    sortable: false
-  }),
-  new ColumnDef({
-    name: 'antibodyData.targetVirusName',
-    label: 'target'
-  }),*/
   new ColumnDef({
     name: 'articles',
     label: 'Refs',
@@ -38,7 +30,12 @@ const columnDefs = [
           {nickname[0]}
         </a>
       ))}
-    </>
+    </>,
+    sort: data => sortBy(data, ['articles[0].nickname'])
+  }),
+  new ColumnDef({
+    name: 'name',
+    label: 'Ab name',
   }),
   new ColumnDef({
     name: 'drugClassName',
@@ -53,46 +50,69 @@ const columnDefs = [
     }[abtype] || abtype)
   }),
   new ColumnDef({
-    name: 'antibodyData.source', label: 'Source'
+    name: 'antibodyData.source', label: 'Ab source'
   }),
   new ColumnDef({
     name: 'antibodyData.abdabAvailability',
-    label: (
+    label: <>
+      Sequence<br />(
       <a
        target="_blank" rel="noopener noreferrer"
        href="http://opig.stats.ox.ac.uk/webapps/covabdab/">
-        CoV-AbDab?
-      </a>
-    ),
-    render: abdab => abdab ? 'Yes' : ''
+        CoV-AbDab
+      </a>)
+    </>,
+    render: abdab => abdab ? 'Yes' : '',
+    none: '-'
+  }),
+  new ColumnDef({
+    name: 'hasExperiments',
+    label: 'EC50',
+    render: (hasExps, {name, target}) => hasExps ?
+      <Link to={{
+        pathname: '/search/',
+        query: {
+          target,
+          compound: name,
+          no_related_compounds: 'yes'
+        }
+      }}>
+        results
+      </Link> : '-'
   }),
   new ColumnDef({
     name: 'antibodyData.pdb',
-    label: 'PDB'
-  }),
-  new ColumnDef({
-    name: 'antibodyData.epitope',
-    label: 'Epitope'
+    label: <>Structure<br />(PDB)</>,
+    none: '-'
   }),
   new ColumnDef({
     name: 'antibodyData.animalModel',
-    label: 'Animal model'
+    label: 'Animal model',
+    none: '-'
   }),
   new ColumnDef({
-    name: 'description'
-  }),
-  new ColumnDef({
-    name: 'name',
-    label: 'Experiments',
-    render: name => (
-      <Link to={{
-        pathname: '/search/',
-        query: {'compound': name}
-      }}>
-        Result link
-      </Link>
-    )
-  }),
+    name: 'clinicalTrialObjs',
+    label: 'Clinical trials',
+    render: (trials, {name, target}) => <>
+      {trials.length > 0 ? <>
+        {trials.map(
+          ({trialNumbers}) => trialNumbers.map(tn => (
+            <div key={tn} className={style['trial-number']}>
+              <TrialLink number={tn} />
+            </div>
+          ))
+        )}
+        (<Link to={{
+          pathname: '/clinical-trials/',
+          query: {
+            target,
+            compound: name,
+            no_related_compounds: 'yes'
+          }
+        }}>results</Link>)
+      </> : '-'}
+    </>
+  })
 ];
 
 
@@ -115,7 +135,12 @@ export default class AntibodyTable extends React.Component {
         <ChiroTable
          cacheKey="antibody"
          columnDefs={columnDefs}
-         data={compoundsByTargetVirus[virus] || []} />
+         data={sortBy(compoundsByTargetVirus[virus], [
+           data => data.clinicalTrialObjs.length === 0,
+           '-hasExperiments',
+           'articles[0].nickname',
+           'name'
+         ]) || []} />
       </section>)}
     </>;
   }
