@@ -88,7 +88,7 @@ class CompoundListInner extends React.Component {
                   ({node: {
                     name, synonyms, target, drugClassName,
                     molecularFormula, molecularWeight,
-                    category, pubchemCid, relatedCompounds, smiles,
+                    category, pubchemCid, casNumber, relatedCompounds, smiles,
                     experimentCounts = [], description
                   }}, idx) => (
                     <Item key={idx}>
@@ -124,6 +124,11 @@ class CompoundListInner extends React.Component {
                           <span className={style['drug-class']}>
                             {drugClassName || '?'}
                           </span>
+                          {casNumber ? (
+                            <span className={style['cas-number']}>
+                              {casNumber}
+                            </span>
+                          ) : null}
                           {molecularFormula ?
                             <span className={style['formula']}>
                               {renderFormula(molecularFormula)}
@@ -140,7 +145,8 @@ class CompoundListInner extends React.Component {
                         <Item.Description>
                           {description}
                           {pubchemCid ? <>
-                            {' '}[<a
+                            {' ['}<a
+                             className={style['pubchem-cid']}
                              href={
                                'https://pubchem.ncbi.nlm.nih.' +
                                `gov/compound/${pubchemCid}`

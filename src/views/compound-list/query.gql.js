@@ -28,6 +28,7 @@ export default gql`
           molecularWeight
           smiles
           pubchemCid
+          casNumber
           relatedCompounds {
             name
           }

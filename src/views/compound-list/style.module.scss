@@ -46,6 +46,16 @@
       font-weight: 600;
     }
   }
+  > .cas-number {
+    &::before {
+      content: 'CAS Number: ';
+      font-weight: 600;
+    }
+  }
+}
+
+.pubchem-cid {
+  font-weight: 600;
 }
 
 .canvas-2d-struct {
