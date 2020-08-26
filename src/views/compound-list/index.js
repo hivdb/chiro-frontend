@@ -246,10 +246,13 @@ export default function CompoundList({match, ...props}) {
       } = {}
     }
   } = match;
+  const isMAb = isTargetMAb(compoundTargetName);
   let {loading, error, data} = useQuery(query, {
     variables: {
       compoundTargetName,
-      withCompoundTarget: Boolean(compoundTargetName)
+      withCompoundTarget: Boolean(compoundTargetName),
+      isTargetMAb: isMAb,
+      isNotTargetMAb: !isMAb
     }
   });
   if (loading) {

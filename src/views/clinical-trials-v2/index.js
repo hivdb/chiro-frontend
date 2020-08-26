@@ -76,21 +76,20 @@ class ClinicalTrialInner extends React.Component {
     const captionName = e.target.getAttribute('data-figurecaption');
     this.setState({
       modal: <Modal
-        onClose={this.handleCloseFigure.bind(this)}
-        closeOnBlur={false}
-        >
+       onClose={this.handleCloseFigure.bind(this)}
+       closeOnBlur={false}>
         <div>
           <img
-          className={style['figure-image']}
-          src={getFullLink(figureURI)}
-          alt="clinical trials totals statistics" />
+           className={style['figure-image']}
+           src={getFullLink(figureURI)}
+           alt="clinical trials totals statistics" />
         </div>
         <p className={style['figure-name']}>{figureName}</p>
         <p>
           {this.state[captionName] || ''}
         </p>
       </Modal>
-    })
+    });
   }
 
   handleCloseFigure() {
@@ -131,7 +130,7 @@ class ClinicalTrialInner extends React.Component {
         clinicalTrials = clinicalTrials.filter((trial) => {
           let {node: {dateEntered}} = trial;
           dateEntered = moment(dateEntered);
-          return dateEntered.isSameOrAfter(fromDate)
+          return dateEntered.isSameOrAfter(fromDate);
         });
       }
     }
@@ -293,7 +292,7 @@ class ClinicalTrialInner extends React.Component {
           </>}
         </Grid.Column>
         <Grid.Column width={4} className={style['figure-panel']}>
-        {loading ? <Loader active inline="centered" /> :
+          {loading ? <Loader active inline="centered" /> :
           <>
             <div className={style['figure-button']}>
               <Button
@@ -305,7 +304,7 @@ class ClinicalTrialInner extends React.Component {
                size="medium">Studies of targets</Button>
             </div>
             <div className={style['figure-button']}>
-             <Button
+              <Button
                type="button"
                data-figureuri={'images/clinical-trials/DrugTotals.png'}
                data-figurename={'Figure B'}
@@ -314,8 +313,7 @@ class ClinicalTrialInner extends React.Component {
                size="medium">Studies of compounds</Button>
             </div>
             {this.state.modal}
-          </>
-        }
+          </>}
         </Grid.Column>
       </Grid.Row>
 
@@ -362,12 +360,14 @@ export default function ClinicalTrial({match, ...props}) {
         compound: compoundName,
         target: compoundTargetName,
         trialcat: categoryName,
+        no_related_compounds: noRelatedCompounds
       } = {}
     }
   } = match;
   let {loading, error, data} = useQuery(searchQuery, {
     variables: {
-      compoundName, compoundTargetName, categoryName
+      compoundName, compoundTargetName, categoryName,
+      noRelatedCompounds: !!noRelatedCompounds
     }
   });
   if (loading) {
@@ -377,6 +377,7 @@ export default function ClinicalTrial({match, ...props}) {
        qCompoundName={compoundName}
        qCompoundTargetName={compoundTargetName}
        qCategoryName={categoryName}
+       noRelatedCompounds={!!noRelatedCompounds}
        match={match}
        loading
        {...props} />
@@ -390,6 +391,7 @@ export default function ClinicalTrial({match, ...props}) {
      qCompoundName={compoundName}
      qCompoundTargetName={compoundTargetName}
      qCategoryName={categoryName}
+     noRelatedCompounds={!!noRelatedCompounds}
      match={match}
      {...props}
      {...data} />

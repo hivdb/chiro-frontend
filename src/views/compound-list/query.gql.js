@@ -4,6 +4,8 @@ export default gql`
   query compoundList(
     $compoundTargetName: String
     $withCompoundTarget: Boolean!
+    $isTargetMAb: Boolean!
+    $isNotTargetMAb: Boolean!
   ) {
     compoundTarget(name: $compoundTargetName)
     @include(if: $withCompoundTarget) {
@@ -33,15 +35,18 @@ export default gql`
             nickname
             doi
           }
-          experimentCounts {
+          hasExperiments
+          experimentCounts @include(if: $isNotTargetMAb) {
             count
           }
-          antibodyData {
+          clinicalTrialObjs @include(if: $isTargetMAb) {
+            trialNumbers
+          }
+          antibodyData @include(if: $isTargetMAb) {
             targetVirusName
             abdabAvailability
             source
             pdb
-            epitope
             animalModel
           }
           description
