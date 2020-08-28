@@ -89,7 +89,7 @@ export default class TargetTable extends React.Component {
         label: 'Clinical study',
       }),
       new ColumnDef({
-        name: 'articleCount',
+        name: 'expArticleCount',
         label: 'References',
       }),
     ];

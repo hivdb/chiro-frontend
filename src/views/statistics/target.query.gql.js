@@ -6,7 +6,7 @@ query {
     edges {
       node {
         name
-        articleCount
+        expArticleCount
         experimentCounts(countIndividual: true) {
           count
           category

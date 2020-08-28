@@ -15,7 +15,7 @@ query compoundSearch(
       node {
         name
         target
-        articleCount(countIndividual: $countIndividualCompound)
+        expArticleCount(countIndividual: $countIndividualCompound)
         status
         clinicalTrialCount
         experimentCounts(countIndividual: $countIndividualCompound) {

@@ -49,7 +49,7 @@ const tableColumns = [
   //   label: 'Total',
   // }),
   new ColumnDef({
-    name: 'articleCount',
+    name: 'expArticleCount',
     label: 'References',
   }),
   new ColumnDef({

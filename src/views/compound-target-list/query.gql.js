@@ -10,7 +10,7 @@ export default gql`
           relatedCompoundTargets {
             name
           }
-          articleCount
+          expArticleCount
           experimentCounts {
             count
             category
