@@ -90,7 +90,7 @@ class CompoundTargetListInner extends React.Component {
                           {compoundCount > 1 ? 's' : null}
                         </Link>
                       </Item.Extra>
-                      <Item.Description>
+                      <Item.Description className={style['compound-desc']}>
                         {description}
                       </Item.Description>
                       <Item.Extra>
