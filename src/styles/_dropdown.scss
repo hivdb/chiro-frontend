@@ -1,7 +1,7 @@
 @import "./colors";
 
 @mixin search-item-sizing($width) {
-  
+
   :global(.ui.search.dropdown) {
     width: $width;
   }
@@ -52,6 +52,10 @@
     :global(.menu > .item) {
       box-sizing: border-box;
       font-size: 1.1rem;
+    }
+    > :global(.text) {
+      overflow: hidden;
+      max-height: 2rem;
     }
   }
   *[data-type-item-container] {
