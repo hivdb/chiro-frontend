@@ -40,14 +40,6 @@ const columnDefs = [
   new ColumnDef({
     name: 'drugClassName',
     label: 'Ab type',
-    render: abtype => ({
-      'Monoclonal antibody': 'MAb',
-      'Single-domain Ab': 'sdAb',
-      'Single-domain Ab-Fc': 'sdAb-Fc',
-      'Single-domain Ab(2)-Fc': 'sdAb(2)-Fc',
-      'Single-domain Ab-trivalent': 'sdAb-trivalent',
-      'Single-chain variable fragment': 'scFv'
-    }[abtype] || abtype)
   }),
   new ColumnDef({
     name: 'antibodyData.source', label: 'Ab source'
