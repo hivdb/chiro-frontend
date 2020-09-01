@@ -76,15 +76,18 @@ class CompoundListInner extends React.Component {
           compounds.edges.map(({node}) => node)} />;
       }
       else {
+        const notMabCompounds = compounds.edges.filter(({node}) => {
+          return !isTargetMAb(node.target);
+        });
         inner = (
           <Grid.Row>
             <Grid.Column width={16}>
               <p>
-                {compounds.totalCount} compound
-                {compounds.totalCount > 1 ? 's are' : ' is'} listed:
+                {notMabCompounds.length} compound
+                {notMabCompounds.length > 1 ? 's are' : ' is'} listed:
               </p>
               <Item.Group divided>
-                {compounds.edges.map(
+                {notMabCompounds.map(
                   ({node: {
                     name, synonyms, target, drugClassName,
                     molecularFormula, molecularWeight,
