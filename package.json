@@ -52,7 +52,7 @@
     "react-scripts": "3.4.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
-    "sierra-frontend": "hivdb/sierra-frontend#5e1b904",
+    "sierra-frontend": "hivdb/sierra-frontend#715d603",
     "sleep-promise": "^8.0.1",
     "smiles-drawer": "^1.2.0",
     "typeface-poppins": "^0.0.72",

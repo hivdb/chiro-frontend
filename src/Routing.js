@@ -47,7 +47,7 @@ const BrowserRouter = createBrowserRouter({
       </Route>
       {MutAnnotEditorRoutes({
         ...mutAnnotEditorConfig,
-        pathPrefix: 'mut-annot-editor/',
+        pathPrefix: 'mut-annot-viewer/',
         className: style['mut-annot-editor-ui']
       })}
       <Route Component={Search} path="/search/" />
