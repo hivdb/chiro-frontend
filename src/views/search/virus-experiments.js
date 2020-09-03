@@ -189,7 +189,18 @@ const tableColumnsMAb = [
       )
     ),
     sort: data => sortBy(
-      data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive']
+      data, [
+        ({ec50unit}) => (
+          ec50unit === '\xb5M' ?
+            'ng/ml' : ec50unit
+        ),
+        ({ec50, ec50unit}) => (
+          ec50unit === '\xb5M' ?
+            ec50 * 150000 : ec50
+        ),
+        'ec50cmp',
+        'ec50inactive'
+      ]
     )
   })
 ];
