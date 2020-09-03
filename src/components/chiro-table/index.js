@@ -98,12 +98,16 @@ export default class ChiroTable extends React.Component {
 
   handleCopy() {
     const node = this.table.current.querySelector('table');
-    let range = document.createRange();
-    range.selectNodeContents(node);
-    let sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    document.execCommand('copy');
+    let content = [];
+    for (const row of node.rows) {
+      let tr = [];
+      for (const cell of row.cells) {
+        tr.push(`"${cell.innerText.replace('"', '\"')}"`);
+      }
+      content.push(tr.join('\t'));
+    }
+    content = content.join('\n');
+    navigator.clipboard.writeText(content);
   }
 
   render() {
