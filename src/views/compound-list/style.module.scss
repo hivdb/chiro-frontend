@@ -90,3 +90,18 @@
     white-space: nowrap;
   }
 }
+
+ul.ec50data {
+  padding-left: 0;
+  margin: 0;
+  list-style-type: none;
+  li {
+    display: inline;
+    &:not(:first-child):not(:last-child)::before {
+      content: ", ";
+    }
+    & + li:last-child::before {
+      content: " or ";
+    }
+  }
+}

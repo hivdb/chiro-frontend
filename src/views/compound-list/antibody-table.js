@@ -3,6 +3,7 @@ import {Link} from 'found';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import groupBy from 'lodash/groupBy';
+import uniq from 'lodash/uniq';
 import {Header} from 'semantic-ui-react';
 
 import ChiroTable, {ColumnDef} from '../../components/chiro-table';
@@ -14,6 +15,60 @@ import style from './style.module.scss';
 const orderedViruses = [
   'SARS-CoV-2', 'SARS-CoV', 'MERS-CoV'
 ];
+
+
+function readableNum(num) {
+  if (isNaN(num)) {
+    return '?';
+  }
+  let prec = Math.max(Math.floor(Math.log10(num)) + 1, 0);
+  if (prec < 2) {
+    prec ++;
+  }
+  return (
+    num.toPrecision(prec)
+      .replace(/(\.\d*)0+$/, '$1')
+      .replace(/\.$/, '')
+  );
+}
+
+
+function formatEC50({
+  ec50: num,
+  ec50cmp: cmp,
+  ec50unit: unit,
+  ec50inactive: inactive,
+  default_unit = 'ng/ml',
+  none = null,
+  converters = {'\xb5M-to-ng/ml': num => num * 150000}
+}) {
+  if (inactive) {
+    return 'inactive';
+  }
+  if (num === null) {
+    return none;
+  }
+  if (`${unit}-to-${default_unit}` in converters) {
+    num = converters[`${unit}-to-${default_unit}`](num);
+    unit = default_unit;
+  }
+  num = readableNum(num);
+  return (
+    `${cmp === '=' ? '' : cmp}${num}` +
+    `${unit === default_unit ? '' : ` ${unit}`}`
+  );
+}
+
+
+function renderEC50Data(ec50Data) {
+  const ec50Text = uniq(ec50Data.map(formatEC50)).filter(t => t);
+  
+  return (
+    <ul className={style.ec50data}>
+      {ec50Text.map((val, idx) => <li key={idx}>{val}</li>)}
+    </ul>
+  );
+}
 
 
 const columnDefs = [
@@ -58,19 +113,54 @@ const columnDefs = [
     none: '-'
   }),
   new ColumnDef({
-    name: 'hasExperiments',
-    label: 'EC50',
-    render: (hasExps, {name, target}) => hasExps ?
-      <Link to={{
-        pathname: '/search/',
-        query: {
-          target,
-          compound: name,
-          no_related_compounds: 'yes'
-        }
-      }}>
-        results
-      </Link> : '-'
+    name: 'ec50Data',
+    label: <>EC50<br />(live virus; ng/ml)</>,
+    render: (ec50Data, {hasExperiments, name, target}) => {
+      ec50Data = ec50Data.filter(
+        ({expCategoryName}) => expCategoryName === 'CellCulture'
+      );
+      if (ec50Data.length === 0) {
+        return '?';
+      }
+      return <>
+        {renderEC50Data(ec50Data)}
+        (<Link to={{
+          pathname: '/search/',
+          query: {
+            target,
+            compound: name,
+            no_related_compounds: 'yes'
+          }
+        }}>
+          details
+        </Link>)
+      </>;
+    }
+  }),
+  new ColumnDef({
+    name: 'ec50Data',
+    label: <>EC50<br />(pseudovirus; ng/ml)</>,
+    render: (ec50Data, {hasExperiments, name, target}) => {
+      ec50Data = ec50Data.filter(
+        ({expCategoryName}) => expCategoryName === 'Pseudovirus'
+      );
+      if (ec50Data.length === 0) {
+        return '?';
+      }
+      return <>
+        {renderEC50Data(ec50Data)}
+        (<Link to={{
+          pathname: '/search/',
+          query: {
+            target,
+            compound: name,
+            no_related_compounds: 'yes'
+          }
+        }}>
+          details
+        </Link>)
+      </>;
+    }
   }),
   new ColumnDef({
     name: 'antibodyData.pdb',

@@ -50,6 +50,14 @@ export default gql`
             pdb
             animalModel
           }
+          ec50Data @include(if: $isTargetMAb) {
+            expCategoryName
+            articles { nickname doi }
+            ec50cmp
+            ec50
+            ec50unit
+            ec50inactive
+          }
           description
         }
       }
