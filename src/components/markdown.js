@@ -34,7 +34,7 @@ class MarkdownLink extends React.Component {
   renderLink(href, props) {
     const {children, ...others} = props;
     const target = this.getTarget(href, props);
-    if (target == null) {
+    if (!href.startsWith('#') && target == null) {
       return <Link to={href} {...props} />;
     }
     else {
