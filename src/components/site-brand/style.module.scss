@@ -68,6 +68,9 @@
     text-transform: uppercase;
     a {
       color: white;
+      &:hover {
+        color: white;
+      }
     }
     .brand-sitename-title {
       font-family: "Source Sans Pro", sans-serif;

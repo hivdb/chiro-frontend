@@ -85,16 +85,12 @@ function MdHeadingTagAnchorDisabled(props) {
   return <HeadingTag disableAnchor {...props} />;
 }
 
-function MdHeadingTagAnchorEnabled(props) {
-  return <HeadingTag {...props} />;
-}
-
 function MdHeadingTag(disableAnchor) {
   if (disableAnchor) {
     return MdHeadingTagAnchorDisabled;
   }
   else {
-    return MdHeadingTagAnchorEnabled;
+    return HeadingTag;
   }
 }
 
@@ -118,7 +114,6 @@ function parsedHtml({element, escapeHtml, skipHtml, value}) {
 function getHeadingLevel(node) {
   if (
     node.type === MdHeadingTagAnchorDisabled ||
-    node.type === MdHeadingTagAnchorEnabled ||
     node.type === HeadingTag
   ) {
     return node.props.level;
