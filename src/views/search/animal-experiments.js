@@ -76,7 +76,7 @@ const tableColumns = [
   new ColDef({
     name: 'numSubjects',
     label: <># Subjects /<br /># Controls</>,
-    render: (ns, {numControls: nc}) => ns === null || nc === null ?
+    render: (ns, {numControls: nc}) => ns !== null || nc !== null ?
       `${ns === null ? '?' : ns} / ${nc === null ? '?' : nc}` :
       '?',
     sortable: false
