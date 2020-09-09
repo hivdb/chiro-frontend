@@ -16,7 +16,7 @@ export default class BasicTOC extends React.Component {
     const {children, className} = this.props;
     return (
       <div className={makeClassNames(style['toc-container'], className)}>
-        <nav id="_toc" className={makeClassNames(style.toc)}>
+        <nav id="_toc" className={style.toc}>
           {children}
         </nav>
       </div>

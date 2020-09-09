@@ -81,8 +81,21 @@ function OptReferences(props) {
 }
 
 
+function MdHeadingTagAnchorDisabled(props) {
+  return <HeadingTag disableAnchor {...props} />;
+}
+
+function MdHeadingTagAnchorEnabled(props) {
+  return <HeadingTag {...props} />;
+}
+
 function MdHeadingTag(disableAnchor) {
-  return props => <HeadingTag {...{disableAnchor}} {...props} />;
+  if (disableAnchor) {
+    return MdHeadingTagAnchorDisabled;
+  }
+  else {
+    return MdHeadingTagAnchorEnabled;
+  }
 }
 
 
@@ -103,7 +116,11 @@ function parsedHtml({element, escapeHtml, skipHtml, value}) {
 
 
 function getHeadingLevel(node) {
-  if (node.type === HeadingTag) {
+  if (
+    node.type === MdHeadingTagAnchorDisabled ||
+    node.type === MdHeadingTagAnchorEnabled ||
+    node.type === HeadingTag
+  ) {
     return node.props.level;
   }
   else if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.type)) {

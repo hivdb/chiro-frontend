@@ -48,6 +48,15 @@
     .banner-header-title {
       text-align: center;
       font-size: 4rem;
+      > a {
+        color: white;
+        border-bottom: 5px solid transparent;
+        transition: border-bottom-color 125ms ease-in-out;
+        &:hover {
+          color: white;
+          border-bottom-color: white;
+        }
+      }
     }
     .banner-header-subtitle {
       text-align: center;
@@ -64,6 +73,88 @@
     }
   }
 
+  .banner-slider {
+    $slider-height: 11rem;
+    color: black;
+    > h2 {
+      background-color: $slider-title-bg;
+      display: inline-block;
+      font-weight: 400;
+      font-size: 1.1rem;
+      padding: 0.8rem;
+      margin-bottom: 0;
+      > a {
+        color: black;
+        &:hover {
+          color: rgba(0, 0, 0, .7);
+        }
+      }
+    }
+    > .slider-container {
+      display: flex;
+      overflow: hidden;
+      background-color: white;
+      justify-content: space-between;
+      align-items: center;
+      > .slider-sections-overflow {
+        height: $slider-height;
+        overflow: hidden;
+        > .slider-sections {
+          transition-duration: 100ms;
+          display: flex;
+          > section {
+            padding: 1.5rem 0;
+            min-width: 100%;
+            height: 11rem;
+            overflow: hidden;
+            position: relative;
+            > h3 {
+              margin-top: 0;
+              font-size: 1.5rem;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            > p {
+              font-size: 1.2rem;
+            }
+            > ul, > ol {
+              padding-left: 1.5rem;
+              font-size: 1.1rem;
+            }
+            &::after {
+              content: "";
+              position: absolute;
+              background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+              height: 3rem;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+            }
+          }
+        }
+      }
+      > .arrow-prev, > .arrow-next {
+        display: block;
+        text-align: center;
+        font-size: 2.5rem;
+        min-width: 5rem;
+        max-width: 5rem;
+        line-height: $slider-height; 
+        height: $slider-height;
+        opacity: 1;
+        &[disabled] {
+          color: rgba(0, 0, 0, .4);
+          cursor: default;
+          pointer-events: none;
+          &:hover {
+            color: rgba(0, 0, 0, .4);
+          }
+        }
+      }
+    }
+  }
+
   .banner-sidebar {
     height: 100%;
     display: block;
@@ -74,7 +165,7 @@
       &:not(:last-child) {
         margin-left: #{(100vw - $main-content-width) / 2};
         margin-right: 0;
-        max-width: #{50vw - (100vw - $main-content-width) / 2};
+        max-width: #{61.8vw - (100vw - $main-content-width) / 2};
       }
     }
     .banner-sidebar {
@@ -110,6 +201,9 @@
       .banner-header-title {
         font-size: 3rem;
       }
+      .banner-slider {
+        text-align: left;
+      }
       &:not(:last-child) {
         max-width: $mobile-main-content-width;
         .banner-header-title {
@@ -117,6 +211,14 @@
         }
         .banner-header-subtitle {
           text-align: center;
+        }
+      }
+    }
+    .banner-slider {
+      > .slider-container {
+        > .arrow-prev, > .arrow-next {
+          min-width: 2.5rem;
+          max-width: 2.5rem;
         }
       }
     }

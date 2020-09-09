@@ -13,6 +13,10 @@ html {
   }
   a {
     color: $link-color;
+    transition: color 200ms ease-in-out;
+    &:hover {
+      color: rgba($link-color, .8);
+    }
   }
 
   :global(.ui.breadcrumb) a {

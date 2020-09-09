@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, routerShape} from 'found';
-import {List, Loader, Button, Icon} from 'semantic-ui-react';
+import {List, Loader} from 'semantic-ui-react';
 
 import {H2} from '../../components/heading-tags';
 import BasicTOC from '../../components/toc';
@@ -28,30 +28,6 @@ import Subscribe from './subscribe';
 const URL_PK_NOTES = (
   'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
   'tDg7l0H3625fjrPSThbCRN2bt1BeJguD24SBfe9Rp6j5lR6dV1p4NR3YWpW3yh1/pub');
-
-
-function UpdatesSection(props) {
-  const {updates = ''} = props;
-  const [content, refs] = updates.split(/<!-- start of references details -->/);
-  return <section className={style['home-section']}>
-    <H2 disableAnchor>Updates</H2>
-    {updates ?
-      <div className={style['scrollable']}>
-        {content.split(/(?=^###[^#])/m).map((part, idx) => (
-          part.trim() ?
-            <Markdown
-             key={idx}
-             escapeHtml={false}
-             referenceHeadingTagLevel={4}
-             disableHeadingTagAnchor>
-              {`${part}${refs}`}
-            </Markdown> : null
-        ))}
-      </div> :
-      <Loader active />}
-  </section>;
-}
-
 
 
 export default class Home extends React.Component {
@@ -121,22 +97,20 @@ export default class Home extends React.Component {
       <Banner
        bgImage={banner ? getFullLink(`images/${banner.image}`) : undefined}>
         <Banner.Title as="h2">
-          {banner ? <Markdown inline>{banner.title}</Markdown> : null}
+          <a href="/page/covid-review/">
+            {banner ? <Markdown inline>{banner.title}</Markdown> : null}
+          </a>
         </Banner.Title>
-        <Banner.Subtitle>
-          {banner ? <p><Markdown inline>{banner.subtitle}</Markdown></p> : null}
-          <p>
-            <Button
-             size="huge"
-             as={Link} to="/page/covid-review/"
-             className={style['learn-more']}>
-              Learn more
-              <Icon
-               className={style['learn-more-icon']}
-               name="arrow right" />
-            </Button>
-          </p>
-        </Banner.Subtitle>
+        {updates ?
+          <Banner.Slider title={<a href="/page/updates/">Latest Updates</a>}>
+            <Markdown
+             escapeHtml={false}
+             referenceHeadingTagLevel={3}
+             disableHeadingTagAnchor>
+              {updates}
+            </Markdown>
+          </Banner.Slider> :
+          <Loader active />}
         <Banner.Sidebar>
           <BasicTOC className={style['scroll-toc']}>
             {banner ?
@@ -188,7 +162,6 @@ export default class Home extends React.Component {
           </InlineSearchBox>
         </div>
       </section>
-      <UpdatesSection updates={updates} />
       <section className={style['home-section']}>
         <H2 disableAnchor>Mission Statement</H2>
         {missionStatement ?

@@ -2,28 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import makeClassNames from 'classnames';
 
+import Slider from './slider';
+import SubComponent from './sub-component';
 import style from './style.module.scss';
 
-
-function SubComponent(defaultAs, defaultClassName) {
-  return function(props) {
-    let {as, children, ...extras} = props;
-    if (as === undefined) {
-      as = defaultAs;
-    }
-    extras.className = makeClassNames(
-      style[defaultClassName],
-      extras.className
-    );
-    return (
-      React.createElement(
-        as,
-        extras,
-        children
-      )
-    );
-  };
-}
 
 export default class Banner extends React.Component {
 
@@ -45,6 +27,7 @@ export default class Banner extends React.Component {
 
   static Title = SubComponent('h1', 'banner-header-title');
   static Subtitle = SubComponent('div', 'banner-header-subtitle');
+  static Slider = Slider;
   static Sidebar = SubComponent('div', 'banner-sidebar');
 
   get titleElement() {
@@ -57,6 +40,11 @@ export default class Banner extends React.Component {
     return children.filter(node => node.type === this.constructor.Subtitle);
   }
 
+  get sliderElement() {
+    const {children} = this.props;
+    return children.filter(node => node.type === this.constructor.Slider);
+  }
+
   get sidebarElement() {
     const {children} = this.props;
     return children.filter(node => node.type === this.constructor.Sidebar);
@@ -64,7 +52,10 @@ export default class Banner extends React.Component {
 
   render() {
     const {bgImage, narrow} = this.props;
-    const {titleElement, subtitleElement, sidebarElement} = this;
+    const {
+      titleElement, subtitleElement,
+      sliderElement, sidebarElement
+    } = this;
     const classNames = makeClassNames(
       style['banner-section'],
       narrow ? style['narrow'] : null
@@ -79,6 +70,7 @@ export default class Banner extends React.Component {
         <header className={style['banner-header']}>
           {titleElement}
           {subtitleElement}
+          {sliderElement}
         </header>
         {sidebarElement}
       </section>

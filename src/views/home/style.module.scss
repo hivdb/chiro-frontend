@@ -31,12 +31,13 @@
 }
 
 .scroll-toc {
-  margin-right: 8rem;
+  margin-right: 0;
   @media only screen and (max-width: 1600px) {
     margin-right: 0;
   }
   @media only screen and (min-width: 901px) {
-    > nav {
+    > nav[class*="style_toc"] {
+      width: 28rem;
       max-height: $banner-height - 4rem;
       overflow-y: scroll;
     }
