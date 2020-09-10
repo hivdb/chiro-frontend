@@ -25,6 +25,7 @@ import ClinicalTrialsV2 from './views/clinical-trials-v2';
 import News from './views/news';
 import Plots from './views/plots';
 import Page from './views/page';
+import MutAnnotViewerLayout from './views/mut-annot-viewer-layout';
 
 import {mutAnnotEditorConfig} from './config';
 import style from './index.module.scss';
@@ -45,11 +46,13 @@ const BrowserRouter = createBrowserRouter({
           className: style['sierra-sars2-webui']
         })}
       </Route>
-      {MutAnnotEditorRoutes({
-        ...mutAnnotEditorConfig,
-        pathPrefix: 'mut-annot-viewer/',
-        className: style['mut-annot-editor-ui']
-      })}
+      <Route Component={MutAnnotViewerLayout}>
+        {MutAnnotEditorRoutes({
+          ...mutAnnotEditorConfig,
+          pathPrefix: 'mut-annot-viewer/',
+          className: style['mut-annot-editor-ui']
+        })}
+      </Route>
       <Route Component={Search} path="/search/" />
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />

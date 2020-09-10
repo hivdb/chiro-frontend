@@ -163,6 +163,39 @@ export default class Home extends React.Component {
         </div>
       </section>
       <section className={style['home-section']}>
+        <H2 disableAnchor>Projects</H2>
+        <ul className={style['list-projects']}>
+          <li style={{backgroundColor: '#bc6934'}}>
+            <a
+             target="_blank"
+             rel="noopener noreferrer"
+             href="https://www.mdpi.com/1999-4915/12/9/1006">Paper</a>
+          </li>
+          <li style={{backgroundColor: '#6a79d4'}}>
+            <Link to="/mut-annot-viewer/SARS2S/">Spike viewer</Link>
+          </li>
+          <li style={{backgroundColor: '#628c39'}}>
+            <Link to="/page/spike-structures/">Spike structures</Link>
+          </li>
+          <li style={{backgroundColor: '#b35db0'}}>
+            <a
+             target="_blank"
+             rel="noopener noreferrer"
+             href="https://www.youtube.com/watch?v=bp2gMbB5T2w">
+              Polymerase talk
+            </a>
+          </li>
+          <li style={{backgroundColor: '#c85877'}}>
+            <Link to={
+              "/compound-list/" +
+              "?target=Entry%20%28monoclonal%20antibodies%29"
+            }>
+              Spike antibodies
+            </Link>
+          </li>
+        </ul>
+      </section>
+      <section className={style['home-section']}>
         <H2 disableAnchor>Mission Statement</H2>
         {missionStatement ?
           <Markdown>{missionStatement}</Markdown> :
