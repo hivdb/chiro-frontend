@@ -102,7 +102,7 @@ export default class Header extends React.Component {
             </NavItem>
             <NavItem>
               <a
-               href="https://www.preprints.org/manuscript/202007.0551/v1"
+               href="https://www.mdpi.com/1999-4915/12/9/1006"
                target="_blank" rel="noopener noreferrer">
                 Citation
               </a>
