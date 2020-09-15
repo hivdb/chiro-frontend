@@ -186,10 +186,7 @@ export default class Home extends React.Component {
             </a>
           </li>
           <li style={{backgroundColor: '#c85877'}}>
-            <Link to={
-              "/compound-list/" +
-              "?target=Entry%20%28monoclonal%20antibodies%29"
-            }>
+            <Link to="/page/mab-tables/">
               Spike antibodies
             </Link>
           </li>
