@@ -5,9 +5,9 @@ import startCase from 'lodash/startCase';
 export default class ColumnDef {
 
   constructor({
-    name, label, render, sort,
+    name, label, render, renderConfig = {}, sort,
     sortable = true, textAlign = 'center',
-    none = '?'
+    none = '?', multiCells = false
   }) {
     this.name = name;
     this.label = label ? label : startCase(name);
@@ -16,9 +16,11 @@ export default class ColumnDef {
         cellData === null ||
         cellData === '') ? none : cellData
     );
+    this.renderConfig = renderConfig;
     this.sort = sort ? sort : data => sortBy(data, [name]);
     this.sortable = Boolean(sortable);
     this.textAlign = textAlign;
+    this.multiCells = multiCells;
   }
 
 }

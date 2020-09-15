@@ -78,7 +78,7 @@ export default class CMSPage extends React.Component {
     pageTitle, introHeader, content, isHtml, toc,
     hideLastModified, lastModified, cmsPrefix, escapeHtml,
     collapsableLevels, referenceTitle, heroImage,
-    imagePrefix
+    imagePrefix, tables
   }) => {
     content = content.replace(/\$\$CMS_PREFIX\$\$/g, cmsPrefix);
     const {pageName} = this.props;
@@ -123,6 +123,7 @@ export default class CMSPage extends React.Component {
           <Markdown
            toc={toc} tocClassName={style.toc}
            imagePrefix={imagePrefix}
+           tables={tables}
            escapeHtml={escapeHtml}
            collapsableLevels={collapsableLevels}
            referenceTitle={referenceTitle}>

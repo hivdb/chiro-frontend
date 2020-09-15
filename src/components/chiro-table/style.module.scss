@@ -7,6 +7,9 @@
     text-align: justify;
     text-justify: inter-word;
   }
+  td.hide {
+    display: none;
+  }
   @media only screen and (max-width: 767px) {
     .cell-label {
       display: inline-block;

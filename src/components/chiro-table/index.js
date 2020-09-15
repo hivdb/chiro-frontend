@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import nestedGet from 'lodash/get';
+import sortBy from 'lodash/sortBy';
 import {Table, Button} from 'semantic-ui-react';
 import style from './style.module.scss';
 import ColumnDef from './column-def';
@@ -18,6 +19,27 @@ function getNextDirection(direction) {
   else {
     return null;
   }
+}
+
+
+function groupBySpanIndex(rows) {
+  const groups = [];
+  let prevRow;
+  let prevGroup;
+  for (const row of rows) {
+    let curGroup;
+    if (prevRow && prevRow._spanIndex === row._spanIndex) {
+      prevGroup.push(row);
+      curGroup = prevGroup;
+    }
+    else {
+      curGroup = [row];
+      groups.push(curGroup);
+    }
+    prevRow = row;
+    prevGroup = curGroup;
+  }
+  return groups;
 }
 
 
@@ -66,6 +88,10 @@ export default class ChiroTable extends React.Component {
   }
 
   handleSort(column, sortFunc) {
+    if (sortFunc && typeof sortFunc !== 'function') {
+      const sortKeys = sortFunc.map(key => `${column}.${key}`);
+      sortFunc = value => sortBy(value, sortKeys);
+    }
     return () => {
       let {sortedByColumn, sortDirection, sortedData} = this.state;
 
@@ -102,12 +128,39 @@ export default class ChiroTable extends React.Component {
     for (const row of node.rows) {
       let tr = [];
       for (const cell of row.cells) {
-        tr.push(`"${cell.innerText.replace('"', '\"')}"`);
+        tr.push(`"${cell.innerText.replace('"', '\\"')}"`);
       }
       content.push(tr.join('\t'));
     }
     content = content.join('\n');
     navigator.clipboard.writeText(content);
+  }
+
+  getRowSpanMatrix() {
+    const {columnDefs} = this.props;
+    const {sortedData} = this.state;
+    const matrix = new Array(sortedData.length).fill(1).map(
+      () => new Array(columnDefs.length).fill(1)
+    );
+    if (columnDefs.every(({multiCells}) => !multiCells)) {
+      return matrix;
+    }
+    const groupedData = groupBySpanIndex(sortedData);
+    let idx = 0;
+    for (const group of groupedData) {
+      const rowSpan = group.length;
+      for (let jdx = 0; jdx < columnDefs.length; jdx ++) {
+        if (columnDefs[jdx].multiCells) {
+          continue;
+        }
+        matrix[idx][jdx] = rowSpan;
+        for (let offset = 1; offset < rowSpan; offset ++) {
+          matrix[idx + offset][jdx] = 0;
+        }
+      }
+      idx += rowSpan;
+    }
+    return matrix;
   }
 
   render() {
@@ -117,10 +170,11 @@ export default class ChiroTable extends React.Component {
       acc[name] = {};
       return acc;
     }, {});
+    const rowSpanMatrix = this.getRowSpanMatrix();
 
     const {disableCopy} = this.props;
 
-    return  <div ref={this.table} className={style['chiro-table-container']}>
+    return <div ref={this.table} className={style['chiro-table-container']}>
       {disableCopy? null:
       <Button
        size="mini"
@@ -151,16 +205,31 @@ export default class ChiroTable extends React.Component {
         <Table.Body>
           {sortedData.map((row, idx) => (
             <Table.Row verticalAlign="top" key={idx}>
-              {columnDefs.map(({name, render, textAlign, label}, jdx) => (
+              {columnDefs.map(({
+                name, render, renderConfig,
+                textAlign, label
+              }, jdx) => (
                 <Table.Cell
                  key={jdx}
+                 className={rowSpanMatrix[idx][jdx] === 0 ? style.hide : null}
+                 rowSpan={
+                   rowSpanMatrix[idx][jdx] > 1 ?
+                     rowSpanMatrix[idx][jdx] : null
+                 }
                  {...(textAlign === 'justify' ?
                    {className: style.justify} :
                    {textAlign}
                  )}>
-                  <span className={style['cell-label']}>{label}</span>
+                  {rowSpanMatrix[idx][jdx] > 0 ?
+                    <span className={style['cell-label']}>{label}</span>
+                    : null}
                   <span className={style['cell-value']}>
-                    {render(nestedGet(row, name), row, context[name])}
+                    {render(
+                      nestedGet(row, name),
+                      row,
+                      context[name],
+                      renderConfig
+                    )}
                   </span>
                 </Table.Cell>
               ))}
