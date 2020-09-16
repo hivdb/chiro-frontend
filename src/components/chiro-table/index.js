@@ -57,11 +57,15 @@ export default class ChiroTable extends React.Component {
     data: PropTypes.arrayOf(
       PropTypes.object.isRequired
     ).isRequired,
+    tableScrollStyle: PropTypes.object.isRequired,
+    tableStyle: PropTypes.object.isRequired,
     disableCopy: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
     disableCopy: false,
+    tableScrollStyle: {},
+    tableStyle: {}
   };
 
   constructor() {
@@ -70,7 +74,9 @@ export default class ChiroTable extends React.Component {
     this.state = {
       sortedByColumn: null,
       sortedData: data,
-      sortDirection: null
+      sortDirection: null,
+      enableRowSpan: true,
+      copying: false
     };
     this.table = React.createRef();
   }
@@ -108,7 +114,7 @@ export default class ChiroTable extends React.Component {
         sortedData = data;
       }
       else if (sortDirection === 'ascending') {
-        sortedData = sortFunc(sortedData);
+        sortedData = sortFunc(sortedData, column);
       }
       else { // descending
         sortedData = sortedData.reverse();
@@ -123,17 +129,27 @@ export default class ChiroTable extends React.Component {
   }
 
   handleCopy() {
-    const node = this.table.current.querySelector('table');
-    let content = [];
-    for (const row of node.rows) {
-      let tr = [];
-      for (const cell of row.cells) {
-        tr.push(`"${cell.innerText.replace('"', '\\"')}"`);
+    this.setState({
+      copying: true,
+      enableRowSpan: false
+    });
+    setTimeout(() => {
+      const node = this.table.current.querySelector('table');
+      let content = [];
+      for (const row of node.rows) {
+        let tr = [];
+        for (const cell of row.cells) {
+          tr.push(`"${cell.innerText.replace('"', '\\"')}"`);
+        }
+        content.push(tr.join('\t'));
       }
-      content.push(tr.join('\t'));
-    }
-    content = content.join('\n');
-    navigator.clipboard.writeText(content);
+      content = content.join('\n');
+      navigator.clipboard.writeText(content);
+      this.setState({
+        copying: false,
+        enableRowSpan: true
+      });
+    }, 300);
   }
 
   getRowSpanMatrix() {
@@ -164,8 +180,12 @@ export default class ChiroTable extends React.Component {
   }
 
   render() {
-    const {color, columnDefs} = this.props;
-    const {sortedByColumn, sortedData, sortDirection} = this.state;
+    const {color, columnDefs, tableScrollStyle, tableStyle} = this.props;
+    const {
+      sortedByColumn, sortedData,
+      sortDirection, enableRowSpan,
+      copying
+    } = this.state;
     const context = columnDefs.reduce((acc, {name}) => {
       acc[name] = {};
       return acc;
@@ -174,7 +194,10 @@ export default class ChiroTable extends React.Component {
 
     const {disableCopy} = this.props;
 
-    return <div ref={this.table} className={style['chiro-table-container']}>
+    return <div
+     ref={this.table}
+     data-copying={copying}
+     className={style['chiro-table-container']}>
       {disableCopy? null:
       <Button
        size="mini"
@@ -184,59 +207,67 @@ export default class ChiroTable extends React.Component {
         Copy to clipboard
       </Button>
       }
-      <Table
-       color={color} sortable celled compact selectable
-       className={style['chiro-table']}>
-        <Table.Header>
-          <Table.Row>
-            {columnDefs.map(({name, label, sort, sortable}, idx) => (
-              <Table.HeaderCell
-               {...(sortable ? {
-                 sorted: sortedByColumn === name ? sortDirection : null,
-                 onClick: this.handleSort(name, sort)
-               } : {})}
-               textAlign="center"
-               key={idx}>
-                {label}
-              </Table.HeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {sortedData.map((row, idx) => (
-            <Table.Row verticalAlign="top" key={idx}>
+      <div className={style['chiro-table-scroll']} style={tableScrollStyle}>
+        <Table
+         style={tableStyle}
+         color={color} sortable celled compact selectable
+         className={style['chiro-table']}>
+          <Table.Header>
+            <Table.Row>
               {columnDefs.map(({
-                name, render, renderConfig,
-                textAlign, label
-              }, jdx) => (
-                <Table.Cell
-                 key={jdx}
-                 className={rowSpanMatrix[idx][jdx] === 0 ? style.hide : null}
-                 rowSpan={
-                   rowSpanMatrix[idx][jdx] > 1 ?
-                     rowSpanMatrix[idx][jdx] : null
-                 }
-                 {...(textAlign === 'justify' ?
-                   {className: style.justify} :
-                   {textAlign}
-                 )}>
-                  {rowSpanMatrix[idx][jdx] > 0 ?
-                    <span className={style['cell-label']}>{label}</span>
-                    : null}
-                  <span className={style['cell-value']}>
-                    {render(
-                      nestedGet(row, name),
-                      row,
-                      context[name],
-                      renderConfig
-                    )}
-                  </span>
-                </Table.Cell>
+                name, label, sort, sortable, headCellStyle
+              }, idx) => (
+                <Table.HeaderCell
+                 {...(sortable ? {
+                   sorted: sortedByColumn === name ? sortDirection : null,
+                   onClick: this.handleSort(name, sort)
+                 } : {})}
+                 textAlign="center"
+                 style={headCellStyle}
+                 key={idx}>
+                  {label}
+                </Table.HeaderCell>
               ))}
             </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+          </Table.Header>
+          <Table.Body>
+            {sortedData.map((row, idx) => (
+              <Table.Row verticalAlign="top" key={idx}>
+                {columnDefs.map(({
+                  name, render, renderConfig,
+                  textAlign, label, bodyCellStyle
+                }, jdx) => (
+                  <Table.Cell
+                   key={jdx}
+                   className={
+                     enableRowSpan && rowSpanMatrix[idx][jdx] === 0 ?
+                       style.hide : null
+                   }
+                   style={bodyCellStyle}
+                   rowSpan={
+                     enableRowSpan && rowSpanMatrix[idx][jdx] > 1 ?
+                       rowSpanMatrix[idx][jdx] : null
+                   }
+                   {...(textAlign === 'justify' ?
+                     {className: style.justify} :
+                     {textAlign}
+                   )}>
+                    <span className={style['cell-label']}>{label}</span>
+                    <span className={style['cell-value']}>
+                      {render(
+                        nestedGet(row, name),
+                        row,
+                        context[name],
+                        renderConfig
+                      )}
+                    </span>
+                  </Table.Cell>
+                ))}
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </div>
     </div>
     ;
   }

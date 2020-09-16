@@ -1,6 +1,7 @@
 import React from 'react';
 import toPath from 'lodash/toPath';
 import nl2br from 'react-nl2br';
+import nestedGet from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 
 import macroPlugin from './macro-plugin';
@@ -53,6 +54,10 @@ const sortFuncs = {
     rows, ({references}) => references.map(
       ({firstAuthor: {surname}, year}) => [surname, -year]
     )
+  ),
+
+  numeric: (rows, column) => sortBy(
+    rows, row => parseInt(nestedGet(row, column))
   )
 
 };
@@ -106,13 +111,20 @@ function expandMultiCells(data, columnDefs) {
 }
 
 
-function Table({cacheKey, columnDefs, data}) {
+function Table({
+  cacheKey,
+  columnDefs,
+  data,
+  tableScrollStyle = {},
+  tableStyle = {}}) {
   columnDefs = buildColumnDefs(columnDefs);
   data = expandMultiCells(data, columnDefs);
 
   return (
     <ChiroTable
      cacheKey={cacheKey}
+     tableScrollStyle={tableScrollStyle}
+     tableStyle={tableStyle}
      columnDefs={columnDefs}
      data={data} />
   );

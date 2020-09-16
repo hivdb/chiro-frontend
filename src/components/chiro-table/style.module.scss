@@ -1,3 +1,9 @@
+.chiro-table-scroll {
+  @media only screen and (min-width: 768px) {
+    overflow: auto;
+  }
+}
+
 .chiro-table:global(.ui.table:not(.unstackable)) {
   margin-top: 1rem;
   .cell-label {
@@ -14,14 +20,14 @@
     .cell-label {
       display: inline-block;
       text-align: right;
-      width: 40%;
+      width: 20%;
       box-sizing: border-box;
       padding-right: 2%;
     }
     .cell-value {
       display: inline-block;
       text-align: left;
-      width: 60%;
+      width: 80%;
       box-sizing: border-box;
       padding: 2%;
       background-color: rgba(0,0,0,.05);
@@ -29,6 +35,14 @@
     thead {
       display: none;
     } 
+  }
+  @media only screen and (max-width: 500px) {
+    .cell-label {
+      width: 30%;
+    }
+    .cell-value {
+      width: 70%;
+    }
   }
 }
 
@@ -39,11 +53,33 @@
     right: 0;
     position: absolute;
   }
+  &::after {
+    z-index: -1;
+    content: "";
+    display: block;
+    position: absolute;
+    top: 1rem;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+    transition: background-color 150ms ease-in-out;
+  }
+  &[data-copying="true"]::after {
+    z-index: 0;
+    background-color: rgba(0, 0, 0, .2);
+  }
 }
 
 h2:global(.ui.dividing.header) + .chiro-table-container {
   .copy-button {
     top: -3.5rem;
+  }
+}
+
+h2[class*="heading-tag"] + .chiro-table-container {
+  .copy-button {
+    top: -5rem;
   }
 }
 
