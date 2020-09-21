@@ -67,6 +67,7 @@ ul.list-projects {
     background-color: white;
     box-shadow: 0 1rem 4rem 0 rgba(1,33,92,0.1);
     > .image-trimmer {
+      display: block;
       max-height: 15rem;
       overflow: hidden;
       > img {
