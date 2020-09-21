@@ -3,33 +3,6 @@
 @import "../../styles/mixins";
 @import "../../styles/dropdown";
 
-:global(.ui.huge.button).learn-more {
-  padding: .85rem 3.5rem;
-  text-transform: uppercase;
-  background-color: white;
-  border-radius: 0;
-  font-family: $font-family;
-  letter-spacing: 1px;
-  font-weight: 600;
-  color: rgba(0,0,0,.85);
-  font-size: 1.15rem;
-  line-height: 1.7em;
-  transition: background-color .2s ease-in-out;
-  &:global(:not(.icon)>.icon):not(.button):not(.dropdown).learn-more-icon {
-    transition: all .2s ease-in-out;
-    position: absolute;
-    margin-left: -1rem;
-    opacity: 0;
-  }
-  &:hover {
-    background-color: rgba(255, 255, 255, .8);
-    &:global(:not(.icon)>.icon):not(.button):not(.dropdown).learn-more-icon {
-      margin-left: .5rem;
-      opacity: 1;
-    }
-  }
-}
-
 .scroll-toc {
   margin-right: 0;
   @media only screen and (max-width: 1600px) {
@@ -82,6 +55,8 @@ ul.list-projects {
   list-style-type: none;
   flex-wrap: wrap;
   justify-content: flex-start;
+  margin-left: -3rem;
+  margin-right: -3rem;
   > li {
     width: calc(calc(100% / 3) - 6rem);
     box-sizing: border-box;
@@ -114,10 +89,7 @@ ul.list-projects {
     }
     @media only screen and (max-width: 800px) {
       width: calc(100% - 6rem);
-    }
-    @media only screen and (max-width: 600px) {
-      width: 100%;
-      margin: 1rem 0;
+      margin: 1rem 3rem;
     }
   }
 }
