@@ -89,8 +89,8 @@ export default class Home extends React.Component {
   }
 
   thenRender = ({
-    banner, updates,
-    missionStatement
+    banner, updates, projects = [],
+    missionStatement, imagePrefix
   } = {}) => {
     setTitle(null);
     return <>
@@ -165,31 +165,27 @@ export default class Home extends React.Component {
       <section className={style['home-section']}>
         <H2 disableAnchor>Projects</H2>
         <ul className={style['list-projects']}>
-          <li style={{backgroundColor: '#bc6934'}}>
-            <a
-             target="_blank"
-             rel="noopener noreferrer"
-             href="https://www.mdpi.com/1999-4915/12/9/1006">Paper</a>
-          </li>
-          <li style={{backgroundColor: '#6a79d4'}}>
-            <Link to="/mut-annot-viewer/SARS2S/">Spike viewer</Link>
-          </li>
-          <li style={{backgroundColor: '#628c39'}}>
-            <Link to="/page/spike-structures/">Spike structures</Link>
-          </li>
-          <li style={{backgroundColor: '#b35db0'}}>
-            <a
-             target="_blank"
-             rel="noopener noreferrer"
-             href="https://www.youtube.com/watch?v=bp2gMbB5T2w">
-              Polymerase talk
-            </a>
-          </li>
-          <li style={{backgroundColor: '#c85877'}}>
-            <Link to="/page/mab-tables/">
-              Spike antibodies
-            </Link>
-          </li>
+          {projects.map(({
+            title, description, link, extLink, image
+          }, idx) => (
+            <li key={idx}>
+              <div className={style['image-trimmer']}>
+                <img src={`${imagePrefix}${image}`} alt={title} />
+              </div>
+              {extLink ?
+                <a
+                 className={style['project-title']}
+                 rel="noopener noreferrer"
+                 href={link} target="_blank">{title}</a> :
+                <Link
+                 className={style['project-title']}
+                 to={link}>
+                  {title}
+                </Link>
+              }
+              <div className={style['project-desc']}>{description}</div>
+            </li>
+          ))}
         </ul>
       </section>
       <section className={style['home-section']}>
