@@ -240,7 +240,7 @@ export default class ChiroTable extends React.Component {
   }
 
   hideDownloadOptMenu = (evt) => {
-    setTimeout(() => this.setState({showOptMenu: false}), 350);
+    setTimeout(() => this.setState({showOptMenu: false}), 10);
   }
 
   getRowSpanMatrix() {
