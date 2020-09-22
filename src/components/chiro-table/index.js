@@ -2,11 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import nestedGet from 'lodash/get';
 import sortBy from 'lodash/sortBy';
-import {Table, Button} from 'semantic-ui-react';
+import {Table, Button, Menu} from 'semantic-ui-react';
 import style from './style.module.scss';
 import ColumnDef from './column-def';
+import {dumpCSV, dumpTSV, dumpExcelSimple} from '../../utils/sheet-utils';
+
+import {makeDownload} from 'sierra-frontend/dist/utils/download';
 
 export {ColumnDef};
+
+const OPT_CHANGE_EVENT = 'chirodefaulttabledownloadoptchanged';
+const KEY_DEFAULT_DOWNLOAD_OPT = '--chiro-default-table-download-opt';
+const DEFAULT_DOWNLOAD_OPT = 'copy-tsv';
+const DOWNLOAD_OPTS = [
+  'download-csv',
+  'download-excel',
+  'copy-tsv'
+];
 
 
 function getNextDirection(direction) {
@@ -47,6 +59,7 @@ export default class ChiroTable extends React.Component {
 
   static propTypes = {
     cacheKey: PropTypes.string,
+    sheetName: PropTypes.string.isRequired,
     columnDefs: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.string.isRequired,
       label: PropTypes.node.isRequired,
@@ -64,6 +77,7 @@ export default class ChiroTable extends React.Component {
 
   static defaultProps = {
     disableCopy: false,
+    sheetName: 'Sheet1',
     tableScrollStyle: {},
     tableStyle: {}
   };
@@ -76,9 +90,44 @@ export default class ChiroTable extends React.Component {
       sortedData: data,
       sortDirection: null,
       enableRowSpan: true,
+      showOptMenu: false,
+      defaultOpt: this.loadDefaultDownloadOption(),
       copying: false
     };
     this.table = React.createRef();
+  }
+
+  handleStorageChange = () => {
+    const defaultOpt = this.loadDefaultDownloadOption();
+    if (this.state.defaultOpt !== defaultOpt) {
+      this.setState({defaultOpt});
+    }
+  }
+
+  loadDefaultDownloadOption = () => {
+    let opt = window.localStorage.getItem(KEY_DEFAULT_DOWNLOAD_OPT);
+    if (!DOWNLOAD_OPTS.includes(opt)) {
+      opt = DEFAULT_DOWNLOAD_OPT;
+    }
+    return opt;
+  }
+  
+  saveDefaultDownloadOption = (opt) => {
+    window.localStorage.setItem(KEY_DEFAULT_DOWNLOAD_OPT, opt);
+    window.dispatchEvent(new Event(OPT_CHANGE_EVENT));
+    this.setState({showOptMenu: false});
+  }
+
+  componentDidMount() {
+    window.addEventListener(
+      OPT_CHANGE_EVENT, this.handleStorageChange, false
+    );
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener(
+      OPT_CHANGE_EVENT, this.handleStorageChange, false
+    );
   }
 
   componentDidUpdate(prevProps) {
@@ -128,28 +177,70 @@ export default class ChiroTable extends React.Component {
     };
   }
 
-  handleCopy() {
+  readTableData = () => {
     this.setState({
       copying: true,
       enableRowSpan: false
     });
-    setTimeout(() => {
-      const node = this.table.current.querySelector('table');
-      let content = [];
-      for (const row of node.rows) {
-        let tr = [];
-        for (const cell of row.cells) {
-          tr.push(`"${cell.innerText.replace('"', '\\"')}"`);
+    const promise = new Promise((resolve) => {
+      setTimeout(() => {
+        const node = this.table.current.querySelector('table');
+        let content = [];
+        for (const row of node.rows) {
+          let tr = [];
+          for (const cell of row.cells) {
+            tr.push(cell.innerText);
+          }
+          content.push(tr);
         }
-        content.push(tr.join('\t'));
-      }
-      content = content.join('\n');
-      navigator.clipboard.writeText(content);
-      this.setState({
-        copying: false,
-        enableRowSpan: true
-      });
-    }, 300);
+        resolve(content);
+        this.setState({
+          copying: false,
+          enableRowSpan: true
+        });
+      }, 300);
+    });
+    return promise;
+  }
+
+  handleCopy = async () => {
+    const content = await this.readTableData();
+    navigator.clipboard.writeText(dumpTSV(content));
+    this.saveDefaultDownloadOption('copy-tsv');
+  }
+
+  handleDownloadCSV = async () => {
+    const content = await this.readTableData();
+    makeDownload(
+      'datasheet.csv',
+      'text/csv;charset=utf-8',
+      dumpCSV(content, ',', true)
+    );
+    this.saveDefaultDownloadOption('download-csv');
+  }
+
+  handleDownloadExcel = async () => {
+    const {sheetName} = this.props;
+    const content = await this.readTableData();
+    const xlsxBlob = dumpExcelSimple(
+      content,
+      sheetName
+    );
+    makeDownload(
+      /* fileName=  */ 'datasheet.xlsx',
+      /* mediaType= */ null,
+      /* data=      */ xlsxBlob,
+      /* isBlob=    */ true
+    );
+    this.saveDefaultDownloadOption('download-excel');
+  }
+  
+  showDownloadOptMenu = () => {
+    this.setState({showOptMenu: true});
+  }
+
+  hideDownloadOptMenu = (evt) => {
+    setTimeout(() => this.setState({showOptMenu: false}), 350);
   }
 
   getRowSpanMatrix() {
@@ -184,7 +275,8 @@ export default class ChiroTable extends React.Component {
     const {
       sortedByColumn, sortedData,
       sortDirection, enableRowSpan,
-      copying
+      copying, showOptMenu,
+      defaultOpt
     } = this.state;
     const context = columnDefs.reduce((acc, {name}) => {
       acc[name] = {};
@@ -198,15 +290,6 @@ export default class ChiroTable extends React.Component {
      ref={this.table}
      data-copying={copying}
      className={style['chiro-table-container']}>
-      {disableCopy? null:
-      <Button
-       size="mini"
-       floated='right'
-       className={style['copy-button']}
-       onClick={this.handleCopy.bind(this)}>
-        Copy to clipboard
-      </Button>
-      }
       <div className={style['chiro-table-scroll']} style={tableScrollStyle}>
         <Table
          style={tableStyle}
@@ -268,6 +351,57 @@ export default class ChiroTable extends React.Component {
           </Table.Body>
         </Table>
       </div>
+      {disableCopy ? null:
+      <div
+       className={style['download-button-group']}>
+        <Button.Group size="mini">
+          {defaultOpt === 'copy-tsv' ?
+            <Button
+             onClick={this.handleCopy}>
+              Copy to clipboard
+            </Button> : null}
+          {defaultOpt === 'download-csv' ?
+            <Button
+             onClick={this.handleDownloadCSV}>
+              Download CSV
+            </Button> : null}
+          {defaultOpt === 'download-excel' ?
+            <Button
+             onClick={this.handleDownloadExcel}>
+              Download Excel
+            </Button> : null}
+          <Button
+           color="grey"
+           className={style['btn-more-option']}
+           onFocus={this.showDownloadOptMenu}
+           onBlur={this.hideDownloadOptMenu}
+           icon={showOptMenu ? "caret up" : "caret down"}
+           aria-label="More options" />
+        </Button.Group>
+        {showOptMenu ?
+          <Menu
+           inverted
+           color="grey"
+           vertical
+           size="mini"
+           className={style['option-menu']}>
+            {defaultOpt !== 'copy-tsv' ?
+              <Menu.Item
+               name="copy-tsv"
+               content="Copy to clipboard"
+               onClick={this.handleCopy} /> : null}
+            {defaultOpt !== 'download-csv' ?
+              <Menu.Item
+               name="download-csv"
+               content="Download CSV"
+               onClick={this.handleDownloadCSV} /> : null}
+            {defaultOpt !== 'download-excel' ?
+              <Menu.Item
+               name="download-excel"
+               content="Download Excel"
+               onClick={this.handleDownloadExcel} /> : null}
+          </Menu> : null}
+      </div>}
     </div>
     ;
   }
