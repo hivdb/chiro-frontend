@@ -1,3 +1,5 @@
+import {loadPage} from './utils/cms';
+
 let backendPrefix = '';
 
 if (window.__NODE_ENV === 'production') {
@@ -28,12 +30,9 @@ function makeGeneRefSeqLoader(gene) {
 }
 
 
-function makeMutationAnnotationLoader(gene) {
+function makeMutationAnnotationLoader(pageName) {
   return async() => {
-    const resp = await fetch(
-      `${repoSierraSARS2}/src/main/resources/mutation-annotations_${gene}.json`
-    );
-    return await resp.json();
+    return loadPage(pageName);
   };
 }
 
@@ -44,7 +43,13 @@ const mutAnnotEditorConfig = {
       name: 'SARS2S',
       display: "SARS-CoV-2 Spike gene",
       refSeqLoader: makeGeneRefSeqLoader('SARS2S'),
-      annotationLoader: makeMutationAnnotationLoader('SARS2S')
+      annotationLoader: makeMutationAnnotationLoader('mutannot-spike')
+    },
+    {
+      name: 'SARS2RdRP',
+      display: "SARS-CoV-2 RdRP gene",
+      refSeqLoader: makeGeneRefSeqLoader('SARS2RdRP'),
+      annotationLoader: makeMutationAnnotationLoader('mutannot-rdrp')
     }
   ]
 };

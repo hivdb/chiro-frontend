@@ -1,3 +1,5 @@
+import memoize from 'lodash/memoize';
+
 function cmsStageHost(host) {
   if (host === 'covdb.stanford.edu') {
     return 's3-us-west-2.amazonaws.com/cms.hivdb.org/chiro-prod';
@@ -8,13 +10,14 @@ function cmsStageHost(host) {
 }
 
 
-export async function loadPage(pageName) {
+const loadPage = memoize(async function loadPage(pageName) {
   let stage;
   let payload;
   const {hostname} = window.location;
   stage = cmsStageHost(hostname);
   const resp = await fetch(
-    `https://${stage}/pages/${pageName}.json`
+    `https://${stage}/pages/${pageName}.json`,
+    {cache: 'default'}
   );
   if (resp.status === 403 || resp.status === 404) {
     throw new Error(`Page not found: ${pageName}`);
@@ -25,7 +28,8 @@ export async function loadPage(pageName) {
     imagePrefix: `https://${stage}/images/`,
     cmsPrefix: `https://${stage}/`
   };
-}
+});
+export {loadPage};
 
 
 export function getFullLink(path) {

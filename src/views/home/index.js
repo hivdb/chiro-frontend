@@ -97,9 +97,9 @@ export default class Home extends React.Component {
       <Banner
        bgImage={banner ? getFullLink(`images/${banner.image}`) : undefined}>
         <Banner.Title as="h2">
-          <a href="/page/covid-review/">
+          <Link to="/page/covid-review/">
             {banner ? <Markdown inline>{banner.title}</Markdown> : null}
-          </a>
+          </Link>
         </Banner.Title>
         {updates ?
           <Banner.Slider title={<a href="/page/updates/">Latest Updates</a>}>
