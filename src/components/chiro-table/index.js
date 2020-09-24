@@ -122,11 +122,17 @@ export default class ChiroTable extends React.Component {
     window.addEventListener(
       OPT_CHANGE_EVENT, this.handleStorageChange, false
     );
+    document.addEventListener(
+      'click', this.condHideDownloadOptMenu, false
+    );
   }
 
   componentWillUnmount() {
     window.removeEventListener(
       OPT_CHANGE_EVENT, this.handleStorageChange, false
+    );
+    document.removeEventListener(
+      'click', this.condHideDownloadOptMenu, false
     );
   }
 
@@ -234,13 +240,17 @@ export default class ChiroTable extends React.Component {
     );
     this.saveDefaultDownloadOption('download-excel');
   }
-  
-  showDownloadOptMenu = () => {
-    this.setState({showOptMenu: true});
-  }
 
-  hideDownloadOptMenu = (evt) => {
-    setTimeout(() => this.setState({showOptMenu: false}), 10);
+  toggleDownloadOptMenu = () => {
+    this.setState({showOptMenu: !this.state.showOptMenu});
+  }
+  
+  condHideDownloadOptMenu = (evt) => {
+    if (!evt.target.closest('*[data-ignore-global-click]')) {
+      if (this.state.showOptMenu) {
+        this.setState({showOptMenu: false});
+      }
+    }
   }
 
   getRowSpanMatrix() {
@@ -353,6 +363,7 @@ export default class ChiroTable extends React.Component {
       </div>
       {disableCopy ? null:
       <div
+       data-ignore-global-click
        className={style['download-button-group']}>
         <Button.Group size="mini">
           {defaultOpt === 'copy-tsv' ?
@@ -373,8 +384,7 @@ export default class ChiroTable extends React.Component {
           <Button
            color="grey"
            className={style['btn-more-option']}
-           onFocus={this.showDownloadOptMenu}
-           onBlur={this.hideDownloadOptMenu}
+           onClick={this.toggleDownloadOptMenu}
            icon={showOptMenu ? "caret up" : "caret down"}
            aria-label="More options" />
         </Button.Group>
