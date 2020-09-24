@@ -46,7 +46,9 @@ const BrowserRouter = createBrowserRouter({
           className: style['sierra-sars2-webui']
         })}
       </Route>
-      <Route Component={MutAnnotViewerLayout}>
+      <Route render={({props}) => (
+        <MutAnnotViewerLayout {...props} {...mutAnnotEditorConfig} />
+      )}>
         {MutAnnotEditorRoutes({
           ...mutAnnotEditorConfig,
           pathPrefix: 'mut-annot-viewer/',

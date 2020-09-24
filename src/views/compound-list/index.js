@@ -10,6 +10,7 @@ import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
+import Markdown from '../../components/markdown';
 import setTitle from '../../utils/set-title';
 import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';
@@ -59,9 +60,14 @@ class CompoundListInner extends React.Component {
     handleQueryChange(actions, this.props)
   )
 
-  thenRender = ({
-    content
-  } = {}) => {
+  renderContent = ({content}) => {
+    if (content) {
+      return <Markdown>{content}</Markdown>;
+    }
+    return null;
+  }
+
+  render() {
     setTitle('Compounds');
     this.props.loading || redirectIfNeeded(this.props);
     const {
@@ -198,7 +204,9 @@ class CompoundListInner extends React.Component {
       </Grid.Row>
       <Grid.Row>
         <div className={style['compound-list-desc']}>
-          {content}
+          <PromiseComponent
+           promise={loadPage('compound-list')}
+           then={this.renderContent} />
         </div>
       </Grid.Row>
       <Grid.Row>
@@ -230,14 +238,6 @@ class CompoundListInner extends React.Component {
       {loading ? <Loader active inline="centered" /> : inner}
     </Grid>;
 
-  }
-
-  render() {
-    return (
-      <PromiseComponent
-       promise={loadPage('compound-list')}
-       then={this.thenRender} />
-    );
   }
 
 }

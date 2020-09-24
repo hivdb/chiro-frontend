@@ -4,30 +4,47 @@ import {matchShape} from 'found';
 
 import {Grid, Header} from 'semantic-ui-react';
 
+import {loadPage} from '../../utils/cms';
 import setTitle from '../../utils/set-title';
+import PromiseComponent from '../../utils/promise-component';
+
+import Markdown from '../../components/markdown';
 
 
 export default class MutAnnotViewerLayout extends React.Component {
 
   static propTypes = {
     match: matchShape.isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node,
+    presets: PropTypes.arrayOf(
+      PropTypes.shape({
+        display: PropTypes.string.isRequired,
+        asyncPageName: PropTypes.string.isRequired
+      }).isRequired
+    )
   }
 
-  get geneName() {
+  get preset() {
+    const {presets} = this.props;
     const {match: {location: {pathname}}} = this.props;
-    if (pathname.endsWith('SARS2S/') || pathname.endsWith('SARS2S')) {
-      return "Spike";
+    const split = pathname.replace(/\/$/, '').split('/');
+    const geneName = split[split.length - 1];
+    return presets.find(({name}) => name === geneName);
+  }
+
+  renderContent = ({content}) => {
+    if (content) {
+      return <Markdown>{content}</Markdown>;
     }
     return null;
   }
 
   render() {
-    const {geneName} = this;
+    const {preset} = this;
     const {children} = this.props;
     let title = 'Mutation annotation viewer';
-    if (geneName) {
-      title += ` - ${geneName} gene`;
+    if (preset) {
+      title += ` - ${preset.display}`;
     }
 
     setTitle(title);
@@ -36,6 +53,9 @@ export default class MutAnnotViewerLayout extends React.Component {
       <Grid.Row>
         <Grid.Column width={16}>
           <Header as="h1" dividing>{title}</Header>
+          {preset ? <PromiseComponent
+           promise={loadPage(preset.asyncPageName)}
+           then={this.renderContent} /> : null}
           {children}
         </Grid.Column>
       </Grid.Row>
