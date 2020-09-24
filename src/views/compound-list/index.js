@@ -59,8 +59,36 @@ class CompoundListInner extends React.Component {
     handleQueryChange(actions, this.props)
   )
 
+  constructor() {
+    super(...arguments);
+    const promise = new Promise(resolve => {
+      this.resolvePromise = async () => {
+        const {content} = await loadPage('compound-list');
+        resolve({content});
+      };
+      if (this.props.loading === false) {
+        this.resolvePromise();
+      }
+    });
+    this.state = {promise};
+  }
+
+  componentDidUpdate() {
+    if (this.props.loading === false) {
+      this.resolvePromise();
+    }
+  }
+
+  getPromise = async () => {
+    const {content} = await loadPage('compound-list');
+    return {
+      content,
+      props: this.props
+    };
+  }
+
   thenRender = ({
-    content,
+    content
   } = {}) => {
     setTitle('Compounds');
     this.props.loading || redirectIfNeeded(this.props);
@@ -233,14 +261,12 @@ class CompoundListInner extends React.Component {
   }
 
   render() {
-    const promise = loadPage('compound-list');
+    const {promise} = this.state;
 
     return (
       <PromiseComponent
        promise={promise}
-       then={this.thenRender}>
-        {this.thenRender()}
-      </PromiseComponent>
+       then={this.thenRender} />
     );
   }
 
