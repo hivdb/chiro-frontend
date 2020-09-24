@@ -61,13 +61,10 @@ class CompoundListInner extends React.Component {
 
   static getDerivedStateFromProps(props, state = {}) {
     const promise = new Promise(resolve => {
-      const resolvePromise = async () => {
+      (async () => {
         const {content} = await loadPage('compound-list');
         resolve({content});
-      };
-      if (props.loading === false) {
-        resolvePromise();
-      }
+      })();
     });
     return {promise};
   }
