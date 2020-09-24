@@ -73,6 +73,9 @@ function buildColumnDefs(columnDefs) {
     if (typeof sort === 'string') {
       sort = sortFuncs[sort];
     }
+    if (colDef.label && /\n/.test(colDef.label)) {
+      colDef.label = nl2br(colDef.label);
+    }
     objs.push(new ColumnDef({
       ...colDef, render, sort
     }));
@@ -95,6 +98,9 @@ function expandMultiCells(data, columnDefs) {
       );
     }
     expandTarget = attr;
+  }
+  if (expandTarget === null) {
+    return data;
   }
   const newRows = [];
   for (let i = 0; i < data.length; i ++) {
