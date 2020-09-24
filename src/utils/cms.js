@@ -10,7 +10,7 @@ function cmsStageHost(host) {
 }
 
 
-const loadPage = memoize(async function loadPage(pageName) {
+const _loadPage = memoize(async function _loadPage(pageName) {
   let stage;
   let payload;
   const {hostname} = window.location;
@@ -29,7 +29,20 @@ const loadPage = memoize(async function loadPage(pageName) {
     cmsPrefix: `https://${stage}/`
   };
 });
-export {loadPage};
+
+
+export async function loadPage(pageName) {
+  /**
+   * Remove the side-effect of "same `Promise` object
+   * reference" caused by memoizing `_loadPage`
+   *
+   * Note:
+   *   `loadPage` can be safely used in `render()`
+   *   with `PromiseComponent`.
+   *
+   */
+  return await _loadPage(pageName);
+}
 
 
 export function getFullLink(path) {
