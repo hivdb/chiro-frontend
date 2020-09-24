@@ -59,32 +59,22 @@ class CompoundListInner extends React.Component {
     handleQueryChange(actions, this.props)
   )
 
-  constructor() {
-    super(...arguments);
+  static getDerivedStateFromProps(props, state = {}) {
     const promise = new Promise(resolve => {
-      this.resolvePromise = async () => {
+      const resolvePromise = async () => {
         const {content} = await loadPage('compound-list');
         resolve({content});
       };
-      if (this.props.loading === false) {
-        this.resolvePromise();
+      if (props.loading === false) {
+        resolvePromise();
       }
     });
-    this.state = {promise};
+    return {promise};
   }
 
-  componentDidUpdate() {
-    if (this.props.loading === false) {
-      this.resolvePromise();
-    }
-  }
-
-  getPromise = async () => {
-    const {content} = await loadPage('compound-list');
-    return {
-      content,
-      props: this.props
-    };
+  constructor() {
+    super(...arguments);
+    this.state = this.constructor.getDerivedStateFromProps(this.props);
   }
 
   thenRender = ({
