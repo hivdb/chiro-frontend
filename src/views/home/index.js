@@ -102,7 +102,9 @@ export default class Home extends React.Component {
           </Link>
         </Banner.Title>
         {updates ?
-          <Banner.Slider title={<a href="/page/updates/">Latest Updates</a>}>
+          <Banner.Slider
+           title={<a href="/page/updates/">Updates</a>}
+           endHref="/page/updates/">
             <Markdown
              escapeHtml={false}
              referenceHeadingTagLevel={3}

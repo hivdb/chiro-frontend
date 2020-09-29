@@ -21,7 +21,8 @@ export default class Slider extends React.Component {
   static propTypes = {
     title: PropTypes.node.isRequired,
     as: PropTypes.string.isRequired,
-    className: PropTypes.string
+    className: PropTypes.string,
+    endHref: PropTypes.string
   }
 
   static defaultProps = {
@@ -77,8 +78,13 @@ export default class Slider extends React.Component {
   }
 
   handleClick = evt => {
-    evt.preventDefault() && evt.stopPropagation();
+    const {disableNext} = this.state;
+    const {endHref} = this.props;
     const direction = getDirection(evt);
+    if (disableNext && endHref && direction === 1) {
+      return;
+    }
+    evt.preventDefault() && evt.stopPropagation();
     this.handleSlide(direction);
   }
 
@@ -104,7 +110,7 @@ export default class Slider extends React.Component {
 
   render() {
     const {currentSectionIdx, disablePrev, disableNext} = this.state;
-    const {as, title, className, children, ...extras} = this.props;
+    const {as, title, className, children, endHref, ...extras} = this.props;
     extras.className = makeClassNames(
       style['banner-slider'],
       extras.className
@@ -140,9 +146,10 @@ export default class Slider extends React.Component {
               </div>
             </div>
             <a
-             disabled={disableNext}
+             disabled={!endHref && disableNext}
+             href={endHref && disableNext ? endHref : '#next'}
              data-direction="next"
-             className={style['arrow-next']} href="#next"
+             className={style['arrow-next']}
              onTouchStart={this.handleClick}
              onClick={this.handleClick}
              onTouchEnd={evt => evt.preventDefault()}>
