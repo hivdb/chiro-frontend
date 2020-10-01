@@ -27,6 +27,7 @@ export default class Footer extends React.Component {
           <Header as="h2">Resources</Header>
           <ul>
             <li><Link to="/page/links/">COVID-19 Websites and Links</Link></li>
+            <li><Link to="/page/press-release/">Press release</Link></li>
           </ul>
         </Grid.Column>
         <Grid.Column>
