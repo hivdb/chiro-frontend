@@ -165,7 +165,7 @@ export default class Home extends React.Component {
         </div>
       </section>
       <section className={style['home-section']}>
-        <H2 disableAnchor>Projects</H2>
+        <H2 disableAnchor>Features</H2>
         <ul className={style['list-projects']}>
           {projects.map(({
             title, description, link, extLink, image
