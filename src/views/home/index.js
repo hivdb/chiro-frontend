@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, routerShape} from 'found';
-import {List, Loader} from 'semantic-ui-react';
+import {Loader} from 'semantic-ui-react';
 
 import {H2} from '../../components/heading-tags';
 import BasicTOC from '../../components/toc';
@@ -9,25 +9,17 @@ import Banner from '../../components/banner';
 import {InlineSearchBox} from '../../components/search-box';
 import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
-import imageRemdesivir from '../../assets/images/remdesivir.png';
-import imageSARS2 from '../../assets/images/sars2.png';
-import image3CL from '../../assets/images/3cl.png';
-import imagePetriDish from '../../assets/images/petri-dish.png';
-import imageMouse from '../../assets/images/mouse.png';
-import imagePK from '../../assets/images/pk.png';
-import imageMeasurement from '../../assets/images/measurement.png';
-import imageClinicalTrial from '../../assets/images/clinical-trial.png';
-import imageReferences from '../../assets/images/references.png';
 
 import {getFullLink} from '../../utils/cms';
 import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';
 
 import Subscribe from './subscribe';
+import ProjectsSection from './projects-section';
 
-const URL_PK_NOTES = (
-  'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
-  'tDg7l0H3625fjrPSThbCRN2bt1BeJguD24SBfe9Rp6j5lR6dV1p4NR3YWpW3yh1/pub');
+// const URL_PK_NOTES = (
+//   'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
+//   'tDg7l0H3625fjrPSThbCRN2bt1BeJguD24SBfe9Rp6j5lR6dV1p4NR3YWpW3yh1/pub');
 
 
 export default class Home extends React.Component {
@@ -89,7 +81,8 @@ export default class Home extends React.Component {
   }
 
   thenRender = ({
-    banner, updates, projects = [],
+    banner, updates, publications = [],
+    webinars = [], eduMaterials = [],
     missionStatement, imagePrefix
   } = {}) => {
     setTitle(null);
@@ -164,131 +157,23 @@ export default class Home extends React.Component {
           </InlineSearchBox>
         </div>
       </section>
-      <section className={style['home-section']}>
-        <H2 disableAnchor>Features</H2>
-        <ul className={style['list-projects']}>
-          {projects.map(({
-            title, description, link, extLink, image
-          }, idx) => (
-            <li key={idx}>
-              {extLink ?
-                <>
-                  <a
-                   className={style['image-trimmer']}
-                   rel="noopener noreferrer"
-                   href={link} target="_blank">
-                    <img src={`${imagePrefix}${image}`} alt={title} />
-                  </a>
-                  <a
-                   className={style['project-title']}
-                   rel="noopener noreferrer"
-                   href={link} target="_blank">{title}</a>
-                </> : <>
-                  <Link
-                   className={style['image-trimmer']}
-                   to={link}>
-                    <img src={`${imagePrefix}${image}`} alt={title} />
-                  </Link>
-                  <Link
-                   className={style['project-title']}
-                   to={link}>
-                    {title}
-                  </Link>
-                </>
-              }
-              <div className={style['project-desc']}>{description}</div>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <ProjectsSection
+       title="Publications"
+       projects={publications}
+       imagePrefix={imagePrefix} />
+      <ProjectsSection
+       title="Webinars"
+       projects={webinars}
+       imagePrefix={imagePrefix} />
+      <ProjectsSection
+       title="Educational Materials"
+       projects={eduMaterials}
+       imagePrefix={imagePrefix} />
       <section className={style['home-section']}>
         <H2 disableAnchor>Mission Statement</H2>
         {missionStatement ?
           <Markdown>{missionStatement}</Markdown> :
           <Loader active />}
-      </section>
-      <section className={style['home-section']}>
-        <H2 disableAnchor>Knowledge pages</H2>
-        <List horizontal className={style['list-edu-pages']}>
-          <List.Item>
-            <Link to="/compound-list/" className={style['section-link']}>
-              <List.Content>
-                <img src={imageRemdesivir} alt="Drugs" />
-                <List.Header>Drugs</List.Header>
-              </List.Content>
-            </Link>
-          </List.Item>
-          <List.Item>
-            <Link to="/compound-target-list/" className={style['section-link']}>
-              <List.Content>
-                <img src={image3CL} alt="Drug Targets" />
-                <List.Header>Drug Targets</List.Header>
-              </List.Content>
-            </Link>
-          </List.Item>
-          <List.Item>
-            <Link to="/virus-list/" className={style['section-link']}>
-              <List.Content>
-                <img src={imageSARS2} alt="Viruses" />
-                <List.Header>Viruses</List.Header>
-              </List.Content>
-            </Link>
-          </List.Item>
-          <List.Item>
-            <Link to="/cells-list/" className={style['section-link']}>
-              <List.Content>
-                <img src={imagePetriDish} alt="Cell lines" />
-                <List.Header>Cell lines</List.Header>
-              </List.Content>
-            </Link>
-          </List.Item>
-          <List.Item>
-            <Link to="/animal-model-list/"
-             className={style['section-link']}>
-              <List.Content>
-                <img src={imageMouse} alt="Animal models" />
-                <List.Header>Animal models</List.Header>
-              </List.Content>
-            </Link>
-          </List.Item>
-          <List.Item>
-            <a
-             href={URL_PK_NOTES}
-             target="_blank"
-             rel="noopener noreferrer"
-             className={style['section-link']}>
-              <List.Content>
-                <img src={imagePK} alt="PK" />
-                <List.Header>PK notes</List.Header>
-              </List.Content>
-            </a>
-          </List.Item>
-          <List.Item>
-            <Link to="/cell-culture-measurement-list/"
-             className={style['section-link']}>
-              <List.Content>
-                <img src={imageMeasurement} alt="Measurements" />
-                <List.Header>Measurements</List.Header>
-              </List.Content>
-            </Link>
-          </List.Item>
-          <List.Item>
-            <Link to="/clinical-trials/" className={style['section-link']}>
-              <List.Content>
-                <img src={imageClinicalTrial} alt="Clinical Trials" />
-                <List.Header>Clinical Trials</List.Header>
-              </List.Content>
-            </Link>
-          </List.Item>
-          <List.Item>
-            <Link to="/article-list/" className={style['section-link']}>
-              <List.Content>
-                <img src={imageReferences} alt="References" />
-                <List.Header>References</List.Header>
-              </List.Content>
-            </Link>
-          </List.Item>
-        </List>
       </section>
       <Subscribe />
     </>;
