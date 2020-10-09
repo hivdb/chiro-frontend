@@ -4,6 +4,7 @@ import RefLink from './reference-link';
 import RefDefinition from './reference-definition';
 import buildRef from './build-ref';
 import style from './style.module.scss';
+import LoadReferences from './load-references';
 
 export {ReferenceContext, ReferenceContextValue, RefLink, RefDefinition};
 
@@ -53,8 +54,10 @@ export default class References extends React.Component {
   render() {
     return <ol className={style.references}>
       <ReferenceContext.Consumer>
-        {({getReferences}) => getReferences().map(
-          (refProps, idx) => <RefItem {...refProps} key={idx} />
+        {({getReferences}) => (
+          <LoadReferences references={getReferences()}>
+            {(refProps, idx) => <RefItem {...refProps} key={idx} />}
+          </LoadReferences>
         )}
       </ReferenceContext.Consumer>
     </ol>;

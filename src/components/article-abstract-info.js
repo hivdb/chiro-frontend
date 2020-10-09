@@ -19,9 +19,7 @@ function AbstractMessage(nickname) {
   }
 
   return (
-    <p>
-      <ReactMarkdown source={data.article.abstract} escapeHtml={false}/>
-    </p>
+    <ReactMarkdown source={data.article.abstract} escapeHtml={false}/>
   );
 }
 

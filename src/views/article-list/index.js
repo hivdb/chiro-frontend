@@ -36,30 +36,31 @@ class ArticleListInner extends React.Component {
         <Loader active inline="centered" /> :
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h1" dividing>References
-            <Header.Subheader>
-              # Total: {articles.edges.length},
-              # Peer reviewed: {
-                articles.edges.filter(({node}) => {
-                  let result = (node.pmid.length !== 0);
-                  if (!result) {
-                    result = node.doi.filter((d) => {
-                      return (!d.startsWith('10.1101'));
+            <Header as="h1" dividing>
+              References
+              <Header.Subheader>
+                # Total: {articles.edges.length},
+                # Peer reviewed: {
+                  articles.edges.filter(({node}) => {
+                    let result = (node.pmid.length !== 0);
+                    if (!result) {
+                      result = node.doi.filter((d) => {
+                        return (!d.startsWith('10.1101'));
+                      }).length > 0;
+                    }
+                    return result;
+                  }).length},
+                # Preprint: {
+                  articles.edges.filter(({node}) => {
+                    if (node.pmid.length > 0) {
+                      return false;
+                    }
+                    return node.doi.filter((d) => {
+                      return d.startsWith('10.1101');
                     }).length > 0;
-                  }
-                  return result;
-                }).length},
-              # Preprint: {
-                articles.edges.filter(({node}) => {
-                  if (node.pmid.length > 0) {
-                    return false;
-                  }
-                  return node.doi.filter((d) => {
-                    return d.startsWith('10.1101');
-                  }).length > 0;
-                }).length
-              }
-            </Header.Subheader>
+                  }).length
+                }
+              </Header.Subheader>
             </Header>
             <ol>
               {articles.edges.map(

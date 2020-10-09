@@ -52,6 +52,7 @@ export class ReferenceContextValue {
         ...ref,
         number: refNumber,
         itemId: `${refNumber}_${name}`,
+        name,
         linkIds
       };
     });
