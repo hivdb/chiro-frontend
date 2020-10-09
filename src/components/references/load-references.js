@@ -8,22 +8,19 @@ import ArticleAbstractInfo from '../../components/article-abstract-info';
 import query from './query.gql.js';
 
 
-const IDENTIFIER_FORMAT = (
-  /^(PMC\d+|PMID\d+|RefID:.+|10\.\d{4,}(?:\.\d+)*\/\S+)$/i
-);
-
-
 function mergeReferences(references, dbArticles, setRef) {
   const articleLookup = dbArticles.edges.reduce(
     (acc, {node}) => {
       for (const refid of node.nickname) {
-        acc[`RefID:${refid.toLocaleUpperCase()}`] = node;
+        acc[refid.toLocaleUpperCase()] = node;
       }
       for (const pmcid of node.pmcid) {
         acc[`PMC${pmcid}`] = node;
+        acc[`PMCID${pmcid}`] = node;
       }
       for (const pmid of node.pmid) {
-        acc[`PMC${pmid}`] = node;
+        acc[`${pmid}`] = node;
+        acc[`PMID${pmid}`] = node;
       }
       for (const doi of node.doi) {
         acc[doi.toLocaleUpperCase()] = node;
@@ -36,9 +33,6 @@ function mergeReferences(references, dbArticles, setRef) {
     references
       .map(refProps => {
         const {name} = refProps;
-        if (!IDENTIFIER_FORMAT.test(name)) {
-          return refProps;
-        }
         const upper = name.toLocaleUpperCase();
         const article = articleLookup[upper];
         if (!article) {
