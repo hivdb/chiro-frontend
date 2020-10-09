@@ -9,6 +9,19 @@ export {ReferenceContext, ReferenceContextValue, RefLink, RefDefinition};
 
 
 class RefItem extends React.Component {
+
+  handleClick = (evt) => {
+    const {href} = evt.currentTarget.attributes;
+    const anchor = href.value.slice(1);
+    setTimeout(() => {
+      const elem = document.getElementById(anchor);
+      elem.scrollIntoViewIfNeeded();
+      elem.dataset.anchorFocused = true;
+      setTimeout(() => {
+        delete elem.dataset.anchorFocused;
+      }, 3000);
+    });
+  }
   
   render() {
     const {number, itemId, linkIds} = this.props;
@@ -20,7 +33,11 @@ class RefItem extends React.Component {
     return <li id={itemId}>
       {multiLinks ? <><span>^</span> </> : null}
       {linkIds.map((linkId, idx) => [
-        <a key={idx} className={style['cite-back-link']} href={`#${linkId}`}>
+        <a
+         key={idx}
+         className={style['cite-back-link']}
+         onClick={this.handleClick}
+         href={`#${linkId}`}>
           {multiLinks ? <sup>{number}.{idx + 1}</sup> : '^'}
         </a>,
         ' '

@@ -1,8 +1,8 @@
 import React from 'react';
 import toPath from 'lodash/toPath';
-import nl2br from 'react-nl2br';
 import nestedGet from 'lodash/get';
 import sortBy from 'lodash/sortBy';
+import OrigMarkdown from 'react-markdown/with-html';
 
 import macroPlugin from './macro-plugin';
 import ChiroTable, {ColumnDef} from '../chiro-table';
@@ -17,17 +17,46 @@ macroPlugin.addMacro('table', (content) => {
 });
 
 
+function nl2brMdText(text) {
+  if (typeof text === 'string') {
+    return text.replace(/(?<!\n)\n(?!\n)/g, '  \n');
+  }
+  else {
+    return text;
+  }
+}
+
+
+function defaultRenderer(mdProps) {
+  return value => {
+    if (typeof value === 'string') {
+      return <OrigMarkdown {...mdProps} source={value} />;
+    }
+    else {
+      return value;
+    }
+  };
+}
+
+
 const renderFuncs = {
 
-  join: (value, row, context, {joinBy = ''}) => {
-    if (!value) {
-      return null;
-    }
-    return nl2br(value.join(joinBy));
+  default: defaultRenderer,
+  nl2br(mdProps) {
+    return value => defaultRenderer(mdProps)(nl2brMdText(value));
   },
 
-  articleList: articles => {
-    return <>
+  join(mdProps) {
+    return (value, row, context, {joinBy = ''}) => {
+      if (!value) {
+        return null;
+      }
+      return defaultRenderer(mdProps)(value.join(joinBy));
+    };
+  },
+
+  articleList(mdProps) {
+    return articles => <>
       {articles.map(({
         doi, firstAuthor: {surname}, year, journal, journalShort
       }, idx) => <div key={idx} className={style.nowrap}>
@@ -42,9 +71,11 @@ const renderFuncs = {
     </>;
   },
 
-  nl2br: value => nl2br(value),
-
-  nowrap: value => <span className={style.nowrap}>{value}</span>
+  nowrap(mdProps) {
+    return value => <span className={style.nowrap}>
+      {defaultRenderer(mdProps)(value)}
+    </span>;
+  }
 
 };
 
@@ -63,18 +94,22 @@ const sortFuncs = {
 };
 
 
-function buildColumnDefs(columnDefs) {
+function buildColumnDefs(columnDefs, mdProps) {
   const objs = [];
+  const colHeaderRenderer = renderFuncs.nl2br(mdProps);
   for (const colDef of columnDefs) {
     let {render, sort} = colDef;
     if (typeof render === 'string') {
-      render = renderFuncs[render];
+      render = renderFuncs[render](mdProps);
+    }
+    else {
+      render = renderFuncs.default(mdProps);
     }
     if (typeof sort === 'string') {
       sort = sortFuncs[sort];
     }
-    if (colDef.label && /\n/.test(colDef.label)) {
-      colDef.label = nl2br(colDef.label);
+    if (colDef.label) {
+      colDef.label = colHeaderRenderer(colDef.label);
     }
     objs.push(new ColumnDef({
       ...colDef, render, sort
@@ -121,26 +156,42 @@ function Table({
   cacheKey,
   columnDefs,
   data,
+  references,
+  mdProps: {renderers, ...mdProps},
   tableScrollStyle = {},
-  tableStyle = {}}) {
-  columnDefs = buildColumnDefs(columnDefs);
+  tableStyle = {}}
+) {
+  renderers = {
+    ...renderers,
+    paragraph: ({children}) => <>{children}</>
+  };
+  columnDefs = buildColumnDefs(columnDefs, {...mdProps, renderers});
   data = expandMultiCells(data, columnDefs);
 
-  return (
+  return <>
     <ChiroTable
      cacheKey={cacheKey}
      tableScrollStyle={tableScrollStyle}
      tableStyle={tableStyle}
      columnDefs={columnDefs}
      data={data} />
-  );
+    <OrigMarkdown
+     {...mdProps}
+     renderers={renderers}
+     source={references} />
+  </>;
 }
 
 
-export default function TableNode({tables}) {
+export default function TableNode({tables, mdProps}) {
   return ({tableName}) => {
     if (tableName in tables) {
-      return <Table cacheKey={tableName} {...tables[tableName]} />;
+      return (
+        <Table
+         cacheKey={tableName}
+         mdProps={mdProps}
+         {...tables[tableName]} />
+      );
     }
     else {
       return <div>

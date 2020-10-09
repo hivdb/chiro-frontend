@@ -70,34 +70,41 @@ export default class Markdown extends React.Component {
       collapsableLevels, imagePrefix, tables,
       renderers: addRenderers, ...props
     } = this.props;
-    const renderers = {
+    const mdProps = {
+      parserOptions: {footnotes: true},
+      transformLinkUri: false,
+      ...props
+    };
+    const generalRenderers = {
       link: MarkdownLink,
       image: ImageWrapper({imagePrefix}),
       footnote: RefLink,
       footnoteReference: RefLink,
       footnoteDefinition: RefDefinition,
-      BadMacroNode,
-      TableNode: TableNodeWrapper({tables}),
-      // table: SimpleTableContainer,
-      // parsedHtml,
-      ...(inline ? {} : {root: RootWrapper}),
       ...(noHeadingStyle ? null : {
         heading: MdHeadingTag(disableHeadingTagAnchor)
       }),
+      ...addRenderers
+    };
+    const renderers = {
+      ...generalRenderers,
+      BadMacroNode,
+      TableNode: TableNodeWrapper({tables, mdProps}),
+      // table: SimpleTableContainer,
+      // parsedHtml,
+      ...(inline ? {} : {root: RootWrapper}),
       ...(inline ? {paragraph: ({children}) => <>{children}</>} : null),
       ...addRenderers
     };
+    mdProps.renderers = generalRenderers;
     const context = new ReferenceContextValue();
     let jsx = (
       <ReferenceContext.Provider value={context}>
         <OrigMarkdown
+         {...mdProps}
          source={children}
          renderers={renderers}
-         plugins={[macroPlugin.transformer]}
-         parserOptions={{footnotes: true}}
-         transformLinkUri={false}
-         {...props}
-        />
+         plugins={[macroPlugin.transformer]} />
         <OptReferences
          disableAnchor={disableHeadingTagAnchor}
          level={referenceHeadingTagLevel}
