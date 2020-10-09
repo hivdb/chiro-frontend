@@ -54,8 +54,10 @@ export default class References extends React.Component {
   render() {
     return <ol className={style.references}>
       <ReferenceContext.Consumer>
-        {({getReferences}) => (
-          <LoadReferences references={getReferences()}>
+        {({setReference, getReferences}) => (
+          <LoadReferences
+           setReference={setReference}
+           references={getReferences()}>
             {(refProps, idx) => <RefItem {...refProps} key={idx} />}
           </LoadReferences>
         )}

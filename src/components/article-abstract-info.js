@@ -41,7 +41,7 @@ export default class ArticleAbstractInfo extends React.Component {
       <>
         {' '}
         <a href="#abstract"
-         style={{'font-weight': 'bold'}}
+         style={{fontWeight: 'bold'}}
          onClick={this.handleHide}>
           view abstract
         </a>

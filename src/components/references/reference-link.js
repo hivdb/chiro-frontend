@@ -44,7 +44,7 @@ export default class RefLink extends React.Component {
         return (
           <Popup
            on="click"
-           basic hoverable wide="very"
+           basic wide="very"
            content={() => <>
              <a href={`#${itemId}`}>{number}</a>.{' '}
              {buildRef(getReference(name))}

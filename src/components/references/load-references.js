@@ -13,7 +13,7 @@ const IDENTIFIER_FORMAT = (
 );
 
 
-function mergeReferences(references, dbArticles) {
+function mergeReferences(references, dbArticles, setRef) {
   const articleLookup = dbArticles.edges.reduce(
     (acc, {node}) => {
       for (const refid of node.nickname) {
@@ -44,19 +44,18 @@ function mergeReferences(references, dbArticles) {
         if (!article) {
           return refProps;
         }
-        return {
-          ...refProps,
-          children: <>
-            <ArticleInfo {...article} />
-            <ArticleAbstractInfo nickname={article.nickname[0]} />
-          </>
-        };
+        const children = <>
+          <ArticleInfo {...article} />
+          <ArticleAbstractInfo nickname={article.nickname[0]} />
+        </>;
+        setRef(name, {children}, /* noIncr= */true);
+        return {...refProps, children};
       })
   );
 }
 
 
-export default function LoadReferences({references, children}) {
+export default function LoadReferences({references, setReference, children}) {
   let {loading, error, data} = useQuery(query);
   if (loading) {
     return <Loader active inline="centered" />;
@@ -65,5 +64,7 @@ export default function LoadReferences({references, children}) {
     return `Error: ${error.message}`;
   }
 
-  return mergeReferences(references, data.articles).map(children);
+  return mergeReferences(
+    references, data.articles, setReference
+  ).map(children);
 }
