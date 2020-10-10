@@ -19,7 +19,7 @@ macroPlugin.addMacro('table', (content) => {
 
 function nl2brMdText(text) {
   if (typeof text === 'string') {
-    return text.replace(/(?<!\n)\n(?!\n)/g, '  \n');
+    return text.replace(/([^\n]|^)\n(?!\n)/g, '  \n');
   }
   else {
     return text;
