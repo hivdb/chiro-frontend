@@ -17,8 +17,8 @@
     content: "";
     position: absolute;
     z-index: -1;
-    top: -.5rem;
-    bottom: -.5rem;
+    top: -.8rem;
+    bottom: -.8rem;
     left: -.2rem;
     right: -.2rem;
     display: block;
@@ -31,6 +31,7 @@
 }
 
 a.ref-link {
+  display: inline-block;
   color: $link-color;
   text-decoration: none;
   &:hover {

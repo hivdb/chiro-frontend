@@ -15,12 +15,12 @@ function mergeReferences(references, dbArticles, setRef) {
         acc[refid.toLocaleLowerCase()] = node;
       }
       for (const pmcid of node.pmcid) {
-        acc[`PMC${pmcid}`] = node;
-        acc[`PMCID${pmcid}`] = node;
+        acc[`pmc${pmcid}`] = node;
+        acc[`pmcid${pmcid}`] = node;
       }
       for (const pmid of node.pmid) {
         acc[`${pmid}`] = node;
-        acc[`PMID${pmid}`] = node;
+        acc[`pmid${pmid}`] = node;
       }
       for (const doi of node.doi) {
         acc[doi.toLocaleLowerCase()] = node;
