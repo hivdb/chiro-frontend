@@ -20,6 +20,14 @@ class SectionInner extends React.Component {
     getClosestCollapsableAnchor: PropTypes.func.isRequired
   }
 
+  static defaultProps = {
+    registerCollapsableAnchor: () => null,
+    getClosestCollapsableAnchor: () => ({
+      anchor: null,
+      shouldCollapseOther: false
+    })
+  }
+
   static getCurAnchor = (props) => {
     let {
       match: {location},

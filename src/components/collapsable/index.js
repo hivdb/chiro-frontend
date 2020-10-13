@@ -35,6 +35,9 @@ export default class Collapsable extends React.Component {
     );
     const context = new CollapsableContextValue();
     context.setContainerRef(this.containerRef);
+    // if (!this.containerRef.current) {
+    //   setTimeout(() => this.forceUpdate());
+    // }
 
     return (
       <Context.Provider value={context}>
