@@ -13,15 +13,16 @@
 
 %data-anchor-focused {
   position: relative;
+  z-index: 1;
   &[data-anchor-focused]::before {
     content: "";
     position: absolute;
-    z-index: -1;
     top: -.8rem;
     bottom: -.8rem;
     left: -.2rem;
     right: -.2rem;
     display: block;
+    z-index: -1;
     border-bottom: 3px solid transparent;
     transition: background-color 3s ease-in 0s, border-color 3s ease-in 0s;
     animation: highlight-ref-link 6s;
