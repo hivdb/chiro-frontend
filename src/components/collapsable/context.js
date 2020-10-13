@@ -41,7 +41,7 @@ export class CollapsableContextValue {
     const container = this.#containerRef.current;
     if (container) {
       let elem = container.querySelector(`[id=${JSON.stringify(curHash)}]`);
-      do {
+      while (elem && container.contains(elem)) {
         const header = elem.querySelector('h1,h2,h3,h4,h5,h6');
         if (header && header.attributes.id) {
           const anchor = header.attributes.id.value;
@@ -52,8 +52,11 @@ export class CollapsableContextValue {
             };
           }
         }
-        elem = elem.closest('section[data-level]');
-      } while(container.contains(elem));
+        if (!elem.parentNode) {
+          break;
+        }
+        elem = elem.parentNode.closest('section[data-level]');
+      }
     }
     return {
       anchor: null,

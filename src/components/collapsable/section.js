@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Icon} from 'semantic-ui-react';
+import Children from 'react-children-utilities';
 import {withRouter, matchShape, routerShape} from 'found';
 
 import {getAnchor, HeadingTag} from '../heading-tags';
@@ -13,7 +14,10 @@ class SectionInner extends React.Component {
 
   static propTypes = {
     level: PropTypes.number.isRequired,
-    children: PropTypes.node.isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.node.isRequired,
+      PropTypes.func.isRequired
+    ]),
     match: matchShape.isRequired,
     router: routerShape.isRequired,
     registerCollapsableAnchor: PropTypes.func.isRequired,
@@ -40,24 +44,26 @@ class SectionInner extends React.Component {
     return getClosestCollapsableAnchor(curHash);
   }
 
-  static getDefaultState = (props) => {
+  static getDefaultState = (props, state = {}) => {
     let {
       children,
       registerCollapsableAnchor
     } = props;
-    let anchor = null;
-    if (!(children instanceof Array)) {
-      children = [children];
+    if (state.children) {
+      children = state.children;
     }
-    for (const child of children) {
-      if (child && child.type === HeadingTag) {
-        anchor = getAnchor(child);
-        registerCollapsableAnchor(anchor);
-      }
+    let anchor = null;
+    const headingChild = Children.deepFind(
+      children,
+      child => child && child.type === HeadingTag
+    );
+    if (headingChild) {
+      anchor = getAnchor(headingChild);
+      registerCollapsableAnchor(anchor);
     }
     const {anchor: curAnchor} = this.getCurAnchor(props);
     return {
-      expanded: anchor === curAnchor,
+      expanded: anchor !== null && anchor === curAnchor,
       isDefaultState: true,
       myAnchor: anchor,
       curAnchor
@@ -74,14 +80,25 @@ class SectionInner extends React.Component {
       (shouldCollapseOther || state.myAnchor === curAnchor) &&
       curAnchor !== state.curAnchor
     ) {
-      return this.getDefaultState(props);
+      return this.getDefaultState(props, state);
     }
     return state;
   }
 
   constructor() {
     super(...arguments);
-    this.state = this.constructor.getDefaultState(this.props);
+    const {children} = this.props;
+    const state = {
+      children: (
+        typeof children === 'function' ? children({
+          onLoad: this.onLoad
+        }) : children
+      )
+    };
+    this.state = {
+      ...state,
+      ...this.constructor.getDefaultState(this.props, state)
+    };
     this.sectionRef = React.createRef();
   }
 
@@ -104,14 +121,22 @@ class SectionInner extends React.Component {
     });
   }
 
+  onLoad = (e) => {
+    setTimeout(() => this.forceUpdate());
+  }
+
   render() {
     const {
-      level, children, match, router,
+      level, match, router,
       registerCollapsableAnchor,  // unused
       getClosestCollapsableAnchor,  // unused
       ...props
     } = this.props;
-    const {expanded, isDefaultState} = this.state;
+    const {
+      children,
+      expanded,
+      isDefaultState
+    } = this.state;
     const {maxHeight} = this;
     if (expanded) {
       props['data-expanded'] = '';

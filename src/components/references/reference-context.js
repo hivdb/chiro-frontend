@@ -56,7 +56,7 @@ export class ReferenceContextValue {
         itemId: `${refNumber}_${nameKey}`,
         linkIds
       };
-    });
+    }).filter(({linkIds}) => linkIds.length > 0);
   }
 }
 

@@ -64,7 +64,10 @@ function groupSections(nodes, startIdx = 0, minLevel = 1) {
         <Collapsable.Section
          key={`section-${startIdx}-${sections.length}-${level}`}
          level={level}>
-          {sectionParas}
+          {({onLoad}) => {
+            onLoad();
+            return sectionParas;
+          }}
         </Collapsable.Section>
       );
     }

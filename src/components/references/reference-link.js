@@ -6,6 +6,7 @@ import Children from 'react-children-utilities';
 import style from './style.module.scss';
 import ReferenceContext from './reference-context';
 import buildRef from './build-ref';
+import {focusElement} from './funcs';
 
 
 export default class RefLink extends React.Component {
@@ -22,6 +23,27 @@ export default class RefLink extends React.Component {
     children: PropTypes.node
   }
 
+  constructor() {
+    super(...arguments);
+    this.linkRef = React.createRef();
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      const elem = this.linkRef.current;
+      if (!elem) {
+        return;
+      }
+      let anchor = window.location.hash;
+      if (anchor) {
+        anchor = anchor.slice(1);
+        if (anchor.length > 0 && anchor === elem.id) {
+          focusElement(elem);
+        }
+      }
+    });
+  }
+
   handleClick = (evt) => {
     evt && evt.preventDefault();
   }
@@ -32,13 +54,7 @@ export default class RefLink extends React.Component {
     setTimeout(() => {
       const elem = document.getElementById(anchor);
       const parentLi = elem.closest('li');
-      if (parentLi) {
-        parentLi.scrollIntoViewIfNeeded();
-        parentLi.dataset.anchorFocused = true;
-        setTimeout(() => {
-          delete parentLi.dataset.anchorFocused;
-        }, 6000);
-      }
+      focusElement(parentLi);
     });
   }
 
@@ -73,6 +89,7 @@ export default class RefLink extends React.Component {
            trigger={
              <sup><a className={style['ref-link']}
               onClick={this.handleClick}
+              ref={this.linkRef}
               id={linkId} href={`#ref__${itemId}`}>
                [{number}]
              </a></sup>

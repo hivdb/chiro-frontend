@@ -1,28 +1,45 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReferenceContext, {ReferenceContextValue} from './reference-context';
 import RefLink from './reference-link';
 import RefDefinition from './reference-definition';
 import buildRef from './build-ref';
 import style from './style.module.scss';
 import LoadReferences from './load-references';
+import {focusElement} from './funcs';
 
 export {ReferenceContext, ReferenceContextValue, RefLink, RefDefinition};
 
 
 class RefItem extends React.Component {
 
+  constructor() {
+    super(...arguments);
+    this.itemRef = React.createRef();
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      const elem = this.itemRef.current;
+      if (!elem) {
+        return;
+      }
+      let anchor = window.location.hash;
+      if (anchor) {
+        anchor = anchor.slice(1);
+        if (anchor.length > 0 && anchor === elem.id) {
+          focusElement(elem);
+        }
+      }
+    });
+  }
+
   handleClick = (evt) => {
     const {href} = evt.currentTarget.attributes;
     const anchor = href.value.slice(1);
     setTimeout(() => {
       const elem = document.getElementById(anchor);
-      if (elem) {
-        elem.scrollIntoViewIfNeeded();
-        elem.dataset.anchorFocused = true;
-        setTimeout(() => {
-          delete elem.dataset.anchorFocused;
-        }, 6000);
-      }
+      focusElement(elem);
     });
   }
   
@@ -33,7 +50,7 @@ class RefItem extends React.Component {
     if (linkIds.length === 0) {
       return null;
     }
-    return <li id={`ref__${itemId}`}>
+    return <li id={`ref__${itemId}`} ref={this.itemRef}>
       {multiLinks ? <><span>^</span> </> : null}
       {linkIds.map((linkId, idx) => [
         <a
@@ -53,11 +70,17 @@ class RefItem extends React.Component {
 
 export default class References extends React.Component {
 
+  static propTypes = {
+    onLoad: PropTypes.func
+  }
+
   render() {
+    const {onLoad} = this.props;
     return <ol className={style.references}>
       <ReferenceContext.Consumer>
         {({setReference, getReferences}) => (
           <LoadReferences
+           onLoad={onLoad}
            setReference={setReference}
            references={getReferences()}>
             {(refProps, idx) => <RefItem {...refProps} key={idx} />}
