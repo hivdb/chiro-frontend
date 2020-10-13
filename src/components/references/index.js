@@ -16,11 +16,13 @@ class RefItem extends React.Component {
     const anchor = href.value.slice(1);
     setTimeout(() => {
       const elem = document.getElementById(anchor);
-      elem.scrollIntoViewIfNeeded();
-      elem.dataset.anchorFocused = true;
-      setTimeout(() => {
-        delete elem.dataset.anchorFocused;
-      }, 3000);
+      if (elem) {
+        elem.scrollIntoViewIfNeeded();
+        elem.dataset.anchorFocused = true;
+        setTimeout(() => {
+          delete elem.dataset.anchorFocused;
+        }, 6000);
+      }
     });
   }
   
@@ -31,7 +33,7 @@ class RefItem extends React.Component {
     if (linkIds.length === 0) {
       return null;
     }
-    return <li id={itemId}>
+    return <li id={`ref__${itemId}`}>
       {multiLinks ? <><span>^</span> </> : null}
       {linkIds.map((linkId, idx) => [
         <a

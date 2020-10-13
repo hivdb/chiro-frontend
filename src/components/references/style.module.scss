@@ -1,6 +1,6 @@
 @import '../../styles/colors';
 
-@keyframes BLINK-REF-LINK {
+@keyframes highlight-ref-link {
   0% {
     border-bottom-color: red;
     background-color: yellow;
@@ -11,19 +11,32 @@
   }
 }
 
+%data-anchor-focused {
+  position: relative;
+  &[data-anchor-focused]::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: -.5rem;
+    bottom: -.5rem;
+    left: -.2rem;
+    right: -.2rem;
+    display: block;
+    border-bottom: 3px solid transparent;
+    transition: background-color 3s ease-in 0s, border-color 3s ease-in 0s;
+    animation: highlight-ref-link 6s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+  }
+}
+
 a.ref-link {
   color: $link-color;
   text-decoration: none;
   &:hover {
     text-decoration: underline;
   }
-  &[data-anchor-focused] {
-    border-bottom: 3px solid transparent;
-    transition: background-color 1.5s ease-in 0s, border-color 1.5s ease-in 0s;
-    animation: BLINK-REF-LINK 3s;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in-out;
-  }
+  @extend %data-anchor-focused;
 }
 ol.references {
   > li {
@@ -37,5 +50,6 @@ ol.references {
     line-height: 1.5;
     margin-top: .8rem;
     margin-bottom: .8rem;
+    @extend %data-anchor-focused;
   }
 }

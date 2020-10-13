@@ -12,7 +12,7 @@ function mergeReferences(references, dbArticles, setRef) {
   const articleLookup = dbArticles.edges.reduce(
     (acc, {node}) => {
       for (const refid of node.nickname) {
-        acc[refid.toLocaleUpperCase()] = node;
+        acc[refid.toLocaleLowerCase()] = node;
       }
       for (const pmcid of node.pmcid) {
         acc[`PMC${pmcid}`] = node;
@@ -23,7 +23,7 @@ function mergeReferences(references, dbArticles, setRef) {
         acc[`PMID${pmid}`] = node;
       }
       for (const doi of node.doi) {
-        acc[doi.toLocaleUpperCase()] = node;
+        acc[doi.toLocaleLowerCase()] = node;
       }
       return acc;
     }, {}
@@ -33,8 +33,8 @@ function mergeReferences(references, dbArticles, setRef) {
     references
       .map(refProps => {
         const {name} = refProps;
-        const upper = name.toLocaleUpperCase();
-        const article = articleLookup[upper];
+        const nameKey = name.toLocaleLowerCase();
+        const article = articleLookup[nameKey];
         if (!article) {
           return refProps;
         }

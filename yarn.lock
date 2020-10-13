@@ -11831,6 +11831,11 @@ react-bootstrap@^1.0.0-beta.17:
     uncontrollable "^7.0.0"
     warning "^4.0.3"
 
+react-children-utilities@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/react-children-utilities/-/react-children-utilities-2.1.6.tgz#9d60e247a2165b90b4ad01455aed98ea72a919be"
+  integrity sha512-w98UfUMzg7eg008CNmz7VYuog//kcXTnB26r0rGc+7kzKQ1sP9Yry29sDj9AL/TQ9C/7UCkFadaHnNKYdyhL2A==
+
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.1.tgz#f6de325ae25fa4d546d09df4bb1befdc6dd19c19"

@@ -14,9 +14,6 @@ export default gql`
             givenNames
           }
           year
-          experimentCounts {
-            count
-          }
         }
       }
     }

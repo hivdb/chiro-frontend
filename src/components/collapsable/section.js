@@ -5,44 +5,68 @@ import {withRouter, matchShape, routerShape} from 'found';
 
 import {getAnchor, HeadingTag} from '../heading-tags';
 
+import Context from './context';
 import style from './style.module.scss';
 
 
-class Section extends React.Component {
+class SectionInner extends React.Component {
 
   static propTypes = {
     level: PropTypes.number.isRequired,
     children: PropTypes.node.isRequired,
     match: matchShape.isRequired,
-    router: routerShape.isRequired
+    router: routerShape.isRequired,
+    registerCollapsableAnchor: PropTypes.func.isRequired,
+    getClosestCollapsableAnchor: PropTypes.func.isRequired
   }
 
-  static getDefaultState(props) {
-    let {match: {location}, children} = props;
+  static getCurAnchor = (props) => {
+    let {
+      match: {location},
+      getClosestCollapsableAnchor
+    } = props;
     let curHash = null;
-    let anchor = null;
     if (location.hash) {
       curHash = location.hash.replace(/^#/, '');
     }
+    return getClosestCollapsableAnchor(curHash);
+  }
+
+  static getDefaultState = (props) => {
+    let {
+      children,
+      registerCollapsableAnchor
+    } = props;
+    let anchor = null;
     if (!(children instanceof Array)) {
       children = [children];
     }
     for (const child of children) {
       if (child && child.type === HeadingTag) {
         anchor = getAnchor(child);
+        registerCollapsableAnchor(anchor);
       }
     }
+    const {anchor: curAnchor} = this.getCurAnchor(props);
     return {
-      expanded: anchor === curHash,
+      expanded: anchor === curAnchor,
       isDefaultState: true,
-      curHash
+      myAnchor: anchor,
+      curAnchor
     };
   }
 
-  static getDerivedStateFromProps(props, state) {
-    const newState = Section.getDefaultState(props);
-    if (newState.curHash !== state.curHash) {
-      return newState;
+  static getDerivedStateFromProps = (props, state) => {
+    const {
+      anchor: curAnchor,
+      shouldCollapseOther
+    } = this.getCurAnchor(props);
+    if (
+      curAnchor !== null &&
+      (shouldCollapseOther || state.myAnchor === curAnchor) &&
+      curAnchor !== state.curAnchor
+    ) {
+      return this.getDefaultState(props);
     }
     return state;
   }
@@ -73,7 +97,12 @@ class Section extends React.Component {
   }
 
   render() {
-    const {level, children, match, router, ...props} = this.props;
+    const {
+      level, children, match, router,
+      registerCollapsableAnchor,  // unused
+      getClosestCollapsableAnchor,  // unused
+      ...props
+    } = this.props;
     const {expanded, isDefaultState} = this.state;
     const {maxHeight} = this;
     if (expanded) {
@@ -96,17 +125,40 @@ class Section extends React.Component {
       setTimeout(() => this.forceUpdate(), 0);
     }
 
-    return <section {...props} ref={this.sectionRef}>
-      <a
-       {...eventProps}
-       className={style['toggle-display']}
-       href="#toggle-display">
-        {expanded ?
-          <Icon name="minus circle" aria-label="expand" /> :
-          <Icon name="plus circle" aria-label="collapse" />}
-      </a>
-      {children}
-    </section>;
+    return (
+      <section {...props} ref={this.sectionRef}>
+        <a
+         {...eventProps}
+         className={style['toggle-display']}
+         href="#toggle-display">
+          {expanded ?
+            <Icon name="minus circle" aria-label="expand" /> :
+            <Icon name="plus circle" aria-label="collapse" />}
+        </a>
+        {children}
+      </section>
+    );
+  }
+
+}
+
+
+class Section extends React.Component {
+
+  render() {
+    return <Context.Consumer>
+      {({
+        registerCollapsableAnchor,
+        getClosestCollapsableAnchor
+      }) => (
+        <SectionInner
+         {...this.props}
+         {...{
+           registerCollapsableAnchor,
+           getClosestCollapsableAnchor
+         }} />
+      )}
+    </Context.Consumer>;
   }
 
 }

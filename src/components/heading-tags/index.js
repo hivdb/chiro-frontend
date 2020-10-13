@@ -2,37 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import sleep from 'sleep-promise';
 import {Icon} from 'semantic-ui-react';
+import Children from 'react-children-utilities';
 
 import style from './style.module.scss';
 
 
 export function getChildrenText(elem) {
-  if (elem === null || elem === undefined) {
-    return '';
-  }
-  else if (elem instanceof Array) {
-    if (elem.length > 0) {
-      return elem.map(e => getChildrenText(e)).join('');
-    }
-    else {
-      return ''; // TODO: empty header
-    }
-  }
-  else if (typeof elem === 'string') {
-    return elem;
-  }
-  else if (React.isValidElement(elem)) {
-    if ('children' in elem.props) {
-      return getChildrenText(elem.props.children);
-    }
-    else {
-      const obj = new elem.type(elem.props);
-      return getChildrenText(obj.render());
-    }
-  }
-  else {
-    return '';
-  }
+  return Children.onlyText(elem);
 }
 
 

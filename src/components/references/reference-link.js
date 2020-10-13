@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Popup} from 'semantic-ui-react';
+import Children from 'react-children-utilities';
 
 import style from './style.module.scss';
 import ReferenceContext from './reference-context';
@@ -25,6 +26,22 @@ export default class RefLink extends React.Component {
     evt && evt.preventDefault();
   }
 
+  handleAnchorClick = (evt) => {
+    const {href} = evt.currentTarget.attributes;
+    const anchor = href.value.slice(1);
+    setTimeout(() => {
+      const elem = document.getElementById(anchor);
+      const parentLi = elem.closest('li');
+      if (parentLi) {
+        parentLi.scrollIntoViewIfNeeded();
+        parentLi.dataset.anchorFocused = true;
+        setTimeout(() => {
+          delete parentLi.dataset.anchorFocused;
+        }, 6000);
+      }
+    });
+  }
+
   render() {
     let {name, identifier, ...ref} = this.props;
     name = name || identifier;
@@ -34,7 +51,7 @@ export default class RefLink extends React.Component {
         name = `${authors.split(' ', 2)[0]}${year}`;
       }
       else {
-        name = 'UnknownRef';
+        name = Children.onlyText(ref.children);
       }
     }
 
@@ -46,13 +63,17 @@ export default class RefLink extends React.Component {
            on="click"
            basic wide="very"
            content={() => <>
-             <a href={`#${itemId}`}>{number}</a>.{' '}
+             <a
+              onClick={this.handleAnchorClick}
+              href={`#ref__${itemId}`}>
+               {number}
+             </a>.{' '}
              {buildRef(getReference(name))}
            </>}
            trigger={
              <sup><a className={style['ref-link']}
               onClick={this.handleClick}
-              id={linkId} href={`#${itemId}`}>
+              id={linkId} href={`#ref__${itemId}`}>
                [{number}]
              </a></sup>
            } />
