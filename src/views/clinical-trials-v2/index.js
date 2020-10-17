@@ -140,6 +140,9 @@ class ClinicalTrialInner extends React.Component {
       let used_target = [];
       let thisTrials = [];
       for (let {target, primaryCompound, relatedCompounds} of compoundObjs) {
+        if (!target) {
+          target = 'Uncertain'
+        }
         let compoundNames = primaryCompound? [primaryCompound.name]: [];
         for (const {name} of relatedCompounds) {
           if (name) {
