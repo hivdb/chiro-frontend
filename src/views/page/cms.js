@@ -71,7 +71,57 @@ export default class CMSPage extends React.Component {
     super(...arguments);
     const {pageName} = this.props;
     const promise = loadPage(`page-${pageName}`);
+    this.containerRef = React.createRef();
     this.state = {promise, pageName};
+  }
+
+  componentDidMount() {
+    window.addEventListener('load', this.updateScroll, false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('load', this.updateScroll, false);
+  }
+
+  updateScroll = () => {
+    const {current: container} = this.containerRef;
+    if (!container) {
+      setTimeout(this.updateScroll, 50);
+      return;
+    }
+    const images = Array.from(container.querySelectorAll('img'));
+    let loadingImages = images.length;
+    images.forEach(image => {
+      if (image.complete) {
+        loadingImages --;
+        if (loadingImages === 0) {
+          scrollToAnchor();
+          setTimeout(scrollToAnchor, 500);
+        }
+      }
+      else {
+        const onImageLoad = () => {
+          loadingImages --;
+          if (loadingImages === 0) {
+            scrollToAnchor();
+            setTimeout(scrollToAnchor, 500);
+          }
+          image.removeEventListener('load', onImageLoad, false);
+        };
+        image.addEventListener('load', onImageLoad, false);
+      }
+    });
+
+    function scrollToAnchor() {
+      const {hash} = window.location;
+      if (hash && hash.length > 1) {
+        const anchor = hash.slice(1);
+        const elem = document.getElementById(anchor);
+        if (elem) {
+          elem.scrollIntoView({block: 'center'});
+        }
+      }
+    }
   }
 
   thenRender = ({
@@ -96,6 +146,7 @@ export default class CMSPage extends React.Component {
     return (
       <ReferenceContext.Provider value={new ReferenceContextValue()}>
         <article
+         ref={this.containerRef}
          className={style['content-container']}
          data-page-name={pageName}>
           <BackToTop />
