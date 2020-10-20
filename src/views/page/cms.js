@@ -76,11 +76,7 @@ export default class CMSPage extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('load', this.updateScroll, false);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('load', this.updateScroll, false);
+    this.updateScroll();
   }
 
   updateScroll = () => {
