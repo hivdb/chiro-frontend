@@ -40,9 +40,11 @@ const BrowserRouter = createBrowserRouter({
       <Route path="home-staging/" Component={HomeStaging} />
       <Route path="sierra/">
         {SARS2Routes({
-          graphqlURI: window.__NODE_ENV === 'production' ?
-            '/sierra-sars2/graphql' :
-            'http://localhost:8113/Sierra-SARS2/graphql',
+          config: {
+            graphqlURI: window.__NODE_ENV === 'production' ?
+              '/sierra-sars2/graphql' :
+              'http://localhost:8113/Sierra-SARS2/graphql'
+          },
           className: style['sierra-sars2-webui']
         })}
       </Route>
