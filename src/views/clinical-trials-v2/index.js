@@ -137,38 +137,64 @@ class ClinicalTrialInner extends React.Component {
 
     let allTrials = [];
     for (const {node: {compoundObjs, ...trial}} of clinicalTrials) {
-      let used_target = [];
-      let thisTrials = [];
+      let theseTrials = [];
+      let compoundNames = [];
+      let oldTargets = [];
       for (let {target, primaryCompound, relatedCompounds} of compoundObjs) {
         if (!target) {
           target = 'Uncertain'
         }
-        let compoundNames = primaryCompound? [primaryCompound.name]: [];
+        if (target) {
+          oldTargets.push(target);
+        }
+        if (primaryCompound) {
+          compoundNames.push(primaryCompound.name)
+        }
         for (const {name} of relatedCompounds) {
           if (name) {
-            compoundNames.push(name);
+            compoundNames.push(name)
           }
         }
-        if (compoundNames.includes('Hydroxychloroquine') || compoundNames.includes('Chloroquine')) {
-          const oldTarget = target;
-          target = "Hydroxychloroquine";
-          thisTrials = [{...trial, target, primaryCompound, relatedCompounds, oldTarget}];
-          break;
+      }
+
+      let isHCQTrial = false;
+      if (
+        compoundNames.includes('Hydroxychloroquine') ||
+        compoundNames.includes('Chloroquine')) {
+        isHCQTrial = true;
+        let target = "Hydroxychloroquine";
+        theseTrials.push(
+          {...trial, target, oldTargets}
+        );
+      }
+
+      if (isHCQTrial) {
+        allTrials = allTrials.concat(theseTrials);
+        continue;
+      }
+
+      let used_target = [];
+      for (let {target} of compoundObjs) {
+        if (!target) {
+          target = 'Uncertain'
         }
 
         if (used_target.includes(target)) {
           continue;
         }
-        thisTrials.push({...trial, target, primaryCompound, relatedCompounds});
+        theseTrials.push({...trial, target});
         used_target.push(target);
       }
 
-      allTrials = allTrials.concat(thisTrials);
+      allTrials = allTrials.concat(theseTrials);
     }
     if (qCompoundTargetName) {
-      allTrials = allTrials.filter(({target, oldTarget}) => {
-        if (target === 'Hydroxychloroquine') {
-          target = oldTarget;
+      allTrials = allTrials.filter(({target, oldTargets}) => {
+        if (
+          target === 'Hydroxychloroquine' &&
+          oldTargets.includes(qCompoundTargetName)
+          ) {
+          return true;
         }
         if (target === qCompoundTargetName) {
           return true;
