@@ -19,6 +19,7 @@ import Modal from '../../components/modal';
 
 import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
+import {groupTrials2} from './group-trials';
 
 import {
   compoundShape
@@ -134,75 +135,8 @@ class ClinicalTrialInner extends React.Component {
         });
       }
     }
+    let allTrials = groupTrials2(clinicalTrials, qCompoundTargetName);
 
-    let allTrials = [];
-    for (const {node: {compoundObjs, ...trial}} of clinicalTrials) {
-      let theseTrials = [];
-      let compoundNames = [];
-      let oldTargets = [];
-      for (let {target, primaryCompound, relatedCompounds} of compoundObjs) {
-        if (!target) {
-          target = 'Uncertain'
-        }
-        if (target) {
-          oldTargets.push(target);
-        }
-        if (primaryCompound) {
-          compoundNames.push(primaryCompound.name)
-        }
-        for (const {name} of relatedCompounds) {
-          if (name) {
-            compoundNames.push(name)
-          }
-        }
-      }
-
-      let isHCQTrial = false;
-      if (
-        compoundNames.includes('Hydroxychloroquine') ||
-        compoundNames.includes('Chloroquine')) {
-        isHCQTrial = true;
-        let target = "Hydroxychloroquine";
-        theseTrials.push(
-          {...trial, target, oldTargets}
-        );
-      }
-
-      if (isHCQTrial) {
-        allTrials = allTrials.concat(theseTrials);
-        continue;
-      }
-
-      let used_target = [];
-      for (let {target} of compoundObjs) {
-        if (!target) {
-          target = 'Uncertain'
-        }
-
-        if (used_target.includes(target)) {
-          continue;
-        }
-        theseTrials.push({...trial, target});
-        used_target.push(target);
-      }
-
-      allTrials = allTrials.concat(theseTrials);
-    }
-    if (qCompoundTargetName) {
-      allTrials = allTrials.filter(({target, oldTargets}) => {
-        if (
-          target === 'Hydroxychloroquine' &&
-          oldTargets.includes(qCompoundTargetName)
-          ) {
-          return true;
-        }
-        if (target === qCompoundTargetName) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
     let result = groupBy(allTrials, t => t.target);
     return result;
   }
