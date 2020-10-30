@@ -13189,9 +13189,9 @@ side-channel@^1.0.2:
     es-abstract "^1.17.0-next.1"
     object-inspect "^1.7.0"
 
-sierra-frontend@hivdb/sierra-frontend#b5d84e8:
+sierra-frontend@hivdb/sierra-frontend#3666e2e:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#b5d84e843650a36c1b46f75c9cb38ad2fb42845d"
+  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#3666e2e4ee84675dd3729f60b7fc97656ea16e27"
   dependencies:
     "@apollo/react-hooks" "3.1.5"
     "@vx/axis" "^0.0.197"
