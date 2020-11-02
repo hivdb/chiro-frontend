@@ -47,7 +47,7 @@
     }
     thead {
       display: none;
-    } 
+    }
   }
   @media only screen and (max-width: 500px) {
     .cell-label {
@@ -70,6 +70,7 @@
     align-items: flex-end;
     .option-menu:global(.ui.vertical.menu) {
       margin-top: .4rem;
+      z-index: 11;
       &::before {
         content: "";
         display: block;
