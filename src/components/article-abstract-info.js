@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import {Message, Loader} from 'semantic-ui-react';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import query from './abstract.gql';
 
 function AbstractMessage(nickname) {

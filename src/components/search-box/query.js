@@ -1,6 +1,6 @@
 import React from 'react';
 import {Loader} from 'semantic-ui-react';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 
 import searchPromptsQuery from './search-prompts.gql';
 

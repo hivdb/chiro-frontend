@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'found';
 import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 
 import {Grid, Header, Item, Loader} from 'semantic-ui-react';
 

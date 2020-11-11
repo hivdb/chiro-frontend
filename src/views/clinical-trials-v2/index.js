@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {matchShape, routerShape} from 'found';
 import {Grid, Header, Loader, Button} from 'semantic-ui-react';
 

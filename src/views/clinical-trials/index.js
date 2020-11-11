@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
 import ReactMarkdown from 'react-markdown';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {Link, matchShape, routerShape} from 'found';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 

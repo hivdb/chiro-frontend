@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link, matchShape} from 'found';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {Grid, Header, Loader} from 'semantic-ui-react';
 
 import VirusExpTable from './virus-experiments';
