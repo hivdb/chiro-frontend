@@ -170,6 +170,7 @@ export default class CMSPage extends React.Component {
           <Markdown
            toc={toc} tocClassName={style.toc}
            imagePrefix={imagePrefix}
+           cmsPrefix={cmsPrefix}
            tables={tables}
            escapeHtml={escapeHtml}
            collapsableLevels={collapsableLevels}

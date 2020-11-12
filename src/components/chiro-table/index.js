@@ -315,6 +315,7 @@ export default class ChiroTable extends React.Component {
                    sorted: sortedByColumn === name ? sortDirection : null,
                    onClick: this.handleSort(name, sort)
                  } : {})}
+                 data-sortable={sortable}
                  textAlign="center"
                  style={headCellStyle}
                  key={idx}>

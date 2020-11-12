@@ -43,6 +43,7 @@ export default class Markdown extends React.Component {
     referenceTitle: PropTypes.string.isRequired,
     referenceHeadingTagLevel: PropTypes.number.isRequired,
     imagePrefix: PropTypes.string.isRequired,
+    cmsPrefix: PropTypes.string.isRequired,
     tables: PropTypes.objectOf(PropTypes.shape({
       columnDefs: PropTypes.array.isRequired,
       data: PropTypes.array.isRequired
@@ -67,7 +68,10 @@ export default class Markdown extends React.Component {
       referenceTitle, inline, tocClassName,
       disableHeadingTagAnchor,
       referenceHeadingTagLevel,
-      collapsableLevels, imagePrefix, tables,
+      collapsableLevels,
+      imagePrefix,
+      cmsPrefix,
+      tables,
       renderers: addRenderers, ...props
     } = this.props;
     const mdProps = {
@@ -89,7 +93,7 @@ export default class Markdown extends React.Component {
     const renderers = {
       ...generalRenderers,
       BadMacroNode,
-      TableNode: TableNodeWrapper({tables, mdProps}),
+      TableNode: TableNodeWrapper({tables, mdProps, cmsPrefix}),
       // table: SimpleTableContainer,
       // parsedHtml,
       ...(inline ? {} : {root: RootWrapper}),

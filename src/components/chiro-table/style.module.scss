@@ -21,6 +21,9 @@
     &:hover {
       background-color: #f3f3f3;
     }
+    &[data-sortable="false"] {
+      cursor: default;
+    }
   }
   td.justify {
     text-align: justify;

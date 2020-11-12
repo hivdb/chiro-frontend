@@ -27,9 +27,10 @@ function nl2brMdText(text) {
 }
 
 
-function defaultRenderer(mdProps) {
+function defaultRenderer(mdProps, cmsPrefix) {
   return value => {
     if (typeof value === 'string') {
+      value = value.replace(/\$\$CMS_PREFIX\$\$/g, cmsPrefix);
       return <OrigMarkdown {...mdProps} source={value} />;
     }
     else {
@@ -42,39 +43,69 @@ function defaultRenderer(mdProps) {
 const renderFuncs = {
 
   default: defaultRenderer,
-  nl2br(mdProps) {
-    return value => defaultRenderer(mdProps)(nl2brMdText(value));
+  nl2br(mdProps, cmsPrefix) {
+    return value => defaultRenderer(mdProps, cmsPrefix)(nl2brMdText(value));
   },
 
-  join(mdProps) {
+  join(mdProps, cmsPrefix) {
     return (value, row, context, {joinBy = ''}) => {
       if (!value) {
         return null;
       }
-      return defaultRenderer(mdProps)(value.join(joinBy));
+      return defaultRenderer(mdProps, cmsPrefix)(value.join(joinBy));
     };
   },
 
-  articleList(mdProps) {
-    return articles => <>
+  articleList(mdProps, cmsPrefix) {
+    const freeTextRenderer = defaultRenderer(mdProps, cmsPrefix);
+    return (articles, row) => <>
       {articles.map(({
-        doi, firstAuthor: {surname}, year, journal, journalShort
-      }, idx) => <div key={idx} className={style.nowrap}>
-        <a
-         href={`https://doi.org/${doi}`}
-         rel="noopener noreferrer"
-         target="_blank">
-          {surname} {year}
-        </a>
-        {' '}({journalShort ? journalShort : journal})
+        doi,
+        firstAuthor: {surname} = {},
+        year,
+        journal,
+        journalShort,
+        freeText
+      }, idx) => <div key={idx}>
+        {freeText ?
+          freeTextRenderer(freeText) : <>
+            <a
+             href={`https://doi.org/${doi}`}
+             rel="noopener noreferrer"
+             target="_blank">
+              {surname} {year}
+            </a>
+            {' '}({journalShort ? journalShort : journal})
+          </>}
       </div>)}
     </>;
   },
 
-  nowrap(mdProps) {
+  compoundEC50Obj(mdProps, cmsPrefix) {
+    const freeTextRenderer = defaultRenderer(mdProps, cmsPrefix);
+    return (compounds) => {
+      const content = compounds.map(({name, ec50, ec50Note}) => {
+        const part = [`${name}`];
+        if (ec50 && ec50Note) {
+          part.push(` (${ec50}, ${ec50Note})`);
+        }
+        else if (ec50) {
+          part.push(` (${ec50})`);
+        }
+        return `${part.join('')}  `;
+      }).join('\n');
+      return freeTextRenderer(content);
+    };
+  },
+
+  nowrap(mdProps, cmsPrefix) {
     return value => <span className={style.nowrap}>
-      {defaultRenderer(mdProps)(value)}
+      {defaultRenderer(mdProps, cmsPrefix)(value)}
     </span>;
+  },
+
+  checkMark() {
+    return value => value ? '\u2713' : '';
   }
 
 };
@@ -83,7 +114,7 @@ const sortFuncs = {
 
   articleList: rows => sortBy(
     rows, ({references}) => references.map(
-      ({firstAuthor: {surname}, year}) => [surname, -year]
+      ({firstAuthor: {surname} = [], year}) => [surname, -year]
     )
   ),
 
@@ -94,16 +125,16 @@ const sortFuncs = {
 };
 
 
-function buildColumnDefs(columnDefs, mdProps) {
+function buildColumnDefs(columnDefs, mdProps, cmsPrefix) {
   const objs = [];
   const colHeaderRenderer = renderFuncs.nl2br(mdProps);
   for (const colDef of columnDefs) {
     let {render, sort} = colDef;
     if (typeof render === 'string') {
-      render = renderFuncs[render](mdProps);
+      render = renderFuncs[render](mdProps, cmsPrefix);
     }
     else {
-      render = renderFuncs.default(mdProps);
+      render = renderFuncs.default(mdProps, cmsPrefix);
     }
     if (typeof sort === 'string') {
       sort = sortFuncs[sort];
@@ -158,6 +189,7 @@ function Table({
   data,
   references,
   mdProps: {renderers, ...mdProps},
+  cmsPrefix,
   tableScrollStyle = {},
   tableStyle = {}}
 ) {
@@ -165,7 +197,7 @@ function Table({
     ...renderers,
     paragraph: ({children}) => <>{children}</>
   };
-  columnDefs = buildColumnDefs(columnDefs, {...mdProps, renderers});
+  columnDefs = buildColumnDefs(columnDefs, {...mdProps, renderers}, cmsPrefix);
   data = expandMultiCells(data, columnDefs);
 
   return <>
@@ -183,13 +215,14 @@ function Table({
 }
 
 
-export default function TableNode({tables, mdProps}) {
+export default function TableNode({tables, mdProps, cmsPrefix}) {
   return ({tableName}) => {
     if (tableName in tables) {
       return (
         <Table
          cacheKey={tableName}
          mdProps={mdProps}
+         cmsPrefix={cmsPrefix}
          {...tables[tableName]} />
       );
     }
