@@ -81,7 +81,9 @@ export default class Home extends React.Component {
   }
 
   thenRender = ({
-    banner, updates, publications = [],
+    banner, updates,
+    highlights = [],
+    publications = [],
     webinars = [], eduMaterials = [],
     missionStatement, imagePrefix
   } = {}) => {
@@ -157,6 +159,10 @@ export default class Home extends React.Component {
           </InlineSearchBox>
         </div>
       </section>
+      <ProjectsSection
+       title="Highlights"
+       projects={highlights}
+       imagePrefix={imagePrefix} />
       <ProjectsSection
        title="Publications"
        projects={publications}
