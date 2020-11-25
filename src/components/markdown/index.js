@@ -113,7 +113,7 @@ export default class Markdown extends React.Component {
       <ReferenceContext.Provider value={context}>
         <OrigMarkdown
          {...mdProps}
-         source={children}
+         children={children}
          renderers={renderers}
          plugins={[macroPlugin.transformer]} />
         <OptReferences

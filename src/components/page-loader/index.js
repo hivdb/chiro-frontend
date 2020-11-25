@@ -23,6 +23,7 @@ export default class PageLoader extends React.Component {
     ) {
       state.pageName = pageName;
       state.promise = loadPage(`page-${pageName}`, childProps);
+      state.childProps = childProps;
       return state;
     }
     return null;

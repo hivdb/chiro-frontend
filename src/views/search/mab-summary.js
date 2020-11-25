@@ -50,6 +50,7 @@ function MAbSummaryTable({
 
   return <>
     <Markdown
+     key={mAbsInTitle}
      imagePrefix={imagePrefix}
      cmsPrefix={cmsPrefix}
      tables={tables}>
@@ -64,7 +65,8 @@ function MAbSummaryTable({
 
 
 export default function MAbSummaryTableContainer({
-  displayMAbs, curCompound, children}) {
+  displayMAbs, curCompound, children
+}) {
 
   return (
     <PageLoader
