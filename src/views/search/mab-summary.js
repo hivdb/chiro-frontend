@@ -66,15 +66,12 @@ function MAbSummaryTable({
 export default function MAbSummaryTableContainer({
   displayMAbs, curCompound, children}) {
 
-  return <PageLoader pageName="mab-tables">
-    {(props) => (
-      <MAbSummaryTable
-       {...props}
-       children={children}
-       curCompound={curCompound}
-       displayMAbs={displayMAbs} />
-    )}
-  </PageLoader>;
+  return (
+    <PageLoader
+     pageName="mab-tables"
+     childProps={{children, curCompound, displayMAbs}}
+     component={MAbSummaryTable} />
+  );
 
 }
 

@@ -32,7 +32,7 @@ const _loadPage = memoize(async function _loadPage(pageName) {
 });
 
 
-export async function loadPage(pageName) {
+export async function loadPage(pageName, props = {}) {
   /**
    * Remove the side-effect of "same `Promise` object
    * reference" caused by memoizing `_loadPage`
@@ -42,7 +42,10 @@ export async function loadPage(pageName) {
    *   with `PromiseComponent`.
    *
    */
-  return await _loadPage(pageName);
+  return {
+    ...(await _loadPage(pageName)),
+    ...props
+  };
 }
 
 
