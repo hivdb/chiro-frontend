@@ -209,7 +209,9 @@ class SearchInner extends React.Component {
                       lists to start searching.
                     </p>
                   </> : <>
-                    {compound || virus || compoundTarget ? <>
+                    {!compound && !virus && !compoundTarget && article ?
+                      <ArticleInfo {...article} /> : null}
+                    {compound || virus || compoundTarget || mAbs.length ? <>
                       {compoundTarget && !compound ? <>
                         <Header as={H2}>
                           Target: {compoundTarget.name}
@@ -244,8 +246,6 @@ class SearchInner extends React.Component {
                         <p>{virus.description || 'Pending.'}</p>
                       </> : null}
                     </> : null}
-                    {!compound && !virus && !compoundTarget && article ?
-                      <ArticleInfo {...article} /> : null}
                     {noResult ? null : <>
                       <Header as={H2}>
                         Results
