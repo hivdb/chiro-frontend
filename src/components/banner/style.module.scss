@@ -164,7 +164,7 @@
       margin-right: #{(100vw - $main-content-width) / 2};
     }
   }
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: $mobile-main-content-max-width) {
     .banner-header {
       &:not(:last-child) {
         margin-left: #{(100vw - $mobile-main-content-width) / 2};
@@ -173,6 +173,26 @@
     }
     .banner-sidebar {
       margin-right: #{(100vw - $mobile-main-content-width) / 2};
+    }
+  }
+  @media only screen and (max-width: 1400px) {
+    .banner-header {
+      text-align: center;
+      height: $narrow-banner-height;
+      .banner-header-title {
+        font-size: 3rem;
+      }
+      .banner-slider {
+        text-align: left;
+      }
+      &:not(:last-child) {
+        .banner-header-title {
+          text-align: center;
+        }
+        .banner-header-subtitle {
+          text-align: center;
+        }
+      }
     }
   }
   @media only screen and (max-width: 900px) {
@@ -186,24 +206,10 @@
       }
     }
     .banner-header {
-      text-align: center;
-      height: $narrow-banner-height;
       margin-left: #{(100vw - $mobile-main-content-width) / 2};
       margin-right: #{(100vw - $mobile-main-content-width) / 2};
-      .banner-header-title {
-        font-size: 3rem;
-      }
-      .banner-slider {
-        text-align: left;
-      }
       &:not(:last-child) {
         max-width: $mobile-main-content-width;
-        .banner-header-title {
-          text-align: center;
-        }
-        .banner-header-subtitle {
-          text-align: center;
-        }
       }
     }
     .banner-slider {

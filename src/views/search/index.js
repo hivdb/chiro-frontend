@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import {Link, matchShape} from 'found';
 import {useQuery} from '@apollo/client';
 import {Grid, Header, Loader} from 'semantic-ui-react';
+import uniq from 'lodash/uniq';
 
+import MAbSummaryTable from './mab-summary';
 import VirusExpTable from './virus-experiments';
 import BiochemExpTable from './biochem-experiments';
 import AnimalExpTable from './animal-experiments';
@@ -12,6 +14,7 @@ import PseudovirusExpTable from './pseudovirus-experiments';
 import ClinicalExpTable from './clinical-experiments';
 import searchQuery from './search.gql';
 
+import {H1, H2} from '../../components/heading-tags';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import ArticleInfo from '../../components/article-info';
@@ -128,7 +131,7 @@ class SearchInner extends React.Component {
       animalExperiments.totalCount +
       clinicalExperiments.totalCount
     ) === 0;
-    const virusMAbCount = virusExperiments ? (
+    const virusMAbs = virusExperiments ? (
       virusExperiments.edges.filter(({
         node: {categoryName, compoundObjs}
       }) => (
@@ -136,8 +139,9 @@ class SearchInner extends React.Component {
         compoundObjs.some(
           ({target}) => isTargetMAb(target)
         )
-      )).length
-    ) : 0;
+      ))
+    ) : [];
+    const virusMAbCount = virusMAbs.length;
     const virusIFNCount = virusExperiments ? (
       virusExperiments.edges.filter(({
         node: {categoryName}
@@ -145,15 +149,26 @@ class SearchInner extends React.Component {
         categoryName === 'CellCultureIFN'
       )).length
     ) : 0;
-    const pseudovirusMAbCount = pseudovirusExperiments ? (
+    const pseudovirusMAbs = pseudovirusExperiments ? (
       pseudovirusExperiments.edges.filter(({
         node: {categoryName, compoundObjs}
       }) => (
         compoundObjs.some(
           ({target}) => isTargetMAb(target)
         )
-      )).length
-    ) : 0;
+      ))
+    ) : [];
+    const pseudovirusMAbCount = pseudovirusMAbs.length;
+    const mAbs = uniq([
+      ...virusMAbs,
+      ...pseudovirusMAbs
+    ].reduce(
+      (acc, {node: {compoundNames}}) => ([
+        ...acc,
+        ...compoundNames
+      ]), []
+    ));
+
     return <Grid stackable className={style['search']}>
       <Grid.Row>
         <InlineSearchBox
@@ -188,7 +203,7 @@ class SearchInner extends React.Component {
                   width: 12,
                   className: style['search-summary'],
                   description: formOnly ? <>
-                    <Header as="h1" dividing>Database Search</Header>
+                    <Header as={H1} disableAnchor>Database Search</Header>
                     <p>
                       Select an option from left drop down
                       lists to start searching.
@@ -196,13 +211,13 @@ class SearchInner extends React.Component {
                   </> : <>
                     {compound || virus || compoundTarget ? <>
                       {compoundTarget && !compound ? <>
-                        <Header as="h2" dividing>
+                        <Header as={H2}>
                           Target: {compoundTarget.name}
                         </Header>
                         <p>{compoundTarget.description || 'Pending.'}</p>
                       </> : null}
                       {compound ? <>
-                        <Header as="h2" dividing>
+                        <Header as={H2}>
                           Target: {
                             compound.targetObj ?
                             compound.targetObj.name : 'NA'
@@ -212,14 +227,18 @@ class SearchInner extends React.Component {
                           compound.targetObj.description || 'Pending.' :
                           null}</p>
                       </> : null}
-                      {compound ? <>
-                        <Header as="h2" dividing>
-                          Compound: {compound.name}
-                        </Header>
-                        <p>{compound.description || 'Pending.'}</p>
-                      </> : null}
+                      <MAbSummaryTable
+                       displayMAbs={mAbs}
+                       curCompound={compound}>
+                        {compound ? <>
+                          <Header as={H2}>
+                            Compound: {compound.name}
+                          </Header>
+                          <p>{compound.description || 'Pending.'}</p>
+                        </> : null}
+                      </MAbSummaryTable>
                       {virus ? <>
-                        <Header as="h2" dividing>
+                        <Header as={H2}>
                           Virus: {virus.name}
                         </Header>
                         <p>{virus.description || 'Pending.'}</p>
@@ -228,7 +247,7 @@ class SearchInner extends React.Component {
                     {!compound && !virus && !compoundTarget && article ?
                       <ArticleInfo {...article} /> : null}
                     {noResult ? null : <>
-                      <Header as="h2" dividing>
+                      <Header as={H2}>
                         Results
                         {noRelatedCompounds ?
                           ' (without closely related compounds)' : null}
@@ -336,7 +355,7 @@ class SearchInner extends React.Component {
           {virusExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as="h2" dividing id="invitro-cells">
+                <Header as={H2} id="invitro-cells">
                   Cell Culture
                 </Header>
                 <VirusExpTable
@@ -347,7 +366,7 @@ class SearchInner extends React.Component {
           {fusionAssayExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column withd={16}>
-                <Header as="h2" dividing id="invitro-fusionassay">
+                <Header as={H2} id="invitro-fusionassay">
                   Fusion Assay
                 </Header>
                 <FusionAssayExpTable
@@ -358,7 +377,7 @@ class SearchInner extends React.Component {
           {pseudovirusExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as="h2" dividing id="pseudovirus">
+                <Header as={H2} id="pseudovirus">
                   Pseudovirus Entry
                 </Header>
                 <PseudovirusExpTable
@@ -369,7 +388,7 @@ class SearchInner extends React.Component {
           {biochemExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as="h2" dividing id="invitro-biochem">
+                <Header as={H2} id="invitro-biochem">
                   Biochemistry
                 </Header>
                 <BiochemExpTable
@@ -380,7 +399,7 @@ class SearchInner extends React.Component {
           {animalExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as="h2" dividing id="animal-models">
+                <Header as={H2} id="animal-models">
                   Animal Models
                 </Header>
                 <AnimalExpTable
@@ -391,7 +410,7 @@ class SearchInner extends React.Component {
           {clinicalExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as="h2" dividing id="clinical-studies">
+                <Header as={H2} id="clinical-studies">
                   Cinical Studies
                 </Header>
                 <ClinicalExpTable

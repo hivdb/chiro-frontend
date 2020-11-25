@@ -183,7 +183,7 @@ function expandMultiCells(data, columnDefs) {
 }
 
 
-function Table({
+export function Table({
   cacheKey,
   columnDefs,
   data,

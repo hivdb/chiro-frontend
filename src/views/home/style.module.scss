@@ -43,7 +43,7 @@
   display: flex;
   justify-content: space-between;
 
-  @include chiro-dropdown(18rem);
+  @include chiro-dropdown(20rem);
   @media only screen and (max-width: 900px) {
     flex-wrap: wrap;
   }
@@ -196,7 +196,7 @@ ul.list-projects {
     @media only screen {
       width: $main-content-width;
     }
-    @media only screen and (max-width: 1200px) {
+    @media only screen and (max-width: $mobile-main-content-max-width) {
       width: $mobile-main-content-width;
       flex-wrap: wrap;
     }

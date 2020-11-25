@@ -4,7 +4,7 @@
     width: 100vw;
     margin-left: #{($main-content-width - 100vw) / 2};
   }
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: $mobile-main-content-max-width) {
     width: 100vw;
     margin-left: #{($mobile-main-content-width - 100vw) / 2};
   }

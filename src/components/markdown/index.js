@@ -33,7 +33,10 @@ export default class Markdown extends React.Component {
 
   static propTypes = {
     toc: PropTypes.bool.isRequired,
-    children: PropTypes.string.isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+    ]).isRequired,
     tocClassName: PropTypes.string,
     inline: PropTypes.bool.isRequired,
     renderers: PropTypes.object.isRequired,
@@ -42,12 +45,12 @@ export default class Markdown extends React.Component {
     noHeadingStyle: PropTypes.bool.isRequired,
     referenceTitle: PropTypes.string.isRequired,
     referenceHeadingTagLevel: PropTypes.number.isRequired,
-    imagePrefix: PropTypes.string.isRequired,
-    cmsPrefix: PropTypes.string.isRequired,
+    imagePrefix: PropTypes.string,
+    cmsPrefix: PropTypes.string,
     tables: PropTypes.objectOf(PropTypes.shape({
       columnDefs: PropTypes.array.isRequired,
       data: PropTypes.array.isRequired
-    }).isRequired).isRequired
+    }).isRequired)
   }
 
   static defaultProps = {
@@ -63,8 +66,9 @@ export default class Markdown extends React.Component {
   }
 
   render() {
-    const {
-      children, noHeadingStyle, toc,
+    let {
+      noHeadingStyle, toc,
+      children,
       referenceTitle, inline, tocClassName,
       disableHeadingTagAnchor,
       referenceHeadingTagLevel,
@@ -74,6 +78,9 @@ export default class Markdown extends React.Component {
       tables,
       renderers: addRenderers, ...props
     } = this.props;
+    if (children instanceof Array) {
+      children = children.join('');
+    }
     const mdProps = {
       parserOptions: {footnotes: true},
       transformLinkUri: false,

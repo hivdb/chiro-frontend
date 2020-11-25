@@ -60,7 +60,7 @@
 }
 
 :global(.ui > .grid > .row) > .search-box {
-  @include chiro-dropdown(18rem);
+  @include chiro-dropdown(20rem);
   @media only screen and (max-width: 900px) {
     &[class*="four wide"]:global(.column) {
       width: 100%!important;

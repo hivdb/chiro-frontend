@@ -42,7 +42,7 @@ ul.result-col-popup {
   margin-bottom: 3rem;
   > :global(.row) {
     .search-box {
-      @include chiro-dropdown(18rem);
+      @include chiro-dropdown(20rem);
     }
     .search-summary {
       font-size: 1.1rem;

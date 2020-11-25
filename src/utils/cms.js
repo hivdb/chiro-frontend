@@ -25,6 +25,7 @@ const _loadPage = memoize(async function _loadPage(pageName) {
   payload = await resp.json();
   return {
     ...payload,
+    pageName,
     imagePrefix: `https://${stage}/images/`,
     cmsPrefix: `https://${stage}/`
   };

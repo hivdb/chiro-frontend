@@ -71,7 +71,7 @@
       min-width: 90% !important;
     }
   }
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: $mobile-main-content-max-width) {
     padding-left: #{(100vw - $mobile-main-content-width) / 2};
     padding-right: #{(100vw - $mobile-main-content-width) / 2};
   }

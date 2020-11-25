@@ -23,6 +23,7 @@ export function getAnchor(elem) {
 export class HeadingTag extends React.Component {
 
   static propTypes = {
+    id: PropTypes.string,
     level: PropTypes.oneOf([1, 2, 3, 4, 5, 6]).isRequired,
     children: PropTypes.node.isRequired,
     disableAnchor: PropTypes.bool.isRequired
@@ -38,7 +39,8 @@ export class HeadingTag extends React.Component {
   }
 
   get anchor() {
-    return getAnchor(this.props.children);
+    const {children, id} = this.props;
+    return id ? id : getAnchor(children);
   }
 
   async componentDidMount() {

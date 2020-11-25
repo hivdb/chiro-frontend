@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 // import sleep from 'sleep-promise';
 import {Header} from 'semantic-ui-react';
 
-import {loadPage} from '../../utils/cms';
 import setTitle from '../../utils/set-title';
+import PageLoader from '../../components/page-loader';
 import Banner from '../../components/banner';
 import Markdown from '../../components/markdown';
 import BackToTop from '../../components/back-to-top';
-import PromiseComponent from '../../utils/promise-component';
 import {
   ReferenceContext,
   ReferenceContextValue} from '../../components/references';
@@ -16,63 +15,30 @@ import {
 import style from './style.module.scss';
 
 
-/* let _scrollTops = {};
-
-async function updateScroll(props) {
-  const {pageName} = props;
-  const {hash, query: {_: internalQuery}} = props.location;
-  let scrollTop;
-  if (!hash || hash === '' || hash === '#') {
-    scrollTop = _scrollTops[pageName] || 0;
-  }
-  if (typeof internalQuery === 'string') {
-    const {y} = JSON.parse(atob(internalQuery));
-    if (y) {
-      scrollTop = y;
-    }
-  }
-  let tryTimes = 10;
-  if (typeof scrollTop === 'undefined') {
-    return;
-  }
-  while (tryTimes --) {
-    await sleep(50);
-    window.scrollTo(0, scrollTop);
-    if (window.scrollY === scrollTop) {
-      break;
-    }
-  }
-} */
-
-
-export default class CMSPage extends React.Component {
+class CMSPage extends React.Component {
 
   static propTypes = {
-    location: PropTypes.object.isRequired,
-    pageName: PropTypes.string.isRequired
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    const {pageName} = props;
-    if (pageName !== state.pageName) {
-      state.promise = loadPage(`page-${pageName}`);
-      // _scrollTops = {};
-    }
-    /* else {
-      setTimeout(() => {
-        _scrollTops[pageName] = window.pageYOffset;
-      }, 0);
-    } */
-    // updateScroll(props);
-    return state;
+    pageName: PropTypes.string.isRequired,
+    pageTitle: PropTypes.string.isRequired,
+    introHeader: PropTypes.string,
+    toc: PropTypes.bool,
+    hideLastModified: PropTypes.bool,
+    lastModified: PropTypes.string.isRequired,
+    escapeHtml: PropTypes.bool,
+    collapsableLevels: PropTypes.array,
+    referenceTitle: PropTypes.string,
+    heroImage: PropTypes.string,
+    cmsPrefix: PropTypes.string.isRequired,
+    imagePrefix: PropTypes.string.isRequired,
+    tables: PropTypes.objectOf(PropTypes.shape({
+      columnDefs: PropTypes.array.isRequired,
+      data: PropTypes.array.isRequired
+    }).isRequired)
   }
 
   constructor() {
     super(...arguments);
-    const {pageName} = this.props;
-    const promise = loadPage(`page-${pageName}`);
     this.containerRef = React.createRef();
-    this.state = {promise, pageName};
   }
 
   componentDidMount() {
@@ -120,15 +86,26 @@ export default class CMSPage extends React.Component {
     }
   }
 
-  thenRender = ({
-    pageTitle, introHeader, content, isHtml, toc,
-    hideLastModified, lastModified, cmsPrefix, escapeHtml,
-    collapsableLevels, referenceTitle, heroImage,
-    imagePrefix, tables
-  }) => {
-    content = content.replace(/\$\$CMS_PREFIX\$\$/g, cmsPrefix);
-    const {pageName} = this.props;
-    escapeHtml = escapeHtml === false ? false : true;
+  render() {
+    const {
+      pageName,
+      pageTitle,
+      introHeader,
+      toc,
+      hideLastModified,
+      lastModified,
+      cmsPrefix,
+      collapsableLevels,
+      referenceTitle,
+      heroImage,
+      imagePrefix,
+      tables
+    } = this.props;
+    const content = (
+      this.props.content
+        .replace(/\$\$CMS_PREFIX\$\$/g, cmsPrefix)
+    );
+    const escapeHtml = this.props.escapeHtml === false ? false : true;
     let lastMod;
     if (!hideLastModified) {
       lastMod = new Date(lastModified).toLocaleString(
@@ -180,20 +157,19 @@ export default class CMSPage extends React.Component {
         </article>
       </ReferenceContext.Provider>
     );
-  };
-
-  errorRender = () => {
-    return "Page not found.";
-  };
-
-  render() {
-    const {promise} = this.state;
-
-    return (
-      <PromiseComponent
-       promise={promise}
-       error={this.errorRender}
-       then={this.thenRender} />
-    );
   }
 }
+
+
+export default function CMSPageContainer({pageName}) {
+  return (
+    <PageLoader
+     pageName={pageName}
+     component={CMSPage} />
+  );
+}
+
+
+CMSPageContainer.propTypes = {
+  pageName: PropTypes.string.isRequired
+};
