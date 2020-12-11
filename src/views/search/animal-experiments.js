@@ -94,7 +94,12 @@ function resultColDefs(rows) {
     'Mortality': 'Mortality',
     'Lung pathology': <>Lung<br />pathology</>,
     'Clinical Diseases': <>Clinical<br />Diseases</>,
-    'Xenograft VL': <>Xenograft VL</>
+    'Xenograft VL': <>Xenograft VL</>,
+    'Clinical Signs': <>Clinical<br />Signs</>,
+    'virus shedding': <>Virus<br />shedding</>,
+    'Lung Inflammation': <>Lung<br />Inflammation</>,
+    'Infection': <>Infection</>,
+    'Seroconversion': <>Seroconversion</>,
   };
 
   for (const key in displayResultNames) {
