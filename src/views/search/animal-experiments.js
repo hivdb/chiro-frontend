@@ -22,8 +22,10 @@ const treatmentTypeMap = {
 
 const symbols = {
   'SIG_REDUCE': '↓↓↓',
+  'MID_REDUCE': '↓↓',
   'REDUCE': '↓',
   'SIG_INCREASE': '↑↑↑',
+  'MID_INCREASE': '↑↑',
   'INCREASE': '↑',
   'NO_CHANGE': '<=>'
 };
