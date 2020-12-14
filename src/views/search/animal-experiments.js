@@ -107,8 +107,8 @@ function resultColDefs(rows) {
       <Popup
        header={key}
        content={<ul className={style['result-col-popup']}>
-         <li>↓, ↓↓↓ decreased; </li>
-         <li>↑, ↑↑↑ increased; </li>
+         <li>↓, ↓↓, ↓↓↓ decreased; </li>
+         <li>↑, ↑↑, ↑↑↑ increased; </li>
          <li>
            {'<=>'} no discernable difference;{' '}
          </li>
