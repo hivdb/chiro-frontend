@@ -10,6 +10,8 @@ import PromiseComponent from '../../utils/promise-component';
 
 import Markdown from '../../components/markdown';
 
+import style from './style.module.scss';
+
 
 export default class MutAnnotViewerLayout extends React.Component {
 
@@ -49,7 +51,7 @@ export default class MutAnnotViewerLayout extends React.Component {
 
     setTitle(title);
 
-    return <Grid stackable>
+    return <Grid stackable className={style['full-width-viewer']}>
       <Grid.Row>
         <Grid.Column width={16}>
           <Header as="h1" dividing>{title}</Header>

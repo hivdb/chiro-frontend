@@ -7,7 +7,7 @@ import {
 } from 'found';
 
 import SARS2Routes from 'sierra-frontend/dist/views/sars2';
-import MutAnnotEditorRoutes from 'sierra-frontend/dist/views/mut-annot-editor';
+import MutAnnotViewerRoutes from 'sierra-frontend/dist/views/mut-annot-viewer';
 
 import Home from './views/home';
 import HomeStaging from './views/home-staging';
@@ -27,7 +27,7 @@ import Plots from './views/plots';
 import Page from './views/page';
 import MutAnnotViewerLayout from './views/mut-annot-viewer-layout';
 
-import {mutAnnotEditorConfig} from './config';
+import {mutAnnotViewerConfig} from './config';
 import style from './index.module.scss';
 
 import Layout from './components/layout';
@@ -49,10 +49,10 @@ const BrowserRouter = createBrowserRouter({
         })}
       </Route>
       <Route render={({props}) => (
-        <MutAnnotViewerLayout {...props} {...mutAnnotEditorConfig} />
+        <MutAnnotViewerLayout {...props} {...mutAnnotViewerConfig} />
       )}>
-        {MutAnnotEditorRoutes({
-          ...mutAnnotEditorConfig,
+        {MutAnnotViewerRoutes({
+          ...mutAnnotViewerConfig,
           pathPrefix: 'mut-annot-viewer/',
           className: style['mut-annot-editor-ui']
         })}

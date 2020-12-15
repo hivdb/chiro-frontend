@@ -17,7 +17,7 @@ function makeMutationAnnotationLoader(pageName) {
 }
 
 
-const mutAnnotEditorConfig = {
+const mutAnnotViewerConfig = {
   presets: [
     {
       name: 'SARS2S',
@@ -36,5 +36,5 @@ const mutAnnotEditorConfig = {
 
 export {
   backendPrefix,
-  mutAnnotEditorConfig
+  mutAnnotViewerConfig
 };
