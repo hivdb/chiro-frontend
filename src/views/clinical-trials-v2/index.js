@@ -19,7 +19,7 @@ import Modal from '../../components/modal';
 
 import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
-import {groupTrials2} from './group-trials';
+import {groupTrials2, markHasIssue} from './group-trials';
 
 import {
   compoundShape
@@ -135,7 +135,9 @@ class ClinicalTrialInner extends React.Component {
         });
       }
     }
-    let allTrials = groupTrials2(clinicalTrials, qCompoundTargetName);
+    let allTrials = markHasIssue(clinicalTrials);
+
+    allTrials = groupTrials2(allTrials, qCompoundTargetName);
 
     let result = groupBy(allTrials, t => t.target);
     return result;

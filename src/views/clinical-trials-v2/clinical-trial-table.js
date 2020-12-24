@@ -170,11 +170,11 @@ const tableColumns = [
     label: 'Est. Start',
     render: monthYear
   }),
-  new ColDef({
-    name: 'dateEntered',
-    label: 'Add Date',
-    render: monthDay
-  }),
+  // new ColDef({
+  //   name: 'dateEntered',
+  //   label: 'Add Date',
+  //   render: monthDay
+  // }),
   new ColDef({
     name: 'recruitmentStatus', label: 'Status',
     render: renderRecruitmentStatus
@@ -183,7 +183,12 @@ const tableColumns = [
     name: 'articles',
     label: 'Publication',
     render: renderArticle,
-  })
+  }),
+  new ColDef({
+    name: 'issue',
+    label: 'Issue',
+    none: '',
+  }),
 ];
 
 
@@ -247,17 +252,25 @@ export default class ClinicalTrialTable extends React.Component {
     let {cacheKey, data, compounds} = this.props;
 
     data = orderBy(
-      data, [function(o) {
+      data, [
+        function(o) {
+          if (o['issue'] === 'Always pending.') {
+            return 1;
+          } else if (o['issue'] === 'Not finished.') {
+            return 2;
+          } else {
+            return 0;
+          }
+        }
+        ,function(o) {
         if (o['recruitmentStatus'] === 'Published') {
           return 1;
         } else if (o['recruitmentStatus'] === 'Completed') {
           return 2;
-        } else if (o['recruitmentStatus'] === 'Withdrawn') {
-          return 3;
         } else if (o['recruitmentStatus'] === 'Active') {
-          return 4;
+          return 3;
         } else {
-          return 5;
+          return 4;
         }
       }, function(o) {
         return - o['numPatients'];

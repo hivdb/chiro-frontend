@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export function groupTrials1(clinicalTrials, qCompoundTargetName) {
   let allTrials = [];
   for (const {node: {compoundObjs, ...trial}} of clinicalTrials) {
@@ -120,4 +122,35 @@ export function groupTrials2(clinicalTrials, qCompoundTargetName) {
     });
   }
   return allTrials;
+}
+
+function isOldTrial(date) {
+  const today = moment();
+  date = moment(date);
+  if (date.isValid()) {
+    if (moment.duration(today.diff(date)).months() > 4) {
+      return true;
+    } else {
+      return false
+    }
+  } else {
+    return true
+  }
+}
+
+export function markHasIssue(clinicalTrials) {
+  const status = ['Published', 'Completed', 'Active', 'Pending'];
+  let result = []
+  for (let {node: {...trials}} of clinicalTrials) {
+    if (!status.includes(trials['recruitmentStatus'])) {
+      trials['issue'] = 'Not finished.';
+    } else if (trials['recruitmentStatus'] === 'Pending'
+       && isOldTrial(trials['startDate'])) {
+      trials['issue'] = 'Always pending.';
+    } else {
+      trials['issue'] = '';
+    }
+    result.push({node: trials});
+  }
+  return result;
 }
