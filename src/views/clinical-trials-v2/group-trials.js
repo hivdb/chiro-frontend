@@ -146,7 +146,7 @@ export function markHasIssue(clinicalTrials) {
       trials['issue'] = 'Not finished.';
     } else if (trials['recruitmentStatus'] === 'Pending'
        && isOldTrial(trials['startDate'])) {
-      trials['issue'] = 'Always pending.';
+      trials['issue'] = 'Stop updating.';
     } else {
       trials['issue'] = '';
     }

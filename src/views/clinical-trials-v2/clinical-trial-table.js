@@ -254,7 +254,7 @@ export default class ClinicalTrialTable extends React.Component {
     data = orderBy(
       data, [
         function(o) {
-          if (o['issue'] === 'Always pending.') {
+          if (o['issue'] === 'Stop updating.') {
             return 1;
           } else if (o['issue'] === 'Not finished.') {
             return 2;
