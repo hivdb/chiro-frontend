@@ -124,7 +124,7 @@ export function groupTrials2(clinicalTrials, qCompoundTargetName) {
   return allTrials;
 }
 
-function isOldTrial(date) {
+function isDelayed(date) {
   const today = moment();
   date = moment(date);
   if (date.isValid()) {
@@ -138,17 +138,12 @@ function isOldTrial(date) {
   }
 }
 
-export function markHasIssue(clinicalTrials) {
-  const status = ['Published', 'Completed', 'Active', 'Pending'];
+export function markDelayed(clinicalTrials) {
   let result = []
   for (let {node: {...trials}} of clinicalTrials) {
-    if (!status.includes(trials['recruitmentStatus'])) {
-      trials['issue'] = 'Not finished.';
-    } else if (trials['recruitmentStatus'] === 'Pending'
-       && isOldTrial(trials['startDate'])) {
-      trials['issue'] = 'Stop updating.';
-    } else {
-      trials['issue'] = '';
+    if (trials['recruitmentStatus'] === 'Pending'
+       && isDelayed(trials['startDate'])) {
+      trials['recruitmentStatus'] = 'Delayed';
     }
     result.push({node: trials});
   }

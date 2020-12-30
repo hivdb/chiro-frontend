@@ -184,11 +184,6 @@ const tableColumns = [
     label: 'Publication',
     render: renderArticle,
   }),
-  new ColDef({
-    name: 'issue',
-    label: 'Issue',
-    none: '',
-  }),
 ];
 
 
@@ -254,23 +249,18 @@ export default class ClinicalTrialTable extends React.Component {
     data = orderBy(
       data, [
         function(o) {
-          if (o['issue'] === 'Stop updating.') {
-            return 1;
-          } else if (o['issue'] === 'Not finished.') {
-            return 2;
-          } else {
-            return 0;
-          }
-        }
-        ,function(o) {
         if (o['recruitmentStatus'] === 'Published') {
           return 1;
         } else if (o['recruitmentStatus'] === 'Completed') {
           return 2;
         } else if (o['recruitmentStatus'] === 'Active') {
           return 3;
-        } else {
+        } else if (o['recruitmentStatus'] === 'Pending') {
           return 4;
+        } else if (o['recruitmentStatus'] === 'Delayed') {
+          return 5;
+        } else {
+          return 6;
         }
       }, function(o) {
         return - o['numPatients'];

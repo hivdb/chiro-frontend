@@ -19,7 +19,7 @@ import Modal from '../../components/modal';
 
 import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
-import {groupTrials2, markHasIssue} from './group-trials';
+import {groupTrials2, markDelayed} from './group-trials';
 
 import {
   compoundShape
@@ -135,7 +135,7 @@ class ClinicalTrialInner extends React.Component {
         });
       }
     }
-    let allTrials = markHasIssue(clinicalTrials);
+    let allTrials = markDelayed(clinicalTrials);
 
     allTrials = groupTrials2(allTrials, qCompoundTargetName);
 
