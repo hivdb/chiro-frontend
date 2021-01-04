@@ -1,4 +1,8 @@
 :global(.ui.grid).full-width-viewer {
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
+  div[class*="footer-container"] {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
 }

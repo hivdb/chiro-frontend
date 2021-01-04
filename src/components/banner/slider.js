@@ -2,7 +2,8 @@ import React, {createRef} from 'react';
 import PropTypes from 'prop-types';
 import makeClassNames from 'classnames';
 import throttle from 'lodash/throttle';
-import {IoIosArrowForward, IoIosArrowBack} from 'react-icons/io';
+import {IoIosArrowForward} from '@react-icons/all-files/io/IoIosArrowForward';
+import {IoIosArrowBack} from '@react-icons/all-files/io/IoIosArrowBack';
 
 import style from './style.module.scss';
 

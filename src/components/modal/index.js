@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {IoIosClose} from 'react-icons/io';
+import {IoIosClose} from '@react-icons/all-files/io/IoIosClose';
 
 import style from './style.module.scss';
 

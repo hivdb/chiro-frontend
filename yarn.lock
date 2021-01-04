@@ -1776,6 +1776,11 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
+"@react-icons/all-files@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@react-icons/all-files/-/all-files-4.1.0.tgz#477284873a0821928224b6fc84c62d2534d6650b"
+  integrity sha512-hxBI2UOuVaI3O/BhQfhtb4kcGn9ft12RWAFVMUeNjqqhLsHvFtzIkFaptBJpFDANTKoDfdVoHTKZDlwKCACbMQ==
+
 "@restart/context@^2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@restart/context/-/context-2.1.4.tgz#a99d87c299a34c28bd85bb489cb07bfd23149c02"
@@ -4341,6 +4346,11 @@ core-js@^3.5.0:
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.4.tgz#440a83536b458114b9cb2ac1580ba377dc470647"
   integrity sha512-4paDGScNgZP2IXXilaffL9X7968RuvwlkK3xWtZRVqgd8SYNiVKRJvkFd1aqqEuPfN7E68ZHEp9hDj6lHj4Hyw==
+
+core-js@^3.6.5:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.8.2.tgz#0a1fd6709246da9ca8eff5bb0cbd15fba9ac7044"
+  integrity sha512-FfApuSRgrR6G5s58casCBd9M2k+4ikuu4wbW6pJyYU7bd9zvFc9qf7vr5xmrZOhT9nn+8uwlH1oRR9jTnFoA3A==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -11520,7 +11530,16 @@ query-string@^5.1.1:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
-query-string@^6.13.1, query-string@^6.8.2:
+query-string@^6.13.8:
+  version "6.13.8"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.13.8.tgz#8cf231759c85484da3cf05a851810d8e825c1159"
+  integrity sha512-jxJzQI2edQPE/NPUOusNjO/ZOGqr1o2OBa/3M00fU76FsLXDVbJDv/p7ng5OdQyorKrkRz1oqfwmbe5MAMePQg==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    split-on-first "^1.0.0"
+    strict-uri-encode "^2.0.0"
+
+query-string@^6.8.2:
   version "6.13.1"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.13.1.tgz#d913ccfce3b4b3a713989fe6d39466d92e71ccad"
   integrity sha512-RfoButmcK+yCta1+FuU8REvisx1oEzhMKwhLUNcepQTPGcNMp1sIqjnfCtfnvGSQZQEhaBHvccujtWoUV3TTbA==
@@ -11643,6 +11662,11 @@ react-children-utilities@^2.1.6:
   resolved "https://registry.yarnpkg.com/react-children-utilities/-/react-children-utilities-2.1.6.tgz#9d60e247a2165b90b4ad01455aed98ea72a919be"
   integrity sha512-w98UfUMzg7eg008CNmz7VYuog//kcXTnB26r0rGc+7kzKQ1sP9Yry29sDj9AL/TQ9C/7UCkFadaHnNKYdyhL2A==
 
+react-children-utilities@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-children-utilities/-/react-children-utilities-2.2.2.tgz#5fde33cc67f838703a88e7fa2a2e3490d801a557"
+  integrity sha512-s0DPDiUd2FFXrNwoybM3cOreXex8OppySIwLMOCJfMV9x1nAoVLlp1GobnemCKvzJ4dNhBZyRsL+Ucv3zGHQyQ==
+
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.1.tgz#f6de325ae25fa4d546d09df4bb1befdc6dd19c19"
@@ -11718,13 +11742,6 @@ react-ga@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-3.0.0.tgz#4d665389cf0c489c36c5fdf97722a7e53efdfc5b"
   integrity sha512-IKqqCtSMe0IfSRNvbHAiwXwIXbuza4VvHvB/2N3hEiMFGSjv8fNI6obPH6bkDdIjDpwzbUqKs8895OxBckWJ2g==
-
-react-icons@^3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.10.0.tgz#6c217a2dde2e8fa8d293210023914b123f317297"
-  integrity sha512-WsQ5n1JToG9VixWilSo1bHv842Cj5aZqTGiS3Ud47myF6aK7S/IUY2+dHcBdmkQcCFRuHsJ9OMUI0kTDfjyZXQ==
-  dependencies:
-    camelcase "^5.0.0"
 
 react-is@^16.12.0, react-is@^16.3.2, react-is@^16.6.3, react-is@^16.7.0, react-is@^16.8.6, react-is@^16.9.0:
   version "16.13.0"
@@ -11953,6 +11970,11 @@ react@^16.13.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
+
+reactjs-popup@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-2.0.4.tgz#53f585a2b19fb730b127a166ffffa2672e144fa1"
+  integrity sha512-G5jTXL2JkClKAYAdqedf+K9QvbNsFWvdbrXW1/vWiyanuCU/d7DtQzQux+uKOz2HeNVRsFQHvs7abs0Z7VLAhg==
 
 read-cmd-shim@^1.0.1, read-cmd-shim@^1.0.5:
   version "1.0.5"
@@ -12996,10 +13018,11 @@ side-channel@^1.0.2:
     es-abstract "^1.17.0-next.1"
     object-inspect "^1.7.0"
 
-sierra-frontend@hivdb/sierra-frontend#6d95023:
+sierra-frontend@hivdb/sierra-frontend#abcc8d2:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#6d9502331a999748f7174cdb63feda329082ebbd"
+  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#abcc8d231cad834d897fb4e886ab3847924b012e"
   dependencies:
+    "@react-icons/all-files" "^4.1.0"
     "@vx/axis" "^0.0.197"
     "@vx/scale" "^0.0.197"
     "@vx/tooltip" "^0.0.197"
@@ -13017,16 +13040,17 @@ sierra-frontend@hivdb/sierra-frontend#6d95023:
     normalize-scss "^7.0.1"
     object-merge "^2.5.1"
     randomcolor "^0.6.2"
+    react-children-utilities "^2.2.2"
     react-dropdown "^1.7.0"
     react-dropzone "^11.0.1"
-    react-icons "^3.10.0"
     react-konva "^16.13.0-5"
     react-loader "^2.4.7"
     react-progressbar "^15.4.1"
     react-tabs "^3.1.1"
+    reactjs-popup "^2.0.4"
     resolve-pathname "^3.0.0"
     rfdc "^1.1.4"
-    sleep-promise "^8.0.1"
+    sleep-promise "^9.0.0"
     typeface-source-sans-pro "^1.1.5"
     typescript "^3.9.5"
     uuid "^8.3.1"
@@ -13067,6 +13091,13 @@ sleep-promise@^8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/sleep-promise/-/sleep-promise-8.0.1.tgz#8d795a27ea23953df6b52b91081e5e22665993c5"
   integrity sha1-jXlaJ+ojlT32tSuRCB5eImZZk8U=
+
+sleep-promise@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/sleep-promise/-/sleep-promise-9.0.0.tgz#99bf063ee5f821edc974d9011478ed7cadfebaa3"
+  integrity sha512-7x3Fra49pMKWs0+jzOXBVR31GkP3NwmFMoxH/irXcUCUyglhPtoQa/XaC7OimjI41YEGP00StD8UlmJL/MBHlw==
+  dependencies:
+    core-js "^3.6.5"
 
 slice-ansi@^2.1.0:
   version "2.1.0"

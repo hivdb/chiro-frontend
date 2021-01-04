@@ -1,4 +1,5 @@
 import {loadPage} from './utils/cms';
+import LoadReferences from './components/references/load-references';
 
 let backendPrefix = '';
 
@@ -11,8 +12,8 @@ if (window.__NODE_ENV === 'production') {
 
 function makeMutationAnnotationLoader(pageName) {
   return async () => {
-    const payload = await loadPage(pageName);
-    return payload.data;
+    const {data, comments = []} = await loadPage(pageName);
+    return {...data, comments};
   };
 }
 
@@ -31,7 +32,8 @@ const mutAnnotViewerConfig = {
       asyncPageName: 'mutannot-rdrp',
       annotationLoader: makeMutationAnnotationLoader('mutannot-rdrp')
     }
-  ]
+  ],
+  LoadReferences
 };
 
 export {
