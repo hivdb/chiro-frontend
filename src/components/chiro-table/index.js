@@ -2,9 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import nestedGet from 'lodash/get';
 import sortBy from 'lodash/sortBy';
-import {Table, Button, Menu} from 'semantic-ui-react';
+import classNames from 'classnames';
 import style from './style.module.scss';
 import ColumnDef from './column-def';
+import {FaCaretUp} from '@react-icons/all-files/fa/FaCaretUp';
+import {FaCaretDown} from '@react-icons/all-files/fa/FaCaretDown';
+import {FaSortDown} from '@react-icons/all-files/fa/FaSortDown';
+import {FaSortUp} from '@react-icons/all-files/fa/FaSortUp';
+import {FaSort} from '@react-icons/all-files/fa/FaSort';
 import {dumpCSV, dumpTSV, dumpExcelSimple} from '../../utils/sheet-utils';
 
 import {makeDownload} from 'sierra-frontend/dist/utils/download';
@@ -92,7 +97,8 @@ export default class ChiroTable extends React.Component {
       enableRowSpan: true,
       showOptMenu: false,
       defaultOpt: this.loadDefaultDownloadOption(),
-      copying: false
+      copying: false,
+      mobileLabelWidth: 'auto'
     };
     this.table = React.createRef();
   }
@@ -125,6 +131,7 @@ export default class ChiroTable extends React.Component {
     document.addEventListener(
       'click', this.condHideDownloadOptMenu, false
     );
+    this.initMobileLabelWidth();
   }
 
   componentWillUnmount() {
@@ -183,6 +190,19 @@ export default class ChiroTable extends React.Component {
     };
   }
 
+  initMobileLabelWidth() {
+    if (!this.table.current) {
+      return;
+    }
+    const elem = this.table.current;
+    const hCells = Array.from(elem.querySelectorAll(
+      ':scope > div > table > thead > tr > th[data-column]'
+    ));
+    this.setState({mobileLabelWidth: `${
+      Math.max(...hCells.map(th => th.textContent.length)) * 0.55
+    }rem`});
+  }
+
   readTableData = () => {
     this.setState({
       copying: true,
@@ -209,13 +229,15 @@ export default class ChiroTable extends React.Component {
     return promise;
   }
 
-  handleCopy = async () => {
+  handleCopy = async (e) => {
+    e && e.preventDefault();
     const content = await this.readTableData();
     navigator.clipboard.writeText(dumpTSV(content));
     this.saveDefaultDownloadOption('copy-tsv');
   }
 
-  handleDownloadCSV = async () => {
+  handleDownloadCSV = async (e) => {
+    e && e.preventDefault();
     const content = await this.readTableData();
     makeDownload(
       'datasheet.csv',
@@ -225,7 +247,8 @@ export default class ChiroTable extends React.Component {
     this.saveDefaultDownloadOption('download-csv');
   }
 
-  handleDownloadExcel = async () => {
+  handleDownloadExcel = async (e) => {
+    e && e.preventDefault();
     const {sheetName} = this.props;
     const content = await this.readTableData();
     const xlsxBlob = dumpExcelSimple(
@@ -246,6 +269,7 @@ export default class ChiroTable extends React.Component {
   }
   
   condHideDownloadOptMenu = (evt) => {
+    window.test = evt.target;
     if (!evt.target.closest('*[data-ignore-global-click]')) {
       if (this.state.showOptMenu) {
         this.setState({showOptMenu: false});
@@ -286,7 +310,7 @@ export default class ChiroTable extends React.Component {
       sortedByColumn, sortedData,
       sortDirection, enableRowSpan,
       copying, showOptMenu,
-      defaultOpt
+      defaultOpt, mobileLabelWidth
     } = this.state;
     const context = columnDefs.reduce((acc, {name}) => {
       acc[name] = {};
@@ -298,120 +322,128 @@ export default class ChiroTable extends React.Component {
 
     return <div
      ref={this.table}
+     style={{"--mobile-label-width": mobileLabelWidth}}
      data-copying={copying}
      className={style['chiro-table-container']}>
       <div className={style['chiro-table-scroll']} style={tableScrollStyle}>
-        <Table
+        <table
          style={tableStyle}
-         color={color} sortable celled compact selectable
+         color={color}
          className={style['chiro-table']}>
-          <Table.Header>
-            <Table.Row>
+          <thead>
+            <tr>
               {columnDefs.map(({
                 name, label, sort, sortable, headCellStyle
               }, idx) => (
-                <Table.HeaderCell
+                <th
                  {...(sortable ? {
-                   sorted: sortedByColumn === name ? sortDirection : null,
+                   'data-sorted': (
+                     sortedByColumn === name ? sortDirection : null
+                   ),
                    onClick: this.handleSort(name, sort)
                  } : {})}
+                 data-column
                  data-sortable={sortable}
-                 textAlign="center"
                  style={headCellStyle}
                  key={idx}>
-                  {label}
-                </Table.HeaderCell>
+                  <div className={style['thead-container']}>
+                    <div className={style['label']}>
+                      {label}
+                    </div>
+                    {sortable && <div className={style['sort-icon']}>
+                      {sortedByColumn === name && <>
+                        {sortDirection === 'ascending' && <FaSortUp />}
+                        {sortDirection === 'descending' && <FaSortDown />}
+                      </>}
+                      {(sortedByColumn !== name ||
+                        !sortDirection) && <FaSort />}
+                    </div>}
+                  </div>
+                </th>
               ))}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
+            </tr>
+          </thead>
+          <tbody>
             {sortedData.map((row, idx) => (
-              <Table.Row verticalAlign="top" key={idx}>
+              <tr key={idx}>
                 {columnDefs.map(({
                   name, render, renderConfig,
                   textAlign, label, bodyCellStyle
-                }, jdx) => (
-                  <Table.Cell
+                }, jdx) => {
+                  const jsx = render(
+                    nestedGet(row, name),
+                    row,
+                    context[name],
+                    renderConfig
+                  );
+                  const isEmpty = typeof jsx === 'string' && jsx.length === 0;
+                  return <td
                    key={jdx}
-                   className={
+                   className={classNames(
                      enableRowSpan && rowSpanMatrix[idx][jdx] === 0 ?
-                       style.hide : null
-                   }
+                       style.hide : null,
+                     style[textAlign]
+                   )}
+                   {...(isEmpty ? {'data-is-empty': ''} : null)}
                    style={bodyCellStyle}
                    rowSpan={
                      enableRowSpan && rowSpanMatrix[idx][jdx] > 1 ?
                        rowSpanMatrix[idx][jdx] : null
-                   }
-                   {...(textAlign === 'justify' ?
-                     {className: style.justify} :
-                     {textAlign}
-                   )}>
-                    <span className={style['cell-label']}>{label}</span>
-                    <span className={style['cell-value']}>
-                      {render(
-                        nestedGet(row, name),
-                        row,
-                        context[name],
-                        renderConfig
-                      )}
-                    </span>
-                  </Table.Cell>
-                ))}
-              </Table.Row>
+                   }>
+                    <span
+                     className={style['cell-label']}>{label}</span>
+                    <span className={style['cell-value']}>{jsx}</span>
+                  </td>;
+                })}
+              </tr>
             ))}
-          </Table.Body>
-        </Table>
+          </tbody>
+        </table>
       </div>
       {disableCopy ? null:
       <div
        data-ignore-global-click
-       className={style['download-button-group']}>
-        <Button.Group size="mini">
+       className={style['download-options']}>
+        <div className={style['download-button-group']}>
           {defaultOpt === 'copy-tsv' ?
-            <Button
+            <button
              onClick={this.handleCopy}>
               Copy to clipboard
-            </Button> : null}
+            </button> : null}
           {defaultOpt === 'download-csv' ?
-            <Button
+            <button
              onClick={this.handleDownloadCSV}>
               Download CSV
-            </Button> : null}
+            </button> : null}
           {defaultOpt === 'download-excel' ?
-            <Button
+            <button
              onClick={this.handleDownloadExcel}>
               Download Excel
-            </Button> : null}
-          <Button
-           color="grey"
+            </button> : null}
+          <button
            className={style['btn-more-option']}
            onClick={this.toggleDownloadOptMenu}
-           icon={showOptMenu ? "caret up" : "caret down"}
-           aria-label="More options" />
-        </Button.Group>
-        {showOptMenu ?
-          <Menu
-           inverted
-           color="grey"
-           vertical
-           size="mini"
-           className={style['option-menu']}>
-            {defaultOpt !== 'copy-tsv' ?
-              <Menu.Item
-               name="copy-tsv"
-               content="Copy to clipboard"
-               onClick={this.handleCopy} /> : null}
-            {defaultOpt !== 'download-csv' ?
-              <Menu.Item
-               name="download-csv"
-               content="Download CSV"
-               onClick={this.handleDownloadCSV} /> : null}
-            {defaultOpt !== 'download-excel' ?
-              <Menu.Item
-               name="download-excel"
-               content="Download Excel"
-               onClick={this.handleDownloadExcel} /> : null}
-          </Menu> : null}
+           aria-label="More options">
+            {showOptMenu ?
+              <FaCaretUp data-ignore-global-click /> :
+              <FaCaretDown data-ignore-global-click />}
+          </button>
+        </div>
+        {showOptMenu &&
+          <div className={style['option-menu']}>
+            {defaultOpt !== 'copy-tsv' &&
+              <a onClick={this.handleCopy} href="#copy-tsv">
+                Copy to clipboard
+              </a>}
+            {defaultOpt !== 'download-csv' &&
+              <a onClick={this.handleDownloadCSV} href="#download-csv">
+                Download CSV
+              </a>}
+            {defaultOpt !== 'download-excel' &&
+              <a onClick={this.handleDownloadExcel} href="#download-excel">
+                Download Excel
+              </a>}
+          </div>}
       </div>}
     </div>
     ;

@@ -15,6 +15,10 @@ export default class PageLoader extends React.Component {
     childProps: PropTypes.object.isRequired
   }
 
+  static defaultProps = {
+    childProps: {}
+  }
+
   static getDerivedStateFromProps(props, state = {}) {
     const {pageName, childProps} = props;
     if (
