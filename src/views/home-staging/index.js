@@ -2,9 +2,9 @@ import React from 'react';
 import {Link, routerShape} from 'found';
 import {List, Loader, Button, Icon} from 'semantic-ui-react';
 
-import {H2} from '../../components/heading-tags';
-import BasicTOC from '../../components/toc';
-import Markdown from '../../components/markdown';
+import {H2} from 'sierra-frontend/dist/components/heading-tags';
+import BasicTOC from 'sierra-frontend/dist/components/toc';
+import Markdown from 'sierra-frontend/dist/components/markdown';
 import Banner from '../../components/banner';
 import {InlineSearchBox} from '../../components/search-box';
 import style from './style.module.scss';

@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy';
 import {Icon, Popup} from 'semantic-ui-react';
 
 import {fusionAssayExperimentsShape} from './prop-types';
-import ChiroTable from '../../components/chiro-table';
+import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import {
   compoundColDef, ColDef,
   reformExpData, authorYearColDef,
@@ -61,7 +61,7 @@ export default class FusionAssayExpTable extends React.Component {
   render() {
     const {cacheKey, data} = this.props;
     return (
-      <ChiroTable
+      <SimpleTable
        cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data)}

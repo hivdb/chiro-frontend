@@ -1,6 +1,7 @@
 import React from 'react';
-import ChiroTable from '../../components/chiro-table';
-import {ColumnDef} from '../../components/chiro-table';
+import SimpleTable, {
+  ColumnDef
+} from 'sierra-frontend/dist/components/simple-table';
 
 // import getTargetShowName from './utils';
 
@@ -10,6 +11,7 @@ function reformExpData(expData) {
   }
 
   let data = expData.edges.map(({node}) => {
+    node = {...node};
     const experimentCounts = node.experimentCounts;
     for (const exp_counts of experimentCounts) {
       const {category, count} = exp_counts;
@@ -96,7 +98,7 @@ export default class TargetTable extends React.Component {
 
 
     return (
-      <ChiroTable
+      <SimpleTable
        columnDefs={tableColumns}
        data={reformExpData(data)} />
     );

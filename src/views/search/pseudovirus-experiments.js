@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import {Header, Icon, Popup} from 'semantic-ui-react';
 
-import ChiroTable from '../../components/chiro-table';
+import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import isTargetMAb from '../../utils/is-target-mab';
 import {
   ColDef, reformExpData, readableNum, renderXX50,
@@ -203,7 +203,7 @@ export default class PseudovirusExpTable extends React.Component {
     );
     return <>
       {vData.length > 0 ?
-        <ChiroTable
+        <SimpleTable
          cacheKey={cacheKey}
          columnDefs={tableColumns}
          data={vData} /> : null}
@@ -211,7 +211,7 @@ export default class PseudovirusExpTable extends React.Component {
         <Header as="h3" id="monoclonal-antibodies-pseudovirus">
           Monoclonal antibodies
         </Header>
-        <ChiroTable
+        <SimpleTable
          cacheKey={cacheKey}
          columnDefs={tableColumnsMAb}
          data={mabData} />

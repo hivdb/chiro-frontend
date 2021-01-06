@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Link} from 'found';
-import {H2} from '../../components/heading-tags';
+import {H2} from 'sierra-frontend/dist/components/heading-tags';
 import style from './style.module.scss';
 
 

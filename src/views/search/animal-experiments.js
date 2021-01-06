@@ -4,7 +4,7 @@ import groupBy from 'lodash/groupBy';
 import arrayFind from 'lodash/find';
 import {Popup, Icon} from 'semantic-ui-react';
 
-import ChiroTable from '../../components/chiro-table';
+import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import {animalExperimentsShape} from './prop-types';
 import style from './style.module.scss';
 
@@ -170,7 +170,7 @@ export default class AnimalExpTable extends React.Component {
         )
       )
     ).map(([aname, articleData], idx) => (
-      <ChiroTable
+      <SimpleTable
        key={idx}
        color={colors[idx % colors.length]}
        cacheKey={cacheKey}

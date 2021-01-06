@@ -4,8 +4,9 @@ import {useQuery} from '@apollo/client';
 import {Loader} from 'semantic-ui-react';
 
 import SearchQuery from './virus.query.gql.js';
-import ChiroTable from '../../components/chiro-table';
-import {ColumnDef} from '../../components/chiro-table';
+import SimpleTable, {
+  ColumnDef
+} from 'sierra-frontend/dist/components/simple-table';
 
 class VirusTableInner extends React.Component {
 
@@ -69,7 +70,7 @@ class TargetTable extends React.Component {
 
 
     return (
-      <ChiroTable
+      <SimpleTable
        columnDefs={tableColumns}
        data={reformExpData(data)} />
     );

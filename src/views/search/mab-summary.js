@@ -1,6 +1,6 @@
 import React from 'react';
 import PageLoader from '../../components/page-loader';
-import Markdown from '../../components/markdown';
+import Markdown from 'sierra-frontend/dist/components/markdown';
 
 
 function MAbSummaryTable({

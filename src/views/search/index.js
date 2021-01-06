@@ -14,7 +14,7 @@ import PseudovirusExpTable from './pseudovirus-experiments';
 import ClinicalExpTable from './clinical-experiments';
 import searchQuery from './search.gql';
 
-import {H1, H2} from '../../components/heading-tags';
+import {H1, H2} from 'sierra-frontend/dist/components/heading-tags';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import ArticleInfo from '../../components/article-info';

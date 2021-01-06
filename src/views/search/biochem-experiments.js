@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import {Icon, Popup} from 'semantic-ui-react';
 
-import ChiroTable from '../../components/chiro-table';
+import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import {biochemExperimentsShape} from './prop-types';
 
 import {
@@ -53,7 +53,7 @@ export default class BiochemExpTable extends React.Component {
   render() {
     const {cacheKey, data} = this.props;
     return (
-      <ChiroTable
+      <SimpleTable
        cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data)} />
