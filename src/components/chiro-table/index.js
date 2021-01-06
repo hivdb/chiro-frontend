@@ -346,7 +346,7 @@ export default class ChiroTable extends React.Component {
                  data-sortable={sortable}
                  style={headCellStyle}
                  key={idx}>
-                  <div className={style['thead-container']}>
+                  <div className={style['th-container']}>
                     <div className={style['label']}>
                       {label}
                     </div>

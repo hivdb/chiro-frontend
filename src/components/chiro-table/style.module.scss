@@ -88,19 +88,22 @@ table.chiro-table {
         &[data-sortable="false"] {
           cursor: default;
         }
-        > .thead-container {
+        > .th-container {
           display: inline-flex;
           flex-direction: row;
-          align-items: flex-end;
+          line-height: 1.2rem;
+          margin-top: 2px;
+          margin-bottom: -2px;
+          min-height: calc(1.2rem + 4px);
           > .sort-icon {
             margin-left: .1rem;
             > svg {
-              vertical-align: middle;
+              vertical-align: top;
             }
           }
         }
         &:not([data-sorted]) {
-          >.thead-container > .sort-icon > svg {
+          >.th-container > .sort-icon > svg {
             color: rgba(0, 0, 0, .25);
           }
         }
