@@ -39,6 +39,37 @@ table.chiro-table {
     display: none;
   }
 
+  &[data-color="red"] {
+    border-top: .2em solid #db2828;
+  }
+  &[data-color="orange"] {
+    border-top: .2em solid #f2711c;
+  }
+  &[data-color="yellow"] {
+    border-top: .2em solid #fbbd08;
+  }
+  &[data-color="olive"] {
+    border-top: .2em solid #b5cc18
+  }
+  &[data-color="green"] {
+    border-top: .2em solid #21ba45;
+  }
+  &[data-color="teal"] {
+    border-top: .2em solid #00b5ad;
+  }
+  &[data-color="blue"] {
+    border-top: .2em solid #2185d0;
+  }
+  &[data-color="violet"] {
+    border-top: .2em solid #6435c9;
+  }
+  &[data-color="purple"] {
+    border-top: .2em solid #a333c8;
+  }
+  &[data-color="pink"] {
+    border-top: .2em solid #e03997;
+  }
+
   > thead {
     box-shadow: none;
     > tr {

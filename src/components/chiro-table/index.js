@@ -328,7 +328,7 @@ export default class ChiroTable extends React.Component {
       <div className={style['chiro-table-scroll']} style={tableScrollStyle}>
         <table
          style={tableStyle}
-         color={color}
+         data-color={color}
          className={style['chiro-table']}>
           <thead>
             <tr>
