@@ -75,15 +75,6 @@ class GeneSeqGenerator extends React.Component {
       }
     });
 
-    // options.sort((a, b) => {
-    //   if (a['key'] === 'S') {
-    //     return -1;
-    //   }
-    //   if (b['key'] === 'S') {
-    //     return 1;
-    //   }
-    // });
-
     return options;
   }
 
@@ -180,7 +171,7 @@ class GeneSeqGenerator extends React.Component {
 
             </>:
             <>
-              <p><em>Please select gene and input mutations.</em></p>
+              <p className={style['desc-em']}>Please select gene and input mutations.</p>
               <p>Features:</p>
               <ol>
                 <li>Support 1 gene + multiple mutations.</li>
