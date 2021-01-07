@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Dropdown, GridColumn, Input, Grid, Item, Segment, TextArea} from 'semantic-ui-react';
+import {Dropdown, GridColumn, Grid, Segment, TextArea} from 'semantic-ui-react';
 
 import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';
 
-import {H2} from '../../components/heading-tags';
+import {H2} from 'sierra-frontend/dist/components/heading-tags';
 import style from './style.module.scss';
 import {makeDownload} from 'sierra-frontend/dist/utils/download';
 
