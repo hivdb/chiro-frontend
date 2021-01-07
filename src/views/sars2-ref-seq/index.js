@@ -16,14 +16,14 @@ export default class SARS2RefSeq extends React.Component {
     return <>
       <H2>SARS-CoV-2 AA mutation to AA sequence</H2>
       <GeneSeqGenerator reference={reference} />
-    </>
+    </>;
   }
 
   render() {
     return (
       <PromiseComponent
-        promise={loadPage('page-sars2-ref-seq')}
-        then={this.thenRender}>
+       promise={loadPage('page-sars2-ref-seq')}
+       then={this.thenRender}>
       </PromiseComponent>
     );
   }
@@ -43,7 +43,7 @@ class GeneSeqGenerator extends React.Component {
       geneName: '',
       mutations: [],
       AASeq: null,
-    }
+    };
   }
 
   get geneOptions() {
@@ -54,7 +54,7 @@ class GeneSeqGenerator extends React.Component {
         key: geneName,
         text: geneName,
         value: geneName
-      }
+      };
     });
 
     options.sort((a, b) => {
@@ -64,7 +64,9 @@ class GeneSeqGenerator extends React.Component {
       if (b.key === 'S') {
         return 1;
       }
-      if (a.key.length != b.key.length && (a.key.length < 4 || b.key.length < 4)) {
+      if (a.key.length !== b.key.length && (
+        a.key.length < 4 || b.key.length < 4
+      )) {
         return (a.key.length - b.key.length);
       } else if ( a.key < b.key) {
         return -1;
@@ -121,7 +123,7 @@ class GeneSeqGenerator extends React.Component {
   }
 
   handleDownload = async(e) => {
-    const filename = this.fastaHeader
+    const filename = this.fastaHeader;
     makeDownload(
       filename + '.fasta',
       'text/x-fasta;charset=utf-8',
@@ -131,60 +133,66 @@ class GeneSeqGenerator extends React.Component {
 
   render() {
     return (<Grid columns={2}>
-        <GridColumn width={3}>
-          <Segment.Group>
-            <Segment>
-              <label>Gene: </label>
-              <Dropdown
-                search
-                placeholder={EMPTY_TEXT}
-                options={this.geneOptions}
-                onChange={this.handleSelectGeneName}
-                value={this.state.geneName}
-                />
-            </Segment>
-            <Segment>
-             <label>AA mutations: </label>
-              <TextArea
-                type="text"
-                name="mutation"
-                rows="8"
-                onChange={this.handleInputMutation}
-                placeholder="Amino acid mutation"
-                required />
-            </Segment>
-          </Segment.Group>
-        </GridColumn>
-        <GridColumn>
-          { (this.state.geneName && this.state.mutations.length > 0) ? <>
-            <h3>
-              Amino acid Sequence for {this.fastaHeader}
-            </h3>
-            <p>
-              <button onClick={this.handleCopy}>Copy</button>
-              <button onClick={this.handleDownload}>Download</button>
-            </p>
-            <p>
-              {"> "}{this.fastaHeader}<wbr/>
-              <span className={style['aaseq']}>{this.state.AASeq}</span>
-            </p>
+      <GridColumn width={3}>
+        <Segment.Group>
+          <Segment>
+            <label>Gene: </label>
+            <Dropdown
+             search
+             placeholder={EMPTY_TEXT}
+             options={this.geneOptions}
+             onChange={this.handleSelectGeneName}
+             value={this.state.geneName} />
+          </Segment>
+          <Segment>
+            <label>AA mutations: </label>
+            <TextArea
+             type="text"
+             name="mutation"
+             rows="8"
+             onChange={this.handleInputMutation}
+             placeholder="Amino acid mutation"
+             required />
+          </Segment>
+        </Segment.Group>
+      </GridColumn>
+      <GridColumn>
+        { (this.state.geneName && this.state.mutations.length > 0) ? <>
+          <h3>
+            Amino acid Sequence for {this.fastaHeader}
+          </h3>
+          <p>
+            <button onClick={this.handleCopy}>Copy</button>
+            <button onClick={this.handleDownload}>Download</button>
+          </p>
+          <p>
+            {"> "}{this.fastaHeader}<wbr/>
+            <span className={style['aaseq']}>{this.state.AASeq}</span>
+          </p>
 
-            </>:
-            <>
-              <p className={style['desc-em']}>Please select gene and input mutations.</p>
-              <p>Features:</p>
-              <ol>
-                <li>Support 1 gene + multiple mutations.</li>
-                <li>Mutation format: reference amino acid + position + mutation.</li>
-                <li>Multiple mutations should be seperated by comma, for example: "D614G+H69del"</li>
-                <li>Please use 'del', '-', '∆' behind position to represent deletion.</li>
-                <li>Automatically check position exists in gene.</li>
-                <li>Automatically correct reference amino acid by mutation.</li>
-                <li>You can copy fasta-formated content or download fasta file.</li>
-              </ol>
-            </>
-          }
-        </GridColumn>
+        </>: <>
+          <p className={style['desc-em']}>
+            Please select gene and input mutations.
+          </p>
+          <p>Features:</p>
+          <ol>
+            <li>Support 1 gene + multiple mutations.</li>
+            <li>
+              Mutation format: reference amino acid + position + mutation.
+            </li>
+            <li>
+              Multiple mutations should be seperated by comma, for example:
+              "D614G+H69del"
+            </li>
+            <li>
+              Please use 'del', '-', '∆' behind position to represent deletion.
+            </li>
+            <li>Automatically check position exists in gene.</li>
+            <li>Automatically correct reference amino acid by mutation.</li>
+            <li>You can copy fasta-formated content or download fasta file.</li>
+          </ol>
+        </>}
+      </GridColumn>
     </Grid>);
   }
 }
@@ -194,7 +202,7 @@ function parseMutationList(mutation_list) {
     name = name.trim();
     const match = parseMutation(name);
     if (!match) {
-      return null
+      return null;
     }
     const result = match.groups;
     if (result['mut'] && ['del', '-', '∆'].includes(result['mut'])) {
@@ -205,12 +213,14 @@ function parseMutationList(mutation_list) {
 
   mutations = mutations.filter((mut) => mut);
 
-  return mutations
+  return mutations;
 }
 
 
 function parseMutation(mutation) {
-  const pattern = /(?<refAA>[AC-IK-WY]?)(?<pos>\d+)(?<mut>([AC-IK-WY]|\-|∆|del)?)/;
+  const pattern = (
+    /(?<refAA>[AC-IK-WY]?)(?<pos>\d+)(?<mut>([AC-IK-WY]|-|∆|del)?)/
+  );
   const match = mutation.match(pattern);
   return match;
 }
@@ -220,13 +230,13 @@ function checkRefAAPos(reference, geneName, mutations) {
     return [];
   }
   let result = mutations.map((mut) => {
-    const pos = mut['pos']
+    const pos = mut['pos'];
     const gene = reference[geneName];
     if (!gene) {
-      return null
+      return null;
     }
     if (!gene['AA']) {
-      return null
+      return null;
     }
     const refAA = gene['AA'][pos-1];
     if (!refAA) {
@@ -245,7 +255,7 @@ function fixMutationDisplay(mutations) {
   return mutations.map((mut) => {
     mut['display'] = `${mut['refAA']}${mut['pos']}${mut['mut']}`;
     return mut;
-  })
+  });
 }
 
 function generateSequence(reference, geneName, mutations) {
@@ -253,13 +263,13 @@ function generateSequence(reference, geneName, mutations) {
   if (!gene) {
     return null;
   }
-  let refAASeq = gene['AA']
+  let refAASeq = gene['AA'];
   if (!refAASeq) {
     return null;
   }
   refAASeq = refAASeq.split('');
   for (const mut of mutations) {
-    const pos = mut['pos']
+    const pos = mut['pos'];
     if (mut['mut']) {
       refAASeq[pos-1] = mut['mut'];
     }
