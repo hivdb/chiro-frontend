@@ -20,8 +20,8 @@ import AnimalModelList from './views/animal-model-list';
 import CellCultureMeasurementList from './views/cell-culture-measurement-list';
 import ArticleList from './views/article-list';
 import Donation from './views/donation';
-import ClinicalTrialsV1 from './views/clinical-trials';
 import ClinicalTrialsV2 from './views/clinical-trials-v2';
+import SARS2RefSeq from './views/sars2-ref-seq';
 import News from './views/news';
 import Plots from './views/plots';
 import Page from './views/page';
@@ -69,8 +69,8 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={ArticleList} path="/article-list/" />
       <Route Component={Donation} path="/donation/" />
       <Route Component={News} path="/news/" />
-      <Route Component={ClinicalTrialsV1} path="/clinical-trials-v1/" />
       <Route Component={ClinicalTrialsV2} path="/clinical-trials/" />
+      <Route Component={SARS2RefSeq} path='/sars2-ref-seq' />
       <Route Component={Plots} path="/plots/" />
       <Route Component={Page} path="/page/:pageName/" />
       <Redirect from="/terms-of-use/" to="/page/terms-of-use/" />
