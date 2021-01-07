@@ -22,7 +22,7 @@ export default class SARS2RefSeq extends React.Component {
   render() {
     return (
       <PromiseComponent
-        promise={loadPage('page-sars2-reference')}
+        promise={loadPage('page-sars2-ref-seq')}
         then={this.thenRender}>
       </PromiseComponent>
     );
