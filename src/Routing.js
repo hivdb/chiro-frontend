@@ -70,7 +70,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={Donation} path="/donation/" />
       <Route Component={News} path="/news/" />
       <Route Component={ClinicalTrialsV2} path="/clinical-trials/" />
-      <Route Component={SARS2RefSeq} path='/sars2-ref-seq' />
+      <Route Component={SARS2RefSeq} path='/sars2-ref-seq/' />
       <Route Component={Plots} path="/plots/" />
       <Route Component={Page} path="/page/:pageName/" />
       <Redirect from="/terms-of-use/" to="/page/terms-of-use/" />
