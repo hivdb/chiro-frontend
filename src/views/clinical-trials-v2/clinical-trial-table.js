@@ -6,7 +6,9 @@ import orderBy from 'lodash/orderBy';
 import escapeRegExp from 'lodash/escapeRegExp';
 import {Popup} from 'semantic-ui-react';
 
-import ChiroTable, {ColumnDef as ColDef} from '../../components/chiro-table';
+import SimpleTable, {
+  ColumnDef as ColDef
+} from 'sierra-frontend/dist/components/simple-table';
 import TrialLink from '../../components/clinical-trial-link';
 import style from './style.module.scss';
 
@@ -14,14 +16,6 @@ function monthYear(date) {
   date = moment(date);
   if (date.isValid()) {
     return date.format("MMM 'YY");
-  }
-  return '-';
-}
-
-function monthDay(date) {
-  date = moment(date);
-  if (date.isValid()) {
-    return date.format("MMM DD");
   }
   return '-';
 }
@@ -170,11 +164,6 @@ const tableColumns = [
     label: 'Est. Start',
     render: monthYear
   }),
-  // new ColDef({
-  //   name: 'dateEntered',
-  //   label: 'Add Date',
-  //   render: monthDay
-  // }),
   new ColDef({
     name: 'recruitmentStatus', label: 'Status',
     render: renderRecruitmentStatus
@@ -249,22 +238,23 @@ export default class ClinicalTrialTable extends React.Component {
     data = orderBy(
       data, [
         function(o) {
-        if (o['recruitmentStatus'] === 'Published') {
-          return 1;
-        } else if (o['recruitmentStatus'] === 'Completed') {
-          return 2;
-        } else if (o['recruitmentStatus'] === 'Active') {
-          return 3;
-        } else if (o['recruitmentStatus'] === 'Pending') {
-          return 4;
-        } else if (o['recruitmentStatus'] === 'Delayed') {
-          return 5;
-        } else {
-          return 6;
+          if (o['recruitmentStatus'] === 'Published') {
+            return 1;
+          } else if (o['recruitmentStatus'] === 'Completed') {
+            return 2;
+          } else if (o['recruitmentStatus'] === 'Active') {
+            return 3;
+          } else if (o['recruitmentStatus'] === 'Pending') {
+            return 4;
+          } else if (o['recruitmentStatus'] === 'Delayed') {
+            return 5;
+          } else {
+            return 6;
+          }
+        }, function(o) {
+          return - o['numPatients'];
         }
-      }, function(o) {
-        return - o['numPatients'];
-      }],
+      ]
     );
     const compoundSplitter = getCompoundSplitter(compounds);
     const compoundDescMap = getCompoundDescMap(compounds);
@@ -275,7 +265,7 @@ export default class ClinicalTrialTable extends React.Component {
       ...d, compoundSplitter, compoundDescMap, compoundNormMap
     }));
     return (
-      <ChiroTable
+      <SimpleTable
        cacheKey={cacheKey}
        columnDefs={[...tableColumns]}
        data={data} />

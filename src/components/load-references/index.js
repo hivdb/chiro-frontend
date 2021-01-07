@@ -2,8 +2,8 @@ import React from 'react';
 import {Loader} from 'semantic-ui-react';
 import {useQuery} from '@apollo/client';
 
-import ArticleInfo from '../../components/article-info';
-import ArticleAbstractInfo from '../../components/article-abstract-info';
+import ArticleInfo from '../article-info';
+import ArticleAbstractInfo from '../article-abstract-info';
 
 import query from './query.gql.js';
 

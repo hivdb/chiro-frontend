@@ -49,13 +49,13 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "sha.js": "^2.4.11",
-    "sierra-frontend": "hivdb/sierra-frontend#abcc8d2",
+    "sierra-frontend": "hivdb/sierra-frontend#a6de208",
     "sleep-promise": "^8.0.1",
     "smiles-drawer": "^1.2.0",
     "typeface-poppins": "^0.0.72",
     "typeface-source-sans-pro": "^1.1.5",
     "typescript": ">=2.8.0",
-    "xlsx": "^0.16.7",
+    "xlsx": "^0.16.9",
     "youtube-url": "^0.5.0"
   },
   "scripts": {

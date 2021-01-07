@@ -6,7 +6,9 @@ import groupBy from 'lodash/groupBy';
 import uniq from 'lodash/uniq';
 import {Header} from 'semantic-ui-react';
 
-import ChiroTable, {ColumnDef} from '../../components/chiro-table';
+import SimpleTable, {
+  ColumnDef
+} from 'sierra-frontend/dist/components/simple-table';
 import TrialLink from '../../components/clinical-trial-link';
 
 import style from './style.module.scss';
@@ -214,7 +216,7 @@ export default class AntibodyTable extends React.Component {
         <Header as="h2" dividing>
           {virus}
         </Header>
-        <ChiroTable
+        <SimpleTable
          cacheKey="antibody"
          columnDefs={columnDefs}
          data={sortBy(compoundsByTargetVirus[virus], [

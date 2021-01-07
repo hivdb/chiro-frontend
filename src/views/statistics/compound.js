@@ -5,8 +5,9 @@ import {Loader} from 'semantic-ui-react';
 
 import SearchQuery from './compound.query.gql.js';
 
-import ChiroTable from '../../components/chiro-table';
-import {ColumnDef} from '../../components/chiro-table';
+import SimpleTable, {
+  ColumnDef
+} from 'sierra-frontend/dist/components/simple-table';
 
 // import getTargetShowName from './utils';
 
@@ -63,6 +64,7 @@ function reformExpData(expData, selectedTarget) {
     return [];
   }
   let data = expData.edges.map(({node}) => {
+    node = {...node};
     const experimentCounts = node.experimentCounts;
     let totalExpCount = 0;
     for (const exp_counts of experimentCounts) {
@@ -109,7 +111,7 @@ class CompoundTableInner extends React.Component {
     return (
       <>{
         loading? <Loader active inline="centered" /> :
-        <ChiroTable
+        <SimpleTable
          cacheKey={cacheKey}
          columnDefs={tableColumns}
          data={reformExpData(compounds, selectedTarget)} />

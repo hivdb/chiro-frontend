@@ -6,11 +6,13 @@ import {Header} from 'semantic-ui-react';
 import setTitle from '../../utils/set-title';
 import PageLoader from '../../components/page-loader';
 import Banner from '../../components/banner';
-import Markdown from '../../components/markdown';
+import Markdown from 'sierra-frontend/dist/components/markdown';
+import LoadReferences from '../../components/load-references';
 import BackToTop from '../../components/back-to-top';
 import {
   ReferenceContext,
-  ReferenceContextValue} from '../../components/references';
+  ReferenceContextValue
+} from 'sierra-frontend/dist/components/references';
 
 import style from './style.module.scss';
 
@@ -150,6 +152,7 @@ class CMSPage extends React.Component {
            cmsPrefix={cmsPrefix}
            tables={tables}
            escapeHtml={escapeHtml}
+           LoadReferences={LoadReferences}
            collapsableLevels={collapsableLevels}
            referenceTitle={referenceTitle}>
             {content}

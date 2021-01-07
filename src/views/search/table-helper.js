@@ -5,7 +5,7 @@ import orderBy from 'lodash/orderBy';
 import {Popup} from 'semantic-ui-react';
 
 import style from './style.module.scss';
-import {ColumnDef} from '../../components/chiro-table';
+import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
 
 function reformExpData(expData, sort = true) {

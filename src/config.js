@@ -1,5 +1,5 @@
 import {loadPage} from './utils/cms';
-import LoadReferences from './components/references/load-references';
+import LoadReferences from './components/load-references';
 
 let backendPrefix = '';
 

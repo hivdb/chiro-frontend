@@ -6,7 +6,9 @@ import orderBy from 'lodash/orderBy';
 import escapeRegExp from 'lodash/escapeRegExp';
 import {Popup} from 'semantic-ui-react';
 
-import ChiroTable, {ColumnDef as ColDef} from '../../components/chiro-table';
+import SimpleTable, {
+  ColumnDef as ColDef
+} from 'sierra-frontend/dist/components/simple-table';
 import style from './style.module.scss';
 
 function monthYear(date) {
@@ -284,7 +286,7 @@ export default class ClinicalTrialTable extends React.Component {
       ...d, compoundSplitter, compoundDescMap, compoundNormMap
     }));
     return (
-      <ChiroTable
+      <SimpleTable
        cacheKey={cacheKey}
        columnDefs={[...tableColumns]}
        data={data} />
