@@ -36,8 +36,8 @@ html, body {
   // container width define.
   // See I am higher than you now!
   --mobile-main-content-width: #{$mobile-main-content-width};
-  --sierra-color-type-main: #{$main-color} !important;
-  --sierra-color-type-main-lighter: #{$bondi-blue} !important;
+  --sierra-color-type-main: #{$main-color};
+  --sierra-color-type-main-lighter: #{$bondi-blue};
 
   @media only screen {
     width: $main-content-width;
