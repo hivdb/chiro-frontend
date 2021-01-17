@@ -37,28 +37,20 @@ const mutAnnotViewerConfig = {
 };
 
 
-const genomeViewerConfig = {
-  presets: [
-    {
-      name: 'sars2-linages',
-      label: "SARS-CoV-2 Lineages",
-      payloadLoader: async () => (
-        await loadPage('genome-viewer/sars2-lineages')
-      )
-    },
-    {
-      name: 'sars2-case-reports',
-      label: "SARS-CoV-2 Prolonged Case Reports",
-      payloadLoader: async () => (
-        await loadPage('genome-viewer/sars2-case-reports')
-      )
-    }
-  ]
+const mutationViewerConfig = {
+  indexLoader: async () => (
+    await loadPage('mutation-viewer/index')
+  ),
+  makePresetLoader: name => (
+    async () => (
+      await loadPage(`mutation-viewer/${name}`)
+    )
+  )
 };
 
 
 export {
   backendPrefix,
   mutAnnotViewerConfig,
-  genomeViewerConfig
+  mutationViewerConfig
 };

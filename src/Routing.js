@@ -27,9 +27,9 @@ import News from './views/news';
 import Plots from './views/plots';
 import Page from './views/page';
 import MutAnnotViewerLayout from './views/mut-annot-viewer-layout';
-import GenomeViewerLayout from './views/genome-viewer-layout';
+import MutationViewerLayout from './views/mutation-viewer-layout';
 
-import {mutAnnotViewerConfig, genomeViewerConfig} from './config';
+import {mutAnnotViewerConfig, mutationViewerConfig} from './config';
 import style from './index.module.scss';
 
 import Layout from './components/layout';
@@ -60,14 +60,14 @@ const BrowserRouter = createBrowserRouter({
         })}
       </Route>
       <Route render={({props}) => (
-        <GenomeViewerLayout
+        <MutationViewerLayout
          {...props}
-         {...genomeViewerConfig}
-         pathPrefix="genome-viewer/" />
+         {...mutationViewerConfig}
+         pathPrefix="mutation-viewer/" />
       )}>
         {GenomeViewerRoutes({
-          ...genomeViewerConfig,
-          pathPrefix: 'genome-viewer/',
+          ...mutationViewerConfig,
+          pathPrefix: 'mutation-viewer/',
           className: style['genome-viewer-ui']
         })}
       </Route>
