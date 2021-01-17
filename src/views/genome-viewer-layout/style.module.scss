@@ -1,0 +1,8 @@
+@import "../../styles/colors";
+
+:global(.ui.grid) {
+  .preset-selection {
+    --sierra-color-type-main: #{$main-color} !important;
+    --sierra-color-type-main-lighter: #{$bondi-blue} !important;
+  }
+}

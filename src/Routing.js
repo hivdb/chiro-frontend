@@ -8,6 +8,7 @@ import {
 
 import SARS2Routes from 'sierra-frontend/dist/views/sars2';
 import MutAnnotViewerRoutes from 'sierra-frontend/dist/views/mut-annot-viewer';
+import GenomeViewerRoutes from 'sierra-frontend/dist/views/genome-viewer';
 
 import Home from './views/home';
 import HomeStaging from './views/home-staging';
@@ -26,8 +27,9 @@ import News from './views/news';
 import Plots from './views/plots';
 import Page from './views/page';
 import MutAnnotViewerLayout from './views/mut-annot-viewer-layout';
+import GenomeViewerLayout from './views/genome-viewer-layout';
 
-import {mutAnnotViewerConfig} from './config';
+import {mutAnnotViewerConfig, genomeViewerConfig} from './config';
 import style from './index.module.scss';
 
 import Layout from './components/layout';
@@ -57,6 +59,19 @@ const BrowserRouter = createBrowserRouter({
           className: style['mut-annot-editor-ui']
         })}
       </Route>
+      <Route render={({props}) => (
+        <GenomeViewerLayout
+         {...props}
+         {...genomeViewerConfig}
+         pathPrefix="genome-viewer/" />
+      )}>
+        {GenomeViewerRoutes({
+          ...genomeViewerConfig,
+          pathPrefix: 'genome-viewer/',
+          className: style['genome-viewer-ui']
+        })}
+      </Route>
+
       <Route Component={Search} path="/search/" />
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />

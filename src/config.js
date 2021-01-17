@@ -36,7 +36,29 @@ const mutAnnotViewerConfig = {
   LoadReferences
 };
 
+
+const genomeViewerConfig = {
+  presets: [
+    {
+      name: 'sars2-linages',
+      label: "SARS-CoV-2 Lineages",
+      payloadLoader: async () => (
+        await loadPage('genome-viewer/sars2-lineages')
+      )
+    },
+    {
+      name: 'sars2-case-reports',
+      label: "SARS-CoV-2 Prolonged Case Reports",
+      payloadLoader: async () => (
+        await loadPage('genome-viewer/sars2-case-reports')
+      )
+    }
+  ]
+};
+
+
 export {
   backendPrefix,
-  mutAnnotViewerConfig
+  mutAnnotViewerConfig,
+  genomeViewerConfig
 };
