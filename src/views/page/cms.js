@@ -101,6 +101,7 @@ class CMSPage extends React.Component {
       referenceTitle,
       heroImage,
       imagePrefix,
+      genomeMaps,
       tables
     } = this.props;
     const content = (
@@ -150,6 +151,7 @@ class CMSPage extends React.Component {
            toc={toc} tocClassName={style.toc}
            imagePrefix={imagePrefix}
            cmsPrefix={cmsPrefix}
+           genomeMaps={genomeMaps}
            tables={tables}
            escapeHtml={escapeHtml}
            LoadReferences={LoadReferences}

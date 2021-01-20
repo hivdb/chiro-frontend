@@ -177,6 +177,7 @@
 
     :global(.figure-image) {
       flex-shrink: 0;
+      max-width: 100%;
     }
 
     :global(.figure-caption) {
@@ -185,14 +186,22 @@
       padding: 4rem 2rem;
       margin-left: 4rem;
       margin-right: 4rem;
-      > h2 {
-        font-size: 2.15rem;
+      > h2, > h3, > h4, > h5, > h6 {
         border: none;
         margin: 0;
         &:hover > a[data-anchor-link] {
           display: none;
         }
       }
+
+      > h2 {
+        font-size: 2.15rem;
+      }
+
+      > h3 {
+        font-size: 1.95rem;
+      }
+
       > p {
         font-size: 1.25rem;
       }

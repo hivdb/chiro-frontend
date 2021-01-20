@@ -1,7 +1,11 @@
 @import "styles/colors";
 @import "styles/variables";
+@import "~sierra-frontend/dist/styles/default-colors";
 
 body {
+  @include default-color;
+  --sierra-color-type-main: #{$main-color} !important;
+  --sierra-color-type-main-lighter: #{$bondi-blue} !important;
   margin: 0;
   font-family: $font-family;
   -webkit-font-smoothing: antialiased;
@@ -16,20 +20,14 @@ code {
 .sierra-sars2-webui {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  --sierra-color-type-main: #{$main-color} !important;
-  --sierra-color-type-main-lighter: #{$bondi-blue} !important;
 }
 
 .mut-annot-editor-ui {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  --sierra-color-type-main: #{$main-color} !important;
-  --sierra-color-type-main-lighter: #{$bondi-blue} !important;
 }
 
 .genome-viewer-ui {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  --sierra-color-type-main: #{$main-color} !important;
-  --sierra-color-type-main-lighter: #{$bondi-blue} !important;
 }
