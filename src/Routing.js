@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import {
   createBrowserRouter,
   makeRouteConfig,
@@ -10,29 +10,35 @@ import SARS2Routes from 'sierra-frontend/dist/views/sars2';
 import MutAnnotViewerRoutes from 'sierra-frontend/dist/views/mut-annot-viewer';
 import GenomeViewerRoutes from 'sierra-frontend/dist/views/genome-viewer';
 
-import Home from './views/home';
-import HomeStaging from './views/home-staging';
-import Search from './views/search';
-import CompoundList from './views/compound-list';
-import CompoundTargetList from './views/compound-target-list';
-import VirusList from './views/virus-list';
-import CellsList from './views/cells-list';
-import AnimalModelList from './views/animal-model-list';
-import CellCultureMeasurementList from './views/cell-culture-measurement-list';
-import ArticleList from './views/article-list';
-import Donation from './views/donation';
-import ClinicalTrialsV2 from './views/clinical-trials-v2';
-import SARS2RefSeq from './views/sars2-ref-seq';
-import News from './views/news';
-import Plots from './views/plots';
-import Page from './views/page';
-import MutAnnotViewerLayout from './views/mut-annot-viewer-layout';
-import MutationViewerLayout from './views/mutation-viewer-layout';
-
 import {mutAnnotViewerConfig, mutationViewerConfig} from './config';
 import style from './index.module.scss';
 
 import Layout from './components/layout';
+
+const Home = lazy(() => import('./views/home'));
+const HomeStaging = lazy(() => import('./views/home-staging'));
+const Search = lazy(() => import('./views/search'));
+const CompoundList = lazy(() => import('./views/compound-list'));
+const CompoundTargetList = lazy(() => import('./views/compound-target-list'));
+const VirusList = lazy(() => import('./views/virus-list'));
+const CellsList = lazy(() => import('./views/cells-list'));
+const AnimalModelList = lazy(() => import('./views/animal-model-list'));
+const CellCultureMeasurementList = lazy(
+  () => import('./views/cell-culture-measurement-list')
+);
+const ArticleList = lazy(() => import('./views/article-list'));
+const Donation = lazy(() => import('./views/donation'));
+const ClinicalTrialsV2 = lazy(() => import('./views/clinical-trials-v2'));
+const SARS2RefSeq = lazy(() => import('./views/sars2-ref-seq'));
+const News = lazy(() => import('./views/news'));
+const Plots = lazy(() => import('./views/plots'));
+const Page = lazy(() => import('./views/page'));
+const MutAnnotViewerLayout = lazy(
+  () => import('./views/mut-annot-viewer-layout')
+);
+const MutationViewerLayout = lazy(
+  () => import('./views/mutation-viewer-layout')
+);
 
 const BrowserRouter = createBrowserRouter({
 

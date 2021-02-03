@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import PropTypes from 'prop-types';
 import {matchShape} from 'found';
 import {Container} from 'semantic-ui-react';
 
 import Header from './header';
 import Footer from './footer';
+import Loader from 'react-loader';
 import GAWrapper from './ga/gawrapper';
 
 import "typeface-poppins";
@@ -29,7 +30,7 @@ export default class Layout extends React.Component {
 
   render() {
     const {children, router} = this.props;
-    return <>
+    return <Suspense fallback={<Loader loaded={false} />}>
       <Header currentPathName={this.currentPathName} />
       <div className={globalStyle["main-content"]}>
         <Container className="he is dead jim">
@@ -38,7 +39,7 @@ export default class Layout extends React.Component {
       </div>
       <Footer />
       <GAWrapper router={router} />
-    </>;
+    </Suspense>;
   }
 
 }
