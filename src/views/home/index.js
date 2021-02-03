@@ -5,7 +5,7 @@ import {Loader} from 'semantic-ui-react';
 import {H2} from 'sierra-frontend/dist/components/heading-tags';
 import BasicTOC from 'sierra-frontend/dist/components/toc';
 import Markdown from 'sierra-frontend/dist/components/markdown';
-import Banner from '../../components/banner';
+import Banner from './banner';
 import {InlineSearchBox} from '../../components/search-box';
 import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
@@ -15,7 +15,7 @@ import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';
 
 import Subscribe from './subscribe';
-import ProjectsSection from './projects-section';
+import ProjectsSection, {Projects} from './projects-section';
 
 // const URL_PK_NOTES = (
 //   'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
@@ -82,6 +82,7 @@ export default class Home extends React.Component {
 
   thenRender = ({
     banner, updates,
+    bannerProjects = [],
     highlights = [],
     publications = [],
     webinars = [], eduMaterials = [],
@@ -96,6 +97,13 @@ export default class Home extends React.Component {
             {banner ? <Markdown inline>{banner.title}</Markdown> : null}
           </Link>
         </Banner.Title>
+        <Banner.ExtraSection>
+          <BasicTOC className={style['scroll-toc']}>
+            {banner ?
+              <Markdown inline>{banner.menuContent}</Markdown> :
+              <Loader active />}
+          </BasicTOC>
+        </Banner.ExtraSection>
         {updates ?
           <Banner.Slider
            title={<a href="/page/updates/">Updates</a>}
@@ -108,13 +116,15 @@ export default class Home extends React.Component {
             </Markdown>
           </Banner.Slider> :
           <Loader active />}
-        <Banner.Sidebar>
-          <BasicTOC className={style['scroll-toc']}>
-            {banner ?
-              <Markdown inline>{banner.menuContent}</Markdown> :
-              <Loader active />}
-          </BasicTOC>
-        </Banner.Sidebar>
+        <Banner.SideSection>
+          <h2 className={style['banner-projects-header']}>
+            Resistance
+          </h2>
+          <Projects
+           className={style['banner-projects']}
+           projects={bannerProjects}
+           imagePrefix={imagePrefix} />
+        </Banner.SideSection>
       </Banner>
       <section className={style['home-section']}>
         <H2 disableAnchor>Database Search</H2>
