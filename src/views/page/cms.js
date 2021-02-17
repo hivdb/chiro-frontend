@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 // import sleep from 'sleep-promise';
 import {Header} from 'semantic-ui-react';
 
@@ -24,6 +25,7 @@ class CMSPage extends React.Component {
     pageTitle: PropTypes.string.isRequired,
     introHeader: PropTypes.string,
     toc: PropTypes.bool,
+    tocFloat: PropTypes.oneOf(['none', 'left', 'right']).isRequired,
     hideLastModified: PropTypes.bool,
     lastModified: PropTypes.string.isRequired,
     escapeHtml: PropTypes.bool,
@@ -36,6 +38,10 @@ class CMSPage extends React.Component {
       columnDefs: PropTypes.array.isRequired,
       data: PropTypes.array.isRequired
     }).isRequired)
+  }
+
+  static defaultProps = {
+    tocFloat: 'right'
   }
 
   constructor() {
@@ -94,6 +100,7 @@ class CMSPage extends React.Component {
       pageTitle,
       introHeader,
       toc,
+      tocFloat,
       hideLastModified,
       lastModified,
       cmsPrefix,
@@ -148,7 +155,10 @@ class CMSPage extends React.Component {
               </Header.Subheader>
             </Header>}
           <Markdown
-           toc={toc} tocClassName={style.toc}
+           toc={toc} tocClassName={classNames(
+             style.toc,
+             style[`toc-float-${tocFloat}`]
+           )}
            imagePrefix={imagePrefix}
            cmsPrefix={cmsPrefix}
            genomeMaps={genomeMaps}

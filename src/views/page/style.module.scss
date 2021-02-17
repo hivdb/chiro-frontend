@@ -11,6 +11,20 @@
     @media only screen and (max-width: 900px) {
       padding-left: 0;
     }
+    &.toc-float-none {
+      float: none;
+    }
+    &.toc-float-left {
+      float: left;
+    }
+    &.toc-float-right {
+      float: right;
+    }
+    @media only screen and (max-width: 900px) {
+      &.toc-float-left, &.toc-float-right {
+        float: none;
+      }
+    }
   }
 
   text-align: justify;
