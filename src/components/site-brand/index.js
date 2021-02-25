@@ -59,7 +59,7 @@ export default class SiteBrand extends React.Component {
         <Link className={style['brand-logo']} to="/" />
         <div className={style['brand-sitename']}>
           <Link className={style['brand-sitename-title']} to="/">
-            Coronavirus Antiviral Research Database
+            Coronavirus Antiviral & Resistance Database
           </Link>
           {hideSubtitle ? null :
           <div className={style['brand-sitename-subtitle']}>
