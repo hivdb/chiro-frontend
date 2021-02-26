@@ -28,6 +28,10 @@ export default class Footer extends React.Component {
           <ul>
             <li><Link to="/page/links/">COVID-19 Websites and Links</Link></li>
             <li><Link to="/page/press-release/">Press Releases</Link></li>
+            <li><Link to="/virus-list/">Viruses</Link></li>
+            <li><Link to="/cells-list/">Cell lines</Link></li>
+            <li><Link to="/animal-model-list/">Animal models</Link></li>
+            <li><Link to="/cell-culture-measurement-list/">Measurements</Link></li>
           </ul>
         </Grid.Column>
         <Grid.Column>
