@@ -21,9 +21,7 @@ function MAbSummaryTable({
     )
   );
   data = data.filter(
-    ({antibodies}) => antibodies.some(
-      ({name}) => displayMAbs.includes(name)
-    )
+    ({antibodies}) => displayMAbs.includes(antibodies)
   );
   if (data.length >= 2 || data.length === 0) {
     // fallback to display children
