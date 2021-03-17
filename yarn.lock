@@ -11759,10 +11759,10 @@ react-dom@^16.13.1:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-dropdown@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/react-dropdown/-/react-dropdown-1.7.0.tgz#20287aafabdece49a6595ebe40e3fa1a37c26456"
-  integrity sha512-zFZ73pgLA32hArpE4j/7DtOEhOMg240XG5QvbAb0/VinGekkHDVIakMyAFUKC5jDz8jqXEltgriqFW9R5iCtPQ==
+react-dropdown@^1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/react-dropdown/-/react-dropdown-1.9.2.tgz#db6cbc90184e3f6dd7eb40f7ddabac4b09dccf15"
+  integrity sha512-g4eufErTi5P5T5bGK+VmLl//qvAHy79jm6KKx8G2Tl3mG90bpigb+Aw85P+C2JUdAnIIQdv8kP/oHN314GvAfw==
   dependencies:
     classnames "^2.2.3"
 
@@ -13069,9 +13069,9 @@ side-channel@^1.0.2:
     es-abstract "^1.17.0-next.1"
     object-inspect "^1.7.0"
 
-sierra-frontend@hivdb/sierra-frontend#fa0bf50:
+sierra-frontend@hivdb/sierra-frontend#32240ce:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#fa0bf50aaed62c9b3c5c15d20d93174aaae23570"
+  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#32240ced7c0d2e3f82f495af1de5d62a8c9449ac"
   dependencies:
     "@react-icons/all-files" "^4.1.0"
     "@vx/axis" "^0.0.197"
@@ -13092,7 +13092,7 @@ sierra-frontend@hivdb/sierra-frontend#fa0bf50:
     randomcolor "^0.6.2"
     raw-loader "^4.0.2"
     react-children-utilities "^2.2.2"
-    react-dropdown "^1.7.0"
+    react-dropdown "^1.9.2"
     react-dropzone "^11.0.1"
     react-konva "^16.13.0-5"
     react-loader "^2.4.7"

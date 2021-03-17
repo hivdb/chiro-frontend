@@ -14,6 +14,7 @@ import {mutAnnotViewerConfig, mutationViewerConfig} from './config';
 import style from './index.module.scss';
 
 import Layout from './components/layout';
+import {getFullLink} from './utils/cms';
 
 const Home = lazy(() => import('./views/home'));
 const HomeStaging = lazy(() => import('./views/home-staging'));
@@ -49,6 +50,7 @@ const BrowserRouter = createBrowserRouter({
       <Route path="sierra/">
         {SARS2Routes({
           config: {
+            configFromURL: getFullLink('pages/sierra-sars2.json'),
             graphqlURI: window.__NODE_ENV === 'production' ?
               '/sierra-sars2/graphql' :
               'http://localhost:8113/Sierra-SARS2/graphql'
