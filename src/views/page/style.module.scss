@@ -171,6 +171,7 @@
   }
   section:global(.figure-section) {
     display: flex;
+    position: relative;
     flex-direction: row-reverse;
     align-items: center;
     justify-content: space-between;
@@ -186,6 +187,28 @@
       }
       :global(.figure-caption) {
         margin-top: 1rem;
+      }
+    }
+
+    &:global(.compact) {
+      align-items: flex-start;
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+      :global(.figure-caption) {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        padding: 1rem 1.5rem;
+        > h2 {
+          font-size: 1.6rem;
+        }
+
+        > h3 {
+          font-size: 1.4rem;
+        }
+
+        > p {
+          font-size: .9rem;
+        }
       }
     }
 
@@ -221,7 +244,7 @@
       }
     }
 
-    @media only screen and (max-width: 1800px) {
+    @media only screen and (max-width: 1400px) {
       flex-wrap: wrap;
       :global(.figure-caption), :global(.figure-image) {
         flex-basis: 100%;
