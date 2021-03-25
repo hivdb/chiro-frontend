@@ -42,7 +42,7 @@ function mergeReferences(references, dbArticles, setRef) {
           <ArticleInfo {...article} />
           <ArticleAbstractInfo nickname={article.nickname[0]} />
         </>;
-        setRef(name, {children}, /* noIncr= */true);
+        setRef(name, {children}, /* incr= */false);
         return {...refProps, children};
       })
   );
@@ -61,10 +61,10 @@ export default function RefDataLoader({
   else if (error) {
     return `Error: ${error.message}`;
   }
-  onLoad();
 
   mergeReferences(
     references, data.articles, setReference
   );
+  onLoad();
   return null;
 }

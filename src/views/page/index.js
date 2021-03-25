@@ -17,6 +17,6 @@ export default class Page extends React.Component {
 
   render() {
     const {params: {pageName}, location} = this.props.match;
-    return <CMSPage {...{pageName, location}} />;
+    return <CMSPage key={pageName} {...{pageName, location}} />;
   }
 }

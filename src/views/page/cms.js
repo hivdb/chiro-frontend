@@ -10,10 +10,6 @@ import Banner from '../../components/banner';
 import Markdown from 'sierra-frontend/dist/components/markdown';
 import refDataLoader from '../../components/refdata-loader';
 import BackToTop from '../../components/back-to-top';
-import {
-  ReferenceContext,
-  ReferenceContextValue
-} from 'sierra-frontend/dist/components/references';
 
 import style from './style.module.scss';
 
@@ -127,50 +123,49 @@ class CMSPage extends React.Component {
     }
     setTitle(pageTitle);
     return (
-      <ReferenceContext.Provider value={new ReferenceContextValue()}>
-        <article
-         ref={this.containerRef}
-         className={style['content-container']}
-         data-page-name={pageName}>
-          <BackToTop />
-          {heroImage ?
-            <Banner bgImage={`${imagePrefix}${heroImage}`} narrow>
-              <Banner.Title as="h1">
-                <Markdown inline>{introHeader}</Markdown>
-              </Banner.Title>
-              <Banner.Subtitle>
-                {hideLastModified ? null :
-                <span className={style['last-update']}>
-                  Last updated at {lastMod}
-                </span>}
-              </Banner.Subtitle>
-            </Banner> :
-            <Header as="h1" dividing>
+      <article
+       ref={this.containerRef}
+       className={style['content-container']}
+       data-page-name={pageName}>
+        <BackToTop />
+        {heroImage ?
+          <Banner bgImage={`${imagePrefix}${heroImage}`} narrow>
+            <Banner.Title as="h1">
               <Markdown inline>{introHeader}</Markdown>
-              <Header.Subheader>
-                {hideLastModified ? null :
-                <span className={style['last-update']}>
-                  Last updated at {lastMod}
-                </span>}
-              </Header.Subheader>
-            </Header>}
-          <Markdown
-           toc={toc} tocClassName={classNames(
-             style.toc,
-             style[`toc-float-${tocFloat}`]
-           )}
-           imagePrefix={imagePrefix}
-           cmsPrefix={cmsPrefix}
-           genomeMaps={genomeMaps}
-           tables={tables}
-           escapeHtml={escapeHtml}
-           refDataLoader={refDataLoader}
-           collapsableLevels={collapsableLevels}
-           referenceTitle={referenceTitle}>
-            {content}
-          </Markdown>
-        </article>
-      </ReferenceContext.Provider>
+            </Banner.Title>
+            <Banner.Subtitle>
+              {hideLastModified ? null :
+              <span className={style['last-update']}>
+                Last updated at {lastMod}
+              </span>}
+            </Banner.Subtitle>
+          </Banner> :
+          <Header as="h1" dividing>
+            <Markdown inline>{introHeader}</Markdown>
+            <Header.Subheader>
+              {hideLastModified ? null :
+              <span className={style['last-update']}>
+                Last updated at {lastMod}
+              </span>}
+            </Header.Subheader>
+          </Header>}
+        <Markdown
+         key={pageName}
+         toc={toc} tocClassName={classNames(
+           style.toc,
+           style[`toc-float-${tocFloat}`]
+         )}
+         imagePrefix={imagePrefix}
+         cmsPrefix={cmsPrefix}
+         genomeMaps={genomeMaps}
+         tables={tables}
+         escapeHtml={escapeHtml}
+         refDataLoader={refDataLoader}
+         collapsableLevels={collapsableLevels}
+         referenceTitle={referenceTitle}>
+          {content}
+        </Markdown>
+      </article>
     );
   }
 }
