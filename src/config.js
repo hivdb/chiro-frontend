@@ -1,5 +1,5 @@
 import {loadPage} from './utils/cms';
-import LoadReferences from './components/load-references';
+import refDataLoader from './components/refdata-loader';
 
 let backendPrefix = '';
 
@@ -33,7 +33,7 @@ const mutAnnotViewerConfig = {
       annotationLoader: makeMutationAnnotationLoader('mutannot-rdrp')
     }
   ],
-  LoadReferences
+  refDataLoader
 };
 
 

@@ -49,10 +49,9 @@ function mergeReferences(references, dbArticles, setRef) {
 }
 
 
-export default function LoadReferences({
+export default function RefDataLoader({
   references,
   setReference,
-  children,
   onLoad = () => null
 }) {
   let {loading, error, data} = useQuery(query);
@@ -64,7 +63,8 @@ export default function LoadReferences({
   }
   onLoad();
 
-  return mergeReferences(
+  mergeReferences(
     references, data.articles, setReference
-  ).map(children);
+  );
+  return null;
 }

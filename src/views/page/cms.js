@@ -8,7 +8,7 @@ import setTitle from '../../utils/set-title';
 import PageLoader from '../../components/page-loader';
 import Banner from '../../components/banner';
 import Markdown from 'sierra-frontend/dist/components/markdown';
-import LoadReferences from '../../components/load-references';
+import refDataLoader from '../../components/refdata-loader';
 import BackToTop from '../../components/back-to-top';
 import {
   ReferenceContext,
@@ -164,7 +164,7 @@ class CMSPage extends React.Component {
            genomeMaps={genomeMaps}
            tables={tables}
            escapeHtml={escapeHtml}
-           LoadReferences={LoadReferences}
+           refDataLoader={refDataLoader}
            collapsableLevels={collapsableLevels}
            referenceTitle={referenceTitle}>
             {content}
