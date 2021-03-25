@@ -95,7 +95,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={ClinicalTrialsV2} path="/clinical-trials/" />
       <Route Component={SARS2RefSeq} path='/sars2-ref-seq/' />
       <Route Component={Plots} path="/plots/" />
-      <Route Component={Page} path="/page/:pageName/" />
+      <Route Component={Page} path="/page/:pageName+/" />
       <Redirect from="/terms-of-use/" to="/page/terms-of-use/" />
       <Redirect from="/database-schema/" to="/page/database-schema/" />
     </Route>
