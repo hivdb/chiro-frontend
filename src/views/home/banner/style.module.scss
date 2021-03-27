@@ -3,12 +3,21 @@
 @import "../../../styles/mixins";
 
 .banner-section {
+  --banner-h-padding: 2rem;
+  --banner-sub-section-margin: 2rem;
+  --num-sub-section-per-row: 3;
+  --banner-sub-section-title-align: center;
+  --banner-sub-section-title-size: 2.4rem;
   @include full-width-container;
   display: flex;
   justify-content: space-between;
   position: relative;
   height: auto;
   margin-bottom: 4rem;
+  flex-wrap: wrap;
+  padding-left: var(--banner-h-padding);
+  padding-right: var(--banner-h-padding);
+  overflow: hidden;
 
   &.narrow {
     height: auto;
@@ -21,6 +30,7 @@
 
   .banner-img-container {
     position: absolute;
+    left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -37,49 +47,26 @@
     }
   }
 
-  .banner-left-sections, .banner-right-sections {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .banner-header {
-    color: white;
-    .banner-header-title {
-      text-align: center;
-      font-size: 4rem;
+  .banner-sub-section {
+    margin: var(--banner-sub-section-margin);
+    > h2 {
+      text-align: var(--banner-sub-section-title-align);
       > a {
         color: white;
-        border-bottom: 5px solid transparent;
-        transition: border-bottom-color 125ms ease-in-out;
-        &:hover {
-          color: white;
-          border-bottom-color: white;
-        }
+        font-size: var(--banner-sub-section-title-size);
       }
     }
-    .banner-header-subtitle {
-      text-align: center;
-      font-family: 'Poppins',$font-family;
-      font-size: 1.25rem;
-    }
-    &:not(:last-child) {
-      .banner-header-title {
-        text-align: left;
-      }
-      .banner-header-subtitle {
-        text-align: left;
-      }
-    }
+    max-width: calc(
+      (100vw - var(--banner-h-padding) * 2) /
+      var(--num-sub-section-per-row) -
+      var(--banner-sub-section-margin) * 2
+    );
   }
 
   .banner-slider {
-    margin-top: 1rem;
+    text-align: left;
+    margin: 1rem var(--banner-sub-section-margin) 3rem;
+    width: calc(100vw - var(--banner-h-padding) * 2 - var(--banner-sub-section-margin) * 2);
     $slider-height: 11rem;
     color: black;
     > h2 {
@@ -153,53 +140,16 @@
     }
   }
 
-  @media only screen {
-    .banner-left-sections {
-      &:not(:last-child) {
-        margin-left: #{(100vw - $main-content-width) / 2};
-        margin-right: 0;
-        max-width: #{55vw - (100vw - $main-content-width) / 2};
-      }
-    }
-    .banner-right-sections {
-      margin-left: 4rem;
-      min-width: #{40vw - (100vw - $main-content-width) / 2};
-      margin-right: #{(100vw - $main-content-width) / 2};
-    }
-  }
-  @media only screen and (max-width: $mobile-main-content-max-width) {
-    .banner-left-sections {
-      &:not(:last-child) {
-        margin-left: #{(100vw - $mobile-main-content-width) / 2};
-        max-width: $mobile-main-content-width - 50vw;
-      }
-    }
-    .banner-right-sections {
-      min-width: $mobile-main-content-width - 50vw;
-      margin-left: #{(100vw - $mobile-main-content-width) / 2};
-      margin-right: #{(100vw - $mobile-main-content-width) / 2};
-    }
-  }
-  @media only screen and (max-width: 1400px) {
-    .banner-header {
-      text-align: center;
-      .banner-header-title {
-        font-size: 3rem;
-      }
-      &:not(:last-child) {
-        .banner-header-title {
-          text-align: center;
-        }
-        .banner-header-subtitle {
-          text-align: center;
-        }
-      }
-    }
+  @media only screen and (max-width: 1200px) {
+    --banner-sub-section-title-size: 1.7rem;
     .banner-slider {
-      text-align: left;
     }
   }
   @media only screen and (max-width: 900px) {
+    --banner-h-padding: 0;
+    --banner-sub-section-margin: 1rem;
+    --num-sub-section-per-row: 1;
+    --banner-sub-section-title-size: 2.4rem;
     display: block;
     height: auto;
     .banner-img-container {
@@ -209,13 +159,6 @@
         max-height: 100%;
       }
     }
-    .banner-left-sections {
-      margin-left: #{(100vw - $mobile-main-content-width) / 2};
-      margin-right: #{(100vw - $mobile-main-content-width) / 2};
-      &:not(:last-child) {
-        max-width: $mobile-main-content-width;
-      }
-    }
     .banner-slider {
       > .slider-container {
         > .arrow-prev, > .arrow-next {
@@ -223,16 +166,6 @@
           max-width: 2.5rem;
         }
       }
-    }
-    .banner-left-sections {
-      margin-top: 0;
-      :last-child {
-        margin-bottom: 0;
-      }
-    }
-    .banner-right-sections {
-      margin-bottom: 0;
-      padding-bottom: 2rem;
     }
   }
 }

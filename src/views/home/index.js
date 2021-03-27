@@ -15,7 +15,7 @@ import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';
 
 import Subscribe from './subscribe';
-import ProjectsSection, {Projects} from './projects-section';
+import ProjectsSection from './projects-section';
 
 // const URL_PK_NOTES = (
 //   'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
@@ -82,28 +82,26 @@ export default class Home extends React.Component {
 
   thenRender = ({
     banner, updates,
-    bannerProjects = [],
-    highlights = [],
-    publications = [],
-    webinars = [], eduMaterials = [],
+    projectSections = [],
     missionStatement, imagePrefix
   } = {}) => {
     setTitle(null);
     return <>
       <Banner
-       bgImage={banner ? getFullLink(`images/${banner.image}`) : undefined}>
-        <Banner.Title as="h2">
-          <Link to="/page/covid-review/">
-            {banner ? <Markdown inline>{banner.title}</Markdown> : null}
-          </Link>
-        </Banner.Title>
-        <Banner.ExtraSection>
-          <BasicTOC className={style['scroll-toc']}>
-            {banner ?
-              <Markdown inline>{banner.menuContent}</Markdown> :
-              <Loader active />}
-          </BasicTOC>
-        </Banner.ExtraSection>
+       bgImage={
+         banner && banner.image ?
+           getFullLink(`images/${banner.image}`) : undefined
+       }>
+        {banner ? banner.tocInfinity.map(({title, link, tocContent}) => (
+          <Banner.SubSection key={title}>
+            <h2>
+              <Link to={link}>{title}</Link>
+            </h2>
+            <BasicTOC className={style['scroll-toc']}>
+              <Markdown escapeHtml={false} inline>{tocContent}</Markdown>
+            </BasicTOC>
+          </Banner.SubSection>
+        )) : <Loader active />}
         {updates ?
           <Banner.Slider
            title={<a href="/page/updates/">Updates</a>}
@@ -116,15 +114,6 @@ export default class Home extends React.Component {
             </Markdown>
           </Banner.Slider> :
           <Loader active />}
-        <Banner.SideSection>
-          <h2 className={style['banner-projects-header']}>
-            Resistance
-          </h2>
-          <Projects
-           className={style['banner-projects']}
-           projects={bannerProjects}
-           imagePrefix={imagePrefix} />
-        </Banner.SideSection>
       </Banner>
       <section className={style['home-section']}>
         <H2 disableAnchor>Database Search</H2>
@@ -169,22 +158,13 @@ export default class Home extends React.Component {
           </InlineSearchBox>
         </div>
       </section>
-      <ProjectsSection
-       title="Highlights"
-       projects={highlights}
-       imagePrefix={imagePrefix} />
-      <ProjectsSection
-       title="Publications"
-       projects={publications}
-       imagePrefix={imagePrefix} />
-      <ProjectsSection
-       title="Webinars"
-       projects={webinars}
-       imagePrefix={imagePrefix} />
-      <ProjectsSection
-       title="Educational Materials"
-       projects={eduMaterials}
-       imagePrefix={imagePrefix} />
+      {projectSections.map(({title, items}) => (
+        <ProjectsSection
+         key={title}
+         title={title}
+         projects={items}
+         imagePrefix={imagePrefix} />
+      ))}
       <section className={style['home-section']}>
         <H2 disableAnchor>Mission Statement</H2>
         {missionStatement ?
