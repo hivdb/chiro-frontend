@@ -18,6 +18,7 @@ import {getFullLink} from './utils/cms';
 
 const Home = lazy(() => import('./views/home'));
 const HomeStaging = lazy(() => import('./views/home-staging'));
+const Archive = lazy(() => import('./views/archive'));
 const Search = lazy(() => import('./views/search'));
 const CompoundList = lazy(() => import('./views/compound-list'));
 const CompoundTargetList = lazy(() => import('./views/compound-target-list'));
@@ -96,6 +97,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={SARS2RefSeq} path='/sars2-ref-seq/' />
       <Route Component={Plots} path="/plots/" />
       <Route Component={Page} path="/page/:pageName+/" />
+      <Route Component={Archive} path="/archive/" />
       <Redirect from="/terms-of-use/" to="/page/terms-of-use/" />
       <Redirect from="/database-schema/" to="/page/database-schema/" />
     </Route>

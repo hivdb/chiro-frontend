@@ -32,6 +32,7 @@ export default class Footer extends React.Component {
             <li><Link to="/cells-list/">Cell lines</Link></li>
             <li><Link to="/animal-model-list/">Animal models</Link></li>
             <li><Link to="/cell-culture-measurement-list/">Measurements</Link></li>
+            <li><Link to="/archive/">Archive</Link></li>
           </ul>
         </Grid.Column>
         <Grid.Column>
