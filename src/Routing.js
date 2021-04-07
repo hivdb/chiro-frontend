@@ -14,6 +14,7 @@ import {mutAnnotViewerConfig, mutationViewerConfig} from './config';
 import style from './index.module.scss';
 
 import Layout from './components/layout';
+import refDataLoader from './components/refdata-loader';
 import {getFullLink} from './utils/cms';
 
 const Home = lazy(() => import('./views/home'));
@@ -54,7 +55,8 @@ const BrowserRouter = createBrowserRouter({
             configFromURL: getFullLink('pages/sierra-sars2.json'),
             graphqlURI: window.__NODE_ENV === 'production' ?
               '/sierra-sars2/graphql' :
-              'http://localhost:8113/Sierra-SARS2/graphql'
+              'http://localhost:8113/Sierra-SARS2/graphql',
+            refDataLoader
           },
           className: style['sierra-sars2-webui']
         })}
