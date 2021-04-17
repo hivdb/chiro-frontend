@@ -11675,6 +11675,11 @@ react-app-polyfill@^1.0.6:
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
 
+react-async@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/react-async/-/react-async-10.0.1.tgz#575c083f808303d2f6ca52d11ec7554dbdbd9fcd"
+  integrity sha512-ORUz5ca0B57QgBIzEZM5SuhJ6xFjkvEEs0gylLNlWf06vuVcLZsjIw3wx58jJkZG38p+0nUAxRgFW2b7mnVZzA==
+
 react-bootstrap@^1.0.0-beta.17:
   version "1.0.0-beta.17"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-1.0.0-beta.17.tgz#09d4789633b2fb24d408fa493b4a80a496e87c82"
@@ -13070,9 +13075,9 @@ side-channel@^1.0.2:
     es-abstract "^1.17.0-next.1"
     object-inspect "^1.7.0"
 
-sierra-frontend@hivdb/sierra-frontend#f0c6960:
+sierra-frontend@hivdb/sierra-frontend#2c364de:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#f0c69602900cc1b27f557ad922b33b4cd06a6320"
+  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#2c364de30875e85b0bc85a96bc49869a5f7c7e6d"
   dependencies:
     "@react-icons/all-files" "^4.1.0"
     "@vx/axis" "^0.0.197"
@@ -13092,6 +13097,7 @@ sierra-frontend@hivdb/sierra-frontend#f0c6960:
     object-merge "^2.5.1"
     randomcolor "^0.6.2"
     raw-loader "^4.0.2"
+    react-async "^10.0.1"
     react-children-utilities "^2.2.2"
     react-dropdown "^1.9.2"
     react-dropzone "^11.0.1"
