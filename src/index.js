@@ -8,7 +8,7 @@ import './index.module.scss';
 import BrowserRouter from './Routing';
 import chiroClient from './apollo';
 
-import * as serviceWorker from './serviceWorker';
+import reportWebVitals from './reportWebVitals';
 
 import 'semantic-ui-css/semantic.min.css';
 
@@ -24,7 +24,10 @@ ReactDOM.render(
   </ApolloProvider>,
   document.getElementById('root'));
 
-serviceWorker.unregister();
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
 
 const rootElem = document.querySelector('#root');
 const resizeObserver = new ResizeObserver(([{contentRect: {height}}]) => {

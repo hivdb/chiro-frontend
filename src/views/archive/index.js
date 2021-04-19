@@ -79,11 +79,12 @@ export default class Home extends React.Component {
     introHeader,
   } = {}) => {
     setTitle(null);
-    return <article
-      className={style['content-container']}
-      data-page-name={pageName}>
-      <BackToTop />
-      {heroImage ?
+    return (
+      <article
+       className={style['content-container']}
+       data-page-name={pageName}>
+        <BackToTop />
+        {heroImage ?
           <Banner bgImage={`${imagePrefix}${heroImage}`} narrow>
             <Banner.Title as="h1">
               <Markdown inline>{introHeader}</Markdown>
@@ -92,14 +93,15 @@ export default class Home extends React.Component {
           <Header as="h1" dividing>
             <Markdown inline>{introHeader}</Markdown>
           </Header>}
-      {projectSections.map(({title, items}) => (
-        <ProjectsSection
-         key={title}
-         title={title}
-         projects={items}
-         imagePrefix={imagePrefix} />
-      ))}
-    </article>;
+        {projectSections.map(({title, items}) => (
+          <ProjectsSection
+           key={title}
+           title={title}
+           projects={items}
+           imagePrefix={imagePrefix} />
+        ))}
+      </article>
+    );
   }
 
   render() {

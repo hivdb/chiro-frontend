@@ -10,19 +10,38 @@ function cmsStageHost(host) {
 }
 
 
-const _loadPage = memoize(async function _loadPage(pageName) {
+async function fetchCMS(resPath) {
   let stage;
-  let payload;
   const {hostname} = window.location;
   stage = cmsStageHost(hostname);
   const resp = await fetch(
-    `https://${stage}/pages/${pageName}.json`,
+    `https://${stage}/${resPath}`,
     {cache: 'default'}
   );
+  return [resp, stage];
+}
+
+
+const _loadBinary = memoize(async function _loadBinary(resPath) {
+  const [resp] = await fetchCMS(resPath);
+  if (resp.status === 403 || resp.status === 404) {
+    throw new Error(`Resource not found: ${resPath}`);
+  }
+  
+  const payload = await resp.arrayBuffer();
+  return {
+    payload,
+    resPath
+  };
+});
+
+
+const _loadPage = memoize(async function _loadPage(pageName) {
+  const [resp, stage] = await fetchCMS(`pages/${pageName}.json`);
   if (resp.status === 403 || resp.status === 404) {
     throw new Error(`Page not found: ${pageName}`);
   }
-  payload = await resp.json();
+  const payload = await resp.json();
   return {
     ...payload,
     pageName,
@@ -30,6 +49,11 @@ const _loadPage = memoize(async function _loadPage(pageName) {
     cmsPrefix: `https://${stage}/`
   };
 });
+
+
+export async function loadBinary(resPath) {
+  return await _loadBinary(resPath);
+}
 
 
 export async function loadPage(pageName, props = {}) {

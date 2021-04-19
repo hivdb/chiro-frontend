@@ -26,8 +26,8 @@ export default function Plots() {
     <div>
       <img src={ClinialChart} alt={"Clinical trials"} width={1000}/>
     </div>
-   {/* <div>
+    {/* <div>
       <img src={CompoundChart} alt={"Compound"} width={1000}/>
    </div> */}
-  </>)
+  </>);
 }

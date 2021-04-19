@@ -29,7 +29,7 @@ const AnimalModelList = lazy(() => import('./views/animal-model-list'));
 const CellCultureMeasurementList = lazy(
   () => import('./views/cell-culture-measurement-list')
 );
-const Drdb = lazy(() => import('./views/drdb'));
+const SearchDRDB = lazy(() => import('./views/search-drdb'));
 const ArticleList = lazy(() => import('./views/article-list'));
 const Donation = lazy(() => import('./views/donation'));
 const ClinicalTrialsV2 = lazy(() => import('./views/clinical-trials-v2'));
@@ -85,6 +85,7 @@ const BrowserRouter = createBrowserRouter({
       </Route>
 
       <Route Component={Search} path="/search/" />
+      <Route Component={SearchDRDB} path="/search-drdb/" />
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />
       <Route Component={VirusList} path="/virus-list/" />
@@ -100,7 +101,6 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={SARS2RefSeq} path='/sars2-ref-seq/' />
       <Route Component={Plots} path="/plots/" />
       <Route Component={Page} path="/page/:pageName+/" />
-      <Route Component={Drdb} path="/drdb/" />
       <Route Component={Archive} path="/archive/" />
       <Redirect from="/terms-of-use/" to="/page/terms-of-use/" />
       <Redirect from="/database-schema/" to="/page/database-schema/" />

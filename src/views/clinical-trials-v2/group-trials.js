@@ -8,17 +8,17 @@ export function groupTrials1(clinicalTrials, qCompoundTargetName) {
     let oldTargets = [];
     for (let {target, primaryCompound, relatedCompounds} of compoundObjs) {
       if (!target) {
-        target = 'Uncertain'
+        target = 'Uncertain';
       }
       if (target) {
         oldTargets.push(target);
       }
       if (primaryCompound) {
-        compoundNames.push(primaryCompound.name)
+        compoundNames.push(primaryCompound.name);
       }
       for (const {name} of relatedCompounds) {
         if (name) {
-          compoundNames.push(name)
+          compoundNames.push(name);
         }
       }
     }
@@ -41,7 +41,7 @@ export function groupTrials1(clinicalTrials, qCompoundTargetName) {
     let used_target = [];
     for (let {target} of compoundObjs) {
       if (!target) {
-        target = 'Uncertain'
+        target = 'Uncertain';
       }
 
       if (used_target.includes(target)) {
@@ -58,7 +58,7 @@ export function groupTrials1(clinicalTrials, qCompoundTargetName) {
       if (
         target === 'Hydroxychloroquine' &&
         oldTargets.includes(qCompoundTargetName)
-        ) {
+      ) {
         return true;
       }
       if (target === qCompoundTargetName) {
@@ -82,11 +82,11 @@ export function groupTrials2(clinicalTrials, qCompoundTargetName) {
       }
       let compoundNames = [];
       if (primaryCompound) {
-        compoundNames.push(primaryCompound.name)
+        compoundNames.push(primaryCompound.name);
       }
       for (const {name} of relatedCompounds) {
         if (name) {
-          compoundNames.push(name)
+          compoundNames.push(name);
         }
       }
       let oldTarget = null;
@@ -104,7 +104,7 @@ export function groupTrials2(clinicalTrials, qCompoundTargetName) {
     }
     if (used_target.length === 0) {
       let target = 'Uncertain';
-      theseTrials.push({...trial, target})
+      theseTrials.push({...trial, target});
     }
 
     allTrials = allTrials.concat(theseTrials);
@@ -131,15 +131,15 @@ function isDelayed(date) {
     if (moment.duration(today.diff(date)).months() > 4) {
       return true;
     } else {
-      return false
+      return false;
     }
   } else {
-    return true
+    return true;
   }
 }
 
 export function markDelayed(clinicalTrials) {
-  let result = []
+  let result = [];
   for (let {node: {...trials}} of clinicalTrials) {
     if (trials['recruitmentStatus'] === 'Pending'
        && isDelayed(trials['startDate'])) {

@@ -10,20 +10,20 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/react": "^16.8.0",
-    "@typescript-eslint/eslint-plugin": "2.x",
-    "@typescript-eslint/parser": "2.x",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "add": "^2.0.6",
     "axios": "^0.21.1",
     "babel-eslint": "10.x",
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "css-element-queries": "^1.2.3",
-    "eslint": "6.x",
-    "eslint-plugin-flowtype": "3.x || 4.x",
-    "eslint-plugin-import": "2.x",
+    "eslint": "^7.11.0",
+    "eslint-plugin-flowtype": "5.7.1",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "6.x",
-    "eslint-plugin-react": "7.x",
-    "eslint-plugin-react-hooks": "1.x || 2.x",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "farce": "^0.4.1",
     "found": "^0.5.3",
     "fuse.js": "^5.0.7-beta",
@@ -44,7 +44,7 @@
     "react-ga": "^3.0.0",
     "react-markdown": "^4.3.1",
     "react-nl2br": "^0.6.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "4.0.3",
     "remark-macro": "^1.0.7",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
@@ -57,6 +57,7 @@
     "typeface-poppins": "^0.0.72",
     "typeface-source-sans-pro": "^1.1.5",
     "typescript": ">=2.8.0",
+    "web-vitals": "^1.1.1",
     "xlsx": "^0.16.9",
     "youtube-url": "^0.5.0"
   },
@@ -83,6 +84,6 @@
   },
   "devDependencies": {
     "@testing-library/dom": ">=5",
-    "eslint-config-react-app": "^5.2.1"
+    "eslint-config-react-app": "6.0.0"
   }
 }

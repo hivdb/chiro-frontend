@@ -180,7 +180,12 @@ class ClinicalTrialInner extends React.Component {
       updateTime = new Date(updateTime.updateTime);
     }
 
-    let tableHeaders = compoundTargets? compoundTargets.edges.map(({node: {name}}) => name): [];
+    let tableHeaders = (
+      compoundTargets ?
+        compoundTargets.edges.map(({node: {name}}) => name) :
+        []
+    );
+
     tableHeaders.push('Hydroxychloroquine');
 
     return <Grid stackable className={style['clinical-trials']}>
