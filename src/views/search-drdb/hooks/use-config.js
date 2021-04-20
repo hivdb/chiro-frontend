@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {loadPage} from '../cms';
+import {loadPage} from '../../../utils/cms';
 
 
 async function loadConfig(setConfig, mounted) {

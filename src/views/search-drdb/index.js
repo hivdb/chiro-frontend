@@ -1,22 +1,78 @@
 import React from 'react';
+import {useQuery} from '@apollo/client';
 
-import FixedLoader from 'sierra-frontend/dist/components/fixed-loader';
-import {useQuery, useConfig} from '../../utils/drdb';
+import articleQuery from './search.gql';
+
+import {
+  useLocationParams,
+  useAbSuscResults,
+  useCPSuscResults,
+  useVPSuscResults
+} from './hooks';
+import SearchDRDBLayout from './layout';
 
 
-export default function SearchDRDB() {
-  
-  const statement = "SELECT * FROM antibodies";
+export default function SearchDRDB(props) {
+  const {
+    formOnly,
+    refName,
+    mutations,
+    abNames
+  } = useLocationParams();
+  let {
+    loading: isArticlePending,
+    error,
+    data
+  } = useQuery(articleQuery, {
+    variables: {
+      articleNickname: refName
+    },
+    skip: formOnly !== undefined || !refName
+  });
+  const {
+    suscResults: abSuscResults,
+    isPending: isAbPending
+  } = useAbSuscResults({
+    refName,
+    spikeMutations: mutations,
+    abNames
+  });
+  const {
+    suscResults: cpSuscResults,
+    isPending: isCPPending
+  } = useCPSuscResults({
+    refName,
+    spikeMutations: mutations,
+  });
+  const {
+    suscResults: vpSuscResults,
+    isPending: isVPPending
+  } = useVPSuscResults({
+    refName,
+    spikeMutations: mutations,
+  });
 
-  const {config} = useConfig();
-  const {payload, isPending} = useQuery(statement, config);
+  const loaded = (
+    !isArticlePending &&
+    !isAbPending &&
+    !isCPPending &&
+    !isVPPending
+  );
 
-  if (isPending) {
-    return <FixedLoader />;
+  if (error) {
+    return `Error: ${error.message}`;
   }
-
-  return <pre>
-    {JSON.stringify(payload, null, '  ')}
-  </pre>;
-
+  return (
+    <SearchDRDBLayout
+     refName={refName}
+     mutations={mutations}
+     abNames={abNames}
+     loaded={loaded}
+     formOnly={formOnly !== undefined}
+     abSuscResults={abSuscResults}
+     cpSuscResults={cpSuscResults}
+     vpSuscResults={vpSuscResults}
+     {...props}
+     {...data} />
+  );
 }
