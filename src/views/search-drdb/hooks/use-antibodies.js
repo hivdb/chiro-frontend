@@ -1,4 +1,15 @@
+import maxBy from 'lodash/maxBy';
 import useQuery from './use-query';
+
+
+export function compareAntibodyLists(abListA, abListB) {
+  const priorityA = maxBy(abListA, 'priority').priority;
+  const priorityB = maxBy(abListB, 'priority').priority;
+  let cmp = priorityA - priorityB;
+  if (cmp) { return cmp; }
+  cmp = abListA.length - abListB.length;
+  return cmp;
+}
 
 
 function useJoinSynonyms({
@@ -43,6 +54,8 @@ function useJoinSynonyms({
       ab.synonyms.push(synonym);
     }
   }
+
+  return {isPending};
 }
 
 
@@ -82,10 +95,14 @@ export default function useAntibodies({
     );
   }
 
-  useJoinSynonyms({
+  const {isPending: isSynonymPending} = useJoinSynonyms({
     antibodyLookup,
     skip: skip || isPending || !join.includes('synonyms')
   });
 
-  return {antibodies, antibodyLookup, isPending};
+  return {
+    antibodies,
+    antibodyLookup,
+    isPending: isPending || isSynonymPending
+  };
 }

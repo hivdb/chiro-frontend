@@ -1,4 +1,6 @@
 import useQuery from './use-query';
+import useVirusVariants from './use-virus-variants';
+import {useCompareSuscResultsByVariant} from './use-compare-susc-results';
 
 
 export function getSuscResultUniqKey(suscResult) {
@@ -89,6 +91,7 @@ export default function useSuscResults({
   joinClause = [],
   where: addWhere = [],
   params: addParams = {},
+  addCompareSuscResults = () => 0,
   skip = false
 }) {
   const addColumnText = (
@@ -177,13 +180,36 @@ export default function useSuscResults({
     isPending
   } = useQuery({sql, params: combinedParams, skip});
 
+  const {
+    variantLookup,
+    isPending: isVariantPending
+  } = useVirusVariants({
+    skip: skip || isPending
+  });
+
   let suscResults;
   let suscResultLookup = {};
-  if (!skip && !isPending) {
+
+  const compareByVariants = useCompareSuscResultsByVariant(variantLookup);
+
+  if (!skip && !isPending && !isVariantPending) {
     suscResults = payload.map(sr => ({
       ...sr,
       resistanceLevel: calcResistanceLevel(sr),
     }));
+
+    suscResults.sort((srA, srB) => {
+      let cmp = addCompareSuscResults(srA, srB);
+      if (cmp) { return cmp; }
+
+      cmp = compareByVariants(srA, srB);
+      if (cmp) { return cmp; }
+
+      const assayA = srA.assay !== 'authentic virus';
+      const assayB = srB.assay !== 'authentic virus';
+      return assayA - assayB;
+    });
+
     suscResultLookup = suscResults.reduce(
       (acc, sr) => {
         const key = getSuscResultUniqKey(sr);
@@ -194,5 +220,9 @@ export default function useSuscResults({
     );
   }
 
-  return {suscResults, suscResultLookup, isPending};
+  return {
+    suscResults,
+    suscResultLookup,
+    isPending: isPending || isVariantPending
+  };
 }

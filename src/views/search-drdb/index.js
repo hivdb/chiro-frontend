@@ -5,6 +5,8 @@ import articleQuery from './search.gql';
 
 import {
   useLocationParams,
+  useAntibodies,
+  useVirusVariants,
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults
@@ -30,8 +32,16 @@ export default function SearchDRDB(props) {
     skip: formOnly !== undefined || !refName
   });
   const {
+    antibodyLookup,
+    isPending: isAbLookupPending
+  } = useAntibodies();
+  const {
+    variantLookup,
+    isPending: isVariantPending
+  } = useVirusVariants();
+  const {
     suscResults: abSuscResults,
-    isPending: isAbPending
+    isPending: isAbResultPending
   } = useAbSuscResults({
     refName,
     spikeMutations: mutations,
@@ -54,7 +64,9 @@ export default function SearchDRDB(props) {
 
   const loaded = (
     !isArticlePending &&
-    !isAbPending &&
+    !isAbLookupPending &&
+    !isVariantPending &&
+    !isAbResultPending &&
     !isCPPending &&
     !isVPPending
   );
@@ -69,6 +81,8 @@ export default function SearchDRDB(props) {
      abNames={abNames}
      loaded={loaded}
      formOnly={formOnly !== undefined}
+     antibodyLookup={antibodyLookup}
+     variantLookup={variantLookup}
      abSuscResults={abSuscResults}
      cpSuscResults={cpSuscResults}
      vpSuscResults={vpSuscResults}

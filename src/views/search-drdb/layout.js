@@ -23,6 +23,8 @@ export default function SearchDRDBLayout({
   match,
   loaded,
   formOnly,
+  antibodyLookup,
+  variantLookup,
   abSuscResults,
   cpSuscResults,
   vpSuscResults,
@@ -86,7 +88,11 @@ export default function SearchDRDBLayout({
         <Header as={H2} id="mab-susc-results">
           MAb Susceptibility Data
         </Header>
-        <AbSuscResults loaded={loaded} abSuscResults={abSuscResults} />
+        <AbSuscResults
+         loaded={loaded}
+         antibodyLookup={antibodyLookup}
+         variantLookup={variantLookup}
+         abSuscResults={abSuscResults} />
       </Grid.Column>
     </Grid.Row>
     <Grid.Row centered>
@@ -119,6 +125,7 @@ SearchDRDBLayout.propTypes = {
   refName: PropTypes.string,
   mutations: PropTypes.array,
   abNames: PropTypes.array,
+  antibodyLookup: PropTypes.object,
   abSuscResults: PropTypes.array,
   cpSuscResults: PropTypes.array,
   vpSuscResults: PropTypes.array,
