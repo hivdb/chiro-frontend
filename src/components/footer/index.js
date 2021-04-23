@@ -50,6 +50,13 @@ export default class Footer extends React.Component {
                 How to Contact Us
               </a>
             </li>
+            <li>
+              <a
+               href="https://www.mdpi.com/1999-4915/12/9/1006"
+               target="_blank" rel="noopener noreferrer">
+                Citation
+              </a>
+            </li>
           </ul>
         </Grid.Column>
       </Grid>

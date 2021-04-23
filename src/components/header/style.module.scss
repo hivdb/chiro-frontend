@@ -4,6 +4,7 @@
 
 
 header.chiro-header {
+  --size-ratio: 1;
   display: flex;
   justify-content: space-between;
   background-color: $main-color;
@@ -12,38 +13,38 @@ header.chiro-header {
   font-family: $font-family;
   font-weight: 700;
   box-sizing: border-box;
-  padding: 0 1rem 0 4rem;
+  padding: 0 calc(var(--size-ratio) * 1rem) 0 calc(var(--size-ratio) * 4rem);
 
   .nav-container {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     height: 100%;
-    font-size: 1.2rem;
+    font-size: calc(var(--size-ratio) * 1.2rem);
     text-transform: uppercase;
     font-weight: 700;
 
     a.menu-toggle {
       display: none;
       color: white;
-      font-size: 1.5rem;
+      font-size: calc(var(--size-ratio) * 1.5rem);
       font-weight: 800;
       transform: rotate(-90deg);
       touch-action: none;
-      padding: .7rem;
+      padding: calc(var(--size-ratio) * .7rem);
     }
 
     ul.nav {
       display: block;
-      padding: 0 3rem 0 0;
+      padding: 0 calc(var(--size-ratio) * 3rem) 0 0;
       margin: 0;
 
       li.nav-item {
         display: inline-block;
         margin-top: auto;
         margin-bottom: auto;
-        font-size: 1.1rem;
-        padding: .7rem;
+        font-size: calc(var(--size-ratio) * 1.1rem);
+        padding: calc(var(--size-ratio) * .7rem);
 
         a {
           color: white;
@@ -55,7 +56,7 @@ header.chiro-header {
         }
 
         + li.highlight {
-          padding-left: .7rem;
+          padding-left: calc(var(--size-ratio) * .7rem);
         }
 
         &.current {
@@ -71,7 +72,7 @@ header.chiro-header {
           padding: 0;
           a {
             display: inline-block;
-            padding: .7rem 1.4rem;
+            padding: calc(var(--size-ratio) * .7rem) calc(var(--size-ratio) * 1.4rem);
             border: 2px solid white;
             transition: all .4s ease-in-out;
             &:hover {
@@ -85,7 +86,8 @@ header.chiro-header {
     }
 
   }
-  @media only screen and (max-width: 1280px) {
+  @media only screen and (max-width: 1300px) {
+    --size-ratio: .9;
     padding-left: 1rem;
     padding-right: 1rem;
     .nav-container {
@@ -95,7 +97,14 @@ header.chiro-header {
     }
   }
 
+  @media only screen and (max-width: 1080px) {
+    --size-ratio: .8;
+  }
   @media only screen and (max-width: 1023px) {
+    --size-ratio: .72;
+  }
+
+  @media only screen and (max-width: 940px) {
     padding-right: 0rem;
     .nav-container {
       position: relative;
@@ -134,13 +143,6 @@ header.chiro-header {
             padding-top: 1.2rem;
           }
         }
-      }
-    }
-  }
-  @media only screen and (max-width: 1023px) {
-    .nav-container {
-      ul.nav {
-        width: 60vw;
       }
     }
   }

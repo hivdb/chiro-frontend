@@ -5,7 +5,7 @@ import capitalize from 'lodash/capitalize';
 export default function CellFold({
   foldCmp,
   fold,
-  ineffective,
+  // ineffective,
   fbResistanceLevel
 }) {
   let foldValue = fold;
@@ -17,7 +17,7 @@ export default function CellFold({
     return <>
       {foldCmp === "=" ? "" : foldCmp}
       {foldValue}
-      {ineffective ? <sup><em>ineffective</em></sup> : null}
+      {/* ineffective ? <sup><em>ineffective</em></sup> : null */}
     </>;
   }
   if (fbResistanceLevel !== null) {

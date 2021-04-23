@@ -94,13 +94,16 @@ export default class Header extends React.Component {
             <NavItem to="/search/?form_only" {...navItemProps}>
               Search
             </NavItem>
+            <NavItem to="/sierra/sars2/" {...navItemProps}>
+              Analysis Program
+            </NavItem>
             <NavItem to="/compound-list/" {...navItemProps}>
               Drugs
             </NavItem>
             <NavItem to="/clinical-trials/" {...navItemProps}>
-              Clinical Trials
+              Trials
             </NavItem>
-            <NavItem>
+            <NavItem {...navItemProps}>
               <a
                href="https://www.mdpi.com/1999-4915/12/9/1006"
                target="_blank" rel="noopener noreferrer">
