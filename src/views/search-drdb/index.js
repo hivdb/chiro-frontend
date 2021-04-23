@@ -1,10 +1,12 @@
 import React from 'react';
 import {useQuery} from '@apollo/client';
+import FixedLoader from 'sierra-frontend/dist/components/fixed-loader';
 
 import articleQuery from './search.gql';
 
 import {
   useLocationParams,
+  useArticles,
   useAntibodies,
   useVirusVariants,
   useAbSuscResults,
@@ -19,7 +21,9 @@ export default function SearchDRDB(props) {
     formOnly,
     refName,
     mutations,
-    abNames
+    mutationMatch,
+    abNames,
+    onChange
   } = useLocationParams();
   let {
     loading: isArticlePending,
@@ -32,6 +36,10 @@ export default function SearchDRDB(props) {
     skip: formOnly !== undefined || !refName
   });
   const {
+    articleLookup,
+    isPending: isRefNameListPending
+  } = useArticles();
+  const {
     antibodyLookup,
     isPending: isAbLookupPending
   } = useAntibodies();
@@ -39,12 +47,14 @@ export default function SearchDRDB(props) {
     variantLookup,
     isPending: isVariantPending
   } = useVirusVariants();
+
   const {
     suscResults: abSuscResults,
     isPending: isAbResultPending
   } = useAbSuscResults({
     refName,
     spikeMutations: mutations,
+    mutationMatch,
     abNames
   });
   const {
@@ -53,6 +63,7 @@ export default function SearchDRDB(props) {
   } = useCPSuscResults({
     refName,
     spikeMutations: mutations,
+    mutationMatch
   });
   const {
     suscResults: vpSuscResults,
@@ -60,10 +71,12 @@ export default function SearchDRDB(props) {
   } = useVPSuscResults({
     refName,
     spikeMutations: mutations,
+    mutationMatch
   });
 
   const loaded = (
     !isArticlePending &&
+    !isRefNameListPending &&
     !isAbLookupPending &&
     !isVariantPending &&
     !isAbResultPending &&
@@ -74,19 +87,26 @@ export default function SearchDRDB(props) {
   if (error) {
     return `Error: ${error.message}`;
   }
-  return (
-    <SearchDRDBLayout
-     refName={refName}
-     mutations={mutations}
-     abNames={abNames}
-     loaded={loaded}
-     formOnly={formOnly !== undefined}
-     antibodyLookup={antibodyLookup}
-     variantLookup={variantLookup}
-     abSuscResults={abSuscResults}
-     cpSuscResults={cpSuscResults}
-     vpSuscResults={vpSuscResults}
-     {...props}
-     {...data} />
-  );
+  if (!loaded) {
+    return <FixedLoader />;
+  }
+  else {
+    return (
+      <SearchDRDBLayout
+       refName={refName}
+       mutations={mutations}
+       abNames={abNames}
+       loaded={loaded}
+       onChange={onChange}
+       formOnly={formOnly !== undefined}
+       articleLookup={articleLookup}
+       antibodyLookup={antibodyLookup}
+       variantLookup={variantLookup}
+       abSuscResults={abSuscResults}
+       cpSuscResults={cpSuscResults}
+       vpSuscResults={vpSuscResults}
+       {...props}
+       {...data} />
+    );
+  }
 }

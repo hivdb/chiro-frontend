@@ -1,3 +1,4 @@
+import React from 'react';
 import maxBy from 'lodash/maxBy';
 import useQuery from './use-query';
 
@@ -59,41 +60,55 @@ function useJoinSynonyms({
 }
 
 
+function usePrepareQuery({skip, visibility}) {
+  return React.useMemo(
+    () => {
+      let sql;
+      let where = '';
+      if (!skip) {
+        if (visibility === true) {
+          where = 'where visibility = 1';
+        }
+        else if (visibility === false) {
+          where = 'where visibility = 0';
+        }
+
+        sql = `
+          SELECT ab_name, abbreviation_name, availability, priority, visibility
+          FROM antibodies
+          ${where}
+          ORDER BY priority, ab_name
+        `;
+      }
+      return {sql};
+    },
+    [skip, visibility]
+  );
+}
+
+
+
 export default function useAntibodies({
   visibility = true,
   join = ['synonyms'],
   skip = false
 } = {}) {
-  let where = '';
-  if (visibility === true) {
-    where = 'where visibility = 1';
-  }
-  else if (visibility === false) {
-    where = 'where visibility = 0';
-  }
-
-  const sql = `
-    SELECT ab_name, abbreviation_name, availability, priority, visibility
-    FROM antibodies
-    ${where}
-    ORDER BY priority, ab_name
-  `;
-
+  const {sql} = usePrepareQuery({skip, visibility});
   const {
     payload: antibodies,
     isPending
   } = useQuery({sql, skip});
 
-  let antibodyLookup = {};
-  if (!skip && !isPending && antibodies) {
-    antibodyLookup = antibodies.reduce(
+  const antibodyLookup = React.useMemo(
+    () => skip || isPending || !antibodies ? {} : antibodies.reduce(
       (acc, ab) => {
         acc[ab.abName] = ab;
         return acc;
       },
       {}
-    );
-  }
+    ),
+    [skip, isPending, antibodies]
+  );
 
   const {isPending: isSynonymPending} = useJoinSynonyms({
     antibodyLookup,

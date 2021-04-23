@@ -4,13 +4,15 @@ import {/*Link, */matchShape} from 'found';
 import {Grid, Header/*, Loader*/} from 'semantic-ui-react';
 
 import {H1, H2} from 'sierra-frontend/dist/components/heading-tags';
-import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
 import ArticleInfo from '../../components/article-info';
 import BackToTop from '../../components/back-to-top';
 import setTitle from '../../utils/set-title';
 
+import SearchBox from './search-box';
 import AbSuscResults from './tables/ab-susc-results';
+import VPSuscResults from './tables/vp-susc-results';
+import CPSuscResults from './tables/cp-susc-results';
 
 import style from './style.module.scss';
 
@@ -23,6 +25,8 @@ export default function SearchDRDBLayout({
   match,
   loaded,
   formOnly,
+  onChange,
+  articleLookup,
   antibodyLookup,
   variantLookup,
   abSuscResults,
@@ -31,28 +35,21 @@ export default function SearchDRDBLayout({
   article
 }) {
 
-  const handleQueryChange = (actions) => (
-    null
-    // handleQueryChange(actions, this.props)
-  );
-
   setTitle('Search susceptibility data');
   /* loading || redirectIfNeeded(props); */
 
   return <Grid stackable className={style['search']}>
     <Grid.Row>
-      <InlineSearchBox
+      <SearchBox
+       loaded={loaded}
        articleValue={refName}
-       compoundValue={null}
-       virusValue={null}
-       compoundTargetValue={null}
-       studyTypeValue={null}
-       placeholder={'Select item'}
-       compoundPlaceholder={'Enter text or select item'}
-       onChange={handleQueryChange}
-       allowEmpty>
+       articleLookup={articleLookup}
+       antibodyValue={abNames}
+       antibodyLookup={antibodyLookup}
+       onChange={onChange}>
         {({
-          articleDropdown
+          articleDropdown,
+          antibodyDropdown
         }) => (
           <StatHeader>
             {[
@@ -60,6 +57,7 @@ export default function SearchDRDBLayout({
                 className: style['search-box'],
                 width: 4,
                 cells: [
+                  {label: 'Monoclonal antibody', value: antibodyDropdown},
                   {label: 'Reference', value: articleDropdown}
                 ]
               },
@@ -81,7 +79,7 @@ export default function SearchDRDBLayout({
             ]}
           </StatHeader>
         )}
-      </InlineSearchBox>
+      </SearchBox>
     </Grid.Row>
     <Grid.Row centered>
       <Grid.Column width={16}>
@@ -90,6 +88,7 @@ export default function SearchDRDBLayout({
         </Header>
         <AbSuscResults
          loaded={loaded}
+         cacheKey={JSON.stringify({refName, mutations, abNames})}
          antibodyLookup={antibodyLookup}
          variantLookup={variantLookup}
          abSuscResults={abSuscResults} />
@@ -97,18 +96,26 @@ export default function SearchDRDBLayout({
     </Grid.Row>
     <Grid.Row centered>
       <Grid.Column width={16}>
-        <Header as={H2} id="cp-susc-results">
-          Convalescent Plasma Susceptibility Data
+        <Header as={H2} id="vp-susc-results">
+          Plasma from Vaccinated Persons Susceptibility Data
         </Header>
-        <div>pending</div>
+        <VPSuscResults
+         loaded={loaded}
+         cacheKey={JSON.stringify({refName, mutations})}
+         variantLookup={variantLookup}
+         vpSuscResults={vpSuscResults} />
       </Grid.Column>
     </Grid.Row>
     <Grid.Row centered>
       <Grid.Column width={16}>
-        <Header as={H2} id="vp-susc-results">
-          Plasma from Vaccinated Persons Susceptibility Data
+        <Header as={H2} id="cp-susc-results">
+          Convalescent Plasma Susceptibility Data
         </Header>
-        <div>pending</div>
+        <CPSuscResults
+         loaded={loaded}
+         cacheKey={JSON.stringify({refName, mutations})}
+         variantLookup={variantLookup}
+         cpSuscResults={cpSuscResults} />
       </Grid.Column>
     </Grid.Row>
     <BackToTop />

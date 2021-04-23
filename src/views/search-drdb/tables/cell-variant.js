@@ -52,7 +52,7 @@ export default function CellVariant({
   else {
     const shortenMuts = shortenMutationList(mutations);
     return <>
-      {shortenMuts.join('+')}
+      {shortenMuts.join(' + ')}
       <sup>{assay}</sup>
     </>;
   }

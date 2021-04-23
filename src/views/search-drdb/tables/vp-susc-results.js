@@ -2,24 +2,25 @@ import useColumnDefs from './use-column-defs';
 import useRenderSuscResults from './use-render-susc-results';
 
 
-export default function AbSuscResults({
+export default function VPSuscResults({
   loaded,
   cacheKey,
-  antibodyLookup,
   variantLookup,
-  abSuscResults
+  vpSuscResults
 }) {
 
   const indivMutColumnDefs = useColumnDefs({
-    antibodyLookup,
     variantLookup,
     columns: [
       'refName',
       'section',
       'controlVariantName',
       'variantName',
-      'abNames',
-      'fold'
+      'vaccineName',
+      'timing',
+      'dosage',
+      'fold',
+      'resistanceLevel'
     ],
     labels: {
       variantName: 'Mutation'
@@ -27,15 +28,17 @@ export default function AbSuscResults({
   });
 
   const comboMutsColumnDefs = useColumnDefs({
-    antibodyLookup,
     variantLookup,
     columns: [
       'refName',
       'section',
       'controlVariantName',
       'variantName',
-      'abNames',
-      'fold'
+      'vaccineName',
+      'timing',
+      'dosage',
+      'fold',
+      'resistanceLevel'
     ],
     labels: {
       variantName: 'Variant'
@@ -44,9 +47,9 @@ export default function AbSuscResults({
 
   return useRenderSuscResults({
     loaded,
-    id: 'mab-susc-results',
+    id: 'vp-susc-results',
     cacheKey,
-    suscResults: abSuscResults,
+    suscResults: vpSuscResults,
     variantLookup,
     indivMutColumnDefs,
     comboMutsColumnDefs

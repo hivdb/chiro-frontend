@@ -15,6 +15,18 @@ export function useCompareSuscResultsByVariant(variantLookup) {
 }
 
 
+export function useCompareSuscResultsByControlVariant(variantLookup) {
+  return React.useCallback(
+    (srA, srB) => {
+      const varA = variantLookup[srA.controlVariantName];
+      const varB = variantLookup[srB.controlVariantName];
+      return compareVariants(varA, varB);
+    },
+    [variantLookup]
+  );
+}
+
+
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 

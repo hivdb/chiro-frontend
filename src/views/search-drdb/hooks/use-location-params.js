@@ -43,17 +43,35 @@ function parseAntibodies(antibodyText) {
 
 
 export default function useLocationParams() {
-  const {match} = useRouter();
+  const {router, match} = useRouter();
   const {
+    location: loc,
     location: {
       query: {
         form_only: formOnly,
         article: refName = null,
         mutations: mutationText = '',
+        mut_match: inputMutMatch,
         antibodies: antibodyText = ''
       } = {}
     }
   } = match;
+
+  const mutationMatch = (
+    inputMutMatch === 'all' ? 'all' : 'any'
+  );
+
+  const onChange = React.useCallback(
+    (action, value) => {
+      const query = {...loc.query};
+      query[action] = value;
+      router.push({
+        ...loc,
+        query
+      });
+    },
+    [router, loc]
+  );
 
   return React.useMemo(
     () => {
@@ -63,10 +81,18 @@ export default function useLocationParams() {
         formOnly,
         refName,
         mutations,
+        mutationMatch,
         abNames,
-        onChange: () => null // TODO
+        onChange
       };
     },
-    [formOnly, refName, mutationText, antibodyText]
+    [
+      formOnly,
+      refName,
+      mutationText,
+      mutationMatch,
+      antibodyText,
+      onChange
+    ]
   );
 }

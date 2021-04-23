@@ -1,3 +1,4 @@
+import React from 'react';
 import useQuery from './use-query';
 
 
@@ -6,25 +7,25 @@ function countSpikeMutations(mutations) {
   let spikeMuts = mutations.filter(({gene}) => gene === 'S');
   let numMuts = spikeMuts.length;
   
-  spikeMuts = spikeMuts.filter(({pos, aminoAcid}) => !(
+  spikeMuts = spikeMuts.filter(({position: pos, aminoAcid}) => !(
     pos === 614 && aminoAcid === 'G'
   ));
   // const hasD614G = numMuts > spikeMuts.length;
   numMuts = spikeMuts.length;
 
-  spikeMuts = spikeMuts.filter(({pos, aminoAcid}) => !(
+  spikeMuts = spikeMuts.filter(({position: pos, aminoAcid}) => !(
     (pos === 69 || pos === 70) && aminoAcid === 'del'
   ));
   const hasRangeDel69 = numMuts > spikeMuts.length;
   numMuts = spikeMuts.length;
 
-  spikeMuts = spikeMuts.filter(({pos, aminoAcid}) => !(
+  spikeMuts = spikeMuts.filter(({position: pos, aminoAcid}) => !(
     pos >= 141 && pos <= 146 && aminoAcid === 'del'
   ));
   const hasRangeDel141 = numMuts > spikeMuts.length;
   numMuts = spikeMuts.length;
 
-  spikeMuts = spikeMuts.filter(({pos, aminoAcid}) => !(
+  spikeMuts = spikeMuts.filter(({position: pos, aminoAcid}) => !(
     pos >= 242 && pos <= 244 && aminoAcid === 'del'
   ));
   const hasRangeDel242 = numMuts > spikeMuts.length;
@@ -61,25 +62,31 @@ function useJoinMutations({
   variantLookup,
   skip = false
 }) {
-  let sql;
-  if (!skip && variantLookup) {
-    for (const variant of Object.values(variantLookup)) {
-      variant.mutations = [];
-    }
-    sql = `
-      SELECT
-        variant_name,
-        V.gene,
-        V.position,
-        V.amino_acid,
-        R.amino_acid AS ref_amino_acid
-      FROM variant_mutations V, ref_amino_acid R
-      WHERE
-        V.gene = R.gene AND
-        V.position = R.position
-      ORDER BY V.gene, V.position, V.amino_acid
-    `;
-  }
+  const sql = React.useMemo(
+    () => {
+      let sql;
+      if (!skip && variantLookup) {
+        for (const variant of Object.values(variantLookup)) {
+          variant.mutations = [];
+        }
+        sql = `
+          SELECT
+            variant_name,
+            V.gene,
+            V.position,
+            V.amino_acid,
+            R.amino_acid AS ref_amino_acid
+          FROM variant_mutations V, ref_amino_acid R
+          WHERE
+            V.gene = R.gene AND
+            V.position = R.position
+          ORDER BY V.gene, V.position, V.amino_acid
+        `;
+      }
+      return sql;
+    },
+    [skip, variantLookup]
+  );
   const {
     payload: mutations,
     isPending
@@ -88,13 +95,18 @@ function useJoinMutations({
     skip
   });
 
-  if (!skip && !isPending) {
-    for (const {variantName, ...mut} of mutations) {
-      const variant = variantLookup[variantName];
-      variant.mutations.push(mut);
-    }
-  }
-  return {isPending};
+  return React.useMemo(
+    () => {
+      if (!skip && !isPending) {
+        for (const {variantName, ...mut} of mutations) {
+          const variant = variantLookup[variantName];
+          variant.mutations.push(mut);
+        }
+      }
+      return {isPending};
+    },
+    [skip, isPending, mutations, variantLookup]
+  );
 }
 
 
@@ -147,16 +159,16 @@ export default function useVirusVariant({
     isPending
   } = useQuery({sql, skip});
 
-  let variantLookup = {};
-  if (!skip && !isPending && variants) {
-    variantLookup = variants.reduce(
+  const variantLookup = React.useMemo(
+    () => skip || isPending || !variants ? {} : variants.reduce(
       (acc, v) => {
         acc[v.variantName] = v;
         return acc;
       },
       {}
-    );
-  }
+    ),
+    [skip, isPending, variants]
+  );
 
   const {isPending: isMutationPending} = useJoinMutations({
     variantLookup,
