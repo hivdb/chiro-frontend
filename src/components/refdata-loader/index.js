@@ -55,16 +55,24 @@ export default function RefDataLoader({
   onLoad = () => null
 }) {
   let {loading, error, data} = useQuery(query);
+
+  React.useEffect(
+    () => {
+      if (!loading && !error) {
+        mergeReferences(
+          references, data.articles, setReference
+        );
+        onLoad();
+      }
+    },
+    [onLoad, loading, error, references, data, setReference]
+  );
+
   if (loading) {
     return <Loader active inline="centered" />;
   }
   else if (error) {
     return `Error: ${error.message}`;
   }
-
-  mergeReferences(
-    references, data.articles, setReference
-  );
-  onLoad();
   return null;
 }
