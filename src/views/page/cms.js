@@ -136,7 +136,7 @@ class CMSPage extends React.Component {
             <Banner.Subtitle>
               {hideLastModified ? null :
               <span className={style['last-update']}>
-                Last updated at {lastMod}
+                Last updated on {lastMod}
               </span>}
             </Banner.Subtitle>
           </Banner> :
@@ -145,7 +145,7 @@ class CMSPage extends React.Component {
             <Header.Subheader>
               {hideLastModified ? null :
               <span className={style['last-update']}>
-                Last updated at {lastMod}
+                Last updated on {lastMod}
               </span>}
             </Header.Subheader>
           </Header>}

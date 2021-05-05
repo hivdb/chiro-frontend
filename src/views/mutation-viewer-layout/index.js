@@ -63,7 +63,7 @@ class MutationViewerLayout extends React.Component {
           </Banner.Title>
           <Banner.Subtitle>
             <span className={style['last-update']}>
-              Last updated at {lastMod}
+              Last updated on {lastMod}
             </span>
           </Banner.Subtitle>
         </Banner> :
@@ -71,7 +71,7 @@ class MutationViewerLayout extends React.Component {
           {title}
           <Header.Subheader>
             <span className={style['last-update']}>
-              Last updated at {lastMod}
+              Last updated on {lastMod}
             </span>
           </Header.Subheader>
         </Header>}

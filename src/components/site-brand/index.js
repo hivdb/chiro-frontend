@@ -70,7 +70,7 @@ export default class SiteBrand extends React.Component {
               A Stanford HIVDB team website.
             </a>
             {lastUpdate === null ? null :
-              ` Last updated at ${lastUpdate.toLocaleString('en-US')}.`}
+              ` Last updated on ${lastUpdate.toLocaleString('en-US')}.`}
           </div>}
         </div>
       </div>

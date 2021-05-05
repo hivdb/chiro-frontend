@@ -202,7 +202,7 @@ class ClinicalTrialInner extends React.Component {
               </a>
               {updateTime ?
                 <span className={style['last-update']}>
-                  Last updated at {updateTime.toLocaleString('en-US')}
+                  Last updated on {updateTime.toLocaleString('en-US')}
                 </span> : null}
             </Header.Subheader>
           </Header>
