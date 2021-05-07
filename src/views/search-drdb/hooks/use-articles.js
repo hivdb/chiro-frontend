@@ -7,16 +7,39 @@ export default function useArticles({
 } = {}) {
 
   const sql = `
-    SELECT ref_name FROM articles A
+    SELECT ref_name, first_author, year FROM articles A
     WHERE
       EXISTS (SELECT 1 FROM susc_results S WHERE A.ref_name=S.ref_name)
     ORDER BY ref_name
   `;
 
   const {
-    payload: articles,
+    payload,
     isPending
   } = useQuery({sql, skip});
+
+  const articles = React.useMemo(
+    () => {
+      if (skip || isPending || !payload) {
+        return [];
+      }
+      return payload.map(
+        article => {
+          const {refName, firstAuthor, year} = article;
+          let suffix = refName.slice(-1);
+          if (!isNaN(suffix)) {
+            suffix = '';
+          }
+          const displayName = `${firstAuthor} (${year}${suffix})`;
+          return {
+            ...article,
+            displayName
+          };
+        }
+      );
+    },
+    [skip, isPending, payload]
+  );
 
   const articleLookup = React.useMemo(
     () => skip || isPending || !articles ? {} : articles.reduce(

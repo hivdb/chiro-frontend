@@ -5,11 +5,13 @@ import useRenderSuscResults from './use-render-susc-results';
 export default function VPSuscResults({
   loaded,
   cacheKey,
+  articleLookup,
   variantLookup,
   vpSuscResults
 }) {
 
   const indivMutColumnDefs = useColumnDefs({
+    articleLookup,
     variantLookup,
     columns: [
       'refName',
@@ -28,6 +30,7 @@ export default function VPSuscResults({
   });
 
   const comboMutsColumnDefs = useColumnDefs({
+    articleLookup,
     variantLookup,
     columns: [
       'refName',

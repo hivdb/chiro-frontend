@@ -6,7 +6,7 @@ const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
 
 
-function useArticleOptions({loaded, articleLookup, articleValue}) {
+function useArticleOptions({loaded, articleValue, articles}) {
   return React.useMemo(
     () => {
       if (!loaded) {
@@ -36,7 +36,9 @@ function useArticleOptions({loaded, articleLookup, articleValue}) {
             value: ANY
           },
           ...(
-            !articleValue || articleValue in articleLookup ?
+            !articleValue || articles.some(
+              ({refName}) => articleValue === refName
+            ) ?
               [] :
               [{
                 key: articleValue,
@@ -44,23 +46,23 @@ function useArticleOptions({loaded, articleLookup, articleValue}) {
                 value: articleValue
               }]
           ),
-          ...Object.values(articleLookup).map(
-            ({refName}) => ({
+          ...articles.map(
+            ({refName, displayName}) => ({
               key: refName,
-              text: refName,
+              text: displayName,
               value: refName
             })
           )
         ];
       }
     },
-    [loaded, articleLookup, articleValue]
+    [loaded, articles, articleValue]
   );
 
 }
 
 
-function useAntibodyOptions({loaded, antibodyLookup, antibodyValue}) {
+function useAntibodyOptions({loaded, antibodies, antibodyValue}) {
   return React.useMemo(
     () => {
       if (!loaded) {
@@ -96,7 +98,7 @@ function useAntibodyOptions({loaded, antibodyLookup, antibodyValue}) {
             antibodyValue && antibodyValue.length > 0 &&
             (
               antibodyValue.length > 1 ||
-              !(antibodyValue[0] in antibodyLookup)
+              !antibodies.some(({abName}) => abName === antibodyValue[0])
             )
           ) ?
             [{
@@ -105,7 +107,7 @@ function useAntibodyOptions({loaded, antibodyLookup, antibodyValue}) {
               value: antibodyValue.join(',')
             }] : []
           ),
-          ...Object.values(antibodyLookup).map(
+          ...antibodies.map(
             ({abName, abbreviationName: abbr}) => ({
               key: abName,
               text: abbr ? `${abName} (${abbr})` : abName,
@@ -115,7 +117,7 @@ function useAntibodyOptions({loaded, antibodyLookup, antibodyValue}) {
         ];
       }
     },
-    [loaded, antibodyLookup, antibodyValue]
+    [loaded, antibodies, antibodyValue]
   );
 }
 
@@ -124,16 +126,16 @@ export default function SearchBox({
   loaded,
   articleValue,
   antibodyValue,
-  articleLookup,
-  antibodyLookup,
+  articles,
+  antibodies,
   onChange,
   children
 }) {
   const articleOptions = useArticleOptions({
-    loaded, articleValue, articleLookup
+    loaded, articleValue, articles
   });
   const antibodyOptions = useAntibodyOptions({
-    loaded, antibodyValue, antibodyLookup
+    loaded, antibodyValue, antibodies
   });
 
   const handleChange = action => (

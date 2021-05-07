@@ -36,10 +36,12 @@ export default function SearchDRDB(props) {
     skip: formOnly !== undefined || !refName
   });
   const {
+    articles,
     articleLookup,
     isPending: isRefNameListPending
   } = useArticles();
   const {
+    antibodies,
     antibodyLookup,
     isPending: isAbLookupPending
   } = useAntibodies();
@@ -99,7 +101,9 @@ export default function SearchDRDB(props) {
        loaded={loaded}
        onChange={onChange}
        formOnly={formOnly !== undefined}
+       articles={articles}
        articleLookup={articleLookup}
+       antibodies={antibodies}
        antibodyLookup={antibodyLookup}
        variantLookup={variantLookup}
        abSuscResults={abSuscResults}

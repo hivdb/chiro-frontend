@@ -5,12 +5,14 @@ import useRenderSuscResults from './use-render-susc-results';
 export default function AbSuscResults({
   loaded,
   cacheKey,
+  articleLookup,
   antibodyLookup,
   variantLookup,
   abSuscResults
 }) {
 
   const indivMutColumnDefs = useColumnDefs({
+    articleLookup,
     antibodyLookup,
     variantLookup,
     columns: [
@@ -27,6 +29,7 @@ export default function AbSuscResults({
   });
 
   const comboMutsColumnDefs = useColumnDefs({
+    articleLookup,
     antibodyLookup,
     variantLookup,
     columns: [

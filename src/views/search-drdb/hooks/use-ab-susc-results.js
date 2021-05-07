@@ -124,7 +124,6 @@ export default function useAntibodySuscResults({
     antibodyLookup,
     isPending: isAbLookupPending
   } = useAntibodies({
-    visibility: antibodyVisibility,
     skip
   });
 

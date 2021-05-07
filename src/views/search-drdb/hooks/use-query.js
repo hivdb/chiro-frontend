@@ -2,8 +2,6 @@ import React from 'react';
 import memoize from 'lodash/memoize';
 import camelCase from 'lodash/camelCase';
 
-import initSqlJs from 'sql.js';
-
 // check this solution later: https://stackoverflow.com/a/61722010/2644759
 // eslint-disable-next-line import/no-webpack-loader-syntax
 // import sqliteWASM from '!!file-loader!sql.js/dist/sql-wasm.wasm';
@@ -12,49 +10,99 @@ import {loadBinary} from '../../../utils/cms';
 
 import useConfig from './use-config';
 
-const sqliteWASM = '/sql-wasm.wasm';
-
 
 const createClient = memoize(
   async function initClient(drdbVersion) {
-    const SQL = await initSqlJs({
-      locateFile: file => sqliteWASM
-    });
+    const worker = new Worker('/worker.sql-wasm.js');
   
     const {payload} = await loadBinary(
       `downloads/covid-drdb/${drdbVersion}.db`
     );
 
-    return new SQL.Database(new Uint8Array(payload));
+    const promise = new Promise(
+      resolve => {
+        worker.addEventListener('message', handleMessage);
+
+        function handleMessage({data}) {
+          if (data.id === 1 && data.ready) {
+            worker.removeEventListener('message', handleMessage);
+            resolve(worker);
+          }
+        }
+      }
+    );
+
+    worker.postMessage({
+      id: 1,
+      action: 'open',
+      buffer: new Uint8Array(payload)
+    });
+
+    return await promise;
   }
 );
 
 
-async function initClient(drdbVersion, setClient, mounted) {
-  if (mounted.mounted) {
-    const client = await createClient(drdbVersion);
-    setClient(client);
-  }
-}
+const execSQL = memoize(
+  async function execSQL({sql, params, drdbVersion}, setRes) {
+    setRes(null);
+    const worker = await createClient(drdbVersion);
+
+    const myId = parseInt(
+      Math.random() * (Number.MAX_SAFE_INTEGER - 1)
+    ) + 1;
+
+    const promise = new Promise(
+      resolve => {
+        worker.addEventListener('message', handleMessage);
+
+        function handleMessage({data: {id, results}}) {
+          if (id === myId) {
+            worker.removeEventListener('message', handleMessage);
+            setRes(results);
+            resolve(results);
+          }
+        }
+      }
+    );
+
+    worker.postMessage({
+      id: myId,
+      action: 'exec',
+      sql,
+      params: params
+    });
+
+    return await promise;
+  },
+  args => JSON.stringify(args)
+);
 
 
 export default function useQuery({sql, params, skip = false, camel = true}) {
   const {config, isPending} = useConfig();
   const {drdbVersion} = config || {};
-  const [client, setClient] = React.useState(null);
+  const [res, setRes] = React.useState(null);
 
   React.useEffect(
     () => {
       if (skip || isPending || !drdbVersion) {
         return;
       }
-      const mounted = {mounted: true};
-      initClient(drdbVersion, setClient, mounted);
-      return () => {
-        mounted.mounted = false;
-      };
+      if (sql && drdbVersion) {
+        execSQL({sql, params, drdbVersion}, setRes).then(res => {
+          setRes(res);
+        });
+      }
     },
-    [setClient, drdbVersion, skip, isPending]
+    [
+      setRes,
+      sql,
+      params,
+      skip,
+      isPending,
+      drdbVersion
+    ]
   );
 
   return React.useMemo(
@@ -64,8 +112,7 @@ export default function useQuery({sql, params, skip = false, camel = true}) {
           isPending: false
         };
       }
-      if (client) {
-        const res = client.exec(sql, params);
+      if (res) {
         if (res.length === 0) {
           return {
             payload: [],
@@ -96,7 +143,7 @@ export default function useQuery({sql, params, skip = false, camel = true}) {
         };
       }
     },
-    [client, sql, params, skip, camel]
+    [res, skip, camel]
   );
 
 }

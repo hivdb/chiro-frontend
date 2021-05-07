@@ -60,40 +60,31 @@ function useJoinSynonyms({
 }
 
 
-function usePrepareQuery({skip, visibility}) {
+function usePrepareQuery({skip}) {
   return React.useMemo(
     () => {
       let sql;
-      let where = '';
       if (!skip) {
-        if (visibility === true) {
-          where = 'where visibility = 1';
-        }
-        else if (visibility === false) {
-          where = 'where visibility = 0';
-        }
 
         sql = `
           SELECT ab_name, abbreviation_name, availability, priority, visibility
           FROM antibodies
-          ${where}
           ORDER BY priority, ab_name
         `;
       }
       return {sql};
     },
-    [skip, visibility]
+    [skip]
   );
 }
 
 
 
 export default function useAntibodies({
-  visibility = true,
   join = ['synonyms'],
   skip = false
 } = {}) {
-  const {sql} = usePrepareQuery({skip, visibility});
+  const {sql} = usePrepareQuery({skip});
   const {
     payload: antibodies,
     isPending

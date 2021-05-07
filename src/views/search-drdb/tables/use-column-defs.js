@@ -17,6 +17,7 @@ import {
 
 
 function buildColDefs({
+  articleLookup,
   variantLookup,
   antibodyLookup,
   compareByAntibodies,
@@ -30,7 +31,9 @@ function buildColDefs({
       name: 'refName',
       label: labels.refName || 'Reference',
       render: refName => (
-        <CellReference {...{refName}} />
+        <CellReference
+         refName={refName}
+         displayName={articleLookup[refName].displayName} />
       )
     }),
     controlVariantName: new ColumnDef({
@@ -99,6 +102,7 @@ function buildColDefs({
 
 
 export default function useColumnDefs({
+  articleLookup,
   antibodyLookup,
   variantLookup,
   columns,
@@ -116,6 +120,7 @@ export default function useColumnDefs({
 
   return React.useMemo(
     () => buildColDefs({
+      articleLookup,
       antibodyLookup,
       variantLookup,
       compareByAntibodies,
@@ -125,6 +130,7 @@ export default function useColumnDefs({
       labels
     }),
     [
+      articleLookup,
       antibodyLookup,
       variantLookup,
       compareByAntibodies,

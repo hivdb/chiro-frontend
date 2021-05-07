@@ -5,11 +5,13 @@ import useRenderSuscResults from './use-render-susc-results';
 export default function CPSuscResults({
   loaded,
   cacheKey,
+  articleLookup,
   variantLookup,
   cpSuscResults
 }) {
 
   const indivMutColumnDefs = useColumnDefs({
+    articleLookup,
     variantLookup,
     columns: [
       'refName',
@@ -28,6 +30,7 @@ export default function CPSuscResults({
   });
 
   const comboMutsColumnDefs = useColumnDefs({
+    articleLookup,
     variantLookup,
     columns: [
       'refName',

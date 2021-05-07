@@ -26,7 +26,9 @@ export default function SearchDRDBLayout({
   loaded,
   formOnly,
   onChange,
+  articles,
   articleLookup,
+  antibodies,
   antibodyLookup,
   variantLookup,
   abSuscResults,
@@ -43,9 +45,9 @@ export default function SearchDRDBLayout({
       <SearchBox
        loaded={loaded}
        articleValue={refName}
-       articleLookup={articleLookup}
+       articles={articles}
        antibodyValue={abNames}
-       antibodyLookup={antibodyLookup}
+       antibodies={antibodies}
        onChange={onChange}>
         {({
           articleDropdown,
@@ -89,6 +91,7 @@ export default function SearchDRDBLayout({
         <AbSuscResults
          loaded={loaded}
          cacheKey={JSON.stringify({refName, mutations, abNames})}
+         articleLookup={articleLookup}
          antibodyLookup={antibodyLookup}
          variantLookup={variantLookup}
          abSuscResults={abSuscResults} />
@@ -102,6 +105,7 @@ export default function SearchDRDBLayout({
         <VPSuscResults
          loaded={loaded}
          cacheKey={JSON.stringify({refName, mutations})}
+         articleLookup={articleLookup}
          variantLookup={variantLookup}
          vpSuscResults={vpSuscResults} />
       </Grid.Column>
@@ -114,6 +118,7 @@ export default function SearchDRDBLayout({
         <CPSuscResults
          loaded={loaded}
          cacheKey={JSON.stringify({refName, mutations})}
+         articleLookup={articleLookup}
          variantLookup={variantLookup}
          cpSuscResults={cpSuscResults} />
       </Grid.Column>

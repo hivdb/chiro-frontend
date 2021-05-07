@@ -84,6 +84,7 @@
   },
   "devDependencies": {
     "@testing-library/dom": ">=5",
-    "eslint-config-react-app": "6.0.0"
+    "eslint-config-react-app": "6.0.0",
+    "worker-loader": "^3.0.8"
   }
 }
