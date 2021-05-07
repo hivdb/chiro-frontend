@@ -44,8 +44,7 @@ const createClient = memoize(
 
 
 const execSQL = memoize(
-  async function execSQL({sql, params, drdbVersion}, setRes) {
-    setRes(null);
+  async function execSQL({sql, params, drdbVersion}) {
     const worker = await createClient(drdbVersion);
 
     const myId = parseInt(
@@ -59,7 +58,6 @@ const execSQL = memoize(
         function handleMessage({data: {id, results}}) {
           if (id === myId) {
             worker.removeEventListener('message', handleMessage);
-            setRes(results);
             resolve(results);
           }
         }
@@ -84,18 +82,43 @@ export default function useQuery({sql, params, skip = false, camel = true}) {
   const {drdbVersion} = config || {};
   const [res, setRes] = React.useState(null);
 
+  let {current} = React.useRef({dirty: true});
+
+  React.useMemo(
+    () => {
+      if (skip || isPending || !drdbVersion) {
+        return;
+      }
+      const payload = JSON.stringify({sql, params});
+      if (current.payload !== payload) {
+        current.payload = payload;
+        current.dirty = true;
+      }
+    },
+    [
+      current,
+      sql,
+      params,
+      skip,
+      isPending,
+      drdbVersion
+    ]
+  );
+
   React.useEffect(
     () => {
       if (skip || isPending || !drdbVersion) {
         return;
       }
       if (sql && drdbVersion) {
-        execSQL({sql, params, drdbVersion}, setRes).then(res => {
+        execSQL({sql, params, drdbVersion}).then(res => {
+          current.dirty = false;
           setRes(res);
         });
       }
     },
     [
+      current,
       setRes,
       sql,
       params,
@@ -112,7 +135,7 @@ export default function useQuery({sql, params, skip = false, camel = true}) {
           isPending: false
         };
       }
-      if (res) {
+      if (!current.dirty && res) {
         if (res.length === 0) {
           return {
             payload: [],
@@ -143,7 +166,7 @@ export default function useQuery({sql, params, skip = false, camel = true}) {
         };
       }
     },
-    [res, skip, camel]
+    [current.dirty, res, skip, camel]
   );
 
 }

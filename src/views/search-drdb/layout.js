@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {/*Link, */matchShape} from 'found';
 import {Grid, Header/*, Loader*/} from 'semantic-ui-react';
+import FixedLoader from 'sierra-frontend/dist/components/fixed-loader';
 
 import {H1, H2} from 'sierra-frontend/dist/components/heading-tags';
 import StatHeader from '../../components/stat-header';
@@ -22,6 +23,7 @@ export default function SearchDRDBLayout({
   refName,
   mutations,
   abNames,
+  vaccineName,
   match,
   loaded,
   formOnly,
@@ -30,6 +32,7 @@ export default function SearchDRDBLayout({
   articleLookup,
   antibodies,
   antibodyLookup,
+  vaccines,
   variantLookup,
   abSuscResults,
   cpSuscResults,
@@ -40,18 +43,35 @@ export default function SearchDRDBLayout({
   setTitle('Search susceptibility data');
   /* loading || redirectIfNeeded(props); */
 
+  const displayAbTables = loaded && !formOnly && !vaccineName;
+  const displayCPTables = (
+    loaded &&
+    !formOnly &&
+    (!abNames || abNames.length === 0) &&
+    !vaccineName
+  );
+  const displayVPTables = (
+    loaded &&
+    !formOnly &&
+    (!abNames || abNames.length === 0)
+  );
+
   return <Grid stackable className={style['search']}>
     <Grid.Row>
       <SearchBox
        loaded={loaded}
+       formOnly={formOnly}
        articleValue={refName}
        articles={articles}
        antibodyValue={abNames}
        antibodies={antibodies}
+       vaccineValue={vaccineName}
+       vaccines={vaccines}
        onChange={onChange}>
         {({
           articleDropdown,
-          antibodyDropdown
+          antibodyDropdown,
+          vaccineDropdown
         }) => (
           <StatHeader>
             {[
@@ -60,6 +80,7 @@ export default function SearchDRDBLayout({
                 width: 4,
                 cells: [
                   {label: 'Monoclonal antibody', value: antibodyDropdown},
+                  {label: 'Vaccine', value: vaccineDropdown},
                   {label: 'Reference', value: articleDropdown}
                 ]
               },
@@ -83,46 +104,50 @@ export default function SearchDRDBLayout({
         )}
       </SearchBox>
     </Grid.Row>
-    <Grid.Row centered>
-      <Grid.Column width={16}>
-        <Header as={H2} id="mab-susc-results">
-          MAb Susceptibility Data
-        </Header>
-        <AbSuscResults
-         loaded={loaded}
-         cacheKey={JSON.stringify({refName, mutations, abNames})}
-         articleLookup={articleLookup}
-         antibodyLookup={antibodyLookup}
-         variantLookup={variantLookup}
-         abSuscResults={abSuscResults} />
-      </Grid.Column>
-    </Grid.Row>
-    <Grid.Row centered>
-      <Grid.Column width={16}>
-        <Header as={H2} id="vp-susc-results">
-          Plasma from Vaccinated Persons Susceptibility Data
-        </Header>
-        <VPSuscResults
-         loaded={loaded}
-         cacheKey={JSON.stringify({refName, mutations})}
-         articleLookup={articleLookup}
-         variantLookup={variantLookup}
-         vpSuscResults={vpSuscResults} />
-      </Grid.Column>
-    </Grid.Row>
-    <Grid.Row centered>
-      <Grid.Column width={16}>
-        <Header as={H2} id="cp-susc-results">
-          Convalescent Plasma Susceptibility Data
-        </Header>
-        <CPSuscResults
-         loaded={loaded}
-         cacheKey={JSON.stringify({refName, mutations})}
-         articleLookup={articleLookup}
-         variantLookup={variantLookup}
-         cpSuscResults={cpSuscResults} />
-      </Grid.Column>
-    </Grid.Row>
+    {loaded ? null : <FixedLoader />}
+    {displayAbTables ?
+      <Grid.Row centered>
+        <Grid.Column width={16}>
+          <Header as={H2} id="mab-susc-results">
+            MAb Susceptibility Data
+          </Header>
+          <AbSuscResults
+           loaded={loaded}
+           cacheKey={JSON.stringify({refName, mutations, abNames})}
+           articleLookup={articleLookup}
+           antibodyLookup={antibodyLookup}
+           variantLookup={variantLookup}
+           abSuscResults={abSuscResults} />
+        </Grid.Column>
+      </Grid.Row> : null}
+    {displayVPTables ?
+      <Grid.Row centered>
+        <Grid.Column width={16}>
+          <Header as={H2} id="vp-susc-results">
+            Plasma from Vaccinated Persons Susceptibility Data
+          </Header>
+          <VPSuscResults
+           loaded={loaded}
+           cacheKey={JSON.stringify({refName, mutations, vaccineName})}
+           articleLookup={articleLookup}
+           variantLookup={variantLookup}
+           vpSuscResults={vpSuscResults} />
+        </Grid.Column>
+      </Grid.Row> : null}
+    {displayCPTables ?
+      <Grid.Row centered>
+        <Grid.Column width={16}>
+          <Header as={H2} id="cp-susc-results">
+            Convalescent Plasma Susceptibility Data
+          </Header>
+          <CPSuscResults
+           loaded={loaded}
+           cacheKey={JSON.stringify({refName, mutations})}
+           articleLookup={articleLookup}
+           variantLookup={variantLookup}
+           cpSuscResults={cpSuscResults} />
+        </Grid.Column>
+      </Grid.Row> : null}
     <BackToTop />
   </Grid>;
   

@@ -52,7 +52,8 @@ export default function useLocationParams() {
         article: refName = null,
         mutations: mutationText = '',
         mut_match: inputMutMatch,
-        antibodies: antibodyText = ''
+        antibodies: antibodyText = '',
+        vaccine: vaccineName = ''
       } = {}
     }
   } = match;
@@ -63,8 +64,26 @@ export default function useLocationParams() {
 
   const onChange = React.useCallback(
     (action, value) => {
-      const query = {...loc.query};
+      let query = {...loc.query};
       query[action] = value;
+
+      delete query.form_only;
+
+      if (action === 'vaccine') {
+        delete query.antibodies;
+      }
+      else if (action === 'antibodies') {
+        delete query.vaccine;
+      }
+
+      query = Object.keys(query).sort().reduce(
+        (sorted, key) => { 
+          sorted[key] = query[key]; 
+          return sorted;
+        }, 
+        {}
+      );
+
       router.push({
         ...loc,
         query
@@ -83,6 +102,7 @@ export default function useLocationParams() {
         mutations,
         mutationMatch,
         abNames,
+        vaccineName,
         onChange
       };
     },
@@ -92,6 +112,7 @@ export default function useLocationParams() {
       mutationText,
       mutationMatch,
       antibodyText,
+      vaccineName,
       onChange
     ]
   );

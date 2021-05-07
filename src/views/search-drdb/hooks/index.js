@@ -1,6 +1,7 @@
 import useLocationParams from './use-location-params';
 import useArticles from './use-articles';
 import useAntibodies from './use-antibodies';
+import useVaccines from './use-vaccines';
 import useVirusVariants from './use-virus-variants';
 import {
   useCompareSuscResultsByAntibodies,
@@ -15,6 +16,7 @@ export {
   useLocationParams,
   useArticles,
   useAntibodies,
+  useVaccines,
   useVirusVariants,
   useAbSuscResults,
   useCPSuscResults,

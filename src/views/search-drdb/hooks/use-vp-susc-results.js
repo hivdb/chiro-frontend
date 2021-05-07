@@ -2,11 +2,13 @@ import React from 'react';
 import useSuscResults from './use-susc-results';
 
 
-function usePrepareQuery({skip}) {
+function usePrepareQuery({vaccineName, skip}) {
   return React.useMemo(
     () => {
       const addColumns = [];
       const joinClause = [];
+      const where = [];
+      const params = {};
 
       if (!skip) {
         addColumns.push('vaccine_name');
@@ -18,10 +20,15 @@ function usePrepareQuery({skip}) {
             S.ref_name = RXVP.ref_name AND
             S.rx_name = RXVP.rx_name
         `);
+
+        if (vaccineName) {
+          where.push('RXVP.vaccine_name=$vaccineName');
+        }
+        params.$vaccineName = vaccineName;
       }
-      return {addColumns, joinClause};
+      return {addColumns, joinClause, where, params};
     },
-    [skip]
+    [skip, vaccineName]
   );
 }
 
@@ -30,10 +37,16 @@ export default function useVaccPlasmaSuscResults({
   refName,
   spikeMutations,
   mutationMatch,
+  vaccineName,
   skip = false
 }) {
 
-  const {addColumns, joinClause} = usePrepareQuery({skip});
+  const {
+    addColumns,
+    joinClause,
+    where,
+    params
+  } = usePrepareQuery({vaccineName, skip});
 
   const {
     suscResults,
@@ -45,6 +58,8 @@ export default function useVaccPlasmaSuscResults({
     mutationMatch,
     addColumns,
     joinClause,
+    where,
+    params,
     skip
   });
 

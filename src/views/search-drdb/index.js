@@ -8,6 +8,7 @@ import {
   useLocationParams,
   useArticles,
   useAntibodies,
+  useVaccines,
   useVirusVariants,
   useAbSuscResults,
   useCPSuscResults,
@@ -23,8 +24,10 @@ export default function SearchDRDB(props) {
     mutations,
     mutationMatch,
     abNames,
+    vaccineName,
     onChange
   } = useLocationParams();
+  const skip = formOnly !== undefined;
   let {
     loading: isArticlePending,
     error,
@@ -33,7 +36,7 @@ export default function SearchDRDB(props) {
     variables: {
       articleNickname: refName
     },
-    skip: formOnly !== undefined || !refName
+    skip: skip || !refName
   });
   const {
     articles,
@@ -46,6 +49,11 @@ export default function SearchDRDB(props) {
     isPending: isAbLookupPending
   } = useAntibodies();
   const {
+    vaccines,
+    vaccineLookup,
+    isPending: isVaccPending
+  } = useVaccines();
+  const {
     variantLookup,
     isPending: isVariantPending
   } = useVirusVariants();
@@ -54,6 +62,7 @@ export default function SearchDRDB(props) {
     suscResults: abSuscResults,
     isPending: isAbResultPending
   } = useAbSuscResults({
+    skip,
     refName,
     spikeMutations: mutations,
     mutationMatch,
@@ -63,6 +72,7 @@ export default function SearchDRDB(props) {
     suscResults: cpSuscResults,
     isPending: isCPPending
   } = useCPSuscResults({
+    skip,
     refName,
     spikeMutations: mutations,
     mutationMatch
@@ -71,15 +81,26 @@ export default function SearchDRDB(props) {
     suscResults: vpSuscResults,
     isPending: isVPPending
   } = useVPSuscResults({
+    skip,
     refName,
     spikeMutations: mutations,
-    mutationMatch
+    mutationMatch,
+    vaccineName
   });
 
-  const loaded = (
+  const searchBoxLoaded = (
     !isArticlePending &&
     !isRefNameListPending &&
     !isAbLookupPending &&
+    !isVaccPending &&
+    !isVariantPending
+  );
+
+  const resultLoaded = (
+    !isArticlePending &&
+    !isRefNameListPending &&
+    !isAbLookupPending &&
+    !isVaccPending &&
     !isVariantPending &&
     !isAbResultPending &&
     !isCPPending &&
@@ -89,22 +110,25 @@ export default function SearchDRDB(props) {
   if (error) {
     return `Error: ${error.message}`;
   }
-  if (!loaded) {
+  if (!searchBoxLoaded) {
     return <FixedLoader />;
   }
   else {
     return (
       <SearchDRDBLayout
+       loaded={resultLoaded}
        refName={refName}
        mutations={mutations}
        abNames={abNames}
-       loaded={loaded}
+       vaccineName={vaccineName}
        onChange={onChange}
        formOnly={formOnly !== undefined}
        articles={articles}
        articleLookup={articleLookup}
        antibodies={antibodies}
        antibodyLookup={antibodyLookup}
+       vaccines={vaccines}
+       vaccineLookup={vaccineLookup}
        variantLookup={variantLookup}
        abSuscResults={abSuscResults}
        cpSuscResults={cpSuscResults}

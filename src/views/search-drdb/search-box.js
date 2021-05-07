@@ -6,7 +6,7 @@ const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
 
 
-function useArticleOptions({loaded, articleValue, articles}) {
+function useArticleOptions({loaded, articleValue, articles, formOnly}) {
   return React.useMemo(
     () => {
       if (!loaded) {
@@ -25,11 +25,11 @@ function useArticleOptions({loaded, articleValue, articles}) {
       }
       else {
         return [
-          {
+          ...(formOnly ? [{
             key: 'empty',
             text: EMPTY_TEXT,
             value: EMPTY
-          },
+          }] : []),
           {
             key: 'any',
             text: 'Any',
@@ -56,13 +56,13 @@ function useArticleOptions({loaded, articleValue, articles}) {
         ];
       }
     },
-    [loaded, articles, articleValue]
+    [loaded, articles, articleValue, formOnly]
   );
 
 }
 
 
-function useAntibodyOptions({loaded, antibodies, antibodyValue}) {
+function useAntibodyOptions({loaded, antibodies, antibodyValue, formOnly}) {
   return React.useMemo(
     () => {
       if (!loaded) {
@@ -84,11 +84,11 @@ function useAntibodyOptions({loaded, antibodies, antibodyValue}) {
       }
       else {
         return [
-          {
+          ...(formOnly ? [{
             key: 'empty',
             text: EMPTY_TEXT,
             value: EMPTY
-          },
+          }] : []),
           {
             key: 'any',
             text: 'Any',
@@ -117,25 +117,75 @@ function useAntibodyOptions({loaded, antibodies, antibodyValue}) {
         ];
       }
     },
-    [loaded, antibodies, antibodyValue]
+    [loaded, antibodies, antibodyValue, formOnly]
+  );
+}
+
+
+function useVaccineOptions({loaded, vaccines, vaccineValue, formOnly}) {
+  return React.useMemo(
+    () => {
+      if (!loaded) {
+        return [
+          {
+            key: 'any',
+            text: 'Any',
+            value: ANY
+          },
+          {
+            key: vaccineValue,
+            text: vaccineValue,
+            value: vaccineValue
+          }
+        ];
+      }
+      else {
+        return [
+          ...(formOnly ? [{
+            key: 'empty',
+            text: EMPTY_TEXT,
+            value: EMPTY
+          }] : []),
+          {
+            key: 'any',
+            text: 'Any',
+            value: ANY
+          },
+          ...vaccines.map(
+            ({vaccineName}) => ({
+              key: vaccineName,
+              text: vaccineName,
+              value: vaccineName
+            })
+          )
+        ];
+      }
+    },
+    [loaded, vaccines, vaccineValue, formOnly]
   );
 }
 
 
 export default function SearchBox({
   loaded,
+  formOnly,
   articleValue,
   antibodyValue,
+  vaccineValue,
   articles,
   antibodies,
+  vaccines,
   onChange,
   children
 }) {
   const articleOptions = useArticleOptions({
-    loaded, articleValue, articles
+    loaded, articleValue, articles, formOnly
   });
   const antibodyOptions = useAntibodyOptions({
-    loaded, antibodyValue, antibodies
+    loaded, antibodyValue, antibodies, formOnly
+  });
+  const vaccineOptions = useVaccineOptions({
+    loaded, vaccineValue, vaccines, formOnly
   });
 
   const handleChange = action => (
@@ -152,6 +202,8 @@ export default function SearchBox({
     }
   );
 
+  const defaultValue = formOnly ? EMPTY : ANY;
+
   return children({
     articleDropdown: (
       <Dropdown
@@ -159,7 +211,7 @@ export default function SearchBox({
        placeholder={EMPTY_TEXT}
        options={articleOptions}
        onChange={handleChange('article')}
-       value={articleValue || ANY} />
+       value={articleValue || defaultValue} />
     ),
     antibodyDropdown: (
       <Dropdown
@@ -169,8 +221,16 @@ export default function SearchBox({
        onChange={handleChange('antibodies')}
        value={
          antibodyValue && antibodyValue.length > 0 ?
-           antibodyValue.join(',') : ANY
+           antibodyValue.join(',') : defaultValue
        } />
+    ),
+    vaccineDropdown: (
+      <Dropdown
+       search direction="left"
+       placeholder={EMPTY_TEXT}
+       options={vaccineOptions}
+       onChange={handleChange('vaccine')}
+       value={vaccineValue || defaultValue} />
     )
   });
 
