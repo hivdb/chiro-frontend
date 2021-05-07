@@ -50,6 +50,10 @@ ul.result-col-popup {
           border-color: #007d92;
           padding: .5rem;
         }
+        &:global(-errors) {
+          margin-top: .5rem;
+          white-space: nowrap;
+        }
       }
 
       .mutation-match-checkbox {

@@ -22,6 +22,7 @@ export default function SearchDRDB(props) {
     formOnly,
     refName,
     mutations,
+    mutationText,
     mutationMatch,
     abNames,
     vaccineName,
@@ -124,6 +125,7 @@ export default function SearchDRDB(props) {
        loaded={resultLoaded}
        refName={refName}
        mutations={mutations}
+       mutationText={mutationText}
        mutationMatch={mutationMatch}
        abNames={abNames}
        vaccineName={vaccineName}

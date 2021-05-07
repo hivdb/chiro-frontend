@@ -245,7 +245,7 @@ export default function SearchBox({
   antibodies,
   vaccines,
   variants,
-  mutations,
+  mutationText,
   mutationMatch,
   onChange,
   children
@@ -281,7 +281,7 @@ export default function SearchBox({
   const defaultValue = formOnly ? EMPTY : ANY;
 
   const handleMutationsChange = React.useCallback(
-    ({mutations}, anyErrors) => onChange(
+    ({mutations}, anyErrors) => mutations && onChange(
       'mutations', mutations.join(',')
     ),
     [onChange]
@@ -337,14 +337,14 @@ export default function SearchBox({
         <MutationsInput
          config={config}
          className={style['mutations-input']}
-         mutations={mutations.map(({text}) => text)}
+         mutations={mutationText.split(',')}
          onChange={handleMutationsChange} />
         <CheckboxInput
          id="mut_match"
          name="mut_match"
          className={style['mutation-match-checkbox']}
          onChange={handleMutMatchChange}
-         disabled={mutations.length === 0}
+         disabled={mutationText.length === 0}
          checked={mutationMatch === 'any'}>
           Display results matching any of the input mutations
         </CheckboxInput>

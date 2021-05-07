@@ -22,6 +22,7 @@ import style from './style.module.scss';
 export default function SearchDRDBLayout({
   refName,
   mutations,
+  mutationText,
   mutationMatch,
   abNames,
   vaccineName,
@@ -72,7 +73,7 @@ export default function SearchDRDBLayout({
        vaccines={vaccines}
        variantValue={variantName}
        variants={variants}
-       mutations={mutations}
+       mutationText={mutationText}
        mutationMatch={mutationMatch}
        onChange={onChange}>
         {({

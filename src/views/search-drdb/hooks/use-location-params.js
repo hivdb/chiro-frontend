@@ -12,7 +12,7 @@ function parseMutations(mutationText, config) {
   const [mutList,] = sanitizeMutations(
     mutationText.split(',').filter(mut => mut.trim()),
     config,
-    /* removeErrors =*/ false
+    /* removeErrors =*/ true
   );
   return mutList.reduce(
     (acc, mut) => {
@@ -162,6 +162,7 @@ export default function useLocationParams() {
         formOnly,
         refName,
         mutations,
+        mutationText,
         mutationMatch,
         abNames,
         variantName,
