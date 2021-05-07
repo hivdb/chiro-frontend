@@ -289,7 +289,7 @@ export default function SearchBox({
 
   const handleMutMatchChange = React.useCallback(
     event => onChange(
-      'mut_match', event.currentTarget.checked ? 'all' : 'any'
+      'mut_match', event.currentTarget.checked ? 'any' : 'all'
     ),
     [onChange]
   );
@@ -345,8 +345,8 @@ export default function SearchBox({
          className={style['mutation-match-checkbox']}
          onChange={handleMutMatchChange}
          disabled={mutations.length === 0}
-         checked={mutationMatch === 'all'}>
-          Match all mutations
+         checked={mutationMatch === 'any'}>
+          Display results matching any of the input mutations
         </CheckboxInput>
       </div>
     )

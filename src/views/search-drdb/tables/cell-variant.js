@@ -42,7 +42,6 @@ function shortenMutationList(mutations) {
 
 export default function CellVariant({
   variantName,
-  assay,
   variantLookup
 }) {
   const {type, mutations} = variantLookup[variantName];
@@ -53,7 +52,6 @@ export default function CellVariant({
     const shortenMuts = shortenMutationList(mutations);
     return <>
       {shortenMuts.join(' + ')}
-      <sup>{assay}</sup>
     </>;
   }
 }
