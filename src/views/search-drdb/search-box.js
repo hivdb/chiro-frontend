@@ -337,7 +337,11 @@ export default function SearchBox({
         <MutationsInput
          config={config}
          className={style['mutations-input']}
-         mutations={mutationText.split(',')}
+         mutations={
+           mutationText.split(',')
+             .map(m => m.trim())
+             .filter(m => m)
+         }
          onChange={handleMutationsChange} />
         <CheckboxInput
          id="mut_match"
