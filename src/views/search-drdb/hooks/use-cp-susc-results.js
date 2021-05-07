@@ -29,8 +29,9 @@ function usePrepareQuery({skip}) {
 
 export default function useConvPlasmaSuscResults({
   refName,
-  spikeMutations,
+  mutations,
   mutationMatch,
+  variantName,
   skip = false
 }) {
 
@@ -41,8 +42,9 @@ export default function useConvPlasmaSuscResults({
     isPending
   } = useSuscResults({
     refName,
-    spikeMutations,
+    mutations,
     mutationMatch,
+    variantName,
     addColumns,
     joinClause,
     skip

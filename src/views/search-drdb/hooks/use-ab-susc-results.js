@@ -6,7 +6,7 @@ import {useCompareSuscResultsByAntibodies} from './use-compare-susc-results';
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 
-function usePrepareQuery({abNames, antibodyVisibility, skip}) {
+function usePrepareQuery({abNames, skip}) {
   return React.useMemo(
     () => {
       const addColumns = [];
@@ -56,7 +56,7 @@ function usePrepareQuery({abNames, antibodyVisibility, skip}) {
           `); */
         }
 
-        if (antibodyVisibility === true || antibodyVisibility === false) {
+        else {
           rxAbFiltered = true;
           where.push(`
             EXISTS (
@@ -65,7 +65,7 @@ function usePrepareQuery({abNames, antibodyVisibility, skip}) {
                 RXMAB.ref_name = S.ref_name AND
                 RXMAB.rx_name = S.rx_name AND
                 RXMAB.ab_name = MAB.ab_name AND
-                MAB.visibility = $abVisibility
+                MAB.visibility = 1
             )
           `);
           where.push(`
@@ -75,12 +75,9 @@ function usePrepareQuery({abNames, antibodyVisibility, skip}) {
                 RXMAB.ref_name = S.ref_name AND
                 RXMAB.rx_name = S.rx_name AND
                 RXMAB.ab_name = MAB.ab_name AND
-                MAB.visibility = $negAbVisibility
+                MAB.visibility = 0
             )
           `);
-          params.$abVisibility = + antibodyVisibility; // covert bool to int
-          params.$negAbVisibility = + !antibodyVisibility;
-
         }
 
         if (!rxAbFiltered) {
@@ -101,24 +98,24 @@ function usePrepareQuery({abNames, antibodyVisibility, skip}) {
         params
       };
     },
-    [abNames, antibodyVisibility, skip]
+    [abNames, skip]
   );
 }
 
 
 export default function useAntibodySuscResults({
   refName,
-  spikeMutations,
+  mutations,
   mutationMatch,
+  variantName,
   abNames,
-  antibodyVisibility = true,
   skip = false
 }) {
   const {
     addColumns,
     where,
     params
-  } = usePrepareQuery({abNames, antibodyVisibility, skip});
+  } = usePrepareQuery({abNames, skip});
 
   const {
     antibodyLookup,
@@ -137,8 +134,9 @@ export default function useAntibodySuscResults({
     isPending
   } = useSuscResults({
     refName,
-    spikeMutations,
+    mutations,
     mutationMatch,
+    variantName,
     addColumns,
     where,
     params,

@@ -35,8 +35,9 @@ function usePrepareQuery({vaccineName, skip}) {
 
 export default function useVaccPlasmaSuscResults({
   refName,
-  spikeMutations,
+  mutations,
   mutationMatch,
+  variantName,
   vaccineName,
   skip = false
 }) {
@@ -54,8 +55,9 @@ export default function useVaccPlasmaSuscResults({
     isPending
   } = useSuscResults({
     refName,
-    spikeMutations,
+    mutations,
     mutationMatch,
+    variantName,
     addColumns,
     joinClause,
     where,

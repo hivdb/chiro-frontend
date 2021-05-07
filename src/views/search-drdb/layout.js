@@ -22,8 +22,10 @@ import style from './style.module.scss';
 export default function SearchDRDBLayout({
   refName,
   mutations,
+  mutationMatch,
   abNames,
   vaccineName,
+  variantName,
   match,
   loaded,
   formOnly,
@@ -33,6 +35,7 @@ export default function SearchDRDBLayout({
   antibodies,
   antibodyLookup,
   vaccines,
+  variants,
   variantLookup,
   abSuscResults,
   cpSuscResults,
@@ -67,11 +70,17 @@ export default function SearchDRDBLayout({
        antibodies={antibodies}
        vaccineValue={vaccineName}
        vaccines={vaccines}
+       variantValue={variantName}
+       variants={variants}
+       mutations={mutations}
+       mutationMatch={mutationMatch}
        onChange={onChange}>
         {({
           articleDropdown,
           antibodyDropdown,
-          vaccineDropdown
+          vaccineDropdown,
+          variantDropdown,
+          mutationsInput
         }) => (
           <StatHeader>
             {[
@@ -79,9 +88,11 @@ export default function SearchDRDBLayout({
                 className: style['search-box'],
                 width: 4,
                 cells: [
+                  {label: 'Reference', value: articleDropdown},
                   {label: 'Monoclonal antibody', value: antibodyDropdown},
                   {label: 'Vaccine', value: vaccineDropdown},
-                  {label: 'Reference', value: articleDropdown}
+                  {label: 'Variant', value: variantDropdown},
+                  {label: 'Mutations', value: mutationsInput}
                 ]
               },
               {

@@ -42,7 +42,26 @@ ul.result-col-popup {
   margin-bottom: 3rem;
   > :global(.row) {
     .search-box {
-      @include chiro-dropdown(20rem);
+      @include chiro-dropdown(25rem);
+
+      .mutations-input {
+        margin-top: .5rem;
+        &:global(-tagsinput) {
+          border-color: #007d92;
+          padding: .5rem;
+        }
+      }
+
+      .mutation-match-checkbox {
+        label {
+          font-size: 1rem;
+          font-weight: 400;
+          &::before {
+            border-color: #007d92;
+          }
+        }
+      }
+
     }
     .search-summary {
       font-size: 1.1rem;

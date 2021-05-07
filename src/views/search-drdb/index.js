@@ -25,6 +25,7 @@ export default function SearchDRDB(props) {
     mutationMatch,
     abNames,
     vaccineName,
+    variantName,
     onChange
   } = useLocationParams();
   const skip = formOnly !== undefined;
@@ -54,6 +55,7 @@ export default function SearchDRDB(props) {
     isPending: isVaccPending
   } = useVaccines();
   const {
+    variants,
     variantLookup,
     isPending: isVariantPending
   } = useVirusVariants();
@@ -64,8 +66,9 @@ export default function SearchDRDB(props) {
   } = useAbSuscResults({
     skip,
     refName,
-    spikeMutations: mutations,
+    mutations,
     mutationMatch,
+    variantName,
     abNames
   });
   const {
@@ -74,8 +77,9 @@ export default function SearchDRDB(props) {
   } = useCPSuscResults({
     skip,
     refName,
-    spikeMutations: mutations,
-    mutationMatch
+    mutations,
+    mutationMatch,
+    variantName
   });
   const {
     suscResults: vpSuscResults,
@@ -83,8 +87,9 @@ export default function SearchDRDB(props) {
   } = useVPSuscResults({
     skip,
     refName,
-    spikeMutations: mutations,
+    mutations,
     mutationMatch,
+    variantName,
     vaccineName
   });
 
@@ -119,8 +124,10 @@ export default function SearchDRDB(props) {
        loaded={resultLoaded}
        refName={refName}
        mutations={mutations}
+       mutationMatch={mutationMatch}
        abNames={abNames}
        vaccineName={vaccineName}
+       variantName={variantName}
        onChange={onChange}
        formOnly={formOnly !== undefined}
        articles={articles}
@@ -129,6 +136,7 @@ export default function SearchDRDB(props) {
        antibodyLookup={antibodyLookup}
        vaccines={vaccines}
        vaccineLookup={vaccineLookup}
+       variants={variants}
        variantLookup={variantLookup}
        abSuscResults={abSuscResults}
        cpSuscResults={cpSuscResults}

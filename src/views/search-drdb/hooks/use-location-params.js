@@ -1,36 +1,46 @@
 import React from 'react';
+import isEqual from 'lodash/isEqual';
 import {useRouter} from 'found';
+import {
+  parseAndValidateMutation,
+  sanitizeMutations
+} from 'sierra-frontend/dist/utils/mutation';
+import useConfig from './use-config';
 
 
-const mutPattern = new RegExp(
-  "^\\s*" +
-  "([AC-IK-NP-TV-Y]?)" +
-  "(\\d{1,4})" +
-  "([AC-IK-NP-TV-Zid*]+)" +
-  "\\s*$"
-);
-
-
-function parseMutations(mutationText) {
-  return mutationText
-    .split(',')
-    .filter(mut => mutPattern.test(mut))
-    .reduce(
-      (acc, mut) => {
-        let [,, pos, aas] = mutPattern.exec(mut);
-        pos = parseInt(pos);
+function parseMutations(mutationText, config) {
+  const [mutList,] = sanitizeMutations(
+    mutationText.split(',').filter(mut => mut.trim()),
+    config,
+    /* removeErrors =*/ false
+  );
+  return mutList.reduce(
+    (acc, mut) => {
+      const {gene, pos, aas, text} = parseAndValidateMutation(
+        mut, config
+      );
+      if (aas === 'ins' || aas === 'del') {
+        acc.push({
+          gene,
+          position: pos,
+          aminoAcid: aas,
+          text
+        });
+      }
+      else {
         for (const aa of aas) {
           acc.push({
+            gene,
             position: pos,
-            aminoAcid: aa
-              .replace('i', 'ins')
-              .replace('d', 'del')
-              .replace('*', 'stop')
+            aminoAcid: aa.replace('*', 'stop'),
+            text
           });
         }
-        return acc;
-      }, []
-    );
+      }
+      return acc;
+    },
+    []
+  );
 }
 
 
@@ -42,24 +52,72 @@ function parseAntibodies(antibodyText) {
 }
 
 
+function cleanQuery(query) {
+  query = {...query};
+  if (query.form_only) {
+    query = {
+      form_only: ''
+    };
+  }
+
+  if (!query.mutations || query.mutations.trim().length === 0) {
+    delete query.mutations;
+  }
+
+  if (query.mut_match === 'all') {
+    delete query.mut_match;
+  }
+
+  if (query.mutations !== undefined && query.variant !== undefined) {
+    delete query.variant;
+  }
+
+  query = Object.keys(query).sort().reduce(
+    (sorted, key) => { 
+      sorted[key] = query[key]; 
+      return sorted;
+    }, 
+    {}
+  );
+
+  return query;
+}
+
+
 export default function useLocationParams() {
+  const {config, isPending} = useConfig();
   const {router, match} = useRouter();
   const {
     location: loc,
     location: {
+      query,
       query: {
         form_only: formOnly,
         article: refName = null,
         mutations: mutationText = '',
         mut_match: inputMutMatch,
         antibodies: antibodyText = '',
-        vaccine: vaccineName = ''
+        variant: variantName = null,
+        vaccine: vaccineName = null
       } = {}
     }
   } = match;
 
+  React.useEffect(
+    () => {
+      const cleanedQuery = cleanQuery(query);
+      if (!isEqual(query, cleanedQuery)) {
+        router.replace({
+          ...loc,
+          query: cleanedQuery
+        });
+      }
+    },
+    [/* eslint-disable-line react-hooks/exhaustive-deps */]
+  );
+
   const mutationMatch = (
-    inputMutMatch === 'all' ? 'all' : 'any'
+    inputMutMatch === 'any' ? 'any' : 'all'
   );
 
   const onChange = React.useCallback(
@@ -75,14 +133,15 @@ export default function useLocationParams() {
       else if (action === 'antibodies') {
         delete query.vaccine;
       }
+      else if (action === 'variant') {
+        delete query.mutations;
+        delete query.mut_match;
+      }
+      else if (action === 'mutations') {
+        delete query.variant;
+      }
 
-      query = Object.keys(query).sort().reduce(
-        (sorted, key) => { 
-          sorted[key] = query[key]; 
-          return sorted;
-        }, 
-        {}
-      );
+      query = cleanQuery(query);
 
       router.push({
         ...loc,
@@ -94,24 +153,31 @@ export default function useLocationParams() {
 
   return React.useMemo(
     () => {
-      const mutations = parseMutations(mutationText);
       const abNames = parseAntibodies(antibodyText);
+      let mutations = [];
+      if (!isPending) {
+        mutations = parseMutations(mutationText, config);
+      }
       return {
         formOnly,
         refName,
         mutations,
         mutationMatch,
         abNames,
+        variantName,
         vaccineName,
         onChange
       };
     },
     [
+      isPending,
+      config,
       formOnly,
       refName,
       mutationText,
       mutationMatch,
       antibodyText,
+      variantName,
       vaccineName,
       onChange
     ]

@@ -87,8 +87,9 @@ function calcResistanceLevel({
 function usePrepareQuery({
   skip,
   refName,
-  spikeMutations,
+  mutations,
   mutationMatch,
+  variantName,
   addColumns,
   joinClause,
   addWhere,
@@ -111,15 +112,15 @@ function usePrepareQuery({
           params.$refName = refName;
         }
 
-        if (spikeMutations && spikeMutations.length > 0) {
+        if (mutations && mutations.length > 0) {
           const excludeMutQuery = [
             // constantly allow 614G
-            `NOT (M.position = 614 AND M.amino_acid = 'G')`
+            `NOT (M.gene = 'S' AND M.position = 614 AND M.amino_acid = 'G')`
           ];
           if (mutationMatch === 'all') {
             for (
-              const [idx, {position, aminoAcid}] of
-              spikeMutations.entries()
+              const [idx, {gene, position, aminoAcid}] of
+              mutations.entries()
             ) {
               where.push(`
                 EXISTS (
@@ -127,16 +128,18 @@ function usePrepareQuery({
                   FROM variant_mutations M
                   WHERE
                     S.variant_name = M.variant_name AND
-                    M.gene = 'S' AND
+                    M.gene = $gene${idx} AND
                     M.position = $pos${idx} AND
                     M.amino_acid = $aa${idx}
                 )
               `);
               excludeMutQuery.push(`NOT (
+                M.gene = $gene${idx} AND
                 M.position = $pos${idx} AND
                 M.amino_acid = $aa${idx}
               )`);
 
+              params[`$gene${idx}`] = gene;
               params[`$pos${idx}`] = position;
               params[`$aa${idx}`] = aminoAcid;
             }
@@ -146,7 +149,6 @@ function usePrepareQuery({
                 FROM variant_mutations M
                 WHERE
                   S.variant_name = M.variant_name AND
-                  M.gene = 'S' AND
                   (${excludeMutQuery.join(' AND ')})
               )
             `);
@@ -154,13 +156,15 @@ function usePrepareQuery({
           else {
             const includeMutQuery = [];
             for (
-              const [idx, {position, aminoAcid}] of
-              spikeMutations.entries()
+              const [idx, {gene, position, aminoAcid}] of
+              mutations.entries()
             ) {
               includeMutQuery.push(`
+                M.gene = $gene${idx} AND
                 M.position = $pos${idx} AND
                 M.amino_acid = $aa${idx}
               `);
+              params[`$gene${idx}`] = gene;
               params[`$pos${idx}`] = position;
               params[`$aa${idx}`] = aminoAcid;
             }
@@ -170,11 +174,22 @@ function usePrepareQuery({
                 FROM variant_mutations M
                 WHERE
                   S.variant_name = M.variant_name AND
-                  M.gene = 'S' AND
                   (${includeMutQuery.join(' OR ')})
               )
             `);
           }
+        }
+        else if (variantName) {
+          where.push(`
+            EXISTS (
+              SELECT 1
+              FROM virus_variants VV
+              WHERE
+                S.variant_name = VV.variant_name AND
+                VV.display_name = $variantName
+            )
+          `);
+          params.$variantName = variantName;
         }
       }
 
@@ -212,8 +227,9 @@ function usePrepareQuery({
     [
       skip,
       refName,
-      spikeMutations,
+      mutations,
       mutationMatch,
+      variantName,
       addColumns,
       joinClause,
       addWhere,
@@ -225,8 +241,9 @@ function usePrepareQuery({
 
 export default function useSuscResults({
   refName,
-  spikeMutations,
+  mutations,
   mutationMatch,
+  variantName = null,
   addColumns = [],
   joinClause = [],
   where: addWhere = [],
@@ -237,8 +254,9 @@ export default function useSuscResults({
   const {sql, params} = usePrepareQuery({
     skip,
     refName,
-    spikeMutations,
+    mutations,
     mutationMatch,
+    variantName,
     addColumns,
     joinClause,
     addWhere,

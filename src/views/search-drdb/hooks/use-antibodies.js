@@ -69,6 +69,10 @@ function usePrepareQuery({skip}) {
         sql = `
           SELECT ab_name, abbreviation_name, availability, priority, visibility
           FROM antibodies
+          WHERE EXISTS (
+            SELECT 1 FROM rx_antibodies WHERE
+              rx_antibodies.ab_name = antibodies.ab_name
+          )
           ORDER BY priority, ab_name
         `;
       }

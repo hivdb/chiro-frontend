@@ -1,5 +1,13 @@
 import React from 'react';
+import uniq from 'lodash/uniq';
 import {Dropdown} from 'semantic-ui-react';
+import escapeRegExp from 'lodash/escapeRegExp';
+import MutationsInput from 'sierra-frontend/dist/components/mutations-input';
+import CheckboxInput from 'sierra-frontend/dist/components/checkbox-input';
+
+import useConfig from './hooks/use-config';
+
+import style from './style.module.scss';
 
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
@@ -62,6 +70,16 @@ function useArticleOptions({loaded, articleValue, articles, formOnly}) {
 }
 
 
+function antibodySearch(options, query) {
+  const re = new RegExp(escapeRegExp(query), 'i');
+  return options.filter(({text, value, synonyms}) => (
+    re.test(text) ||
+    re.test(value) ||
+    (synonyms && synonyms.some(syn => re.test(syn)))
+  ));
+}
+
+
 function useAntibodyOptions({loaded, antibodies, antibodyValue, formOnly}) {
   return React.useMemo(
     () => {
@@ -108,10 +126,11 @@ function useAntibodyOptions({loaded, antibodies, antibodyValue, formOnly}) {
             }] : []
           ),
           ...antibodies.map(
-            ({abName, abbreviationName: abbr}) => ({
+            ({abName, abbreviationName: abbr, synonyms}) => ({
               key: abName,
               text: abbr ? `${abName} (${abbr})` : abName,
-              value: abName
+              value: abName,
+              synonyms
             })
           )
         ];
@@ -166,18 +185,72 @@ function useVaccineOptions({loaded, vaccines, vaccineValue, formOnly}) {
 }
 
 
+function useVariantOptions({loaded, variants, variantValue, formOnly}) {
+  const displayVariants = uniq(
+    variants
+      .map(({displayName}) => displayName)
+      .filter(n => n)
+  ).sort();
+  return React.useMemo(
+    () => {
+      if (!loaded) {
+        return [
+          {
+            key: 'any',
+            text: 'Any',
+            value: ANY
+          },
+          {
+            key: variantValue,
+            text: variantValue,
+            value: variantValue
+          }
+        ];
+      }
+      else {
+        return [
+          ...(formOnly ? [{
+            key: 'empty',
+            text: EMPTY_TEXT,
+            value: EMPTY
+          }] : []),
+          {
+            key: 'any',
+            text: 'Any',
+            value: ANY
+          },
+          ...displayVariants.map(
+            (name) => ({
+              key: name,
+              text: name,
+              value: name
+            })
+          )
+        ];
+      }
+    },
+    [loaded, displayVariants, variantValue, formOnly]
+  );
+}
+
+
 export default function SearchBox({
   loaded,
   formOnly,
   articleValue,
   antibodyValue,
   vaccineValue,
+  variantValue,
   articles,
   antibodies,
   vaccines,
+  variants,
+  mutations,
+  mutationMatch,
   onChange,
   children
 }) {
+  const {config, isPending: isConfigPending} = useConfig();
   const articleOptions = useArticleOptions({
     loaded, articleValue, articles, formOnly
   });
@@ -186,6 +259,9 @@ export default function SearchBox({
   });
   const vaccineOptions = useVaccineOptions({
     loaded, vaccineValue, vaccines, formOnly
+  });
+  const variantOptions = useVariantOptions({
+    loaded, variantValue, variants, formOnly
   });
 
   const handleChange = action => (
@@ -204,6 +280,20 @@ export default function SearchBox({
 
   const defaultValue = formOnly ? EMPTY : ANY;
 
+  const handleMutationsChange = React.useCallback(
+    ({mutations}, anyErrors) => onChange(
+      'mutations', mutations.join(',')
+    ),
+    [onChange]
+  );
+
+  const handleMutMatchChange = React.useCallback(
+    event => onChange(
+      'mut_match', event.currentTarget.checked ? 'all' : 'any'
+    ),
+    [onChange]
+  );
+
   return children({
     articleDropdown: (
       <Dropdown
@@ -215,9 +305,10 @@ export default function SearchBox({
     ),
     antibodyDropdown: (
       <Dropdown
-       search direction="left"
+       direction="left"
        placeholder={EMPTY_TEXT}
        options={antibodyOptions}
+       search={antibodySearch}
        onChange={handleChange('antibodies')}
        value={
          antibodyValue && antibodyValue.length > 0 ?
@@ -231,6 +322,33 @@ export default function SearchBox({
        options={vaccineOptions}
        onChange={handleChange('vaccine')}
        value={vaccineValue || defaultValue} />
+    ),
+    variantDropdown: (
+      <Dropdown
+       search direction="left"
+       placeholder={EMPTY_TEXT}
+       options={variantOptions}
+       onChange={handleChange('variant')}
+       value={variantValue || defaultValue} />
+    ),
+    mutationsInput: (
+      isConfigPending ? null :
+      <div>
+        <MutationsInput
+         config={config}
+         className={style['mutations-input']}
+         mutations={mutations.map(({text}) => text)}
+         onChange={handleMutationsChange} />
+        <CheckboxInput
+         id="mut_match"
+         name="mut_match"
+         className={style['mutation-match-checkbox']}
+         onChange={handleMutMatchChange}
+         disabled={mutations.length === 0}
+         checked={mutationMatch === 'all'}>
+          Match all mutations
+        </CheckboxInput>
+      </div>
     )
   });
 
