@@ -49,7 +49,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "sha.js": "^2.4.11",
-    "sierra-frontend": "hivdb/sierra-frontend#1118887",
+    "sierra-frontend": "hivdb/sierra-frontend#ca87547",
     "sleep-promise": "^8.0.1",
     "smiles-drawer": "^1.2.0",
     "sql.js": "^1.5.0",
