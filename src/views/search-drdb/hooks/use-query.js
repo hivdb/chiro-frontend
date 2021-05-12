@@ -55,7 +55,10 @@ const execSQL = memoize(
       resolve => {
         worker.addEventListener('message', handleMessage);
 
-        function handleMessage({data: {id, results}}) {
+        function handleMessage({data: {id, results, error}}) {
+          if (error) {
+            console.error(sql, params, error);
+          }
           if (id === myId) {
             worker.removeEventListener('message', handleMessage);
             resolve(results);

@@ -2,11 +2,12 @@ import useLocationParams from './use-location-params';
 import useArticles from './use-articles';
 import useAntibodies from './use-antibodies';
 import useVaccines from './use-vaccines';
-import useVirusVariants from './use-virus-variants';
+import useVariants from './use-variants';
+import useIsolates, {compareMutations} from './use-isolates';
 import {
   useCompareSuscResultsByAntibodies,
-  useCompareSuscResultsByVariant,
-  useCompareSuscResultsByControlVariant
+  useCompareSuscResultsByIsolate,
+  useCompareSuscResultsByControlIsolate
 } from './use-compare-susc-results';
 import useAbSuscResults from './use-ab-susc-results';
 import useCPSuscResults from './use-cp-susc-results';
@@ -17,11 +18,13 @@ export {
   useArticles,
   useAntibodies,
   useVaccines,
-  useVirusVariants,
+  useVariants,
+  useIsolates,
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults,
   useCompareSuscResultsByAntibodies,
-  useCompareSuscResultsByVariant,
-  useCompareSuscResultsByControlVariant
+  useCompareSuscResultsByIsolate,
+  useCompareSuscResultsByControlIsolate,
+  compareMutations
 };

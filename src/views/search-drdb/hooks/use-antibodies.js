@@ -67,13 +67,30 @@ function usePrepareQuery({skip}) {
       if (!skip) {
 
         sql = `
-          SELECT ab_name, abbreviation_name, availability, priority, visibility
-          FROM antibodies
+          SELECT
+            A.ab_name,
+            abbreviation_name,
+            availability,
+            priority,
+            visibility,
+            AStat.count AS susc_result_count,
+            AT.class AS ab_class
+          FROM antibodies A
+          JOIN antibody_stats AStat ON
+            A.ab_name=AStat.ab_name AND AStat.stat_group='susc_results'
+          LEFT JOIN antibody_targets AT ON
+            A.ab_name=AT.ab_name AND AT.source='structure'
           WHERE EXISTS (
-            SELECT 1 FROM rx_antibodies WHERE
-              rx_antibodies.ab_name = antibodies.ab_name
+            SELECT 1 FROM susc_results S
+            WHERE EXISTS (
+              SELECT 1 FROM rx_antibodies RX
+              WHERE
+                S.ref_name=RX.ref_name AND
+                S.rx_name=RX.rx_name AND
+                RX.ab_name=A.ab_name
+            )
           )
-          ORDER BY priority, ab_name
+          ORDER BY priority, A.ab_name
         `;
       }
       return {sql};
@@ -81,7 +98,6 @@ function usePrepareQuery({skip}) {
     [skip]
   );
 }
-
 
 
 export default function useAntibodies({
@@ -98,6 +114,7 @@ export default function useAntibodies({
     () => skip || isPending || !antibodies ? {} : antibodies.reduce(
       (acc, ab) => {
         acc[ab.abName] = ab;
+        ab.visibility = ab.visibility === 1;
         return acc;
       },
       {}

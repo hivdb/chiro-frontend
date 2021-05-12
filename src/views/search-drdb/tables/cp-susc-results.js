@@ -6,18 +6,18 @@ export default function CPSuscResults({
   loaded,
   cacheKey,
   articleLookup,
-  variantLookup,
+  isolateLookup,
   cpSuscResults
 }) {
 
   const indivMutColumnDefs = useColumnDefs({
     articleLookup,
-    variantLookup,
+    isolateLookup,
     columns: [
       'refName',
       'section',
-      // 'controlVariantName',
-      'variantName',
+      // 'controlIsoName',
+      'isoName',
       'infection',
       'timing',
       'severity',
@@ -25,18 +25,18 @@ export default function CPSuscResults({
       'resistanceLevel'
     ],
     labels: {
-      variantName: 'Mutation'
+      isoName: 'Mutation'
     }
   });
 
   const comboMutsColumnDefs = useColumnDefs({
     articleLookup,
-    variantLookup,
+    isolateLookup,
     columns: [
       'refName',
       'section',
-      // 'controlVariantName',
-      'variantName',
+      // 'controlIsoName',
+      'isoName',
       'infection',
       'timing',
       'severity',
@@ -44,7 +44,7 @@ export default function CPSuscResults({
       'resistanceLevel'
     ],
     labels: {
-      variantName: 'Variant'
+      isoName: 'Variant'
     }
   });
 
@@ -53,7 +53,7 @@ export default function CPSuscResults({
     id: 'cp-susc-results',
     cacheKey,
     suscResults: cpSuscResults,
-    variantLookup,
+    isolateLookup,
     indivMutColumnDefs,
     comboMutsColumnDefs
   });

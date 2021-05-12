@@ -31,7 +31,7 @@ export default function useConvPlasmaSuscResults({
   refName,
   mutations,
   mutationMatch,
-  variantName,
+  varName,
   skip = false
 }) {
 
@@ -44,7 +44,7 @@ export default function useConvPlasmaSuscResults({
     refName,
     mutations,
     mutationMatch,
-    variantName,
+    varName,
     addColumns,
     joinClause,
     skip

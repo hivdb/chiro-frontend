@@ -9,7 +9,8 @@ import {
   useArticles,
   useAntibodies,
   useVaccines,
-  useVirusVariants,
+  useVariants,
+  useIsolates,
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults
@@ -26,7 +27,7 @@ export default function SearchDRDB(props) {
     mutationMatch,
     abNames,
     vaccineName,
-    variantName,
+    varName,
     onChange
   } = useLocationParams();
   const skip = formOnly !== undefined;
@@ -57,9 +58,13 @@ export default function SearchDRDB(props) {
   } = useVaccines();
   const {
     variants,
-    variantLookup,
     isPending: isVariantPending
-  } = useVirusVariants();
+  } = useVariants();
+  const {
+    isolates,
+    isolateLookup,
+    isPending: isIsolatePending
+  } = useIsolates();
 
   const {
     suscResults: abSuscResults,
@@ -69,7 +74,7 @@ export default function SearchDRDB(props) {
     refName,
     mutations,
     mutationMatch,
-    variantName,
+    varName,
     abNames
   });
   const {
@@ -80,7 +85,7 @@ export default function SearchDRDB(props) {
     refName,
     mutations,
     mutationMatch,
-    variantName
+    varName
   });
   const {
     suscResults: vpSuscResults,
@@ -90,7 +95,7 @@ export default function SearchDRDB(props) {
     refName,
     mutations,
     mutationMatch,
-    variantName,
+    varName,
     vaccineName
   });
 
@@ -108,6 +113,7 @@ export default function SearchDRDB(props) {
     !isAbLookupPending &&
     !isVaccPending &&
     !isVariantPending &&
+    !isIsolatePending &&
     !isAbResultPending &&
     !isCPPending &&
     !isVPPending
@@ -129,7 +135,7 @@ export default function SearchDRDB(props) {
        mutationMatch={mutationMatch}
        abNames={abNames}
        vaccineName={vaccineName}
-       variantName={variantName}
+       varName={varName}
        onChange={onChange}
        formOnly={formOnly !== undefined}
        articles={articles}
@@ -139,7 +145,8 @@ export default function SearchDRDB(props) {
        vaccines={vaccines}
        vaccineLookup={vaccineLookup}
        variants={variants}
-       variantLookup={variantLookup}
+       isolates={isolates}
+       isolateLookup={isolateLookup}
        abSuscResults={abSuscResults}
        cpSuscResults={cpSuscResults}
        vpSuscResults={vpSuscResults}

@@ -1,22 +1,22 @@
 import React from 'react';
 import useQuery from './use-query';
-import useVirusVariants from './use-virus-variants';
-import {useCompareSuscResultsByVariant} from './use-compare-susc-results';
+import useIsolates from './use-isolates';
+import {useCompareSuscResultsByIsolate} from './use-compare-susc-results';
 
 
 export function getSuscResultUniqKey(suscResult) {
   const {
     refName,
     rxName,
-    controlVariantName,
-    variantName,
+    controlIsoName,
+    isoName,
     ordinalNumber
   } = suscResult;
   return [
     refName,
     rxName,
-    controlVariantName,
-    variantName,
+    controlIsoName,
+    isoName,
     ordinalNumber
   ].join('$#\u0008#$');
 }
@@ -89,7 +89,7 @@ function usePrepareQuery({
   refName,
   mutations,
   mutationMatch,
-  variantName,
+  varName,
   addColumns,
   joinClause,
   addWhere,
@@ -125,9 +125,9 @@ function usePrepareQuery({
               where.push(`
                 EXISTS (
                   SELECT 1
-                  FROM variant_mutations M
+                  FROM isolate_mutations M
                   WHERE
-                    S.variant_name = M.variant_name AND
+                    S.iso_name = M.iso_name AND
                     M.gene = $gene${idx} AND
                     M.position = $pos${idx} AND
                     M.amino_acid = $aa${idx}
@@ -146,9 +146,9 @@ function usePrepareQuery({
             where.push(`
               NOT EXISTS (
                 SELECT 1
-                FROM variant_mutations M
+                FROM isolate_mutations M
                 WHERE
-                  S.variant_name = M.variant_name AND
+                  S.iso_name = M.iso_name AND
                   (${excludeMutQuery.join(' AND ')})
               )
             `);
@@ -171,25 +171,25 @@ function usePrepareQuery({
             where.push(`
               EXISTS (
                 SELECT 1
-                FROM variant_mutations M
+                FROM isolate_mutations M
                 WHERE
-                  S.variant_name = M.variant_name AND
+                  S.iso_name = M.iso_name AND
                   (${includeMutQuery.join(' OR ')})
               )
             `);
           }
         }
-        else if (variantName) {
+        else if (varName) {
           where.push(`
             EXISTS (
               SELECT 1
-              FROM virus_variants VV
+              FROM isolates VV
               WHERE
-                S.variant_name = VV.variant_name AND
-                VV.display_name = $variantName
+                S.iso_name = VV.iso_name AND
+                VV.var_name = $varName
             )
           `);
-          params.$variantName = variantName;
+          params.$varName = varName;
         }
       }
 
@@ -204,8 +204,8 @@ function usePrepareQuery({
         SELECT
           S.ref_name,
           S.rx_name,
-          S.control_variant_name,
-          S.variant_name,
+          S.control_iso_name,
+          S.iso_name,
           S.ordinal_number,
           S.section,
           S.fold_cmp,
@@ -229,7 +229,7 @@ function usePrepareQuery({
       refName,
       mutations,
       mutationMatch,
-      variantName,
+      varName,
       addColumns,
       joinClause,
       addWhere,
@@ -243,7 +243,7 @@ export default function useSuscResults({
   refName,
   mutations,
   mutationMatch,
-  variantName = null,
+  varName = null,
   addColumns = [],
   joinClause = [],
   where: addWhere = [],
@@ -256,7 +256,7 @@ export default function useSuscResults({
     refName,
     mutations,
     mutationMatch,
-    variantName,
+    varName,
     addColumns,
     joinClause,
     addWhere,
@@ -268,18 +268,18 @@ export default function useSuscResults({
   } = useQuery({sql, params, skip});
 
   const {
-    variantLookup,
-    isPending: isVariantPending
-  } = useVirusVariants({
+    isolateLookup,
+    isPending: isIsolatePending
+  } = useIsolates({
     skip: skip || isPending
   });
 
-  const compareByVariants = useCompareSuscResultsByVariant(variantLookup);
+  const compareByIsolates = useCompareSuscResultsByIsolate(isolateLookup);
 
   let suscResults;
   let suscResultLookup = {};
 
-  if (!skip && !isPending && !isVariantPending) {
+  if (!skip && !isPending && !isIsolatePending) {
     suscResults = payload.map(sr => ({
       ...sr,
       resistanceLevel: calcResistanceLevel(sr),
@@ -289,7 +289,7 @@ export default function useSuscResults({
       let cmp = addCompareSuscResults(srA, srB);
       if (cmp) { return cmp; }
 
-      cmp = compareByVariants(srA, srB);
+      cmp = compareByIsolates(srA, srB);
       if (cmp) { return cmp; }
 
       const assayA = srA.assay !== 'authentic virus';
@@ -310,6 +310,6 @@ export default function useSuscResults({
   return {
     suscResults,
     suscResultLookup,
-    isPending: isPending || isVariantPending
+    isPending: isPending || isIsolatePending
   };
 }

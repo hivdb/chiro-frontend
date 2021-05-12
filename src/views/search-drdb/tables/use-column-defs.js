@@ -5,24 +5,24 @@ import {
 } from 'sierra-frontend/dist/components/simple-table';
 
 import CellFold from './cell-fold';
-import CellVariant from './cell-variant';
+import CellIsolate from './cell-isolate';
 import CellReference from './cell-reference';
 import CellAntibodies from './cell-antibodies';
 import CellRLevel from './cell-resistance-level';
 import {
-  useCompareSuscResultsByVariant,
-  useCompareSuscResultsByControlVariant,
+  useCompareSuscResultsByIsolate,
+  useCompareSuscResultsByControlIsolate,
   useCompareSuscResultsByAntibodies
 } from '../hooks';
 
 
 function buildColDefs({
   articleLookup,
-  variantLookup,
+  isolateLookup,
   antibodyLookup,
   compareByAntibodies,
-  compareByVariant,
-  compareByControlVariant,
+  compareByIsolate,
+  compareByControlIsolate,
   columns,
   labels = {}
 }) {
@@ -36,21 +36,21 @@ function buildColDefs({
          displayName={articleLookup[refName].displayName} />
       )
     }),
-    controlVariantName: new ColumnDef({
-      name: 'controlVariantName',
-      label: labels.controlVariantName || 'Control',
-      render: variantName => (
-        <CellVariant {...{variantName, variantLookup}} />
+    controlIsoName: new ColumnDef({
+      name: 'controlIsoName',
+      label: labels.controlIsoName || 'Control',
+      render: isoName => (
+        <CellIsolate {...{isoName, isolateLookup}} />
       ),
-      sort: rows => [...rows].sort(compareByControlVariant)
+      sort: rows => [...rows].sort(compareByControlIsolate)
     }),
-    variantName: new ColumnDef({
-      name: 'variantName',
-      label: labels.variantName || 'Variant',
-      render: (variantName, {assay}) => (
-        <CellVariant {...{variantName, assay, variantLookup}} />
+    isoName: new ColumnDef({
+      name: 'isoName',
+      label: labels.isoName || 'Variant',
+      render: isoName => (
+        <CellIsolate {...{isoName, isolateLookup}} />
       ),
-      sort: rows => [...rows].sort(compareByVariant)
+      sort: rows => [...rows].sort(compareByIsolate)
     }),
     abNames: new ColumnDef({
       name: 'abNames',
@@ -104,38 +104,38 @@ function buildColDefs({
 export default function useColumnDefs({
   articleLookup,
   antibodyLookup,
-  variantLookup,
+  isolateLookup,
   columns,
   labels
 }) {
   const compareByAntibodies = (
     useCompareSuscResultsByAntibodies(antibodyLookup)
   );
-  const compareByVariant = (
-    useCompareSuscResultsByVariant(variantLookup)
+  const compareByIsolate = (
+    useCompareSuscResultsByIsolate(isolateLookup)
   );
-  const compareByControlVariant = (
-    useCompareSuscResultsByControlVariant(variantLookup)
+  const compareByControlIsolate = (
+    useCompareSuscResultsByControlIsolate(isolateLookup)
   );
 
   return React.useMemo(
     () => buildColDefs({
       articleLookup,
       antibodyLookup,
-      variantLookup,
+      isolateLookup,
       compareByAntibodies,
-      compareByVariant,
-      compareByControlVariant,
+      compareByIsolate,
+      compareByControlIsolate,
       columns,
       labels
     }),
     [
       articleLookup,
       antibodyLookup,
-      variantLookup,
+      isolateLookup,
       compareByAntibodies,
-      compareByVariant,
-      compareByControlVariant,
+      compareByIsolate,
+      compareByControlIsolate,
       columns,
       labels
     ]

@@ -1,28 +1,28 @@
 import React from 'react';
-import {compareVariants} from './use-virus-variants';
+import {compareIsolates} from './use-isolates';
 import {compareAntibodyLists} from './use-antibodies';
 
 
-export function useCompareSuscResultsByVariant(variantLookup) {
+export function useCompareSuscResultsByIsolate(isolateLookup) {
   return React.useCallback(
     (srA, srB) => {
-      const varA = variantLookup[srA.variantName];
-      const varB = variantLookup[srB.variantName];
-      return compareVariants(varA, varB);
+      const isoA = isolateLookup[srA.isoName];
+      const isoB = isolateLookup[srB.isoName];
+      return compareIsolates(isoA, isoB);
     },
-    [variantLookup]
+    [isolateLookup]
   );
 }
 
 
-export function useCompareSuscResultsByControlVariant(variantLookup) {
+export function useCompareSuscResultsByControlIsolate(isolateLookup) {
   return React.useCallback(
     (srA, srB) => {
-      const varA = variantLookup[srA.controlVariantName];
-      const varB = variantLookup[srB.controlVariantName];
-      return compareVariants(varA, varB);
+      const isoA = isolateLookup[srA.controlIsoName];
+      const isoB = isolateLookup[srB.controlIsoName];
+      return compareIsolates(isoA, isoB);
     },
-    [variantLookup]
+    [isolateLookup]
   );
 }
 

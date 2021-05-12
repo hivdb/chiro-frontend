@@ -7,41 +7,41 @@ export default function AbSuscResults({
   cacheKey,
   articleLookup,
   antibodyLookup,
-  variantLookup,
+  isolateLookup,
   abSuscResults
 }) {
 
   const indivMutColumnDefs = useColumnDefs({
     articleLookup,
     antibodyLookup,
-    variantLookup,
+    isolateLookup,
     columns: [
       'refName',
       'section',
-      'controlVariantName',
-      'variantName',
+      'controlIsoName',
+      'isoName',
       'abNames',
       'fold'
     ],
     labels: {
-      variantName: 'Mutation'
+      isoName: 'Mutation'
     }
   });
 
   const comboMutsColumnDefs = useColumnDefs({
     articleLookup,
     antibodyLookup,
-    variantLookup,
+    isolateLookup,
     columns: [
       'refName',
       'section',
-      'controlVariantName',
-      'variantName',
+      'controlIsoName',
+      'isoName',
       'abNames',
       'fold'
     ],
     labels: {
-      variantName: 'Variant'
+      isoName: 'Variant'
     }
   });
 
@@ -50,7 +50,7 @@ export default function AbSuscResults({
     id: 'mab-susc-results',
     cacheKey,
     suscResults: abSuscResults,
-    variantLookup,
+    isolateLookup,
     indivMutColumnDefs,
     comboMutsColumnDefs
   });

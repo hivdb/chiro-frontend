@@ -107,7 +107,7 @@ export default function useAntibodySuscResults({
   refName,
   mutations,
   mutationMatch,
-  variantName,
+  varName,
   abNames,
   skip = false
 }) {
@@ -136,7 +136,7 @@ export default function useAntibodySuscResults({
     refName,
     mutations,
     mutationMatch,
-    variantName,
+    varName,
     addColumns,
     where,
     params,

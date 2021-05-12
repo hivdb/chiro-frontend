@@ -16,13 +16,14 @@ function parseMutations(mutationText, config) {
   );
   return mutList.reduce(
     (acc, mut) => {
-      const {gene, pos, aas, text} = parseAndValidateMutation(
+      const {gene, pos, aas, ref, text} = parseAndValidateMutation(
         mut, config
       );
       if (aas === 'ins' || aas === 'del') {
         acc.push({
           gene,
           position: pos,
+          refAminoAcid: ref,
           aminoAcid: aas,
           text
         });
@@ -32,6 +33,7 @@ function parseMutations(mutationText, config) {
           acc.push({
             gene,
             position: pos,
+            refAminoAcid: ref,
             aminoAcid: aa.replace('*', 'stop'),
             text
           });
@@ -97,7 +99,7 @@ export default function useLocationParams() {
         mutations: mutationText = '',
         mut_match: inputMutMatch,
         antibodies: antibodyText = '',
-        variant: variantName = null,
+        variant: varName = null,
         vaccine: vaccineName = null
       } = {}
     }
@@ -123,7 +125,12 @@ export default function useLocationParams() {
   const onChange = React.useCallback(
     (action, value) => {
       let query = {...loc.query};
-      query[action] = value;
+      if (typeof action === 'string') {
+        query[action] = value;
+      }
+      else {
+        query = {...query, ...action};
+      }
 
       delete query.form_only;
 
@@ -165,7 +172,7 @@ export default function useLocationParams() {
         mutationText,
         mutationMatch,
         abNames,
-        variantName,
+        varName,
         vaccineName,
         onChange
       };
@@ -178,7 +185,7 @@ export default function useLocationParams() {
       mutationText,
       mutationMatch,
       antibodyText,
-      variantName,
+      varName,
       vaccineName,
       onChange
     ]

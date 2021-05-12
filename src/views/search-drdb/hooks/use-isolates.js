@@ -3,7 +3,7 @@ import useQuery from './use-query';
 
 
 function countSpikeMutations(mutations) {
-  // count variant (spike) mutations with a few exceptions
+  // count isolate (spike) mutations with a few exceptions
   let spikeMuts = mutations.filter(({gene}) => gene === 'S');
   let numMuts = spikeMuts.length;
   
@@ -35,21 +35,18 @@ function countSpikeMutations(mutations) {
 }
 
 
-const ORDERD_VARIANT_TYPE = [
+const ORDERD_ISOLATE_TYPE = [
   'individual-mutation',
   'named-variant',
   'mutation-combination'
 ];
 
 
-function classifyVariant({displayName, mutations}) {
-  if (displayName) {
+function classifyIsolate({varName, mutations, numMuts}) {
+  if (varName) {
     return 'named-variant';
   }
-
-  const numMuts = countSpikeMutations(mutations);
-
-  if (numMuts > 1) {
+  else if (numMuts > 1) {
     return 'mutation-combination';
   }
   else {
@@ -59,24 +56,24 @@ function classifyVariant({displayName, mutations}) {
 
 
 function useJoinMutations({
-  variantLookup,
+  isolateLookup,
   skip = false
 }) {
   const sql = React.useMemo(
     () => {
       let sql;
-      if (!skip && variantLookup) {
-        for (const variant of Object.values(variantLookup)) {
-          variant.mutations = [];
+      if (!skip && isolateLookup) {
+        for (const isolate of Object.values(isolateLookup)) {
+          isolate.mutations = [];
         }
         sql = `
           SELECT
-            variant_name,
+            iso_name,
             V.gene,
             V.position,
             V.amino_acid,
             R.amino_acid AS ref_amino_acid
-          FROM variant_mutations V, ref_amino_acid R
+          FROM isolate_mutations V, ref_amino_acid R
           WHERE
             V.gene = R.gene AND
             V.position = R.position
@@ -85,7 +82,7 @@ function useJoinMutations({
       }
       return sql;
     },
-    [skip, variantLookup]
+    [skip, isolateLookup]
   );
   const {
     payload: mutations,
@@ -98,34 +95,44 @@ function useJoinMutations({
   return React.useMemo(
     () => {
       if (!skip && !isPending) {
-        for (const {variantName, ...mut} of mutations) {
-          const variant = variantLookup[variantName];
-          variant.mutations.push(mut);
+        for (const {isoName, ...mut} of mutations) {
+          const isolate = isolateLookup[isoName];
+          isolate.mutations.push(mut);
         }
       }
       return {isPending};
     },
-    [skip, isPending, mutations, variantLookup]
+    [skip, isPending, mutations, isolateLookup]
   );
 }
 
 
-export function compareVariants(variantA, variantB) {
-  if (variantA.variantName === variantB.variantName) {
-    // short-cut if the variant names are the same
+export function compareIsolates(isolateA, isolateB) {
+  if (isolateA.isoName === isolateB.isoName) {
+    // short-cut if the isolate names are the same
     return 0;
   }
-  const typeA = ORDERD_VARIANT_TYPE.indexOf(variantA.type);
-  const typeB = ORDERD_VARIANT_TYPE.indexOf(variantB.type);
+  const typeA = ORDERD_ISOLATE_TYPE.indexOf(isolateA.type);
+  const typeB = ORDERD_ISOLATE_TYPE.indexOf(isolateB.type);
 
   // 1. sort by type
   let cmp = typeA - typeB;
   if (cmp) { return cmp; }
 
-  for (const [idx, mutA] of variantA.mutations.entries()) {
-    const mutB = variantB.mutations[idx];
+  cmp = compareMutations(isolateA.mutations, isolateB.mutations);
+  if (cmp) { return cmp; }
+
+  // last, compare the isolate name
+  return isolateA.isoName.localeCompare(isolateB.isoName);
+}
+
+
+export function compareMutations(mutationsA, mutationsB) {
+  let cmp;
+  for (const [idx, mutA] of mutationsA.entries()) {
+    const mutB = mutationsB[idx];
     if (!mutB) {
-      // shorter first, variantA is longer than variantB
+      // shorter first, isolateA is longer than isolateB
       return 1;
     }
     // 2. sort by position
@@ -136,55 +143,55 @@ export function compareVariants(variantA, variantB) {
     cmp = mutA.aminoAcid.localeCompare(mutB.aminoAcid);
     if (cmp) { return cmp; }
   }
-  // shorter first, variant A is shorter than variantB
-  cmp = variantA.mutations.length - variantB.mutations.length;
-  if (cmp) { return cmp; }
-
-  // last, compare the variant name
-  return variantA.variantName.localeCompare(variantB.variantName);
+  // shorter first, isolateA is shorter than isolateB
+  return mutationsA.length - mutationsB.length;
 }
 
 
-export default function useVirusVariant({
+export default function useIsolates({
   skip = false
 } = {}) {
 
   const sql = `
-    SELECT variant_name, display_name, expandable
-    FROM virus_variants
+    SELECT I.iso_name, var_name, expandable, count AS susc_result_count
+    FROM isolates I
+    LEFT JOIN isolate_stats IStat ON
+      I.iso_name=IStat.iso_name AND IStat.stat_group='susc_results'
   `;
 
   const {
-    payload: variants,
+    payload: isolates,
     isPending
   } = useQuery({sql, skip});
 
-  const variantLookup = React.useMemo(
-    () => skip || isPending || !variants ? {} : variants.reduce(
-      (acc, v) => {
-        acc[v.variantName] = v;
+  const isolateLookup = React.useMemo(
+    () => skip || isPending || !isolates ? {} : isolates.reduce(
+      (acc, iso) => {
+        acc[iso.isoName] = iso;
         return acc;
       },
       {}
     ),
-    [skip, isPending, variants]
+    [skip, isPending, isolates]
   );
 
   const {isPending: isMutationPending} = useJoinMutations({
-    variantLookup,
+    isolateLookup,
     skip: skip || isPending
   });
 
   if (!skip && !isPending && !isMutationPending) {
-    for (const variant of variants) {
-      variant.type = classifyVariant(variant);
+    for (const isolate of isolates) {
+      const numMuts = countSpikeMutations(isolate.mutations);
+      isolate.numMuts = numMuts;
+      isolate.type = classifyIsolate(isolate);
     }
-    // variants.sort(compareVariants);
+    // isolates.sort(compareisolates);
   }
 
   return {
-    variants,
-    variantLookup,
+    isolates,
+    isolateLookup,
     isPending: isPending || isMutationPending
   };
 }

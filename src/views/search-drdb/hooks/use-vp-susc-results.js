@@ -37,7 +37,7 @@ export default function useVaccPlasmaSuscResults({
   refName,
   mutations,
   mutationMatch,
-  variantName,
+  varName,
   vaccineName,
   skip = false
 }) {
@@ -57,7 +57,7 @@ export default function useVaccPlasmaSuscResults({
     refName,
     mutations,
     mutationMatch,
-    variantName,
+    varName,
     addColumns,
     joinClause,
     where,

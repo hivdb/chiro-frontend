@@ -6,18 +6,18 @@ export default function VPSuscResults({
   loaded,
   cacheKey,
   articleLookup,
-  variantLookup,
+  isolateLookup,
   vpSuscResults
 }) {
 
   const indivMutColumnDefs = useColumnDefs({
     articleLookup,
-    variantLookup,
+    isolateLookup,
     columns: [
       'refName',
       'section',
-      'controlVariantName',
-      'variantName',
+      'controlIsoName',
+      'isoName',
       'vaccineName',
       'timing',
       'dosage',
@@ -25,18 +25,18 @@ export default function VPSuscResults({
       'resistanceLevel'
     ],
     labels: {
-      variantName: 'Mutation'
+      isoName: 'Mutation'
     }
   });
 
   const comboMutsColumnDefs = useColumnDefs({
     articleLookup,
-    variantLookup,
+    isolateLookup,
     columns: [
       'refName',
       'section',
-      'controlVariantName',
-      'variantName',
+      'controlIsoName',
+      'isoName',
       'vaccineName',
       'timing',
       'dosage',
@@ -44,7 +44,7 @@ export default function VPSuscResults({
       'resistanceLevel'
     ],
     labels: {
-      variantName: 'Variant'
+      isoName: 'Variant'
     }
   });
 
@@ -53,7 +53,7 @@ export default function VPSuscResults({
     id: 'vp-susc-results',
     cacheKey,
     suscResults: vpSuscResults,
-    variantLookup,
+    isolateLookup,
     indivMutColumnDefs,
     comboMutsColumnDefs
   });

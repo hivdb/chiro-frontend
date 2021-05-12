@@ -1,8 +1,6 @@
-import React from 'react';
 import {consecutiveGroupsBy} from 'sierra-frontend/dist/utils/array-groups';
 
-
-function shortenMutationList(mutations) {
+export default function shortenMutationList(mutations) {
   const merged = [];
   const groups = consecutiveGroupsBy(
     mutations,
@@ -36,22 +34,4 @@ function shortenMutationList(mutations) {
     }
   }
   return merged;
-}
-
-
-
-export default function CellVariant({
-  variantName,
-  variantLookup
-}) {
-  const {type, mutations} = variantLookup[variantName];
-  if (type === 'named-variant') {
-    return variantName;
-  }
-  else {
-    const shortenMuts = shortenMutationList(mutations);
-    return <>
-      {shortenMuts.join(' + ')}
-    </>;
-  }
 }

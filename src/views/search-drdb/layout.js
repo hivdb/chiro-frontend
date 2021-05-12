@@ -26,7 +26,7 @@ export default function SearchDRDBLayout({
   mutationMatch,
   abNames,
   vaccineName,
-  variantName,
+  varName,
   match,
   loaded,
   formOnly,
@@ -37,7 +37,8 @@ export default function SearchDRDBLayout({
   antibodyLookup,
   vaccines,
   variants,
-  variantLookup,
+  isolates,
+  isolateLookup,
   abSuscResults,
   cpSuscResults,
   vpSuscResults,
@@ -71,15 +72,16 @@ export default function SearchDRDBLayout({
        antibodies={antibodies}
        vaccineValue={vaccineName}
        vaccines={vaccines}
-       variantValue={variantName}
+       variantValue={varName}
        variants={variants}
+       isolates={isolates}
+       mutations={mutations}
        mutationText={mutationText}
        mutationMatch={mutationMatch}
        onChange={onChange}>
         {({
           articleDropdown,
-          antibodyDropdown,
-          vaccineDropdown,
+          rxDropdown,
           variantDropdown,
           mutationsInput
         }) => (
@@ -90,10 +92,8 @@ export default function SearchDRDBLayout({
                 width: 4,
                 cells: [
                   {label: 'Reference', value: articleDropdown},
-                  {label: 'Monoclonal antibody', value: antibodyDropdown},
-                  {label: 'Vaccine', value: vaccineDropdown},
-                  {label: 'Variant', value: variantDropdown},
-                  {label: 'Mutations', value: mutationsInput}
+                  {label: 'Plasma / Monoclonal antibody', value: rxDropdown},
+                  {label: 'Variant', value: variantDropdown}
                 ]
               },
               {
@@ -128,7 +128,7 @@ export default function SearchDRDBLayout({
            cacheKey={JSON.stringify({refName, mutations, abNames})}
            articleLookup={articleLookup}
            antibodyLookup={antibodyLookup}
-           variantLookup={variantLookup}
+           isolateLookup={isolateLookup}
            abSuscResults={abSuscResults} />
         </Grid.Column>
       </Grid.Row> : null}
@@ -142,7 +142,7 @@ export default function SearchDRDBLayout({
            loaded={loaded}
            cacheKey={JSON.stringify({refName, mutations, vaccineName})}
            articleLookup={articleLookup}
-           variantLookup={variantLookup}
+           isolateLookup={isolateLookup}
            vpSuscResults={vpSuscResults} />
         </Grid.Column>
       </Grid.Row> : null}
@@ -156,7 +156,7 @@ export default function SearchDRDBLayout({
            loaded={loaded}
            cacheKey={JSON.stringify({refName, mutations})}
            articleLookup={articleLookup}
-           variantLookup={variantLookup}
+           isolateLookup={isolateLookup}
            cpSuscResults={cpSuscResults} />
         </Grid.Column>
       </Grid.Row> : null}

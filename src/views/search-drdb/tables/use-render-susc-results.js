@@ -17,7 +17,7 @@ export default function useRenderSuscResults({
   loaded,
   cacheKey,
   suscResults,
-  variantLookup,
+  isolateLookup,
   indivMutColumnDefs,
   comboMutsColumnDefs
 }) {
@@ -29,7 +29,7 @@ export default function useRenderSuscResults({
       }
       return suscResults.reduce(
         (acc, sr) => {
-          const {type} = variantLookup[sr.variantName];
+          const {type} = isolateLookup[sr.isoName];
           const section = type2Section[type];
           acc[section] = acc[section] || [];
           acc[section].push(sr);
@@ -38,7 +38,7 @@ export default function useRenderSuscResults({
         {}
       );
     },
-    [loaded, suscResults, variantLookup]
+    [loaded, suscResults, isolateLookup]
   );
 
 
