@@ -1,7 +1,11 @@
 import React from 'react';
+import isEqual from 'lodash/isEqual';
+import orderBy from 'lodash/orderBy';
+import uniqWith from 'lodash/uniqWith';
+import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 import shortenMutList from '../shorten-mutlist';
-import {compareMutations} from '../hooks';
+import {useConfig, compareMutations, getQueryMutations} from '../hooks';
 
 
 const EMPTY = '__EMPTY';
@@ -14,11 +18,24 @@ function FragmentWithoutWarning({key, children}) {
 }
 
 
+function mergeMutations(mutationsA, mutationsB, allGenes) {
+  const mutations = uniqWith(
+    [...mutationsA, ...mutationsB],
+    isEqual
+  );
+  return orderBy(
+    mutations,
+    [({gene}) => allGenes.indexOf(gene), 'position', 'aminoAcid']
+  );
+}
+
+
 function useMutOptions({loaded, isolates}) {
+  const {config, isPending: isConfigPending} = useConfig();
 
   return React.useMemo(
     () => {
-      if (!loaded) {
+      if (!loaded || isConfigPending) {
         return [];
       }
       return Object.values(
@@ -36,34 +53,48 @@ function useMutOptions({loaded, isolates}) {
                     gene === 'S' && position === 614 && aminoAcid === 'G'
                   )
                 );
-              const value = (mutsWithout614G
-                .map(
-                  ({gene, position, aminoAcid}) => (
-                    `${gene}:${position}${aminoAcid}`
-                  )
-                )
-                .join(',')
-              );
-              acc[value] = acc[value] || {
-                mutations: mutsWithout614G,
-                value,
-                suscResultCount: 0
-              };
-              acc[value].suscResultCount += suscResultCount;
+              const key = JSON.stringify(getQueryMutations(mutsWithout614G));
+              if (key in acc) {
+                const mergedMuts = mergeMutations(
+                  acc[key].mutations, mutsWithout614G, config.allGenes
+                );
+                acc[key].mutations = mergedMuts;
+              }
+              else {
+                acc[key] = {
+                  mutations: mutsWithout614G,
+                  suscResultCount: 0
+                };
+              }
+              acc[key].suscResultCount += suscResultCount;
               return acc;
             },
             {}
           )
-      ).sort((opt1, opt2) => {
-        let cmp = - (opt1.suscResultCount - opt2.suscResultCount);
-        if (cmp !== 0) {
-          return cmp;
-        }
+      ).map(opt => {
+        opt.value = mutListToValue(opt.mutations);
+        return opt;
+      }).sort((opt1, opt2) => {
+        // let cmp = - (opt1.suscResultCount - opt2.suscResultCount);
+        // if (cmp !== 0) {
+        //   return cmp;
+        // }
         return compareMutations(opt1.mutations, opt2.mutations);
       });
     },
-    [loaded, isolates]
+    [loaded, isolates, isConfigPending, config]
   );
+}
+
+
+function mutListToValue(mutations) {
+  return mutations
+    .map(
+      ({gene, position, aminoAcid}) => (
+        `${gene}:${position}${aminoAcid}`
+      )
+    )
+    .join(',');
 }
 
 
@@ -101,8 +132,9 @@ export default function useVariantDropdown({
         ];
       }
       else {
-        const inMutOptions = mutOptions.some(
-          ({value}) => mutationText === value
+        const curMutValue = mutListToValue(mutations);
+        const inMutOptions = curMutValue && mutOptions.some(
+          ({value}) => value === curMutValue
         );
         return [
           ...(formOnly ? [{
@@ -130,7 +162,7 @@ export default function useVariantDropdown({
                 text: varName,
                 value: varName,
                 type: 'variant',
-                description: `${suscResultCount} results`
+                description: pluralize('result', suscResultCount, true)
               })
             ),
           {
@@ -138,15 +170,15 @@ export default function useVariantDropdown({
             as: FragmentWithoutWarning,
             children: <Dropdown.Divider />
           },
-          ...(inMutOptions ? [] : [{
-            key: mutationText,
+          ...(!curMutValue || inMutOptions ? [] : [{
+            key: curMutValue,
             text: shortenMutList(mutations).join(' + '),
-            value: mutationText,
+            value: curMutValue,
             type: 'mutations'
           }]),
           ...mutOptions
             .filter(({suscResultCount}) => (
-              includeAll || suscResultCount >= 5
+              includeAll || suscResultCount >= 20
             ))
             .map(
               ({value, mutations, suscResultCount}) => ({
@@ -154,7 +186,7 @@ export default function useVariantDropdown({
                 text: shortenMutList(mutations).join(' + '),
                 value,
                 type: 'mutations',
-                description: `${suscResultCount} results`
+                description: pluralize('result', suscResultCount, true)
               })
             )
         ];

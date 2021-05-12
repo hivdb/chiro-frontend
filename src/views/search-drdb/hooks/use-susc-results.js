@@ -1,4 +1,9 @@
 import React from 'react';
+import range from 'lodash/range';
+import isEqual from 'lodash/isEqual';
+import memoize from 'lodash/memoize';
+import uniqWith from 'lodash/uniqWith';
+
 import useQuery from './use-query';
 import useIsolates from './use-isolates';
 import {useCompareSuscResultsByIsolate} from './use-compare-susc-results';
@@ -84,6 +89,57 @@ function calcResistanceLevel({
 }
 
 
+const RANGE_DELETIONS = [{
+  gene: 'S',
+  posStart: 69,
+  posEnd: 70
+}, {
+  gene: 'S',
+  posStart: 141,
+  posEnd: 146
+}, {
+  gene: 'S',
+  posStart: 242,
+  posEnd: 247
+}];
+
+
+const getQueryMutations = memoize(
+  mutations => {
+    const queryMuts = mutations.filter(
+      ({gene}) => gene === 'S'
+    ).map(
+      mut => {
+        if (mut.aminoAcid === 'del') {
+          const rangeDel = RANGE_DELETIONS.find(
+            ({gene, posStart, posEnd}) => (
+              mut.gene === gene &&
+              mut.position >= posStart &&
+              mut.position <= posEnd
+            )
+          );
+          if (rangeDel) {
+            const {gene, posStart, posEnd} = rangeDel;
+            return range(posStart, posEnd + 1).map(
+              position => ({
+                gene: gene,
+                position,
+                aminoAcid: 'del'
+              })
+            );
+          }
+        }
+        return [mut];
+      }
+    );
+    return uniqWith(queryMuts, isEqual);
+  },
+  payload => JSON.stringify(payload)
+);
+
+export {getQueryMutations};
+
+
 function usePrepareQuery({
   skip,
   refName,
@@ -95,6 +151,7 @@ function usePrepareQuery({
   addWhere,
   addParams
 }) {
+  const queryMuts = getQueryMutations(mutations);
   return React.useMemo(
     () => {
       const addColumnText = (
@@ -112,36 +169,46 @@ function usePrepareQuery({
           params.$refName = refName;
         }
 
-        if (mutations && mutations.length > 0) {
+        if (queryMuts && queryMuts.length > 0) {
           const excludeMutQuery = [
             // constantly allow 614G
-            `NOT (M.gene = 'S' AND M.position = 614 AND M.amino_acid = 'G')`
+            `NOT (M.gene = 'S' AND M.position = 614 AND M.amino_acid = 'G')`,
+            // constantly allow non-S
+            `M.gene='S'`
           ];
-          if (mutationMatch === 'all') {
+          const allMutQuery = [];
+          for (
+            const [idx, mutgroup] of
+            queryMuts.entries()
+          ) {
+            const mutQuery = [];
             for (
-              const [idx, {gene, position, aminoAcid}] of
-              mutations.entries()
+              const [jdx, {gene, position, aminoAcid}] of
+              mutgroup.entries()
             ) {
+              mutQuery.push(`
+                M.gene = $gene${idx}_${jdx} AND
+                M.position = $pos${idx}_${jdx} AND
+                M.amino_acid = $aa${idx}_${jdx}
+              `);
+              params[`$gene${idx}_${jdx}`] = gene;
+              params[`$pos${idx}_${jdx}`] = position;
+              params[`$aa${idx}_${jdx}`] = aminoAcid;
+            }
+            allMutQuery.push(mutQuery.join(' OR '));
+          }
+          if (mutationMatch === 'all') {
+            for (const mutQuery of allMutQuery) {
               where.push(`
                 EXISTS (
                   SELECT 1
                   FROM isolate_mutations M
                   WHERE
                     S.iso_name = M.iso_name AND
-                    M.gene = $gene${idx} AND
-                    M.position = $pos${idx} AND
-                    M.amino_acid = $aa${idx}
+                    (${mutQuery})
                 )
               `);
-              excludeMutQuery.push(`NOT (
-                M.gene = $gene${idx} AND
-                M.position = $pos${idx} AND
-                M.amino_acid = $aa${idx}
-              )`);
-
-              params[`$gene${idx}`] = gene;
-              params[`$pos${idx}`] = position;
-              params[`$aa${idx}`] = aminoAcid;
+              excludeMutQuery.push(`NOT (${mutQuery})`);
             }
             where.push(`
               NOT EXISTS (
@@ -154,27 +221,13 @@ function usePrepareQuery({
             `);
           }
           else {
-            const includeMutQuery = [];
-            for (
-              const [idx, {gene, position, aminoAcid}] of
-              mutations.entries()
-            ) {
-              includeMutQuery.push(`
-                M.gene = $gene${idx} AND
-                M.position = $pos${idx} AND
-                M.amino_acid = $aa${idx}
-              `);
-              params[`$gene${idx}`] = gene;
-              params[`$pos${idx}`] = position;
-              params[`$aa${idx}`] = aminoAcid;
-            }
             where.push(`
               EXISTS (
                 SELECT 1
                 FROM isolate_mutations M
                 WHERE
                   S.iso_name = M.iso_name AND
-                  (${includeMutQuery.join(' OR ')})
+                  (${allMutQuery.join(' OR ')})
               )
             `);
           }
@@ -227,7 +280,7 @@ function usePrepareQuery({
     [
       skip,
       refName,
-      mutations,
+      queryMuts,
       mutationMatch,
       varName,
       addColumns,

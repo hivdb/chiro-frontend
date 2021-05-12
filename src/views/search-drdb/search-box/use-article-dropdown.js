@@ -1,4 +1,5 @@
 import React from 'react';
+import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 
 const EMPTY = '__EMPTY';
@@ -53,10 +54,11 @@ export default function useArticleDropdown({
               }]
           ),
           ...articles.map(
-            ({refName, displayName}) => ({
+            ({refName, displayName, suscResultCount}) => ({
               key: refName,
               text: displayName,
-              value: refName
+              value: refName,
+              description: pluralize('result', suscResultCount, true)
             })
           )
         ];

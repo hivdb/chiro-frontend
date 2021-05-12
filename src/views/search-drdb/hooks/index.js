@@ -1,4 +1,5 @@
 import useLocationParams from './use-location-params';
+import useConfig from './use-config';
 import useArticles from './use-articles';
 import useAntibodies from './use-antibodies';
 import useVaccines from './use-vaccines';
@@ -9,12 +10,14 @@ import {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate
 } from './use-compare-susc-results';
+import {getQueryMutations} from './use-susc-results';
 import useAbSuscResults from './use-ab-susc-results';
 import useCPSuscResults from './use-cp-susc-results';
 import useVPSuscResults from './use-vp-susc-results';
 
 export {
   useLocationParams,
+  useConfig,
   useArticles,
   useAntibodies,
   useVaccines,
@@ -26,5 +29,6 @@ export {
   useCompareSuscResultsByAntibodies,
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
+  getQueryMutations,
   compareMutations
 };

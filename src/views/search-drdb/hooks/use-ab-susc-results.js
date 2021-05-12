@@ -45,39 +45,6 @@ function usePrepareQuery({abNames, skip}) {
             params[`$abName${idx}`] = abName;
             excludeAbQuery.push(`$abName${idx}`);
           }
-          /* where.push(`
-            NOT EXISTS (
-              SELECT 1 FROM rx_antibodies RXMAB
-              WHERE
-              RXMAB.ref_name = S.ref_name AND
-              RXMAB.rx_name = S.rx_name AND
-              RXMAB.ab_name NOT IN (${excludeAbQuery.join(', ')})
-            )
-          `); */
-        }
-
-        else {
-          rxAbFiltered = true;
-          where.push(`
-            EXISTS (
-              SELECT 1 FROM rx_antibodies RXMAB, antibodies MAB
-              WHERE
-                RXMAB.ref_name = S.ref_name AND
-                RXMAB.rx_name = S.rx_name AND
-                RXMAB.ab_name = MAB.ab_name AND
-                MAB.visibility = 1
-            )
-          `);
-          where.push(`
-            NOT EXISTS (
-              SELECT 1 FROM rx_antibodies RXMAB, antibodies MAB
-              WHERE
-                RXMAB.ref_name = S.ref_name AND
-                RXMAB.rx_name = S.rx_name AND
-                RXMAB.ab_name = MAB.ab_name AND
-                MAB.visibility = 0
-            )
-          `);
         }
 
         if (!rxAbFiltered) {

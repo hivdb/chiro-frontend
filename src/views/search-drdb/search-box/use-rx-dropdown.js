@@ -1,4 +1,5 @@
 import React from 'react';
+import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 import escapeRegExp from 'lodash/escapeRegExp';
 
@@ -95,11 +96,11 @@ export default function useRxDropdown({
               !(/\+/.test(vaccineName))
             ))
             .map(
-              ({vaccineName, vaccineType, suscResultCount}) => ({
+              ({vaccineName, suscResultCount}) => ({
                 key: vaccineName,
                 text: vaccineName,
                 value: vaccineName,
-                description: `${suscResultCount} results (${vaccineType})`,
+                description: pluralize('result', suscResultCount, true),
                 type: VACCINE
               })
             ),
@@ -137,28 +138,14 @@ export default function useRxDropdown({
                 synonyms,
                 abClass,
                 suscResultCount
-              }) => {
-                const isPlural = suscResultCount > 1;
-                let description = `${suscResultCount} result${
-                  isPlural ? 's' : ''
-                }`;
-                if (abClass) {
-                  const abClassShort = (
-                    abClass
-                      .replace(' Class ', ' ')
-                      .replace(' Cluster ', ' ')
-                  );
-                  description += ` (${abClassShort})`;
-                }
-                return {
-                  key: abName,
-                  text: abbr ? `${abName} (${abbr})` : abName,
-                  value: abName,
-                  type: ANTIBODY,
-                  description,
-                  synonyms
-                };
-              }
+              }) => ({
+                key: abName,
+                text: abbr ? `${abName} (${abbr})` : abName,
+                value: abName,
+                type: ANTIBODY,
+                description: pluralize('result', suscResultCount, true),
+                synonyms
+              })
             )
         ];
       }

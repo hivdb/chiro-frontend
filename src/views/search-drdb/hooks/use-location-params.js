@@ -22,7 +22,7 @@ function parseMutations(mutationText, config) {
       if (aas === 'ins' || aas === 'del') {
         acc.push({
           gene,
-          position: pos,
+          position: parseInt(pos),
           refAminoAcid: ref,
           aminoAcid: aas,
           text
@@ -32,7 +32,7 @@ function parseMutations(mutationText, config) {
         for (const aa of aas) {
           acc.push({
             gene,
-            position: pos,
+            position: parseInt(pos),
             refAminoAcid: ref,
             aminoAcid: aa.replace('*', 'stop'),
             text
