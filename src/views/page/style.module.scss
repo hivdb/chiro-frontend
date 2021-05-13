@@ -1,4 +1,6 @@
 @import "../../styles/colors";
+@import "../../styles/dropdown";
+@import "~sierra-frontend/dist/styles/placeholder";
 
 .content-container {
 
@@ -258,6 +260,41 @@
         margin-left: 0;
         margin-right: 0;
       }
+    }
+  }
+}
+
+.search-container {
+  &[data-loaded="false"] {
+    @extend %placeholder;
+    :global(.ui.search.dropdown) {
+      background-color: #e0e0e0;
+      pointer-events: none;
+    }
+  }
+
+  display: flex;
+  justify-content: space-between;
+  max-width: 80%;
+  > *:not(:last-child) {
+    margin-right: 2rem;
+  }
+  .search-label {
+    white-space: nowrap;
+  }
+  margin-bottom: 2rem;
+
+  @include chiro-dropdown(20rem);
+  @media only screen and (max-width: 1200px) {
+    max-width: 85%;
+  }
+  @media only screen and (max-width: 1000px) {
+    max-width: 100%;
+  }
+  @media only screen and (max-width: 900px) {
+    flex-wrap: wrap;
+    > *:not(:last-child) {
+      margin-right: 0;
     }
   }
 }

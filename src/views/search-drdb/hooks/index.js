@@ -14,6 +14,7 @@ import {getQueryMutations} from './use-susc-results';
 import useAbSuscResults from './use-ab-susc-results';
 import useCPSuscResults from './use-cp-susc-results';
 import useVPSuscResults from './use-vp-susc-results';
+import useCPCount from './use-cp-count';
 
 export {
   useLocationParams,
@@ -26,6 +27,7 @@ export {
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults,
+  useCPCount,
   useCompareSuscResultsByAntibodies,
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,

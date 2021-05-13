@@ -11,6 +11,7 @@ import {
   useVaccines,
   useVariants,
   useIsolates,
+  useCPCount,
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults
@@ -27,6 +28,7 @@ export default function SearchDRDB(props) {
     mutationMatch,
     abNames,
     vaccineName,
+    convPlasmaOnly,
     varName,
     onChange
   } = useLocationParams();
@@ -65,12 +67,16 @@ export default function SearchDRDB(props) {
     isolateLookup,
     isPending: isIsolatePending
   } = useIsolates();
+  const {
+    cpSuscResultCount,
+    isPending: isCPCountPending
+  } = useCPCount();
 
   const {
     suscResults: abSuscResults,
     isPending: isAbResultPending
   } = useAbSuscResults({
-    skip,
+    skip: skip || vaccineName || convPlasmaOnly === 'yes',
     refName,
     mutations,
     mutationMatch,
@@ -81,7 +87,7 @@ export default function SearchDRDB(props) {
     suscResults: cpSuscResults,
     isPending: isCPPending
   } = useCPSuscResults({
-    skip,
+    skip: skip || (abNames && abNames.length > 0) || vaccineName,
     refName,
     mutations,
     mutationMatch,
@@ -91,7 +97,7 @@ export default function SearchDRDB(props) {
     suscResults: vpSuscResults,
     isPending: isVPPending
   } = useVPSuscResults({
-    skip,
+    skip: skip || (abNames && abNames.length > 0) || convPlasmaOnly === 'yes',
     refName,
     mutations,
     mutationMatch,
@@ -104,7 +110,9 @@ export default function SearchDRDB(props) {
     !isRefNameListPending &&
     !isAbLookupPending &&
     !isVaccPending &&
-    !isVariantPending
+    !isVariantPending &&
+    !isIsolatePending &&
+    !isCPCountPending
   );
 
   const resultLoaded = (
@@ -135,6 +143,7 @@ export default function SearchDRDB(props) {
        mutationMatch={mutationMatch}
        abNames={abNames}
        vaccineName={vaccineName}
+       convPlasmaOnly={convPlasmaOnly}
        varName={varName}
        onChange={onChange}
        formOnly={formOnly !== undefined}
@@ -143,6 +152,7 @@ export default function SearchDRDB(props) {
        antibodies={antibodies}
        antibodyLookup={antibodyLookup}
        vaccines={vaccines}
+       cpSuscResultCount={cpSuscResultCount}
        vaccineLookup={vaccineLookup}
        variants={variants}
        isolates={isolates}

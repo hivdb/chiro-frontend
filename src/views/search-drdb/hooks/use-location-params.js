@@ -100,6 +100,7 @@ export default function useLocationParams() {
         mut_match: inputMutMatch,
         antibodies: antibodyText = '',
         variant: varName = null,
+        cp: convPlasmaOnly = 'no',
         vaccine: vaccineName = null
       } = {}
     }
@@ -136,8 +137,14 @@ export default function useLocationParams() {
 
       if (action === 'vaccine') {
         delete query.antibodies;
+        delete query.cp;
       }
       else if (action === 'antibodies') {
+        delete query.vaccine;
+        delete query.cp;
+      }
+      else if (action === 'cp') {
+        delete query.antibodies;
         delete query.vaccine;
       }
       else if (action === 'variant') {
@@ -174,6 +181,7 @@ export default function useLocationParams() {
         abNames,
         varName,
         vaccineName,
+        convPlasmaOnly,
         onChange
       };
     },
@@ -187,6 +195,7 @@ export default function useLocationParams() {
       antibodyText,
       varName,
       vaccineName,
+      convPlasmaOnly,
       onChange
     ]
   );

@@ -26,6 +26,7 @@ export default function SearchDRDBLayout({
   mutationMatch,
   abNames,
   vaccineName,
+  convPlasmaOnly,
   varName,
   match,
   loaded,
@@ -36,6 +37,7 @@ export default function SearchDRDBLayout({
   antibodies,
   antibodyLookup,
   vaccines,
+  cpSuscResultCount,
   variants,
   isolates,
   isolateLookup,
@@ -48,7 +50,12 @@ export default function SearchDRDBLayout({
   setTitle('Search susceptibility data');
   /* loading || redirectIfNeeded(props); */
 
-  const displayAbTables = loaded && !formOnly && !vaccineName;
+  const displayAbTables = (
+    loaded &&
+    !formOnly &&
+    !vaccineName &&
+    convPlasmaOnly !== 'yes'
+  );
   const displayCPTables = (
     loaded &&
     !formOnly &&
@@ -58,7 +65,8 @@ export default function SearchDRDBLayout({
   const displayVPTables = (
     loaded &&
     !formOnly &&
-    (!abNames || abNames.length === 0)
+    (!abNames || abNames.length === 0) &&
+    convPlasmaOnly !== 'yes'
   );
 
   return <Grid stackable className={style['search']}>
@@ -72,6 +80,8 @@ export default function SearchDRDBLayout({
        antibodies={antibodies}
        vaccineValue={vaccineName}
        vaccines={vaccines}
+       cpSuscResultCount={cpSuscResultCount}
+       convPlasmaOnly={convPlasmaOnly}
        variantValue={varName}
        variants={variants}
        isolates={isolates}

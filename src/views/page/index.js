@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import CMSPage from './cms';
+import SusceptibilityDataPage from './susceptibility-data';
 
 
 export default class Page extends React.Component {
@@ -17,6 +18,11 @@ export default class Page extends React.Component {
 
   render() {
     const {params: {pageName}, location} = this.props.match;
-    return <CMSPage key={pageName} {...{pageName, location}} />;
+    if (pageName === 'susceptibility-data') {
+      return <SusceptibilityDataPage location={location} />;
+    }
+    else {
+      return <CMSPage key={pageName} {...{pageName, location}} />;
+    }
   }
 }

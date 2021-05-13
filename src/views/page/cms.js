@@ -33,7 +33,8 @@ class CMSPage extends React.Component {
     tables: PropTypes.objectOf(PropTypes.shape({
       columnDefs: PropTypes.array.isRequired,
       data: PropTypes.array.isRequired
-    }).isRequired)
+    }).isRequired),
+    children: PropTypes.node
   }
 
   static defaultProps = {
@@ -105,7 +106,8 @@ class CMSPage extends React.Component {
       heroImage,
       imagePrefix,
       genomeMaps,
-      tables
+      tables,
+      children
     } = this.props;
     const content = (
       this.props.content
@@ -149,6 +151,7 @@ class CMSPage extends React.Component {
               </span>}
             </Header.Subheader>
           </Header>}
+        {children}
         <Markdown
          key={pageName}
          toc={toc} tocClassName={classNames(
@@ -171,15 +174,17 @@ class CMSPage extends React.Component {
 }
 
 
-export default function CMSPageContainer({pageName}) {
+export default function CMSPageContainer({pageName, children}) {
   return (
     <PageLoader
      pageName={pageName}
-     component={CMSPage} />
+     component={CMSPage}
+     childProps={{children}} />
   );
 }
 
 
 CMSPageContainer.propTypes = {
-  pageName: PropTypes.string.isRequired
+  pageName: PropTypes.string.isRequired,
+  children: PropTypes.node
 };

@@ -7,6 +7,7 @@ import escapeRegExp from 'lodash/escapeRegExp';
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
+const CP = 'cp';
 const ANTIBODY = 'antibodies';
 const VACCINE = 'vaccine';
 
@@ -35,6 +36,8 @@ export default function useRxDropdown({
   loaded,
   vaccines, vaccineValue,
   antibodies, antibodyValue,
+  cpSuscResultCount,
+  convPlasmaOnly,
   onChange,
   formOnly
 }) {
@@ -56,11 +59,17 @@ export default function useRxDropdown({
             value: ANY
           },
           {
+            key: CP,
+            text: 'Convalescent plasma',
+            value: CP,
+            type: CP
+          },
+          ...(vaccineValue ? [{
             key: vaccineValue,
             text: vaccineValue,
             value: vaccineValue,
             type: VACCINE
-          },
+          }] : []),
           ...(
             antibodyValue && antibodyValue.length > 0 ?
               [{
@@ -83,6 +92,13 @@ export default function useRxDropdown({
             key: 'any',
             text: 'Any',
             value: ANY
+          },
+          {
+            key: CP,
+            text: 'Convalescent plasma',
+            value: CP,
+            description: pluralize('result', cpSuscResultCount, true),
+            type: CP
           },
           {
             key: 'vaccine-divider',
@@ -127,7 +143,7 @@ export default function useRxDropdown({
             .filter(
               ({abName, visibility}) => (
                 includeAll ||
-                antibodyValue.includes(abName) ||
+                (antibodyValue && antibodyValue.includes(abName)) ||
                 visibility === true
               )
             )
@@ -154,6 +170,7 @@ export default function useRxDropdown({
       loaded, includeAll,
       vaccines, antibodies,
       vaccineValue, antibodyValue,
+      cpSuscResultCount,
       formOnly
     ]
   );
@@ -168,6 +185,9 @@ export default function useRxDropdown({
             vaccine: undefined,
             antibodies: undefined
           });
+        }
+        else if (value === CP) {
+          onChange('cp', 'yes');
         }
         else {
           const {type} = options.find(opt => opt.value === value);
@@ -184,7 +204,10 @@ export default function useRxDropdown({
   const activeRx = (
     antibodyValue && antibodyValue.length > 0 ?
       antibodyValue.join(',') :
-      (vaccineValue || defaultValue)
+      (
+        convPlasmaOnly === 'yes' ?
+          CP : (vaccineValue || defaultValue)
+      )
   );
   return (
     <Dropdown

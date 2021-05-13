@@ -9,10 +9,12 @@ export default function SearchBox({
   articleValue,
   antibodyValue,
   vaccineValue,
+  convPlasmaOnly,
   variantValue,
   articles,
   antibodies,
   vaccines,
+  cpSuscResultCount,
   variants,
   isolates,
   mutations,
@@ -30,7 +32,9 @@ export default function SearchBox({
   const rxDropdown = useRxDropdown({
     loaded, formOnly,
     vaccineValue, antibodyValue,
+    convPlasmaOnly,
     vaccines, antibodies,
+    cpSuscResultCount,
     onChange
   });
   const variantDropdown = useVariantDropdown({
