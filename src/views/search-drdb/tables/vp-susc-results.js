@@ -19,13 +19,15 @@ export default function VPSuscResults({
       'controlIsoName',
       'isoName',
       'vaccineName',
-      'timing',
       'dosage',
+      'timing',
       'fold',
       'resistanceLevel'
     ],
     labels: {
-      isoName: 'Mutation'
+      isoName: 'Mutation',
+      dosage: '# Shots',
+      timing: '# Months'
     }
   });
 
@@ -38,13 +40,15 @@ export default function VPSuscResults({
       'controlIsoName',
       'isoName',
       'vaccineName',
-      'timing',
       'dosage',
+      'timing',
       'fold',
       'resistanceLevel'
     ],
     labels: {
-      isoName: 'Variant'
+      isoName: 'Variant',
+      dosage: '# Shots',
+      timing: '# Months'
     }
   });
 

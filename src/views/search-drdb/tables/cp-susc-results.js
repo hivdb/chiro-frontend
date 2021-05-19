@@ -25,7 +25,8 @@ export default function CPSuscResults({
       'resistanceLevel'
     ],
     labels: {
-      isoName: 'Mutation'
+      isoName: 'Mutation',
+      timing: '# Months'
     }
   });
 
@@ -44,7 +45,8 @@ export default function CPSuscResults({
       'resistanceLevel'
     ],
     labels: {
-      isoName: 'Variant'
+      isoName: 'Variant',
+      timing: '# Months'
     }
   });
 
