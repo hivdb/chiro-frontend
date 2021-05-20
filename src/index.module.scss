@@ -6,6 +6,7 @@ body {
   @include default-color;
   --sierra-color-type-main: #{$main-color} !important;
   --sierra-color-type-main-lighter: #{$bondi-blue} !important;
+  --sierra-color-type-highlight: #{$lima} !important;
   margin: 0;
   font-family: $font-family;
   -webkit-font-smoothing: antialiased;
