@@ -8,7 +8,8 @@ import useIsolates, {compareMutations} from './use-isolates';
 import {
   useCompareSuscResultsByAntibodies,
   useCompareSuscResultsByIsolate,
-  useCompareSuscResultsByControlIsolate
+  useCompareSuscResultsByControlIsolate,
+  useCompareSuscResultsByInfectedIsolate
 } from './use-compare-susc-results';
 import {getQueryMutations} from './use-susc-results';
 import useAbSuscResults from './use-ab-susc-results';
@@ -31,6 +32,7 @@ export {
   useCompareSuscResultsByAntibodies,
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
+  useCompareSuscResultsByInfectedIsolate,
   getQueryMutations,
   compareMutations
 };

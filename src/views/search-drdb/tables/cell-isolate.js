@@ -6,6 +6,9 @@ export default function CellIsolate({
   isoName,
   isolateLookup
 }) {
+  if (!(isoName in isolateLookup)) {
+    return '?';
+  }
   const {
     type,
     mutations,

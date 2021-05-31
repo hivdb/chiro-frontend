@@ -9,7 +9,7 @@ function usePrepareQuery({skip}) {
       const joinClause = [];
 
       if (!skip) {
-        addColumns.push('RXCP.infection');
+        addColumns.push('RXCP.infected_iso_name');
         addColumns.push('RXCP.timing');
         addColumns.push('RXCP.severity');
 

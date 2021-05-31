@@ -27,6 +27,18 @@ export function useCompareSuscResultsByControlIsolate(isolateLookup) {
 }
 
 
+export function useCompareSuscResultsByInfectedIsolate(isolateLookup) {
+  return React.useCallback(
+    (srA, srB) => {
+      const isoA = isolateLookup[srA.infectedIsoName];
+      const isoB = isolateLookup[srB.infectedIsoName];
+      return compareIsolates(isoA, isoB);
+    },
+    [isolateLookup]
+  );
+}
+
+
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 

@@ -108,6 +108,12 @@ function useJoinMutations({
 
 
 export function compareIsolates(isolateA, isolateB) {
+  if (!isolateA) {
+    return 1;
+  }
+  if (!isolateB) {
+    return -1;
+  }
   if (isolateA.isoName === isolateB.isoName) {
     // short-cut if the isolate names are the same
     return 0;

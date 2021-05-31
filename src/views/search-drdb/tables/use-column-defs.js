@@ -12,6 +12,7 @@ import CellRLevel from './cell-resistance-level';
 import {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
+  useCompareSuscResultsByInfectedIsolate,
   useCompareSuscResultsByAntibodies
 } from '../hooks';
 
@@ -23,6 +24,7 @@ function buildColDefs({
   compareByAntibodies,
   compareByIsolate,
   compareByControlIsolate,
+  compareByInfectedIsolate,
   columns,
   labels = {}
 }) {
@@ -75,9 +77,13 @@ function buildColDefs({
       name: 'vaccineName',
       label: labels.vaccineName || 'Vaccine'
     }),
-    infection: new ColumnDef({
-      name: 'infection',
-      label: labels.infection
+    infectedIsoName: new ColumnDef({
+      name: 'infectedIsoName',
+      label: labels.infectedIsoName || 'Infection',
+      render: isoName => (
+        <CellIsolate {...{isoName, isolateLookup}} />
+      ),
+      sort: rows => [...rows].sort(compareByInfectedIsolate)
     }),
     timing: new ColumnDef({
       name: 'timing',
@@ -117,6 +123,9 @@ export default function useColumnDefs({
   const compareByControlIsolate = (
     useCompareSuscResultsByControlIsolate(isolateLookup)
   );
+  const compareByInfectedIsolate = (
+    useCompareSuscResultsByInfectedIsolate(isolateLookup)
+  );
 
   return React.useMemo(
     () => buildColDefs({
@@ -126,6 +135,7 @@ export default function useColumnDefs({
       compareByAntibodies,
       compareByIsolate,
       compareByControlIsolate,
+      compareByInfectedIsolate,
       columns,
       labels
     }),
@@ -136,6 +146,7 @@ export default function useColumnDefs({
       compareByAntibodies,
       compareByIsolate,
       compareByControlIsolate,
+      compareByInfectedIsolate,
       columns,
       labels
     ]
