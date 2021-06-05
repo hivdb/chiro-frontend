@@ -1,114 +1,125 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <urlset
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+  <!-- created with https://chrome.google.com/webstore/detail/sitemap-generator/hcnjemngcihnhncobgdgkkfkhmleapah?hl=en-US -->
 
 
-<url>
-  <loc>https://covdb.stanford.edu/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/page/covid-review/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/compound-list/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/clinical-trials/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/compound-target-list/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/virus-list/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/cells-list/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/animal-model-list/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/cell-culture-measurement-list/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/article-list/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/page/links/</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Polymerase</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Monoclonal%20antibody</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Fusion%20inhibitor</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Viral%20protease</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Receptor%20binding</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Convalescent%20plasma</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Interferons</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Immunostimulatory</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Host%20proteases</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?target=Host%20endosomes</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?virus=SARS-CoV-2</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?compound=Remdesivir&amp;target=Polymerase</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?compound=REGN10933&amp;target=Monoclonal%20antibody</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
-<url>
-  <loc>https://covdb.stanford.edu/search/?compound=Hydroxychloroquine&amp;target=Host%20endosomes</loc>
-  <lastmod>2020-08-05T14:44:56+00:00</lastmod>
-</url>
+  <url><loc>https://covdb.stanford.edu/</loc></url>
+  <url><loc>https://covdb.stanford.edu/animal-model-list/</loc></url>
+  <url><loc>https://covdb.stanford.edu/archive/</loc></url>
+  <url><loc>https://covdb.stanford.edu/article-list/</loc></url>
+  <url><loc>https://covdb.stanford.edu/cell-culture-measurement-list/</loc></url>
+  <url><loc>https://covdb.stanford.edu/cells-list/</loc></url>
+  <url><loc>https://covdb.stanford.edu/clinical-trials/</loc></url>
+  <url><loc>https://covdb.stanford.edu/clinical-trials/?fromDate=2021-04-15</loc></url>
+  <url><loc>https://covdb.stanford.edu/clinical-trials/?fromDate=2021-04-22</loc></url>
+  <url><loc>https://covdb.stanford.edu/clinical-trials/?fromDate=2021-04-29</loc></url>
+  <url><loc>https://covdb.stanford.edu/clinical-trials/?fromDate=2021-05-28</loc></url>
+  <url><loc>https://covdb.stanford.edu/compound-list/</loc></url>
+  <url><loc>https://covdb.stanford.edu/compound-target-list/</loc></url>
+  <url><loc>https://covdb.stanford.edu/mut-annot-viewer/SARS2S/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/acknowledgment/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/covid-review/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/database-schema/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/links/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/mab-tables/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/mutation-viewer/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/press-release/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/susceptibility-data/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/susceptibility-data/cp-mutations/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/susceptibility-data/cp-variants/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/susceptibility-data/figure/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/susceptibility-data/mab-mutations/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/susceptibility-data/mab-variants/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/susceptibility-data/vp-mutations/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/susceptibility-data/vp-variants/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/terms-of-use/</loc></url>
+  <url><loc>https://covdb.stanford.edu/page/updates/</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Betton21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Dudas21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Edara21b</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Edara21c</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Ferreira21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Goel21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Gonzalez21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Hoffmann21c</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Jalkanen21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Laiton-Donato21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Li21d</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Lien21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Liu21d</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Makdasi21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Monin-Aldama21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Muecksch21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Pegu21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Sapkal21b</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Shi21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Stankov21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Tada21c</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Virtanen21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Weigang21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Yi21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search-drdb/?article=Zhang21c</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Gaborit21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Gunst21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Lee21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Lenze20</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Lopardo21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Maisonnasse21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Qiao21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Rossignol21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Silva21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Suryadevara21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?article=Vandyck21</loc></url>
+  <url><loc>https://covdb.stanford.edu/search/?form_only</loc></url>
+  <url><loc>https://covdb.stanford.edu/sierra/sars2/</loc></url>
+  <url><loc>https://covdb.stanford.edu/sierra/sars2/by-patterns/</loc></url>
+  <url><loc>https://covdb.stanford.edu/sierra/sars2/by-reads/</loc></url>
+  <url><loc>https://covdb.stanford.edu/sierra/sars2/by-sequences/</loc></url>
+  <url><loc>https://covdb.stanford.edu/virus-list/</loc></url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Polymerase</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Monoclonal%20antibody</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Fusion%20inhibitor</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Viral%20protease</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Receptor%20binding</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Convalescent%20plasma</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Interferons</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Immunostimulatory</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Host%20proteases</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?target=Host%20endosomes</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?virus=SARS-CoV-2</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?compound=Remdesivir&amp;target=Polymerase</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?compound=REGN10933&amp;target=Monoclonal%20antibody</loc>
+  </url>
+  <url>
+    <loc>https://covdb.stanford.edu/search/?compound=Hydroxychloroquine&amp;target=Host%20endosomes</loc>
+  </url>
 </urlset>
