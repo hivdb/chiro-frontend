@@ -1,5 +1,6 @@
 import React from 'react';
 import useQuery from './use-query';
+import useVariants from './use-variants';
 
 
 function countSpikeMutations(mutations) {
@@ -166,9 +167,39 @@ export default function useIsolates({
   `;
 
   const {
-    payload: isolates,
+    payload,
     isPending
   } = useQuery({sql, skip});
+
+  const {
+    variants,
+    isPending: isVarsPending
+  } = useVariants({skip: skip || isPending});
+
+  const isolates = React.useMemo(
+    () => {
+      if (skip || isPending || isVarsPending) {
+        return null;
+      }
+      const varLookup = variants.reduce(
+        (acc, v) => {
+          acc[v.varName] = v;
+          return acc;
+        },
+        {}
+      );
+      return payload.map(
+        iso => ({
+          ...iso,
+          synonyms: (
+            iso.varName in varLookup ?
+              varLookup[iso.varName].synonyms : []
+          )
+        })
+      );
+    },
+    [skip, isPending, isVarsPending, payload, variants]
+  );
 
   const isolateLookup = React.useMemo(
     () => skip || isPending || !isolates ? {} : isolates.reduce(

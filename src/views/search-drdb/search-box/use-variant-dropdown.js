@@ -148,7 +148,7 @@ export default function useVariantDropdown({
             value: ANY
           },
           {
-            key: 'vaccine-divider',
+            key: 'variant-divider',
             as: FragmentWithoutWarning,
             children: <Dropdown.Divider />
           },
@@ -157,9 +157,12 @@ export default function useVariantDropdown({
               includeAll || suscResultCount >= 20
             ))
             .map(
-              ({varName, suscResultCount}) => ({
+              ({varName, synonyms, suscResultCount}) => ({
                 key: varName,
-                text: varName,
+                text: (
+                  synonyms.length > 0 ?
+                    `${varName} (${synonyms[0]})` : varName
+                ),
                 value: varName,
                 type: 'variant',
                 description: pluralize('result', suscResultCount, true)

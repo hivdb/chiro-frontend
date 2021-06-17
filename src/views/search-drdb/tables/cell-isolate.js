@@ -10,13 +10,20 @@ export default function CellIsolate({
     return '?';
   }
   const {
+    varName,
+    synonyms,
     type,
     mutations,
     expandable
   } = isolateLookup[isoName];
+  const displayVarName = (
+    synonyms.length > 0 ?
+      `${varName} (${synonyms[0]})` : varName
+  );
+
   if (type === 'named-variant') {
-    // is a named variant, use isolate name
-    return isoName;
+    // is a named variant, use variant name
+    return displayVarName;
   }
   else {
     const shortenMuts = shortenMutList(mutations);
@@ -26,8 +33,8 @@ export default function CellIsolate({
       </>;
     }
     else {
-      // not expandable or no mutations; fallback to isoName
-      return isoName;
+      // not expandable or no mutations; fallback to varName
+      return displayVarName;
     }
   }
 }
