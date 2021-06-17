@@ -1,6 +1,6 @@
 import React from 'react';
 import {Header} from 'semantic-ui-react';
-import {H3} from 'sierra-frontend/dist/components/heading-tags';
+import {H3, H4} from 'sierra-frontend/dist/components/heading-tags';
 
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
@@ -18,8 +18,10 @@ export default function useRenderSuscResults({
   cacheKey,
   suscResults,
   isolateLookup,
-  indivMutColumnDefs,
-  comboMutsColumnDefs
+  indivMutIndivFoldColumnDefs,
+  indivMutAggFoldColumnDefs,
+  comboMutsIndivFoldColumnDefs,
+  comboMutsAggFoldColumnDefs
 }) {
 
   const suscResultsBySection = React.useMemo(
@@ -31,11 +33,18 @@ export default function useRenderSuscResults({
         (acc, sr) => {
           const {type} = isolateLookup[sr.isoName];
           const section = type2Section[type];
-          acc[section] = acc[section] || [];
-          acc[section].push(sr);
+          if (sr.cumulativeCount > 1) {
+            acc[section].aggFold.push(sr);
+          }
+          else {
+            acc[section].indivFold.push(sr);
+          }
           return acc;
         },
-        {}
+        {
+          indivMut: {indivFold: [], aggFold: []},
+          comboMuts: {indivFold: [], aggFold: []}
+        }
       );
     },
     [loaded, suscResults, isolateLookup]
@@ -46,41 +55,87 @@ export default function useRenderSuscResults({
   return React.useMemo(
     () => {
       if (loaded) {
-        const sections = Object.keys(suscResultsBySection);
-        const indivTable = (
-          sections.includes('indivMut') ?
-            <SimpleTable
-             cacheKey={`${id}_indiv-mut_${cacheKey}`}
-             columnDefs={indivMutColumnDefs}
-             data={suscResultsBySection.indivMut} /> : null
+        const numSections = (
+          Object.entries(suscResultsBySection)
+            .filter(
+              ([, {indivFold, aggFold}]) => (
+                indivFold.length + aggFold.length > 0
+              )
+            )
+            .length
         );
-        const comboTable = (
-          sections.includes('comboMuts') ?
+        const indivMutIndivFoldTable = (
+          suscResultsBySection.indivMut.indivFold.length > 0 ?
             <SimpleTable
-             cacheKey={`${id}_combo-muts_${cacheKey}`}
-             columnDefs={comboMutsColumnDefs}
-             data={suscResultsBySection.comboMuts} /> : null
+             cacheKey={`${id}_indiv-mut_indiv-fold_${cacheKey}`}
+             columnDefs={indivMutIndivFoldColumnDefs}
+             data={suscResultsBySection.indivMut.indivFold} /> : null
         );
-        if (sections.length === 2) {
+        const indivMutAggFoldTable = (
+          suscResultsBySection.indivMut.aggFold.length > 0 ?
+            <SimpleTable
+             cacheKey={`${id}_indiv-mut_agg-fold_${cacheKey}`}
+             columnDefs={indivMutAggFoldColumnDefs}
+             data={suscResultsBySection.indivMut.aggFold} /> : null
+        );
+        const comboMutsIndivFoldTable = (
+          suscResultsBySection.comboMuts.indivFold.length > 0 ?
+            <SimpleTable
+             cacheKey={`${id}_combo-muts_indiv-fold_${cacheKey}`}
+             columnDefs={comboMutsIndivFoldColumnDefs}
+             data={suscResultsBySection.comboMuts.indivFold} /> : null
+        );
+        const comboMutsAggFoldTable = (
+          suscResultsBySection.comboMuts.aggFold.length > 0 ?
+            <SimpleTable
+             cacheKey={`${id}_combo-muts_agg-fold_${cacheKey}`}
+             columnDefs={comboMutsAggFoldColumnDefs}
+             data={suscResultsBySection.comboMuts.aggFold} /> : null
+        );
+        if (numSections === 2) {
           return <>
             <section>
               <Header as={H3} id={`${id}_indiv-mut`}>
                 Individual mutation
               </Header>
-              {indivTable}
+              {indivMutIndivFoldTable}
+              {indivMutAggFoldTable ? <>
+                <Header as={H4} id={`${id}_indiv-mut_agg-fold`}>
+                  Aggregated data
+                </Header>
+                {indivMutAggFoldTable}
+              </> : null}
             </section>
             <section>
               <Header as={H3} id={`${id}_combo-muts`}>
                 Variant / mutation combination
               </Header>
-              {comboTable}
+              {comboMutsIndivFoldTable}
+              {comboMutsAggFoldTable ? <>
+                <Header as={H4} id={`${id}_combo-muts_agg-fold`}>
+                  Aggregated data
+                </Header>
+                {comboMutsAggFoldTable}
+              </> : null}
             </section>
           </>;
         }
-        else if (sections.length === 1) {
+        else if (numSections === 1) {
           return <>
-            {indivTable}
-            {comboTable}
+            {indivMutIndivFoldTable}
+            {indivMutAggFoldTable ? <>
+              <Header as={H3} id={`${id}_indiv-mut_agg-fold`}>
+                Aggregated data
+              </Header>
+              {indivMutAggFoldTable}
+            </> : null}
+            {comboMutsIndivFoldTable}
+            {comboMutsAggFoldTable ? <>
+              <Header as={H3} id={`${id}_combo-muts_agg-fold`}>
+                Aggregated data
+              </Header>
+              {comboMutsAggFoldTable}
+            </> : null}
           </>;
         }
         else {
@@ -95,8 +150,10 @@ export default function useRenderSuscResults({
       id,
       loaded,
       cacheKey,
-      indivMutColumnDefs,
-      comboMutsColumnDefs,
+      indivMutIndivFoldColumnDefs,
+      indivMutAggFoldColumnDefs,
+      comboMutsIndivFoldColumnDefs,
+      comboMutsAggFoldColumnDefs,
       suscResultsBySection
     ]
   );

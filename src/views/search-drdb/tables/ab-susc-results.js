@@ -11,7 +11,7 @@ export default function AbSuscResults({
   abSuscResults
 }) {
 
-  const indivMutColumnDefs = useColumnDefs({
+  const indivMutIndivFoldColumnDefs = useColumnDefs({
     articleLookup,
     antibodyLookup,
     isolateLookup,
@@ -27,8 +27,25 @@ export default function AbSuscResults({
       isoName: 'Mutation'
     }
   });
+  const indivMutAggFoldColumnDefs = useColumnDefs({
+    articleLookup,
+    antibodyLookup,
+    isolateLookup,
+    columns: [
+      'refName',
+      'section',
+      'controlIsoName',
+      'isoName',
+      'abNames',
+      'fold',
+      'cumulativeCount'
+    ],
+    labels: {
+      isoName: 'Mutation'
+    }
+  });
 
-  const comboMutsColumnDefs = useColumnDefs({
+  const comboMutsIndivFoldColumnDefs = useColumnDefs({
     articleLookup,
     antibodyLookup,
     isolateLookup,
@@ -45,13 +62,33 @@ export default function AbSuscResults({
     }
   });
 
+  const comboMutsAggFoldColumnDefs = useColumnDefs({
+    articleLookup,
+    antibodyLookup,
+    isolateLookup,
+    columns: [
+      'refName',
+      'section',
+      'controlIsoName',
+      'isoName',
+      'abNames',
+      'fold',
+      'cumulativeCount'
+    ],
+    labels: {
+      isoName: 'Variant'
+    }
+  });
+
   return useRenderSuscResults({
     loaded,
     id: 'mab-susc-results',
     cacheKey,
     suscResults: abSuscResults,
     isolateLookup,
-    indivMutColumnDefs,
-    comboMutsColumnDefs
+    indivMutIndivFoldColumnDefs,
+    indivMutAggFoldColumnDefs,
+    comboMutsIndivFoldColumnDefs,
+    comboMutsAggFoldColumnDefs
   });
 }

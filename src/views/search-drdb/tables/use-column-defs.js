@@ -101,6 +101,10 @@ function buildColDefs({
       name: 'resistanceLevel',
       label: labels.resistanceLevel,
       render: resistanceLevel => <CellRLevel rLevel={resistanceLevel} />
+    }),
+    cumulativeCount: new ColumnDef({
+      name: 'cumulativeCount',
+      label: labels.cumulativeCount || '# Samples'
     })
   };
   return columns.map(name => lookup[name]).filter(cd => cd);

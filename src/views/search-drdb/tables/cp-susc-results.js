@@ -10,7 +10,7 @@ export default function CPSuscResults({
   cpSuscResults
 }) {
 
-  const indivMutColumnDefs = useColumnDefs({
+  const indivMutIndivFoldColumnDefs = useColumnDefs({
     articleLookup,
     isolateLookup,
     columns: [
@@ -21,8 +21,7 @@ export default function CPSuscResults({
       'infectedIsoName',
       'timing',
       'severity',
-      'fold',
-      'resistanceLevel'
+      'fold'
     ],
     labels: {
       isoName: 'Mutation',
@@ -30,7 +29,7 @@ export default function CPSuscResults({
     }
   });
 
-  const comboMutsColumnDefs = useColumnDefs({
+  const indivMutAggFoldColumnDefs = useColumnDefs({
     articleLookup,
     isolateLookup,
     columns: [
@@ -42,7 +41,46 @@ export default function CPSuscResults({
       'timing',
       'severity',
       'fold',
-      'resistanceLevel'
+      'cumulativeCount'
+    ],
+    labels: {
+      isoName: 'Mutation',
+      timing: '# Months'
+    }
+  });
+
+  const comboMutsIndivFoldColumnDefs = useColumnDefs({
+    articleLookup,
+    isolateLookup,
+    columns: [
+      'refName',
+      'section',
+      // 'controlIsoName',
+      'isoName',
+      'infectedIsoName',
+      'timing',
+      'severity',
+      'fold'
+    ],
+    labels: {
+      isoName: 'Variant',
+      timing: '# Months'
+    }
+  });
+
+  const comboMutsAggFoldColumnDefs = useColumnDefs({
+    articleLookup,
+    isolateLookup,
+    columns: [
+      'refName',
+      'section',
+      // 'controlIsoName',
+      'isoName',
+      'infectedIsoName',
+      'timing',
+      'severity',
+      'fold',
+      'cumulativeCount'
     ],
     labels: {
       isoName: 'Variant',
@@ -56,7 +94,9 @@ export default function CPSuscResults({
     cacheKey,
     suscResults: cpSuscResults,
     isolateLookup,
-    indivMutColumnDefs,
-    comboMutsColumnDefs
+    indivMutIndivFoldColumnDefs,
+    indivMutAggFoldColumnDefs,
+    comboMutsIndivFoldColumnDefs,
+    comboMutsAggFoldColumnDefs
   });
 }

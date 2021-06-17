@@ -10,7 +10,7 @@ export default function VPSuscResults({
   vpSuscResults
 }) {
 
-  const indivMutColumnDefs = useColumnDefs({
+  const indivMutIndivFoldColumnDefs = useColumnDefs({
     articleLookup,
     isolateLookup,
     columns: [
@@ -21,8 +21,7 @@ export default function VPSuscResults({
       'vaccineName',
       'dosage',
       'timing',
-      'fold',
-      'resistanceLevel'
+      'fold'
     ],
     labels: {
       isoName: 'Mutation',
@@ -31,7 +30,7 @@ export default function VPSuscResults({
     }
   });
 
-  const comboMutsColumnDefs = useColumnDefs({
+  const indivMutAggFoldColumnDefs = useColumnDefs({
     articleLookup,
     isolateLookup,
     columns: [
@@ -43,7 +42,48 @@ export default function VPSuscResults({
       'dosage',
       'timing',
       'fold',
-      'resistanceLevel'
+      'cumulativeCount'
+    ],
+    labels: {
+      isoName: 'Mutation',
+      dosage: '# Shots',
+      timing: '# Months'
+    }
+  });
+
+  const comboMutsIndivFoldColumnDefs = useColumnDefs({
+    articleLookup,
+    isolateLookup,
+    columns: [
+      'refName',
+      'section',
+      'controlIsoName',
+      'isoName',
+      'vaccineName',
+      'dosage',
+      'timing',
+      'fold'
+    ],
+    labels: {
+      isoName: 'Variant',
+      dosage: '# Shots',
+      timing: '# Months'
+    }
+  });
+
+  const comboMutsAggFoldColumnDefs = useColumnDefs({
+    articleLookup,
+    isolateLookup,
+    columns: [
+      'refName',
+      'section',
+      'controlIsoName',
+      'isoName',
+      'vaccineName',
+      'dosage',
+      'timing',
+      'fold',
+      'cumulativeCount'
     ],
     labels: {
       isoName: 'Variant',
@@ -58,7 +98,9 @@ export default function VPSuscResults({
     cacheKey,
     suscResults: vpSuscResults,
     isolateLookup,
-    indivMutColumnDefs,
-    comboMutsColumnDefs
+    indivMutIndivFoldColumnDefs,
+    indivMutAggFoldColumnDefs,
+    comboMutsIndivFoldColumnDefs,
+    comboMutsAggFoldColumnDefs
   });
 }
