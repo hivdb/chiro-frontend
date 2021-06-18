@@ -146,7 +146,7 @@ export default function SearchDRDBLayout({
       <Grid.Row centered>
         <Grid.Column width={16}>
           <Header as={H2} id="vp-susc-results">
-            Plasma from Vaccinated Persons Susceptibility Data
+            Vaccinee Plasma Susceptibility Data
           </Header>
           <VPSuscResults
            loaded={loaded}

@@ -97,26 +97,32 @@ export default function useRenderSuscResults({
             <section>
               <Header as={H3} id={`${id}_indiv-mut`}>
                 Individual mutation
+                {indivMutIndivFoldTable ?
+                  null : ' - data published only in aggregate form'}
               </Header>
               {indivMutIndivFoldTable}
-              {indivMutAggFoldTable ? <>
+              {indivMutIndivFoldTable && indivMutAggFoldTable ? <>
                 <Header as={H4} id={`${id}_indiv-mut_agg-fold`}>
-                  Aggregated data
+                  Individual mutation -
+                  data published only in aggregate form
                 </Header>
-                {indivMutAggFoldTable}
               </> : null}
+              {indivMutAggFoldTable}
             </section>
             <section>
               <Header as={H3} id={`${id}_combo-muts`}>
                 Variant / mutation combination
+                {comboMutsIndivFoldTable ?
+                  null : ' - data published only in aggregate form'}
               </Header>
               {comboMutsIndivFoldTable}
-              {comboMutsAggFoldTable ? <>
+              {comboMutsIndivFoldTable && comboMutsAggFoldTable ? <>
                 <Header as={H4} id={`${id}_combo-muts_agg-fold`}>
-                  Aggregated data
+                  Variant / mutation combination -
+                  data published only in aggregate form
                 </Header>
-                {comboMutsAggFoldTable}
               </> : null}
+              {comboMutsAggFoldTable}
             </section>
           </>;
         }
@@ -125,14 +131,14 @@ export default function useRenderSuscResults({
             {indivMutIndivFoldTable}
             {indivMutAggFoldTable ? <>
               <Header as={H3} id={`${id}_indiv-mut_agg-fold`}>
-                Aggregated data
+                Data published only in aggregate form
               </Header>
               {indivMutAggFoldTable}
             </> : null}
             {comboMutsIndivFoldTable}
             {comboMutsAggFoldTable ? <>
               <Header as={H3} id={`${id}_combo-muts_agg-fold`}>
-                Aggregated data
+                Data published only in aggregate form
               </Header>
               {comboMutsAggFoldTable}
             </> : null}

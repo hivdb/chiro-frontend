@@ -64,6 +64,10 @@ function buildColDefs({
       name: 'section',
       label: labels.section
     }),
+    cumulativeCount: new ColumnDef({
+      name: 'cumulativeCount',
+      label: labels.cumulativeCount || '# Samples'
+    }),
     fold: new ColumnDef({
       name: 'fold',
       label: labels.fold,
@@ -79,7 +83,7 @@ function buildColDefs({
     }),
     infectedIsoName: new ColumnDef({
       name: 'infectedIsoName',
-      label: labels.infectedIsoName || 'Infection',
+      label: labels.infectedIsoName || 'Infection (CP)',
       render: isoName => (
         <CellIsolate {...{isoName, isolateLookup}} />
       ),
@@ -101,10 +105,6 @@ function buildColDefs({
       name: 'resistanceLevel',
       label: labels.resistanceLevel,
       render: resistanceLevel => <CellRLevel rLevel={resistanceLevel} />
-    }),
-    cumulativeCount: new ColumnDef({
-      name: 'cumulativeCount',
-      label: labels.cumulativeCount || '# Samples'
     })
   };
   return columns.map(name => lookup[name]).filter(cd => cd);

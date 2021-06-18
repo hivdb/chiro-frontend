@@ -18,9 +18,9 @@ export default function AbSuscResults({
     columns: [
       'refName',
       'section',
-      'controlIsoName',
       'isoName',
       'abNames',
+      'controlIsoName',
       'fold'
     ],
     labels: {
@@ -34,14 +34,15 @@ export default function AbSuscResults({
     columns: [
       'refName',
       'section',
-      'controlIsoName',
       'isoName',
       'abNames',
+      'controlIsoName',
+      'cumulativeCount',
       'fold',
-      'cumulativeCount'
     ],
     labels: {
-      isoName: 'Mutation'
+      isoName: 'Mutation',
+      fold: 'Mean/Median Fold'
     }
   });
 
@@ -52,9 +53,9 @@ export default function AbSuscResults({
     columns: [
       'refName',
       'section',
-      'controlIsoName',
       'isoName',
       'abNames',
+      'controlIsoName',
       'fold'
     ],
     labels: {
@@ -72,11 +73,13 @@ export default function AbSuscResults({
       'controlIsoName',
       'isoName',
       'abNames',
+      'controlIsoName',
+      'cumulativeCount',
       'fold',
-      'cumulativeCount'
     ],
     labels: {
-      isoName: 'Variant'
+      isoName: 'Variant',
+      fold: 'Mean/Median Fold'
     }
   });
 
