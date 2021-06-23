@@ -3,6 +3,8 @@ import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 import escapeRegExp from 'lodash/escapeRegExp';
 
+import {useConfig} from '../hooks';
+
 
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
@@ -34,13 +36,14 @@ function FragmentWithoutWarning({key, children}) {
 
 export default function useRxDropdown({
   loaded,
+  convPlasmaValue,
   vaccines, vaccineValue,
   antibodies, antibodyValue,
   cpSuscResultCount,
-  convPlasmaOnly,
   onChange,
   formOnly
 }) {
+  const {config, isPending: isConfigPending} = useConfig();
   const [includeAll, setIncludeAll] = React.useState(false);
   const onSearchChange = React.useCallback(
     (event, {searchQuery}) => {
@@ -51,7 +54,7 @@ export default function useRxDropdown({
 
   const options = React.useMemo(
     () => {
-      if (!loaded) {
+      if (!loaded || isConfigPending) {
         return [
           {
             key: 'any',
@@ -59,10 +62,22 @@ export default function useRxDropdown({
             value: ANY
           },
           {
-            key: CP,
-            text: 'Convalescent plasma',
-            value: CP,
+            key: 'cp-any',
+            text: 'Convalescent plasma - any',
+            value: 'cp-any',
             type: CP
+          },
+          ...(convPlasmaValue ? [{
+            key: convPlasmaValue,
+            text: convPlasmaValue,
+            value: convPlasmaValue,
+            type: CP
+          }] : []),
+          {
+            key: 'vp-any',
+            text: 'Vaccinee plasma - any',
+            value: 'vp-any',
+            type: VACCINE
           },
           ...(vaccineValue ? [{
             key: vaccineValue,
@@ -70,6 +85,12 @@ export default function useRxDropdown({
             value: vaccineValue,
             type: VACCINE
           }] : []),
+          {
+            key: 'ab-any',
+            text: 'MAb - any',
+            value: 'ab-any',
+            type: ANTIBODY
+          },
           ...(
             antibodyValue && antibodyValue.length > 0 ?
               [{
@@ -94,16 +115,30 @@ export default function useRxDropdown({
             value: ANY
           },
           {
-            key: CP,
-            text: 'Convalescent plasma',
-            value: CP,
+            key: 'cp-any',
+            text: 'Convalescent plasma - any',
+            value: 'cp-any',
             description: pluralize('result', cpSuscResultCount, true),
             type: CP
           },
+          ...config.convPlasmaOptions.map(
+            ({name, label}) => ({
+              key: name,
+              text: label,
+              value: name,
+              type: CP
+            })
+          ),
           {
             key: 'vaccine-divider',
             as: FragmentWithoutWarning,
             children: <Dropdown.Divider />
+          },
+          {
+            key: 'vp-any',
+            text: 'Vaccinee plasma - any',
+            value: 'vp-any',
+            type: VACCINE
           },
           ...vaccines
             .filter(({vaccineName}) => (
@@ -125,11 +160,18 @@ export default function useRxDropdown({
             as: FragmentWithoutWarning,
             children: <Dropdown.Divider />
           },
+          {
+            key: 'ab-any',
+            text: 'MAb - any',
+            value: 'ab-any',
+            type: ANTIBODY
+          },
           ...((
             antibodyValue && antibodyValue.length > 0 &&
             (
               antibodyValue.length > 1 ||
-              !antibodies.some(({abName}) => abName === antibodyValue[0])
+              (antibodyValue[0] !== 'any' &&
+               !antibodies.some(({abName}) => abName === antibodyValue[0]))
             )
           ) ?
             [{
@@ -168,7 +210,9 @@ export default function useRxDropdown({
     },
     [
       loaded, includeAll,
+      config, isConfigPending,
       vaccines, antibodies,
+      convPlasmaValue,
       vaccineValue, antibodyValue,
       cpSuscResultCount,
       formOnly
@@ -181,13 +225,20 @@ export default function useRxDropdown({
       }
       else {
         if (value === ANY) {
-          onChange({
-            vaccine: undefined,
-            antibodies: undefined
-          });
+          const clear = {};
+          clear[VACCINE] = undefined;
+          clear[CP] = undefined;
+          clear[ANTIBODY] = undefined;
+          onChange(clear);
         }
-        else if (value === CP) {
-          onChange('cp', 'yes');
+        else if (value === 'ab-any') {
+          onChange(ANTIBODY, 'any');
+        }
+        else if (value === 'cp-any') {
+          onChange(CP, 'any');
+        }
+        else if (value === 'vp-any') {
+          onChange(VACCINE, 'any');
         }
         else {
           const {type} = options.find(opt => opt.value === value);
@@ -201,14 +252,25 @@ export default function useRxDropdown({
 
   const defaultValue = formOnly ? EMPTY : ANY;
 
-  const activeRx = (
-    antibodyValue && antibodyValue.length > 0 ?
-      antibodyValue.join(',') :
-      (
-        convPlasmaOnly === 'yes' ?
-          CP : (vaccineValue || defaultValue)
-      )
-  );
+  let activeRx = defaultValue;
+  if (antibodyValue && antibodyValue[0] === 'any') {
+    activeRx = 'ab-any';
+  }
+  else if (convPlasmaValue === 'any') {
+    activeRx = 'cp-any';
+  }
+  else if (vaccineValue === 'any') {
+    activeRx = 'vp-any';
+  }
+  else if (antibodyValue && antibodyValue.length > 0) {
+    activeRx = antibodyValue.join(',');
+  }
+  else if (convPlasmaValue) {
+    activeRx = convPlasmaValue;
+  }
+  else if (vaccineValue) {
+    activeRx = vaccineValue;
+  }
   return (
     <Dropdown
      direction="right"

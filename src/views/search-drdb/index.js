@@ -28,7 +28,7 @@ export default function SearchDRDB(props) {
     mutationMatch,
     abNames,
     vaccineName,
-    convPlasmaOnly,
+    convPlasmaValue,
     varName,
     onChange
   } = useLocationParams();
@@ -76,7 +76,7 @@ export default function SearchDRDB(props) {
     suscResults: abSuscResults,
     isPending: isAbResultPending
   } = useAbSuscResults({
-    skip: skip || vaccineName || convPlasmaOnly === 'yes',
+    skip: skip || vaccineName || convPlasmaValue,
     refName,
     mutations,
     mutationMatch,
@@ -91,13 +91,14 @@ export default function SearchDRDB(props) {
     refName,
     mutations,
     mutationMatch,
-    varName
+    varName,
+    cpOption: convPlasmaValue
   });
   const {
     suscResults: vpSuscResults,
     isPending: isVPPending
   } = useVPSuscResults({
-    skip: skip || (abNames && abNames.length > 0) || convPlasmaOnly === 'yes',
+    skip: skip || (abNames && abNames.length > 0) || convPlasmaValue,
     refName,
     mutations,
     mutationMatch,
@@ -143,7 +144,7 @@ export default function SearchDRDB(props) {
        mutationMatch={mutationMatch}
        abNames={abNames}
        vaccineName={vaccineName}
-       convPlasmaOnly={convPlasmaOnly}
+       convPlasmaValue={convPlasmaValue}
        varName={varName}
        onChange={onChange}
        formOnly={formOnly !== undefined}

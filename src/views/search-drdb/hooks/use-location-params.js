@@ -100,7 +100,7 @@ export default function useLocationParams() {
         mut_match: inputMutMatch,
         antibodies: antibodyText = '',
         variant: varName = null,
-        cp: convPlasmaOnly = 'no',
+        cp: convPlasmaValue = '',
         vaccine: vaccineName = null
       } = {}
     }
@@ -181,7 +181,7 @@ export default function useLocationParams() {
         abNames,
         varName,
         vaccineName,
-        convPlasmaOnly,
+        convPlasmaValue,
         onChange
       };
     },
@@ -195,7 +195,7 @@ export default function useLocationParams() {
       antibodyText,
       varName,
       vaccineName,
-      convPlasmaOnly,
+      convPlasmaValue,
       onChange
     ]
   );

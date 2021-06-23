@@ -26,7 +26,7 @@ export default function SearchDRDBLayout({
   mutationMatch,
   abNames,
   vaccineName,
-  convPlasmaOnly,
+  convPlasmaValue,
   varName,
   match,
   loaded,
@@ -54,7 +54,7 @@ export default function SearchDRDBLayout({
     loaded &&
     !formOnly &&
     !vaccineName &&
-    convPlasmaOnly !== 'yes'
+    !convPlasmaValue
   );
   const displayCPTables = (
     loaded &&
@@ -66,7 +66,7 @@ export default function SearchDRDBLayout({
     loaded &&
     !formOnly &&
     (!abNames || abNames.length === 0) &&
-    convPlasmaOnly !== 'yes'
+    !convPlasmaValue
   );
 
   return <Grid stackable className={style['search']}>
@@ -81,7 +81,7 @@ export default function SearchDRDBLayout({
        vaccineValue={vaccineName}
        vaccines={vaccines}
        cpSuscResultCount={cpSuscResultCount}
-       convPlasmaOnly={convPlasmaOnly}
+       convPlasmaValue={convPlasmaValue}
        variantValue={varName}
        variants={variants}
        isolates={isolates}

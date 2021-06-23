@@ -21,7 +21,7 @@ function usePrepareQuery({vaccineName, skip}) {
             S.rx_name = RXVP.rx_name
         `);
 
-        if (vaccineName) {
+        if (vaccineName && vaccineName !== 'any') {
           where.push('RXVP.vaccine_name=$vaccineName');
         }
         params.$vaccineName = vaccineName;

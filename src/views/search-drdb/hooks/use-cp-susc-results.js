@@ -1,17 +1,42 @@
 import React from 'react';
+import useConfig from './use-config';
 import useSuscResults from './use-susc-results';
 
 
-function usePrepareQuery({skip}) {
+function usePrepareQuery({cpOption, skip}) {
+  const {config, isPending} = useConfig();
   return React.useMemo(
     () => {
       const addColumns = [];
+      const where = [];
       const joinClause = [];
+      const params = {};
 
-      if (!skip) {
+      if (!skip && !isPending) {
         addColumns.push('RXCP.infected_iso_name');
         addColumns.push('RXCP.timing');
         addColumns.push('RXCP.severity');
+
+        const {varNames} = (
+          config.convPlasmaOptions
+            .find(({name}) => name === cpOption)
+        ) || {};
+        if (varNames && varNames.length > 0) {
+          where.push(`
+            EXISTS (
+              SELECT 1 FROM isolates ISO
+              WHERE
+                RXCP.infected_iso_name = ISO.iso_name AND (
+                  ${varNames.map((_, idx) => `
+                    ISO.var_name = $infectedVarName${idx}
+                  `).join(' OR ')}
+                )
+            )
+          `);
+          varNames.forEach((varName, idx) => {
+            params[`$infectedVarName${idx}`] = varName;
+          });
+        }
 
         joinClause.push(`
           JOIN rx_conv_plasma RXCP ON
@@ -19,9 +44,9 @@ function usePrepareQuery({skip}) {
             S.rx_name = RXCP.rx_name
         `);
       }
-      return {addColumns, joinClause};
+      return {addColumns, where, joinClause, params};
     },
-    [skip]
+    [skip, config, isPending, cpOption]
   );
 
 }
@@ -32,10 +57,16 @@ export default function useConvPlasmaSuscResults({
   mutations,
   mutationMatch,
   varName,
+  cpOption,
   skip = false
 }) {
 
-  const {addColumns, joinClause} = usePrepareQuery({skip});
+  const {
+    addColumns,
+    joinClause,
+    where,
+    params
+  } = usePrepareQuery({cpOption, skip});
   const {
     suscResults,
     suscResultLookup,
@@ -47,6 +78,8 @@ export default function useConvPlasmaSuscResults({
     varName,
     addColumns,
     joinClause,
+    where,
+    params,
     skip
   });
 

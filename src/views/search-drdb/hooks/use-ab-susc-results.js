@@ -12,6 +12,7 @@ function usePrepareQuery({abNames, skip}) {
       const addColumns = [];
       const where = [];
       const params = {};
+      const realAbNames = abNames.filter(n => n !== 'any');
 
       if (!skip) {
         addColumns.push(
@@ -29,10 +30,10 @@ function usePrepareQuery({abNames, skip}) {
         params.$joinSep = LIST_JOIN_MAGIC_SEP;
         let rxAbFiltered = false;
 
-        if (abNames && abNames.length > 0) {
+        if (realAbNames && realAbNames.length > 0) {
           rxAbFiltered = true;
           const excludeAbQuery = [];
-          for (const [idx, abName] of abNames.entries()) {
+          for (const [idx, abName] of realAbNames.entries()) {
             where.push(`
               EXISTS (
                 SELECT 1 FROM rx_antibodies RXMAB
