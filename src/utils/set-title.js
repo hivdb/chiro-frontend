@@ -1,4 +1,4 @@
-const TITLE_SUFFIX = 'Stanford Coronavirus Antiviral Research Database';
+const TITLE_SUFFIX = 'Stanford Coronavirus Antiviral & Resistance Database';
 
 
 export default function setTitle(title) {
