@@ -1,11 +1,10 @@
 import React from 'react';
 import shortenMutList from '../shorten-mutlist';
 
+import style from '../style.module.scss';
 
-export default function CellIsolate({
-  isoName,
-  isolateLookup
-}) {
+
+function useIsolateDisplay({isoName, isolateLookup}) {
   if (!(isoName in isolateLookup)) {
     return '?';
   }
@@ -36,5 +35,31 @@ export default function CellIsolate({
       // not expandable or no mutations; fallback to varName
       return displayVarName;
     }
+  }
+}
+
+
+export default function CellIsolate({
+  isoName,
+  potency,
+  potencyUnit,
+  potencyType,
+  enablePotency,
+  isolateLookup
+}) {
+  const isolateDisplay = useIsolateDisplay({isoName, isolateLookup});
+  if (enablePotency && potency !== null && potency !== undefined) {
+    return <>
+      {isolateDisplay}
+      <div className={style['supplement-info']}>
+        {potencyType}{': '}
+        {parseFloat(potency.toFixed(1)).toLocaleString('en-US')}
+        {' '}
+        {potencyUnit}
+      </div>
+    </>;
+  }
+  else {
+    return isolateDisplay;
   }
 }

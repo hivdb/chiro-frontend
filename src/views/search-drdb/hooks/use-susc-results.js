@@ -261,12 +261,16 @@ function usePrepareQuery({
           S.iso_name,
           S.ordinal_number,
           S.section,
+          S.potency_type,
+          S.control_potency,
+          S.potency,
+          S.potency_unit,
           S.fold_cmp,
           S.fold,
           S.resistance_level as fb_resistance_level,
           S.ineffective,
           S.cumulative_count,
-          S.assay
+          S.assay_name
           ${addColumnText}
         FROM susc_results S
         ${joinClause.join(' ')}
@@ -345,8 +349,8 @@ export default function useSuscResults({
       cmp = compareByIsolates(srA, srB);
       if (cmp) { return cmp; }
 
-      const assayA = srA.assay !== 'authentic virus';
-      const assayB = srB.assay !== 'authentic virus';
+      const assayA = srA.assayName !== 'authentic virus';
+      const assayB = srB.assayName !== 'authentic virus';
       return assayA - assayB;
     });
 

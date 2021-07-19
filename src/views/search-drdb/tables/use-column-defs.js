@@ -5,6 +5,7 @@ import {
 } from 'sierra-frontend/dist/components/simple-table';
 
 import CellFold from './cell-fold';
+import CellSection from './cell-section';
 import CellIsolate from './cell-isolate';
 import CellReference from './cell-reference';
 import CellAntibodies from './cell-antibodies';
@@ -41,16 +42,28 @@ function buildColDefs({
     controlIsoName: new ColumnDef({
       name: 'controlIsoName',
       label: labels.controlIsoName || 'Control',
-      render: isoName => (
-        <CellIsolate {...{isoName, isolateLookup}} />
+      render: (isoName, {controlPotency, potencyType, potencyUnit}) => (
+        <CellIsolate {...{
+          isoName,
+          potency: controlPotency,
+          potencyType,
+          potencyUnit,
+          isolateLookup
+        }} enablePotency />
       ),
       sort: rows => [...rows].sort(compareByControlIsolate)
     }),
     isoName: new ColumnDef({
       name: 'isoName',
       label: labels.isoName || 'Variant',
-      render: isoName => (
-        <CellIsolate {...{isoName, isolateLookup}} />
+      render: (isoName, {potency, potencyType, potencyUnit}) => (
+        <CellIsolate {...{
+          isoName,
+          potency,
+          potencyType,
+          potencyUnit,
+          isolateLookup
+        }} enablePotency />
       ),
       sort: rows => [...rows].sort(compareByIsolate)
     }),
@@ -62,7 +75,8 @@ function buildColDefs({
     }),
     section: new ColumnDef({
       name: 'section',
-      label: labels.section
+      label: labels.section,
+      render: section => <CellSection {...{section}} />
     }),
     cumulativeCount: new ColumnDef({
       name: 'cumulativeCount',
