@@ -6,7 +6,7 @@ import camelCase from 'lodash/camelCase';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 // import sqliteWASM from '!!file-loader!sql.js/dist/sql-wasm.wasm';
 
-import {loadBinary} from '../../../utils/cms';
+import {loadBinary} from '../../../utils/covid-drdb';
 
 import useConfig from './use-config';
 
@@ -16,7 +16,7 @@ const createClient = memoize(
     const worker = new Worker('/worker.sql-wasm.js');
   
     const {payload} = await loadBinary(
-      `downloads/covid-drdb/${drdbVersion}.db`
+      `covid-drdb-${drdbVersion}.db`
     );
 
     const promise = new Promise(
