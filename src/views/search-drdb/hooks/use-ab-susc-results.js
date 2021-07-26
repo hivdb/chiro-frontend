@@ -15,6 +15,7 @@ function usePrepareQuery({abNames, skip}) {
       const realAbNames = abNames.filter(n => n !== 'any');
 
       if (!skip) {
+        addColumns.push("'antibody' AS rx_type");
         addColumns.push(
           `(
             SELECT GROUP_CONCAT(RXMAB.ab_name, $joinSep)

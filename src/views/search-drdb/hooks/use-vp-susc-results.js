@@ -11,6 +11,7 @@ function usePrepareQuery({vaccineName, skip}) {
       const params = {};
 
       if (!skip) {
+        addColumns.push("'vacc-plasma' AS rx_type");
         addColumns.push('vaccine_name');
         addColumns.push('timing');
         addColumns.push('dosage');

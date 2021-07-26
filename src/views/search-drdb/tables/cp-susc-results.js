@@ -15,17 +15,20 @@ export default function CPSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
-      'isoName',
       'infectedIsoName',
       'timing',
       // 'severity',
       'controlIsoName',
+      'isoName',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Mutation',
-      timing: 'Months'
+      timing: 'Months',
+      potency: 'Potency (NT50)'
     }
   });
 
@@ -34,18 +37,21 @@ export default function CPSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
-      'isoName',
       'infectedIsoName',
       'timing',
       // 'severity',
       'controlIsoName',
+      'isoName',
       'cumulativeCount',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Mutation',
       timing: 'Months',
+      potency: 'Mean/Median Potency (NT50)',
       fold: 'Mean/Median Fold'
     }
   });
@@ -55,17 +61,20 @@ export default function CPSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
-      'isoName',
       'infectedIsoName',
       'timing',
       // 'severity',
       'controlIsoName',
+      'isoName',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Variant',
-      timing: 'Months'
+      timing: 'Months',
+      potency: 'Potency (NT50)'
     }
   });
 
@@ -74,18 +83,21 @@ export default function CPSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
-      'isoName',
       'infectedIsoName',
       'timing',
       // 'severity',
       'controlIsoName',
+      'isoName',
       'cumulativeCount',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Variant',
       timing: 'Months',
+      potency: 'Mean/Median Potency (NT50)',
       fold: 'Mean/Median Fold'
     }
   });

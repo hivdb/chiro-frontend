@@ -15,18 +15,21 @@ export default function VPSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
-      'isoName',
       'vaccineName',
       'dosage',
       'timing',
       'controlIsoName',
+      'isoName',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Mutation',
       dosage: '# Shots',
-      timing: 'Months'
+      timing: 'Months',
+      potency: 'Potency (NT50)'
     }
   });
 
@@ -35,19 +38,22 @@ export default function VPSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
-      'isoName',
       'vaccineName',
       'dosage',
       'timing',
       'controlIsoName',
+      'isoName',
       'cumulativeCount',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Mutation',
       dosage: '# Shots',
       timing: 'Months',
+      potency: 'Mean/Median Potency (NT50)',
       fold: 'Mean/Median Fold'
     }
   });
@@ -57,18 +63,21 @@ export default function VPSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
-      'isoName',
       'vaccineName',
       'dosage',
       'timing',
       'controlIsoName',
+      'isoName',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Variant',
       dosage: '# Shots',
-      timing: 'Months'
+      timing: 'Months',
+      potency: 'Potency (NT50)'
     }
   });
 
@@ -77,19 +86,22 @@ export default function VPSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
-      'isoName',
       'vaccineName',
       'dosage',
       'timing',
       'controlIsoName',
+      'isoName',
       'cumulativeCount',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Variant',
       dosage: '# Shots',
       timing: 'Months',
+      potency: 'Mean/Median Potency (NT50)',
       fold: 'Mean/Median Fold'
     }
   });

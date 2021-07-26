@@ -13,6 +13,7 @@ function usePrepareQuery({cpOption, skip}) {
       const params = {};
 
       if (!skip && !isPending) {
+        addColumns.push("'conv-plasma' AS rx_type");
         addColumns.push('RXCP.infected_iso_name');
         addColumns.push('RXCP.timing');
         addColumns.push('RXCP.severity');

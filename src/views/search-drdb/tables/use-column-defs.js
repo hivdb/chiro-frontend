@@ -5,6 +5,8 @@ import {
 } from 'sierra-frontend/dist/components/simple-table';
 
 import CellFold from './cell-fold';
+import CellAssay from './cell-assay';
+import CellPotency from './cell-potency';
 import CellSection from './cell-section';
 import CellIsolate from './cell-isolate';
 import CellReference from './cell-reference';
@@ -16,6 +18,17 @@ import {
   useCompareSuscResultsByInfectedIsolate,
   useCompareSuscResultsByAntibodies
 } from '../hooks';
+
+
+function comparePotency(potA, potB) {
+  if (potA.potencyType !== potB.potencyType) {
+    return potA.potencyType.localeCompare(potB.potencyType);
+  }
+  if (potA.potencyUnit !== potB.potencyUnit) {
+    return potA.potencyUnit.localeCompare(potB.potencyUnit);
+  }
+  return potA.potency - potB.potency;
+}
 
 
 function buildColDefs({
@@ -39,6 +52,13 @@ function buildColDefs({
          displayName={articleLookup[refName].displayName} />
       )
     }),
+    assayName: new ColumnDef({
+      name: 'assayName',
+      label: labels.assayName || 'Assay',
+      render: assayName => (
+        <CellAssay assayName={assayName} />
+      )
+    }),
     controlIsoName: new ColumnDef({
       name: 'controlIsoName',
       label: labels.controlIsoName || 'Control',
@@ -56,16 +76,26 @@ function buildColDefs({
     isoName: new ColumnDef({
       name: 'isoName',
       label: labels.isoName || 'Variant',
-      render: (isoName, {potency, potencyType, potencyUnit}) => (
+      render: (isoName) => (
         <CellIsolate {...{
           isoName,
+          isolateLookup
+        }} />
+      ),
+      sort: rows => [...rows].sort(compareByIsolate)
+    }),
+    potency: new ColumnDef({
+      name: 'potency',
+      label: labels.potency || 'Potency',
+      render: (potency, {rxType, potencyType, potencyUnit}) => (
+        <CellPotency {...{
           potency,
           potencyType,
           potencyUnit,
-          isolateLookup
-        }} enablePotency />
+          rxType
+        }} />
       ),
-      sort: rows => [...rows].sort(compareByIsolate)
+      sort: rows => [...rows].sort(comparePotency)
     }),
     abNames: new ColumnDef({
       name: 'abNames',

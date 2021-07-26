@@ -11,6 +11,7 @@ export default function CellSection({section}) {
         if (URL_ALLOWLIST.test(part)) {
           return (
             <a
+             key={idx}
              rel="noreferrer"
              href={`//${part}`}
              target="_blank">
@@ -19,7 +20,7 @@ export default function CellSection({section}) {
           );
         }
         else {
-          return part;
+          return <React.Fragment key={idx}>part</React.Fragment>;
         }
       })}
     </>;
