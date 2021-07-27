@@ -19,31 +19,27 @@ export default class Banner extends React.Component {
 
   static defaultProps = {
     bgImage: (
-      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQ' +
-      'AAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAA' +
+      'AAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg=='
     ),
     narrow: false
   }
 
-  static Title = SubComponent('h1', 'banner-header-title');
-  static Subtitle = SubComponent('div', 'banner-header-subtitle');
-  static ExtraSection = SubComponent('section', 'banner-extra-section');
+  static SubSection = SubComponent('section', 'banner-sub-section');
   static Slider = Slider;
-  static SideSection = SubComponent('section', 'banner-side-section');
 
-  get titleElement() {
+  get subSectionElement() {
     const {children} = this.props;
-    return children.filter(node => node.type === this.constructor.Title);
-  }
-
-  get subtitleElement() {
-    const {children} = this.props;
-    return children.filter(node => node.type === this.constructor.Subtitle);
-  }
-
-  get extraSectionElement() {
-    const {children} = this.props;
-    return children.filter(node => node.type === this.constructor.ExtraSection);
+    return children
+      .reduce(
+        (acc, child) => {
+          if (child instanceof Array) {
+            acc = [...acc, ...child];
+          }
+          return acc;
+        }, []
+      )
+      .filter(node => node.type === this.constructor.SubSection);
   }
 
   get sliderElement() {
@@ -51,16 +47,10 @@ export default class Banner extends React.Component {
     return children.filter(node => node.type === this.constructor.Slider);
   }
 
-  get sideSectionElement() {
-    const {children} = this.props;
-    return children.filter(node => node.type === this.constructor.SideSection);
-  }
-
   render() {
     const {bgImage, narrow} = this.props;
     const {
-      titleElement, subtitleElement, extraSectionElement,
-      sliderElement, sideSectionElement
+      subSectionElement, sliderElement
     } = this;
     const classNames = makeClassNames(
       style['banner-section'],
@@ -73,17 +63,8 @@ export default class Banner extends React.Component {
         <div className={style['banner-img-container']}>
           <img className={style['banner-img']} src={bgImage} alt={bgImage} />
         </div>
-        <div className={style['banner-left-sections']}>
-          <header className={style['banner-header']}>
-            {titleElement}
-            {subtitleElement}
-          </header>
-          {extraSectionElement}
-          {sliderElement}
-        </div>
-        <div className={style['banner-right-sections']}>
-          {sideSectionElement}
-        </div>
+        {subSectionElement}
+        {sliderElement}
       </section>
     );
   }
