@@ -18,16 +18,19 @@ import ProjectsSection from './projects-section';
 
 
 function Home() {
-  const {
-    data
-  } = useSmartAsync({
-    promiseFn: () => loadPage('home-staging')
-  });
+
+  const promiseFn = React.useCallback(
+    () => loadPage('home-staging'),
+    []
+  );
 
   const {
-    projectSections = [],
-    missionStatement, imagePrefix
-  } = data || {};
+    data: {
+      projectSections = [],
+      missionStatement, imagePrefix
+    } = {}
+  } = useSmartAsync({promiseFn});
+
   setTitle(null);
 
   return <>

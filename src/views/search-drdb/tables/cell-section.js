@@ -20,7 +20,7 @@ export default function CellSection({section}) {
           );
         }
         else {
-          return <React.Fragment key={idx}>part</React.Fragment>;
+          return <React.Fragment key={idx}>{part}</React.Fragment>;
         }
       })}
     </>;
