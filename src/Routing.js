@@ -19,6 +19,7 @@ import {getFullLink} from './utils/cms';
 
 const Home = lazy(() => import('./views/home'));
 const HomeStaging = lazy(() => import('./views/home-staging'));
+const AntiviralPortal = lazy(() => import('./views/antiviral-portal'));
 const Archive = lazy(() => import('./views/archive'));
 const Search = lazy(() => import('./views/search'));
 const CompoundList = lazy(() => import('./views/compound-list'));
@@ -50,6 +51,7 @@ const BrowserRouter = createBrowserRouter({
     <Route path="/" Component={Layout}>
       <Route Component={Home} />
       <Route path="home-staging/" Component={HomeStaging} />
+      <Route path="antiviral-portal/" Component={AntiviralPortal} />
       <Route path="sierra/">
         {SARS2Routes({
           config: {

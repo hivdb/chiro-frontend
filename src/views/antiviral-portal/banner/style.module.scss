@@ -1,0 +1,171 @@
+@import "../../../styles/colors";
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+.banner-section {
+  --banner-h-padding: 2rem;
+  --banner-sub-section-margin: 2rem;
+  --num-sub-section-per-row: 3;
+  --banner-sub-section-title-align: center;
+  --banner-sub-section-title-size: 2.4rem;
+  @include full-width-container;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  height: auto;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+  padding-left: var(--banner-h-padding);
+  padding-right: var(--banner-h-padding);
+  overflow: hidden;
+
+  &.narrow {
+    height: auto;
+    .banner-img-container {
+      img.banner-img {
+        max-height: 100%;
+      }
+    }
+  }
+
+  .banner-img-container {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -100;
+    background-color: $main-color;
+    img.banner-img {
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: -20;
+      mask-image: linear-gradient(359deg, rgba(0,0,0,1) -50%,rgba(0,0,0,0) 100%);
+    }
+  }
+
+  .banner-sub-section {
+    margin: var(--banner-sub-section-margin);
+    > h2 {
+      text-align: var(--banner-sub-section-title-align);
+      > a {
+        color: white;
+        font-size: var(--banner-sub-section-title-size);
+      }
+    }
+    max-width: calc(
+      (100vw - var(--banner-h-padding) * 2) /
+      var(--num-sub-section-per-row) -
+      var(--banner-sub-section-margin) * 2
+    );
+  }
+
+  .banner-slider {
+    text-align: left;
+    margin: 1rem var(--banner-sub-section-margin) 3rem;
+    width: calc(100vw - var(--banner-h-padding) * 2 - var(--banner-sub-section-margin) * 2);
+    $slider-height: 11rem;
+    color: black;
+    > h2 {
+      background-color: $slider-title-bg;
+      display: inline-block;
+      font-weight: 400;
+      font-size: 1.1rem;
+      padding: 0.8rem;
+      margin-bottom: 0;
+      > a {
+        color: black;
+        &:hover {
+          color: rgba(0, 0, 0, .7);
+        }
+      }
+    }
+    > .slider-container {
+      display: flex;
+      overflow: hidden;
+      background-color: white;
+      justify-content: space-between;
+      align-items: center;
+      > .slider-sections-overflow {
+        height: $slider-height;
+        overflow: hidden;
+        > .slider-sections {
+          transition-duration: 100ms;
+          display: flex;
+          > section {
+            padding: 1.5rem 0;
+            min-width: 100%;
+            height: 11rem;
+            overflow: hidden;
+            position: relative;
+            > h3 {
+              margin-top: 0;
+              font-size: 1.5rem;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            > p {
+              font-size: 1rem;
+              letter-spacing: -0.5px;
+            }
+            > ul, > ol {
+              padding-left: 1.5rem;
+              font-size: 1.1rem;
+            }
+          }
+        }
+      }
+      > .arrow-prev, > .arrow-next {
+        display: block;
+        text-align: center;
+        font-size: 2.5rem;
+        min-width: 5rem;
+        max-width: 5rem;
+        line-height: $slider-height; 
+        height: $slider-height;
+        opacity: 1;
+        &[disabled] {
+          color: rgba(0, 0, 0, .4);
+          cursor: default;
+          pointer-events: none;
+          &:hover {
+            color: rgba(0, 0, 0, .4);
+          }
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 1200px) {
+    --banner-sub-section-title-size: 1.7rem;
+    .banner-slider {
+    }
+  }
+  @media only screen and (max-width: 900px) {
+    --banner-h-padding: 0;
+    --banner-sub-section-margin: 1rem;
+    --num-sub-section-per-row: 1;
+    --banner-sub-section-title-size: 2.4rem;
+    display: block;
+    height: auto;
+    .banner-img-container {
+      img.banner-img {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+      }
+    }
+    .banner-slider {
+      > .slider-container {
+        > .arrow-prev, > .arrow-next {
+          min-width: 2.5rem;
+          max-width: 2.5rem;
+        }
+      }
+    }
+  }
+}

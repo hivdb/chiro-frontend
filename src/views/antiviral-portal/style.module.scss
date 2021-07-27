@@ -3,22 +3,11 @@
 @import "../../styles/mixins";
 @import "../../styles/dropdown";
 
-.scroll-toc {
-  float: none;
-  margin-left: 0;
-  @media only screen and (max-width: 1600px) {
-    margin-left: 0;
-  }
-  @media only screen and (min-width: 901px) {
-    > nav[class*="style_toc"] {
-      width: 100%;
-      margin-left: 0;
-      margin-right: 0;
-      max-height: $banner-height - 4rem;
-      overflow-y: scroll;
-    }
-  }
+
+article.antiviral-portal {
+  margin-bottom: 5rem;
 }
+
 
 .home-section {
   &:first-child {

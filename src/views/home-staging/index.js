@@ -10,7 +10,7 @@ import setTitle from '../../utils/set-title';
 import {loadPage} from '../../utils/cms';
 
 import Subscribe from './subscribe';
-import ProjectsSection from './projects-section';
+import ProjectsSection from '../../components/projects-section';
 
 // const URL_PK_NOTES = (
 //   'https://docs.google.com/document/d/e/2PACX-1vSBYQ57vlEJYa2t-' +
@@ -34,10 +34,15 @@ function Home() {
   setTitle(null);
 
   return <>
-    {projectSections.map(({title, items}) => (
+    {projectSections.map(({
+      title,
+      displayTitle = true,
+      items
+    }) => (
       <ProjectsSection
        key={title}
        title={title}
+       displayTitle={displayTitle}
        projects={items}
        imagePrefix={imagePrefix} />
     ))}

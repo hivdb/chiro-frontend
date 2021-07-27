@@ -44,11 +44,16 @@ export function Projects({className, projects = [], imagePrefix}) {
 }
 
 
-export default function ProjectsSection({title, projects = [], imagePrefix}) {
+export default function ProjectsSection({
+  title,
+  displayTitle = true,
+  projects = [],
+  imagePrefix
+}) {
 
   return (
-    <section className={style['home-section']}>
-      <H2 disableAnchor>{title}</H2>
+    <section className={style['projects-section']}>
+      {displayTitle ? <H2 disableAnchor>{title}</H2> : null}
       <Projects projects={projects} imagePrefix={imagePrefix} />
     </section>
   );
