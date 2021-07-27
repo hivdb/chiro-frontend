@@ -10,6 +10,7 @@ import Banner from '../../components/banner';
 import Markdown from 'sierra-frontend/dist/components/markdown';
 import refDataLoader from '../../components/refdata-loader';
 import BackToTop from '../../components/back-to-top';
+import GitHubCorner from '../../components/github-corner';
 
 import style from './style.module.scss';
 
@@ -20,6 +21,8 @@ class CMSPage extends React.Component {
     pageName: PropTypes.string.isRequired,
     pageTitle: PropTypes.string.isRequired,
     introHeader: PropTypes.string,
+    githubLink: PropTypes.string,
+    githubTitle: PropTypes.string,
     toc: PropTypes.bool,
     tocFloat: PropTypes.oneOf(['none', 'left', 'right']).isRequired,
     hideLastModified: PropTypes.bool,
@@ -107,7 +110,9 @@ class CMSPage extends React.Component {
       imagePrefix,
       genomeMaps,
       tables,
-      children
+      children,
+      githubLink,
+      githubTitle
     } = this.props;
     const content = (
       this.props.content
@@ -124,7 +129,7 @@ class CMSPage extends React.Component {
       );
     }
     setTitle(pageTitle);
-    return (
+    return <>
       <article
        ref={this.containerRef}
        className={style['content-container']}
@@ -169,7 +174,9 @@ class CMSPage extends React.Component {
           {content}
         </Markdown>
       </article>
-    );
+      {githubLink ?
+        <GitHubCorner href={githubLink} title={githubTitle} /> : null}
+    </>;
   }
 }
 

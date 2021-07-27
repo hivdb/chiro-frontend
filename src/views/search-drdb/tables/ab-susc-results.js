@@ -24,7 +24,9 @@ export default function AbSuscResults({
       'fold'
     ],
     labels: {
-      isoName: 'Mutation'
+      isoName: 'Mutation',
+      fold: 'Fold Reduction'
+
     }
   });
   const indivMutAggFoldColumnDefs = useColumnDefs({
@@ -42,7 +44,7 @@ export default function AbSuscResults({
     ],
     labels: {
       isoName: 'Mutation',
-      fold: 'Mean/Median Fold'
+      fold: 'Mean/Median Fold Reduction'
     }
   });
 
@@ -59,7 +61,8 @@ export default function AbSuscResults({
       'fold'
     ],
     labels: {
-      isoName: 'Variant'
+      isoName: 'Variant',
+      fold: 'Fold Reduction'
     }
   });
 
@@ -79,7 +82,7 @@ export default function AbSuscResults({
     ],
     labels: {
       isoName: 'Variant',
-      fold: 'Mean/Median Fold'
+      fold: 'Mean/Median Fold Reduction'
     }
   });
 

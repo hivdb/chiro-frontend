@@ -29,7 +29,8 @@ export default function VPSuscResults({
       isoName: 'Mutation',
       dosage: '# Shots',
       timing: 'Months',
-      potency: 'Potency (NT50)'
+      potency: 'Potency (NT50)',
+      fold: 'Fold Reduction'
     }
   });
 
@@ -54,7 +55,7 @@ export default function VPSuscResults({
       dosage: '# Shots',
       timing: 'Months',
       potency: 'Mean/Median Potency (NT50)',
-      fold: 'Mean/Median Fold'
+      fold: 'Mean/Median Fold Reduction'
     }
   });
 
@@ -77,7 +78,8 @@ export default function VPSuscResults({
       isoName: 'Variant',
       dosage: '# Shots',
       timing: 'Months',
-      potency: 'Potency (NT50)'
+      potency: 'Potency (NT50)',
+      fold: 'Fold Reduction'
     }
   });
 
@@ -102,7 +104,7 @@ export default function VPSuscResults({
       dosage: '# Shots',
       timing: 'Months',
       potency: 'Mean/Median Potency (NT50)',
-      fold: 'Mean/Median Fold'
+      fold: 'Mean/Median Fold Reduction'
     }
   });
 

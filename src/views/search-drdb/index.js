@@ -1,6 +1,7 @@
 import React from 'react';
 import {useQuery} from '@apollo/client';
 import FixedLoader from 'sierra-frontend/dist/components/fixed-loader';
+import GitHubCorner from '../../components/github-corner';
 
 import articleQuery from './search.gql';
 
@@ -135,7 +136,7 @@ export default function SearchDRDB(props) {
     return <FixedLoader />;
   }
   else {
-    return (
+    return <>
       <SearchDRDBLayout
        loaded={resultLoaded}
        refName={refName}
@@ -163,6 +164,9 @@ export default function SearchDRDB(props) {
        vpSuscResults={vpSuscResults}
        {...props}
        {...data} />
-    );
+      <GitHubCorner
+       title="Download this database from GitHub"
+       href="https://github.com/hivdb/covid-drdb-payload/releases" />
+    </>;
   }
 }
