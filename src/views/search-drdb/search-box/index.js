@@ -2,7 +2,6 @@ import useArticleDropdown from './use-article-dropdown';
 import useVariantDropdown from './use-variant-dropdown';
 import useRxDropdown from './use-rx-dropdown';
 
-
 export default function SearchBox({
   loaded,
   formOnly,
@@ -25,6 +24,11 @@ export default function SearchBox({
   const articleDropdown = useArticleDropdown({
     loaded,
     articleValue,
+    antibodyValue,
+    vaccineValue,
+    convPlasmaValue,
+    variantValue,
+    mutationText,
     articles,
     onChange,
     formOnly

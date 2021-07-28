@@ -275,8 +275,8 @@ function usePrepareQuery({
         FROM susc_results S
         ${joinClause.join(' ')}
         WHERE
-          (${combinedWhere.join(') AND (')}) AND
-          (ineffective == 'experimental' OR ineffective IS NULL)
+          (${combinedWhere.join(') AND (')}) -- AND
+          -- (ineffective == 'experimental' OR ineffective IS NULL)
       `;
 
       return {sql, params: combinedParams};

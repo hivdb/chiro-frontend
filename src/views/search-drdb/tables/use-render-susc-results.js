@@ -1,4 +1,5 @@
 import React from 'react';
+import pluralize from 'pluralize';
 import {Header} from 'semantic-ui-react';
 import {H3, H4} from 'sierra-frontend/dist/components/heading-tags';
 
@@ -11,6 +12,36 @@ const type2Section = {
   'named-variant': 'comboMuts',
   'mutation-combination': 'comboMuts'
 };
+
+
+function SimpleTableWrapper({data, ...props}) {
+  const filtered = data.filter(
+    d => d.ineffective === 'experimental' || d.ineffective === null
+  );
+  const removedLen = data.length - filtered.length;
+
+  const tableJSX = (
+    filtered.length > 0 ?
+      <SimpleTable {...props} data={filtered} /> : null
+  );
+
+  const hideNote = (
+    removedLen > 0 ?
+      <div><em>
+        <strong>{pluralize('result', removedLen, true)}</strong>{' '}
+        {pluralize('has', removedLen)}{' '}
+        been removed from the below table due to poor
+        neutralizing response against the control virus.
+      </em></div> : null
+  );
+
+  return <>
+    {hideNote}
+    {tableJSX}
+  </>;
+}
+
+
 
 export default function useRenderSuscResults({
   id,
@@ -66,28 +97,28 @@ export default function useRenderSuscResults({
         );
         const indivMutIndivFoldTable = (
           suscResultsBySection.indivMut.indivFold.length > 0 ?
-            <SimpleTable
+            <SimpleTableWrapper
              cacheKey={`${id}_indiv-mut_indiv-fold_${cacheKey}`}
              columnDefs={indivMutIndivFoldColumnDefs}
              data={suscResultsBySection.indivMut.indivFold} /> : null
         );
         const indivMutAggFoldTable = (
           suscResultsBySection.indivMut.aggFold.length > 0 ?
-            <SimpleTable
+            <SimpleTableWrapper
              cacheKey={`${id}_indiv-mut_agg-fold_${cacheKey}`}
              columnDefs={indivMutAggFoldColumnDefs}
              data={suscResultsBySection.indivMut.aggFold} /> : null
         );
         const comboMutsIndivFoldTable = (
           suscResultsBySection.comboMuts.indivFold.length > 0 ?
-            <SimpleTable
+            <SimpleTableWrapper
              cacheKey={`${id}_combo-muts_indiv-fold_${cacheKey}`}
              columnDefs={comboMutsIndivFoldColumnDefs}
              data={suscResultsBySection.comboMuts.indivFold} /> : null
         );
         const comboMutsAggFoldTable = (
           suscResultsBySection.comboMuts.aggFold.length > 0 ?
-            <SimpleTable
+            <SimpleTableWrapper
              cacheKey={`${id}_combo-muts_agg-fold_${cacheKey}`}
              columnDefs={comboMutsAggFoldColumnDefs}
              data={suscResultsBySection.comboMuts.aggFold} /> : null
