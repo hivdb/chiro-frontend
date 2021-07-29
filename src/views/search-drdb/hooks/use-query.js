@@ -45,6 +45,7 @@ const createClient = memoize(
 
 const execSQL = memoize(
   async function execSQL({sql, params, drdbVersion}) {
+    const start = new Date().getTime(); 
     const worker = await createClient(drdbVersion);
 
     const myId = parseInt(
@@ -56,11 +57,18 @@ const execSQL = memoize(
         worker.addEventListener('message', handleMessage);
 
         function handleMessage({data: {id, results, error}}) {
-          if (error) {
-            console.error(sql, params, error);
-          }
           if (id === myId) {
+            if (error) {
+              console.error(sql, params, error);
+            }
             worker.removeEventListener('message', handleMessage);
+            const end = new Date().getTime();
+            if (process.env.NODE_ENV !== 'production') {
+              // eslint-disable-next-line no-console
+              console.debug(
+                `SQL was executed in ${end - start}ms:`, sql, params
+              );
+            }
             resolve(results);
           }
         }

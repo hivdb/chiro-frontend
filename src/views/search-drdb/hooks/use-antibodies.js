@@ -78,14 +78,10 @@ function usePrepareQuery({skip}) {
           LEFT JOIN antibody_targets AT ON
             A.ab_name=AT.ab_name AND AT.source='structure'
           WHERE EXISTS (
-            SELECT 1 FROM susc_results S
-            WHERE EXISTS (
-              SELECT 1 FROM rx_antibodies RX
-              WHERE
-                S.ref_name=RX.ref_name AND
-                S.rx_name=RX.rx_name AND
-                RX.ab_name=A.ab_name
-            )
+            SELECT 1 FROM susc_summary S
+            WHERE
+              S.aggregate_by = 'antibody:indiv' AND
+              A.ab_name = S.antibody_names
           )
           ORDER BY priority, A.ab_name
         `;

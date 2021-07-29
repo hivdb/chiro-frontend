@@ -24,6 +24,7 @@ import useAntibodyNumExpLookup from './use-antibody-numexp-lookup';
 import useVaccineNumExpLookup from './use-vaccine-numexp-lookup';
 import useInfectedVariantNumExpLookup
   from './use-infected-variant-numexp-lookup';
+import useRxTotalNumExp from './use-rx-total-numexp';
 
 export {
   useLocationParams,
@@ -49,5 +50,6 @@ export {
   useArticleNumExpLookup,
   useAntibodyNumExpLookup,
   useVaccineNumExpLookup,
-  useInfectedVariantNumExpLookup
+  useInfectedVariantNumExpLookup,
+  useRxTotalNumExp
 };

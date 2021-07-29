@@ -63,6 +63,7 @@ export default function useArticleNumExperimentLookup({
     infectedVariant: convPlasmaValue,
     varName: variantValue,
     isoAggkey: mutationText,
+    selectColumns: ['ref_name', 'num_experiments'],
     skip
   });
   const {
@@ -76,6 +77,7 @@ export default function useArticleNumExperimentLookup({
     infectedVariant: convPlasmaValue,
     varName: variantValue,
     isoAggkey: mutationText,
+    selectColumns: ['num_experiments'],
     skip
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;

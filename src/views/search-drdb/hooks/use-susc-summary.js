@@ -111,6 +111,7 @@ export default function useSuscSummary({
   isoName,
   varName,
   isoAggkey,
+  selectColumns = null,
   skip = false
 } = {}) {
   const aggKey = compileAggKey(aggregateBy);
@@ -161,35 +162,39 @@ export default function useSuscSummary({
     orderBySQL = `ORDER BY ${orderBy.join(', ')}`;
   }
 
+  if (!selectColumns) {
+    selectColumns = [
+      'aggregate_by',
+      'rx_type',
+      'iso_type',
+      'ref_name',
+      'antibody_names',
+      'antibody_order',
+      'vaccine_name',
+      'vaccine_order',
+      'vaccine_dosage',
+      'infected_var_name',
+      'control_iso_name',
+      'control_iso_display',
+      'control_var_name',
+      'iso_name',
+      'iso_aggkey',
+      'iso_agg_display',
+      'potency_type',
+      'potency_unit',
+      'num_subjects',
+      'num_samples',
+      'num_experiments',
+      'all_studies',
+      'all_control_potency',
+      'all_potency',
+      'all_fold'
+    ];
+  }
+
   const sql = `
     SELECT
-      aggregate_by,
-      rx_type,
-      iso_type,
-      ref_name,
-      antibody_names,
-      antibody_order,
-      vaccine_name,
-      vaccine_order,
-      -- vaccine_dosage,
-      infected_var_name,
-      control_iso_name,
-      control_iso_display,
-      control_var_name,
-      iso_name,
-      iso_aggkey,
-      iso_agg_display,
-      potency_type,
-      potency_unit,
-
-      num_subjects,
-      num_samples,
-      num_experiments,
-      all_studies,
-      all_control_potency,
-      all_potency,
-      all_fold
-
+      ${selectColumns.join(',')}
     FROM susc_summary
     WHERE
       aggregate_by = $aggKey AND
@@ -219,7 +224,7 @@ export default function useSuscSummary({
             ...others
           } = suscSummary;
           return {
-            aggregateBy: aggregateBy.split(','),
+            aggregateBy: aggregateBy && aggregateBy.split(','),
             antibodyNames: antibodyNames && csvSplit(antibodyNames),
             ...others,
             allStudies: allStudies && csvSplit(allStudies),

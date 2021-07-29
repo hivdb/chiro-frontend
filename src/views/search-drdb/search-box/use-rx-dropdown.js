@@ -4,6 +4,7 @@ import {Dropdown} from 'semantic-ui-react';
 import escapeRegExp from 'lodash/escapeRegExp';
 
 import {
+  useRxTotalNumExp,
   useAntibodyNumExpLookup,
   useVaccineNumExpLookup,
   useInfectedVariantNumExpLookup
@@ -57,34 +58,35 @@ export default function useRxDropdown({
     },
     [setIncludeAll]
   );
-  const [abNumExpLookup, isAbNumExpPending] = useAntibodyNumExpLookup({
+  const commonParams = {
     skip: !loaded,
     articleValue,
     variantValue,
     mutationText
+  };
+  const [rxTotalNumExp, isRxTotalNumExpPending] = useRxTotalNumExp({
+    ...commonParams
+  });
+  const [abNumExpLookup, isAbNumExpPending] = useAntibodyNumExpLookup({
+    ...commonParams
   });
 
   const [vaccNumExpLookup, isVaccNumExpPending] = useVaccineNumExpLookup({
-    skip: !loaded,
-    articleValue,
-    variantValue,
-    mutationText
+    ...commonParams
   });
 
   const [
     infectedVariantNumExpLookup,
     isInfectedVariantNumExpPending
   ] = useInfectedVariantNumExpLookup({
-    skip: !loaded,
-    articleValue,
-    variantValue,
-    mutationText
+    ...commonParams
   });
 
   const options = React.useMemo(
     () => {
       if (
         !loaded ||
+        isRxTotalNumExpPending ||
         isAbNumExpPending ||
         isVaccNumExpPending ||
         isInfectedVariantNumExpPending
@@ -148,7 +150,17 @@ export default function useRxDropdown({
           {
             key: 'any',
             text: 'Any',
-            value: ANY
+            value: ANY,
+            description: pluralize(
+              'result',
+              rxTotalNumExp,
+              true
+            )
+          },
+          {
+            key: 'rx-divider',
+            as: FragmentWithoutWarning,
+            children: <Dropdown.Divider />
           },
           {
             key: 'cp-any',
@@ -286,7 +298,8 @@ export default function useRxDropdown({
       abNumExpLookup, isAbNumExpPending,
       vaccNumExpLookup, isVaccNumExpPending,
       infectedVariantNumExpLookup,
-      isInfectedVariantNumExpPending
+      isInfectedVariantNumExpPending,
+      rxTotalNumExp, isRxTotalNumExpPending
     ]
   );
   const handleChange = React.useCallback(

@@ -27,6 +27,7 @@ export default function useVaccineNumExperimentLookup({
     refName: articleValue,
     varName: variantValue,
     isoAggkey: mutationText,
+    selectColumns: ['vaccine_name', 'num_experiments'],
     skip
   });
   const {
@@ -38,6 +39,7 @@ export default function useVaccineNumExperimentLookup({
     refName: articleValue,
     varName: variantValue,
     isoAggkey: mutationText,
+    selectColumns: ['num_experiments'],
     skip
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;
