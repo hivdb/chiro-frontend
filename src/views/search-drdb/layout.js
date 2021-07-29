@@ -37,7 +37,7 @@ export default function SearchDRDBLayout({
   antibodies,
   antibodyLookup,
   vaccines,
-  cpSuscResultCount,
+  infectedVariants,
   variants,
   isolates,
   isolateLookup,
@@ -80,7 +80,7 @@ export default function SearchDRDBLayout({
        antibodies={antibodies}
        vaccineValue={vaccineName}
        vaccines={vaccines}
-       cpSuscResultCount={cpSuscResultCount}
+       infectedVariants={infectedVariants}
        convPlasmaValue={convPlasmaValue}
        variantValue={varName}
        variants={variants}

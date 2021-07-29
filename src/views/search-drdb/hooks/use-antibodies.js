@@ -73,11 +73,8 @@ function usePrepareQuery({skip}) {
             availability,
             priority,
             visibility,
-            AStat.count AS susc_result_count,
             AT.class AS ab_class
           FROM antibodies A
-          JOIN antibody_stats AStat ON
-            A.ab_name=AStat.ab_name AND AStat.stat_group='susc_results'
           LEFT JOIN antibody_targets AT ON
             A.ab_name=AT.ab_name AND AT.source='structure'
           WHERE EXISTS (

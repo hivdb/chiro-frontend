@@ -5,7 +5,7 @@ import {
   useArticles,
   useAntibodies,
   useVaccines,
-  useCPCount,
+  useInfectedVariants,
   useVariants,
   useIsolates
 } from '../search-drdb/hooks';
@@ -31,9 +31,9 @@ export default function SusceptibilityData(props) {
     isPending: isVaccPending
   } = useVaccines();
   const {
-    cpSuscResultCount,
+    infectedVariants,
     isPending: isCPPending
-  } = useCPCount();
+  } = useInfectedVariants();
   const {
     variants,
     isPending: isVariantPending
@@ -81,7 +81,7 @@ export default function SusceptibilityData(props) {
        antibodies={antibodies || []}
        vaccineValue={null}
        vaccines={vaccines || []}
-       cpSuscResultCount={cpSuscResultCount}
+       infectedVariants={infectedVariants || []}
        variantValue={null}
        variants={variants || []}
        isolates={isolates || []}

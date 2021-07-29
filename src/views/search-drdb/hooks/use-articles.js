@@ -10,12 +10,8 @@ export default function useArticles({
     SELECT
       R.ref_name,
       first_author,
-      year,
-      RStat.count as susc_result_count
-    FROM articles R, article_stats RStat
-    WHERE
-      R.ref_name=RStat.ref_name AND
-      RStat.stat_group='susc_results'
+      year
+    FROM articles R
     ORDER BY R.ref_name
   `;
 

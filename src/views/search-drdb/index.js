@@ -10,9 +10,9 @@ import {
   useArticles,
   useAntibodies,
   useVaccines,
+  useInfectedVariants,
   useVariants,
   useIsolates,
-  useCPCount,
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults
@@ -60,6 +60,10 @@ export default function SearchDRDB(props) {
     isPending: isVaccPending
   } = useVaccines();
   const {
+    infectedVariants,
+    isPending: isInfectedVariantPending
+  } = useInfectedVariants();
+  const {
     variants,
     isPending: isVariantPending
   } = useVariants();
@@ -68,10 +72,6 @@ export default function SearchDRDB(props) {
     isolateLookup,
     isPending: isIsolatePending
   } = useIsolates();
-  const {
-    cpSuscResultCount,
-    isPending: isCPCountPending
-  } = useCPCount();
 
   const {
     suscResults: abSuscResults,
@@ -93,7 +93,7 @@ export default function SearchDRDB(props) {
     mutations,
     mutationMatch,
     varName,
-    cpOption: convPlasmaValue
+    infectedVarName: convPlasmaValue
   });
   const {
     suscResults: vpSuscResults,
@@ -112,9 +112,9 @@ export default function SearchDRDB(props) {
     !isRefNameListPending &&
     !isAbLookupPending &&
     !isVaccPending &&
+    !isInfectedVariantPending &&
     !isVariantPending &&
-    !isIsolatePending &&
-    !isCPCountPending
+    !isIsolatePending
   );
 
   const resultLoaded = (
@@ -122,6 +122,7 @@ export default function SearchDRDB(props) {
     !isRefNameListPending &&
     !isAbLookupPending &&
     !isVaccPending &&
+    !isInfectedVariantPending &&
     !isVariantPending &&
     !isIsolatePending &&
     !isAbResultPending &&
@@ -154,7 +155,7 @@ export default function SearchDRDB(props) {
        antibodies={antibodies}
        antibodyLookup={antibodyLookup}
        vaccines={vaccines}
-       cpSuscResultCount={cpSuscResultCount}
+       infectedVariants={infectedVariants}
        vaccineLookup={vaccineLookup}
        variants={variants}
        isolates={isolates}

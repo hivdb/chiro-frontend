@@ -13,7 +13,7 @@ export default function SearchBox({
   articles,
   antibodies,
   vaccines,
-  cpSuscResultCount,
+  infectedVariants,
   variants,
   isolates,
   mutations,
@@ -42,7 +42,7 @@ export default function SearchBox({
     ...commonProps,
     vaccines,
     antibodies,
-    cpSuscResultCount,
+    infectedVariants,
     onChange,
     formOnly
   });

@@ -3,6 +3,7 @@ import useConfig from './use-config';
 import useArticles from './use-articles';
 import useAntibodies from './use-antibodies';
 import useVaccines from './use-vaccines';
+import useInfectedVariants from './use-infected-variants';
 import useVariants from './use-variants';
 import useIsolates, {compareMutations} from './use-isolates';
 import useLookup from './use-lookup';
@@ -21,6 +22,8 @@ import useCPCount from './use-cp-count';
 import useArticleNumExpLookup from './use-article-numexp-lookup';
 import useAntibodyNumExpLookup from './use-antibody-numexp-lookup';
 import useVaccineNumExpLookup from './use-vaccine-numexp-lookup';
+import useInfectedVariantNumExpLookup
+  from './use-infected-variant-numexp-lookup';
 
 export {
   useLocationParams,
@@ -28,6 +31,7 @@ export {
   useArticles,
   useAntibodies,
   useVaccines,
+  useInfectedVariants,
   useVariants,
   useIsolates,
   useAbSuscResults,
@@ -44,5 +48,6 @@ export {
   compareMutations,
   useArticleNumExpLookup,
   useAntibodyNumExpLookup,
-  useVaccineNumExpLookup
+  useVaccineNumExpLookup,
+  useInfectedVariantNumExpLookup
 };

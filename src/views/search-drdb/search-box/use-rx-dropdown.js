@@ -6,7 +6,7 @@ import escapeRegExp from 'lodash/escapeRegExp';
 import {
   useAntibodyNumExpLookup,
   useVaccineNumExpLookup,
-  useConfig
+  useInfectedVariantNumExpLookup
 } from '../hooks';
 
 
@@ -46,11 +46,10 @@ export default function useRxDropdown({
   antibodies, antibodyValue,
   variantValue,
   mutationText,
-  cpSuscResultCount,
+  infectedVariants,
   onChange,
   formOnly
 }) {
-  const {config, isPending: isConfigPending} = useConfig();
   const [includeAll, setIncludeAll] = React.useState(false);
   const onSearchChange = React.useCallback(
     (event, {searchQuery}) => {
@@ -72,13 +71,23 @@ export default function useRxDropdown({
     mutationText
   });
 
+  const [
+    infectedVariantNumExpLookup,
+    isInfectedVariantNumExpPending
+  ] = useInfectedVariantNumExpLookup({
+    skip: !loaded,
+    articleValue,
+    variantValue,
+    mutationText
+  });
+
   const options = React.useMemo(
     () => {
       if (
         !loaded ||
-        isConfigPending ||
         isAbNumExpPending ||
-        isVaccNumExpPending
+        isVaccNumExpPending ||
+        isInfectedVariantNumExpPending
       ) {
         return [
           {
@@ -145,17 +154,31 @@ export default function useRxDropdown({
             key: 'cp-any',
             text: 'Convalescent plasma - any',
             value: 'cp-any',
-            description: pluralize('result', cpSuscResultCount, true),
+            description: pluralize(
+              'result',
+              infectedVariantNumExpLookup[ANY],
+              true
+            ),
             type: CP
           },
-          ...config.convPlasmaOptions.map(
-            ({name, label}) => ({
-              key: name,
-              text: label,
-              value: name,
-              type: CP
-            })
-          ),
+          ...infectedVariants
+            .map(
+              ({varName, synonyms}) => ({
+                key: varName,
+                text: `${
+                  synonyms.length > 0 ?
+                    `${varName} (${synonyms[0]})` : varName
+                } infection`,
+                value: varName,
+                type: CP,
+                description: pluralize(
+                  'result',
+                  infectedVariantNumExpLookup[varName] || 0,
+                  true),
+                'data-num-exp': infectedVariantNumExpLookup[varName] || 0
+              })
+            )
+            .sort((a, b) => b['data-num-exp'] - a['data-num-exp']),
           {
             key: 'vaccine-divider',
             as: FragmentWithoutWarning,
@@ -179,7 +202,7 @@ export default function useRxDropdown({
               !(/\+/.test(vaccineName))
             ))
             .map(
-              ({vaccineName, suscResultCount}) => ({
+              ({vaccineName}) => ({
                 key: vaccineName,
                 text: vaccineName,
                 value: vaccineName,
@@ -187,11 +210,11 @@ export default function useRxDropdown({
                   'result',
                   vaccNumExpLookup[vaccineName] || 0,
                   true),
-                'data-is-empty': !vaccNumExpLookup[vaccineName],
+                'data-num-exp': vaccNumExpLookup[vaccineName] || 0,
                 type: VACCINE
               })
             )
-            .sort((a, b) => a['data-is-empty'] - b['data-is-empty']),
+            .sort((a, b) => b['data-num-exp'] - a['data-num-exp']),
           {
             key: 'antibody-divider',
             as: FragmentWithoutWarning,
@@ -236,8 +259,7 @@ export default function useRxDropdown({
                 abName,
                 abbreviationName: abbr,
                 synonyms,
-                abClass,
-                suscResultCount
+                abClass
               }) => ({
                 key: abName,
                 text: abbr ? `${abName} (${abbr})` : abName,
@@ -257,15 +279,14 @@ export default function useRxDropdown({
     },
     [
       loaded, includeAll,
-      config, isConfigPending,
-      vaccines, antibodies,
+      vaccines, antibodies, infectedVariants,
       convPlasmaValue,
       vaccineValue, antibodyValue,
-      cpSuscResultCount,
       formOnly,
       abNumExpLookup, isAbNumExpPending,
-      vaccNumExpLookup, isVaccNumExpPending
-      
+      vaccNumExpLookup, isVaccNumExpPending,
+      infectedVariantNumExpLookup,
+      isInfectedVariantNumExpPending
     ]
   );
   const handleChange = React.useCallback(

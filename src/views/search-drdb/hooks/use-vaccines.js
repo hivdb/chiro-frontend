@@ -7,14 +7,11 @@ export default function useVaccines({
 } = {}) {
   const sql = `
     SELECT
-      V.vaccine_name,
+      vaccine_name,
       vaccine_type,
-      priority,
-      VStat.count AS susc_result_count
-    FROM vaccines V JOIN vaccine_stats VStat ON
-      V.vaccine_name=VStat.vaccine_name AND
-      VStat.stat_group='susc_results'
-    ORDER BY priority, V.vaccine_name
+      priority
+    FROM vaccines
+    ORDER BY priority, vaccine_name
   `;
   const {
     payload: vaccines,

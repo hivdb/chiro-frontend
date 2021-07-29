@@ -1,10 +1,8 @@
 import React from 'react';
-import useConfig from './use-config';
 import useSuscResults from './use-susc-results';
 
 
-function usePrepareQuery({cpOption, skip}) {
-  const {config, isPending} = useConfig();
+function usePrepareQuery({infectedVarName, skip}) {
   return React.useMemo(
     () => {
       const addColumns = [];
@@ -12,31 +10,22 @@ function usePrepareQuery({cpOption, skip}) {
       const joinClause = [];
       const params = {};
 
-      if (!skip && !isPending) {
+      if (!skip) {
         addColumns.push("'conv-plasma' AS rx_type");
         addColumns.push('RXCP.infected_iso_name');
         addColumns.push('RXCP.timing');
         addColumns.push('RXCP.severity');
 
-        const {varNames} = (
-          config.convPlasmaOptions
-            .find(({name}) => name === cpOption)
-        ) || {};
-        if (varNames && varNames.length > 0) {
+        if (infectedVarName && infectedVarName !== 'any') {
           where.push(`
             EXISTS (
               SELECT 1 FROM isolates ISO
               WHERE
-                RXCP.infected_iso_name = ISO.iso_name AND (
-                  ${varNames.map((_, idx) => `
-                    ISO.var_name = $infectedVarName${idx}
-                  `).join(' OR ')}
-                )
+                RXCP.infected_iso_name = ISO.iso_name AND
+                ISO.var_name = $infectedVarName
             )
           `);
-          varNames.forEach((varName, idx) => {
-            params[`$infectedVarName${idx}`] = varName;
-          });
+          params.$infectedVarName = infectedVarName;
         }
 
         joinClause.push(`
@@ -47,7 +36,7 @@ function usePrepareQuery({cpOption, skip}) {
       }
       return {addColumns, where, joinClause, params};
     },
-    [skip, config, isPending, cpOption]
+    [skip, infectedVarName]
   );
 
 }
@@ -58,7 +47,7 @@ export default function useConvPlasmaSuscResults({
   mutations,
   mutationMatch,
   varName,
-  cpOption,
+  infectedVarName,
   skip = false
 }) {
 
@@ -67,7 +56,7 @@ export default function useConvPlasmaSuscResults({
     joinClause,
     where,
     params
-  } = usePrepareQuery({cpOption, skip});
+  } = usePrepareQuery({infectedVarName, skip});
   const {
     suscResults,
     suscResultLookup,
