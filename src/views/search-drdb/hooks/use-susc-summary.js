@@ -6,6 +6,7 @@ import snakeCase from 'lodash/snakeCase';
 import {csvParse, csvStringify} from 'sierra-frontend/dist/utils/csv';
 
 const AGG_OPTIONS = [
+  'rx_type',
   'article',
   'infected_variant',
   'vaccine',
@@ -37,12 +38,13 @@ function csvJoin(array) {
 }
 
 
-function csvSplit(array) {
-  return csvParse(array, /* withHeader = */false)[0];
+function csvSplit(text) {
+  return csvParse(text, /* withHeader = */false)[0];
 }
 
 
 const AGG_OPTION_BY_VALUE_NAME = {
+  rxType: ['rx_type'],
   refName: ['article'],
   antibodyNames: ['antibody', 'antibody:indiv'],
   vaccineName: ['vaccine'],
@@ -99,6 +101,7 @@ function prepareAggFilter(
 
 export default function useSuscSummary({
   aggregateBy,
+  rxType,
   refName,
   antibodyNames,
   vaccineName,
@@ -115,6 +118,9 @@ export default function useSuscSummary({
   const params = {$aggKey: aggKey};
   const orderBy = [];
 
+  prepareAggFilter(
+    'rxType', rxType,
+    aggregateBy, where, params, orderBy);
   prepareAggFilter(
     'refName', refName,
     aggregateBy, where, params, orderBy);

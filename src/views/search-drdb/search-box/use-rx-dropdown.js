@@ -3,7 +3,11 @@ import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 import escapeRegExp from 'lodash/escapeRegExp';
 
-import {useConfig} from '../hooks';
+import {
+  useAntibodyNumExpLookup,
+  useVaccineNumExpLookup,
+  useConfig
+} from '../hooks';
 
 
 const EMPTY = '__EMPTY';
@@ -36,9 +40,12 @@ function FragmentWithoutWarning({key, children}) {
 
 export default function useRxDropdown({
   loaded,
+  articleValue,
   convPlasmaValue,
   vaccines, vaccineValue,
   antibodies, antibodyValue,
+  variantValue,
+  mutationText,
   cpSuscResultCount,
   onChange,
   formOnly
@@ -51,10 +58,28 @@ export default function useRxDropdown({
     },
     [setIncludeAll]
   );
+  const [abNumExpLookup, isAbNumExpPending] = useAntibodyNumExpLookup({
+    skip: !loaded,
+    articleValue,
+    variantValue,
+    mutationText
+  });
+
+  const [vaccNumExpLookup, isVaccNumExpPending] = useVaccineNumExpLookup({
+    skip: !loaded,
+    articleValue,
+    variantValue,
+    mutationText
+  });
 
   const options = React.useMemo(
     () => {
-      if (!loaded || isConfigPending) {
+      if (
+        !loaded ||
+        isConfigPending ||
+        isAbNumExpPending ||
+        isVaccNumExpPending
+      ) {
         return [
           {
             key: 'any',
@@ -67,7 +92,7 @@ export default function useRxDropdown({
             value: 'cp-any',
             type: CP
           },
-          ...(convPlasmaValue ? [{
+          ...(convPlasmaValue && convPlasmaValue !== 'any' ? [{
             key: convPlasmaValue,
             text: convPlasmaValue,
             value: convPlasmaValue,
@@ -79,7 +104,7 @@ export default function useRxDropdown({
             value: 'vp-any',
             type: VACCINE
           },
-          ...(vaccineValue ? [{
+          ...(vaccineValue && vaccineValue !== 'any' ? [{
             key: vaccineValue,
             text: vaccineValue,
             value: vaccineValue,
@@ -92,7 +117,9 @@ export default function useRxDropdown({
             type: ANTIBODY
           },
           ...(
-            antibodyValue && antibodyValue.length > 0 ?
+            antibodyValue &&
+            antibodyValue.length > 0 &&
+            antibodyValue[0] !== 'any' ?
               [{
                 key: antibodyValue.join(','),
                 text: antibodyValue.join(' + '),
@@ -138,7 +165,12 @@ export default function useRxDropdown({
             key: 'vp-any',
             text: 'Vaccinee plasma - any',
             value: 'vp-any',
-            type: VACCINE
+            type: VACCINE,
+            description: pluralize(
+              'result',
+              vaccNumExpLookup[ANY],
+              true
+            )
           },
           ...vaccines
             .filter(({vaccineName}) => (
@@ -151,10 +183,15 @@ export default function useRxDropdown({
                 key: vaccineName,
                 text: vaccineName,
                 value: vaccineName,
-                description: pluralize('result', suscResultCount, true),
+                description: pluralize(
+                  'result',
+                  vaccNumExpLookup[vaccineName] || 0,
+                  true),
+                'data-is-empty': !vaccNumExpLookup[vaccineName],
                 type: VACCINE
               })
-            ),
+            )
+            .sort((a, b) => a['data-is-empty'] - b['data-is-empty']),
           {
             key: 'antibody-divider',
             as: FragmentWithoutWarning,
@@ -164,7 +201,12 @@ export default function useRxDropdown({
             key: 'ab-any',
             text: 'MAb - any',
             value: 'ab-any',
-            type: ANTIBODY
+            type: ANTIBODY,
+            description: pluralize(
+              'result',
+              abNumExpLookup[ANY],
+              true
+            )
           },
           ...((
             antibodyValue && antibodyValue.length > 0 &&
@@ -201,10 +243,15 @@ export default function useRxDropdown({
                 text: abbr ? `${abName} (${abbr})` : abName,
                 value: abName,
                 type: ANTIBODY,
-                description: pluralize('result', suscResultCount, true),
+                description: pluralize(
+                  'result',
+                  abNumExpLookup[abName] || 0,
+                  true),
+                'data-is-empty': !abNumExpLookup[abName],
                 synonyms
               })
             )
+            .sort((a, b) => a['data-is-empty'] - b['data-is-empty'])
         ];
       }
     },
@@ -215,7 +262,10 @@ export default function useRxDropdown({
       convPlasmaValue,
       vaccineValue, antibodyValue,
       cpSuscResultCount,
-      formOnly
+      formOnly,
+      abNumExpLookup, isAbNumExpPending,
+      vaccNumExpLookup, isVaccNumExpPending
+      
     ]
   );
   const handleChange = React.useCallback(

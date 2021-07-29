@@ -21,31 +21,35 @@ export default function SearchBox({
   onChange,
   children
 }) {
-  const articleDropdown = useArticleDropdown({
-    loaded,
+  const commonProps = {
     articleValue,
     antibodyValue,
     vaccineValue,
     convPlasmaValue,
     variantValue,
-    mutationText,
+    mutationText
+  };
+
+  const articleDropdown = useArticleDropdown({
+    loaded,
+    ...commonProps,
     articles,
     onChange,
     formOnly
   });
   const rxDropdown = useRxDropdown({
-    loaded, formOnly,
-    vaccineValue, antibodyValue,
-    convPlasmaValue,
-    vaccines, antibodies,
+    loaded,
+    ...commonProps,
+    vaccines,
+    antibodies,
     cpSuscResultCount,
-    onChange
+    onChange,
+    formOnly
   });
   const variantDropdown = useVariantDropdown({
     loaded,
-    variantValue,
+    ...commonProps,
     mutations,
-    mutationText,
     variants,
     isolates,
     onChange,

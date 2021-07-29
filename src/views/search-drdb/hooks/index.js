@@ -18,6 +18,9 @@ import useCPSuscResults from './use-cp-susc-results';
 import useVPSuscResults from './use-vp-susc-results';
 import useSuscSummary from './use-susc-summary';
 import useCPCount from './use-cp-count';
+import useArticleNumExpLookup from './use-article-numexp-lookup';
+import useAntibodyNumExpLookup from './use-antibody-numexp-lookup';
+import useVaccineNumExpLookup from './use-vaccine-numexp-lookup';
 
 export {
   useLocationParams,
@@ -38,5 +41,8 @@ export {
   useCompareSuscResultsByControlIsolate,
   useCompareSuscResultsByInfectedIsolate,
   getQueryMutations,
-  compareMutations
+  compareMutations,
+  useArticleNumExpLookup,
+  useAntibodyNumExpLookup,
+  useVaccineNumExpLookup
 };
