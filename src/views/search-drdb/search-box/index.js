@@ -15,8 +15,7 @@ export default function SearchBox({
   vaccines,
   infectedVariants,
   variants,
-  isolates,
-  mutations,
+  isolateAggs,
   mutationText,
   onChange,
   children
@@ -49,9 +48,8 @@ export default function SearchBox({
   const variantDropdown = useVariantDropdown({
     loaded,
     ...commonProps,
-    mutations,
     variants,
-    isolates,
+    isolateAggs,
     onChange,
     formOnly
   });

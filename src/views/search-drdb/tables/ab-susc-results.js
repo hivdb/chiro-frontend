@@ -17,14 +17,18 @@ export default function AbSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
       'isoName',
       'abNames',
       'controlIsoName',
+      'isoName',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Mutation',
+      potency: 'Potency (IC50)',
       fold: 'Fold Reduction'
 
     }
@@ -35,15 +39,19 @@ export default function AbSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
       'isoName',
       'abNames',
       'controlIsoName',
+      'isoName',
       'cumulativeCount',
+      'potency',
       'fold',
     ],
     labels: {
       isoName: 'Mutation',
+      potency: 'Mean/Median Potency (IC50)',
       fold: 'Mean/Median Fold Reduction'
     }
   });
@@ -54,14 +62,18 @@ export default function AbSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
       'isoName',
       'abNames',
       'controlIsoName',
+      'isoName',
+      'potency',
       'fold'
     ],
     labels: {
       isoName: 'Variant',
+      potency: 'Potency (IC50)',
       fold: 'Fold Reduction'
     }
   });
@@ -72,16 +84,20 @@ export default function AbSuscResults({
     isolateLookup,
     columns: [
       'refName',
+      'assayName',
       'section',
       'controlIsoName',
       'isoName',
       'abNames',
       'controlIsoName',
+      'isoName',
       'cumulativeCount',
+      'potency',
       'fold',
     ],
     labels: {
       isoName: 'Variant',
+      potency: 'Mean/Median Potency (IC50)',
       fold: 'Mean/Median Fold Reduction'
     }
   });

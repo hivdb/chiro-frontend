@@ -38,16 +38,12 @@ function countSpikeMutations(mutations) {
 
 const ORDERD_ISOLATE_TYPE = [
   'individual-mutation',
-  'named-variant',
   'mutation-combination'
 ];
 
 
 function classifyIsolate({varName, mutations, numMuts}) {
-  if (varName) {
-    return 'named-variant';
-  }
-  else if (numMuts > 1) {
+  if (numMuts > 1) {
     return 'mutation-combination';
   }
   else {

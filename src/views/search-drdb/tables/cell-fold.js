@@ -5,13 +5,16 @@ import capitalize from 'lodash/capitalize';
 export default function CellFold({
   foldCmp,
   fold,
-  // ineffective,
+  ineffective,
   fbResistanceLevel
 }) {
   let foldValue = fold;
   if (foldValue && foldValue > 100) {
     foldValue = 100;
     foldCmp = '>';
+  }
+  if (ineffective !== null && ineffective !== 'experimental') {
+    return <em>N.N.</em>;
   }
   if (foldValue !== null) {
     return <>

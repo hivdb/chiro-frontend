@@ -13,6 +13,7 @@ import {
   useInfectedVariants,
   useVariants,
   useIsolates,
+  useIsolateAggs,
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults
@@ -24,9 +25,7 @@ export default function SearchDRDB(props) {
   const {
     formOnly,
     refName,
-    mutations,
     mutationText,
-    mutationMatch,
     abNames,
     vaccineName,
     convPlasmaValue,
@@ -68,10 +67,13 @@ export default function SearchDRDB(props) {
     isPending: isVariantPending
   } = useVariants();
   const {
-    isolates,
     isolateLookup,
     isPending: isIsolatePending
   } = useIsolates();
+  const {
+    isolateAggs,
+    isPending: isIsolateAggsPending
+  } = useIsolateAggs();
 
   const {
     suscResults: abSuscResults,
@@ -79,8 +81,7 @@ export default function SearchDRDB(props) {
   } = useAbSuscResults({
     skip: skip || vaccineName || convPlasmaValue,
     refName,
-    mutations,
-    mutationMatch,
+    mutationText,
     varName,
     abNames
   });
@@ -90,8 +91,7 @@ export default function SearchDRDB(props) {
   } = useCPSuscResults({
     skip: skip || (abNames && abNames.length > 0) || vaccineName,
     refName,
-    mutations,
-    mutationMatch,
+    mutationText,
     varName,
     infectedVarName: convPlasmaValue
   });
@@ -101,8 +101,7 @@ export default function SearchDRDB(props) {
   } = useVPSuscResults({
     skip: skip || (abNames && abNames.length > 0) || convPlasmaValue,
     refName,
-    mutations,
-    mutationMatch,
+    mutationText,
     varName,
     vaccineName
   });
@@ -114,7 +113,8 @@ export default function SearchDRDB(props) {
     !isVaccPending &&
     !isInfectedVariantPending &&
     !isVariantPending &&
-    !isIsolatePending
+    !isIsolatePending &&
+    !isIsolateAggsPending
   );
 
   const resultLoaded = (
@@ -141,9 +141,7 @@ export default function SearchDRDB(props) {
       <SearchDRDBLayout
        loaded={resultLoaded}
        refName={refName}
-       mutations={mutations}
        mutationText={mutationText}
-       mutationMatch={mutationMatch}
        abNames={abNames}
        vaccineName={vaccineName}
        convPlasmaValue={convPlasmaValue}
@@ -158,7 +156,7 @@ export default function SearchDRDB(props) {
        infectedVariants={infectedVariants}
        vaccineLookup={vaccineLookup}
        variants={variants}
-       isolates={isolates}
+       isolateAggs={isolateAggs}
        isolateLookup={isolateLookup}
        abSuscResults={abSuscResults}
        cpSuscResults={cpSuscResults}

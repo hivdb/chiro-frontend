@@ -60,7 +60,7 @@ export default function useArticleDropdown({
               'result',
               numExpLookup[ANY],
               true
-            ),
+            )
           },
           ...(
             !articleValue || articles.some(
@@ -73,18 +73,20 @@ export default function useArticleDropdown({
                 value: articleValue
               }]
           ),
-          ...articles.map(
-            ({refName, displayName}) => ({
-              key: refName,
-              text: displayName,
-              value: refName,
-              description: pluralize(
-                'result',
-                numExpLookup[refName] || 0,
-                true),
-              'data-is-empty': !numExpLookup[refName]
-            })
-          ).sort((a, b) => a['data-is-empty'] - b['data-is-empty'])
+          ...articles
+            .map(
+              ({refName, displayName}) => ({
+                key: refName,
+                text: displayName,
+                value: refName,
+                description: pluralize(
+                  'result',
+                  numExpLookup[refName] || 0,
+                  true),
+                'data-is-empty': !numExpLookup[refName]
+              })
+            )
+            .filter(a => !a['data-is-empty'])
         ];
       }
     },
@@ -95,7 +97,7 @@ export default function useArticleDropdown({
   );
 
   const handleChange = React.useCallback(
-    (evt, {value, options}) => {
+    (evt, {value}) => {
       if (value === EMPTY) {
         evt.preventDefault();
       }

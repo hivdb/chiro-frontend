@@ -21,9 +21,7 @@ import style from './style.module.scss';
 
 export default function SearchDRDBLayout({
   refName,
-  mutations,
   mutationText,
-  mutationMatch,
   abNames,
   vaccineName,
   convPlasmaValue,
@@ -39,7 +37,7 @@ export default function SearchDRDBLayout({
   vaccines,
   infectedVariants,
   variants,
-  isolates,
+  isolateAggs,
   isolateLookup,
   abSuscResults,
   cpSuscResults,
@@ -84,10 +82,8 @@ export default function SearchDRDBLayout({
        convPlasmaValue={convPlasmaValue}
        variantValue={varName}
        variants={variants}
-       isolates={isolates}
-       mutations={mutations}
+       isolateAggs={isolateAggs}
        mutationText={mutationText}
-       mutationMatch={mutationMatch}
        onChange={onChange}>
         {({
           articleDropdown,
@@ -135,7 +131,7 @@ export default function SearchDRDBLayout({
           </Header>
           <AbSuscResults
            loaded={loaded}
-           cacheKey={JSON.stringify({refName, mutations, abNames})}
+           cacheKey={JSON.stringify({refName, mutationText, abNames})}
            articleLookup={articleLookup}
            antibodyLookup={antibodyLookup}
            isolateLookup={isolateLookup}
@@ -150,7 +146,7 @@ export default function SearchDRDBLayout({
           </Header>
           <VPSuscResults
            loaded={loaded}
-           cacheKey={JSON.stringify({refName, mutations, vaccineName})}
+           cacheKey={JSON.stringify({refName, mutationText, vaccineName})}
            articleLookup={articleLookup}
            isolateLookup={isolateLookup}
            vpSuscResults={vpSuscResults} />
@@ -164,7 +160,7 @@ export default function SearchDRDBLayout({
           </Header>
           <CPSuscResults
            loaded={loaded}
-           cacheKey={JSON.stringify({refName, mutations})}
+           cacheKey={JSON.stringify({refName, mutationText})}
            articleLookup={articleLookup}
            isolateLookup={isolateLookup}
            cpSuscResults={cpSuscResults} />
@@ -182,7 +178,6 @@ SearchDRDBLayout.propTypes = {
   loaded: PropTypes.bool.isRequired,
   match: matchShape.isRequired,
   refName: PropTypes.string,
-  mutations: PropTypes.array,
   abNames: PropTypes.array,
   antibodyLookup: PropTypes.object,
   abSuscResults: PropTypes.array,

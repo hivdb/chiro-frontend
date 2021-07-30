@@ -12,6 +12,10 @@ export default function useArticles({
       first_author,
       year
     FROM articles R
+    WHERE EXISTS (
+      SELECT 1 FROM susc_summary S
+      WHERE R.ref_name = S.ref_name
+    )
     ORDER BY R.ref_name
   `;
 

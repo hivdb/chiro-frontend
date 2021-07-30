@@ -74,8 +74,7 @@ function usePrepareQuery({abNames, skip}) {
 
 export default function useAntibodySuscResults({
   refName,
-  mutations,
-  mutationMatch,
+  mutationText,
   varName,
   abNames,
   skip = false
@@ -103,8 +102,7 @@ export default function useAntibodySuscResults({
     isPending
   } = useSuscResults({
     refName,
-    mutations,
-    mutationMatch,
+    mutationText,
     varName,
     addColumns,
     where,

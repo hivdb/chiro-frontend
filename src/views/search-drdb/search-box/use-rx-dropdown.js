@@ -157,135 +157,122 @@ export default function useRxDropdown({
               true
             )
           },
-          {
-            key: 'rx-divider',
-            as: FragmentWithoutWarning,
-            children: <Dropdown.Divider />
-          },
-          {
-            key: 'cp-any',
-            text: 'Convalescent plasma - any',
-            value: 'cp-any',
-            description: pluralize(
-              'result',
-              infectedVariantNumExpLookup[ANY],
-              true
-            ),
-            type: CP
-          },
-          ...infectedVariants
-            .map(
-              ({varName, synonyms}) => ({
-                key: varName,
-                text: `${
-                  synonyms.length > 0 ?
-                    `${varName} (${synonyms[0]})` : varName
-                } infection`,
-                value: varName,
-                type: CP,
-                description: pluralize(
-                  'result',
-                  infectedVariantNumExpLookup[varName] || 0,
-                  true),
-                'data-num-exp': infectedVariantNumExpLookup[varName] || 0
-              })
-            )
-            .sort((a, b) => b['data-num-exp'] - a['data-num-exp']),
-          {
-            key: 'vaccine-divider',
-            as: FragmentWithoutWarning,
-            children: <Dropdown.Divider />
-          },
-          {
-            key: 'vp-any',
-            text: 'Vaccinee plasma - any',
-            value: 'vp-any',
-            type: VACCINE,
-            description: pluralize(
-              'result',
-              vaccNumExpLookup[ANY],
-              true
-            )
-          },
-          ...vaccines
-            .filter(({vaccineName}) => (
-              includeAll ||
-              vaccineName === vaccineValue ||
-              !(/\+/.test(vaccineName))
-            ))
-            .map(
-              ({vaccineName}) => ({
-                key: vaccineName,
-                text: vaccineName,
-                value: vaccineName,
-                description: pluralize(
-                  'result',
-                  vaccNumExpLookup[vaccineName] || 0,
-                  true),
-                'data-num-exp': vaccNumExpLookup[vaccineName] || 0,
-                type: VACCINE
-              })
-            )
-            .sort((a, b) => b['data-num-exp'] - a['data-num-exp']),
-          {
-            key: 'antibody-divider',
-            as: FragmentWithoutWarning,
-            children: <Dropdown.Divider />
-          },
-          {
-            key: 'ab-any',
-            text: 'MAb - any',
-            value: 'ab-any',
-            type: ANTIBODY,
-            description: pluralize(
-              'result',
-              abNumExpLookup[ANY],
-              true
-            )
-          },
-          ...((
-            antibodyValue && antibodyValue.length > 0 &&
-            (
-              antibodyValue.length > 1 ||
-              (antibodyValue[0] !== 'any' &&
-               !antibodies.some(({abName}) => abName === antibodyValue[0]))
-            )
-          ) ?
-            [{
-              key: antibodyValue.join(','),
-              text: antibodyValue.join(' + '),
-              value: antibodyValue.join(','),
-              type: ANTIBODY
-            }] : []
-          ),
-          ...antibodies
-            .filter(
-              ({abName, visibility}) => (
-                includeAll ||
-                (antibodyValue && antibodyValue.includes(abName)) ||
-                visibility === true
+          ...(infectedVariantNumExpLookup[ANY] > 0 ? [
+            {
+              key: 'cp-divider',
+              as: FragmentWithoutWarning,
+              children: <Dropdown.Divider />
+            },
+            {
+              key: 'cp-any',
+              text: 'Convalescent plasma - any',
+              value: 'cp-any',
+              description: pluralize(
+                'result',
+                infectedVariantNumExpLookup[ANY],
+                true
+              ),
+              type: CP
+            },
+            ...infectedVariants
+              .map(
+                ({varName, synonyms}) => ({
+                  key: varName,
+                  text: `${
+                    synonyms.length > 0 ?
+                      `${varName} (${synonyms[0]})` : varName
+                  } infection`,
+                  value: varName,
+                  type: CP,
+                  description: pluralize(
+                    'result',
+                    infectedVariantNumExpLookup[varName] || 0,
+                    true),
+                  'data-num-exp': infectedVariantNumExpLookup[varName] || 0
+                })
               )
-            )
-            .map(
-              ({
-                abName,
-                abbreviationName: abbr,
-                synonyms,
-                abClass
-              }) => ({
-                key: abName,
-                text: abbr ? `${abName} (${abbr})` : abName,
-                value: abName,
-                type: ANTIBODY,
-                description: pluralize(
-                  'result',
-                  abNumExpLookup[abName] || 0,
-                  true),
-                'data-is-empty': !abNumExpLookup[abName],
-                synonyms
-              })
-            )
-            .sort((a, b) => a['data-is-empty'] - b['data-is-empty'])
+              .filter(v => v['data-num-exp'] > 0)
+              .sort((a, b) => b['data-num-exp'] - a['data-num-exp']),
+          ] : []),
+          ...(vaccNumExpLookup[ANY] > 0 ? [
+            {
+              key: 'vaccine-divider',
+              as: FragmentWithoutWarning,
+              children: <Dropdown.Divider />
+            },
+            {
+              key: 'vp-any',
+              text: 'Vaccinee plasma - any',
+              value: 'vp-any',
+              type: VACCINE,
+              description: pluralize(
+                'result',
+                vaccNumExpLookup[ANY],
+                true
+              )
+            },
+            ...vaccines
+              .filter(({vaccineName}) => (
+                includeAll ||
+                vaccineName === vaccineValue ||
+                !(/\+/.test(vaccineName))
+              ))
+              .map(
+                ({vaccineName}) => ({
+                  key: vaccineName,
+                  text: vaccineName,
+                  value: vaccineName,
+                  description: pluralize(
+                    'result',
+                    vaccNumExpLookup[vaccineName] || 0,
+                    true),
+                  'data-num-exp': vaccNumExpLookup[vaccineName] || 0,
+                  type: VACCINE
+                })
+              )
+              .filter(v => v['data-num-exp'] > 0)
+              .sort((a, b) => b['data-num-exp'] - a['data-num-exp']),
+          ] : []),
+          ...(abNumExpLookup[ANY] > 0 ? [
+            {
+              key: 'antibody-divider',
+              as: FragmentWithoutWarning,
+              children: <Dropdown.Divider />
+            },
+            {
+              key: 'ab-any',
+              text: 'MAb - any',
+              value: 'ab-any',
+              type: ANTIBODY,
+              description: pluralize(
+                'result',
+                abNumExpLookup[ANY],
+                true
+              )
+            },
+            ...antibodies
+              .map(
+                ({
+                  abName,
+                  abbreviationName: abbr,
+                  synonyms,
+                  abClass
+                }) => ({
+                  key: abName,
+                  text: abbr ? `${abName} (${abbr})` : abName,
+                  value: abName,
+                  type: ANTIBODY,
+                  description: pluralize(
+                    'result',
+                    abNumExpLookup[abName] || 0,
+                    true),
+                  'data-is-empty': !abNumExpLookup[abName],
+                  synonyms
+                })
+              )
+              .filter(v => !v['data-is-empty'])
+              .sort((a, b) => a['data-is-empty'] - b['data-is-empty'])
+          ] : [])
         ];
       }
     },

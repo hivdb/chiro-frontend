@@ -44,8 +44,7 @@ function usePrepareQuery({infectedVarName, skip}) {
 
 export default function useConvPlasmaSuscResults({
   refName,
-  mutations,
-  mutationMatch,
+  mutationText,
   varName,
   infectedVarName,
   skip = false
@@ -63,8 +62,7 @@ export default function useConvPlasmaSuscResults({
     isPending
   } = useSuscResults({
     refName,
-    mutations,
-    mutationMatch,
+    mutationText,
     varName,
     addColumns,
     joinClause,

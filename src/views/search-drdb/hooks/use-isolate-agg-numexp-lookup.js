@@ -1,18 +1,19 @@
 import React from 'react';
-
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useArticleNumExperimentLookup({
+export default function useIsolateAggTotalNumExperiment({
   skip,
+  articleValue,
   antibodyValue,
   vaccineValue,
-  convPlasmaValue,
-  variantValue,
-  mutationText
+  convPlasmaValue
 }) {
   let rxType;
   const aggregateBy = [];
+  if (articleValue) {
+    aggregateBy.push('article');
+  }
   if (antibodyValue && antibodyValue.length > 0) {
     if (antibodyValue[0] === 'any') {
       rxType = 'antibody';
@@ -46,56 +47,32 @@ export default function useArticleNumExperimentLookup({
       aggregateBy.push('infected_variant');
     }
   }
-  if (variantValue) {
-    aggregateBy.push('variant');
-  }
-  if (mutationText) {
-    aggregateBy.push('isolate_agg');
-  }
   const {
     suscSummary,
-    isPending: isSuscSummaryPending
+    isPending
   } = useSuscSummary({
-    aggregateBy: ['article', ...aggregateBy],
+    aggregateBy: ['isolate_agg', ...aggregateBy],
+    refName: articleValue,
     rxType,
     antibodyNames: antibodyValue,
     vaccineName: vaccineValue,
     infectedVarName: convPlasmaValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
-    selectColumns: ['ref_name', 'num_experiments'],
+    selectColumns: ['iso_aggkey', 'num_experiments'],
     skip
   });
-  const {
-    suscSummary: anySuscSummary,
-    isPending: isAnySuscSummaryPending
-  } = useSuscSummary({
-    aggregateBy,
-    rxType,
-    antibodyNames: antibodyValue,
-    vaccineName: vaccineValue,
-    infectedVarName: convPlasmaValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
-    selectColumns: ['num_experiments'],
-    skip
-  });
-  const isPending = isSuscSummaryPending || isAnySuscSummaryPending;
 
   const lookup = React.useMemo(
     () => {
       if (skip || isPending) {
         return {};
       }
-      const lookup = {
-        __ANY: anySuscSummary[0]?.numExperiments || 0
-      };
+      const lookup = {};
       for (const one of suscSummary) {
-        lookup[one.refName] = one.numExperiments;
+        lookup[one.isoAggkey] = one.numExperiments;
       }
       return lookup;
     },
-    [skip, isPending, suscSummary, anySuscSummary]
+    [skip, isPending, suscSummary]
   );
   return [lookup, isPending];
 }

@@ -7,7 +7,7 @@ import {
   useVaccines,
   useInfectedVariants,
   useVariants,
-  useIsolates
+  useIsolateAggs
 } from '../search-drdb/hooks';
 import SearchBox from '../search-drdb/search-box';
 
@@ -39,9 +39,9 @@ export default function SusceptibilityData(props) {
     isPending: isVariantPending
   } = useVariants();
   const {
-    isolates,
-    isPending: isIsolatePending
-  } = useIsolates();
+    isolateAggs,
+    isPending: isIsolateAggPending
+  } = useIsolateAggs();
 
   const searchboxLoaded = (
     !isRefNameListPending &&
@@ -49,7 +49,7 @@ export default function SusceptibilityData(props) {
     !isVaccPending &&
     !isCPPending &&
     !isVariantPending &&
-    !isIsolatePending
+    !isIsolateAggPending
   );
 
   const onChange = React.useCallback(
@@ -84,7 +84,7 @@ export default function SusceptibilityData(props) {
        infectedVariants={infectedVariants || []}
        variantValue={null}
        variants={variants || []}
-       isolates={isolates || []}
+       isolateAggs={isolateAggs || []}
        mutations={[]}
        mutationText={null}
        mutationMatch="all"

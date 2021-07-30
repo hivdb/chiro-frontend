@@ -6,6 +6,7 @@ import useVaccines from './use-vaccines';
 import useInfectedVariants from './use-infected-variants';
 import useVariants from './use-variants';
 import useIsolates, {compareMutations} from './use-isolates';
+import useIsolateAggs from './use-isolate-aggs';
 import useLookup from './use-lookup';
 import {
   useCompareSuscResultsByAntibodies,
@@ -13,7 +14,6 @@ import {
   useCompareSuscResultsByControlIsolate,
   useCompareSuscResultsByInfectedIsolate
 } from './use-compare-susc-results';
-import {getQueryMutations} from './use-susc-results';
 import useAbSuscResults from './use-ab-susc-results';
 import useCPSuscResults from './use-cp-susc-results';
 import useVPSuscResults from './use-vp-susc-results';
@@ -25,6 +25,9 @@ import useVaccineNumExpLookup from './use-vaccine-numexp-lookup';
 import useInfectedVariantNumExpLookup
   from './use-infected-variant-numexp-lookup';
 import useRxTotalNumExp from './use-rx-total-numexp';
+import useVariantNumExpLookup from './use-variant-numexp-lookup';
+import useIsolateAggNumExpLookup from './use-isolate-agg-numexp-lookup';
+import useVariantTotalNumExp from './use-variant-total-numexp';
 
 export {
   useLocationParams,
@@ -35,6 +38,7 @@ export {
   useInfectedVariants,
   useVariants,
   useIsolates,
+  useIsolateAggs,
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults,
@@ -45,11 +49,13 @@ export {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
   useCompareSuscResultsByInfectedIsolate,
-  getQueryMutations,
   compareMutations,
   useArticleNumExpLookup,
   useAntibodyNumExpLookup,
   useVaccineNumExpLookup,
   useInfectedVariantNumExpLookup,
-  useRxTotalNumExp
+  useRxTotalNumExp,
+  useVariantNumExpLookup,
+  useIsolateAggNumExpLookup,
+  useVariantTotalNumExp
 };

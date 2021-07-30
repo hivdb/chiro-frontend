@@ -11,18 +11,23 @@ function useIsolateDisplay({isoName, isolateLookup}) {
   const {
     varName,
     synonyms,
-    type,
     mutations,
+    numMuts,
     expandable
   } = isolateLookup[isoName];
   const displayVarName = (
     synonyms.length > 0 ?
       `${varName} (${synonyms[0]})` : varName
   );
+  const shortenMuts = shortenMutList(mutations);
 
-  if (type === 'named-variant') {
-    // is a named variant, use variant name
-    return displayVarName;
+  if (varName) {
+    if (numMuts === 1) {
+      return `${varName} (${shortenMuts.join(' + ')})`;
+    }
+    else {
+      return displayVarName;
+    }
   }
   else {
     const shortenMuts = shortenMutList(mutations);
@@ -45,6 +50,7 @@ export default function CellIsolate({
   potencyUnit,
   potencyType,
   enablePotency,
+  ineffective,
   isolateLookup
 }) {
   const isolateDisplay = useIsolateDisplay({isoName, isolateLookup});
@@ -53,9 +59,10 @@ export default function CellIsolate({
       {isolateDisplay}
       <div className={style['supplement-info']}>
         {potencyType}{': '}
-        {parseFloat(potency.toFixed(1)).toLocaleString('en-US')}
-        {' '}
-        {potencyUnit}
+        {ineffective ? <em>N.N.</em> : (
+          parseFloat(potency.toFixed(1)).toLocaleString('en-US') +
+          (potencyUnit ? ` ${potencyUnit}` : '')
+        )}
       </div>
     </>;
   }

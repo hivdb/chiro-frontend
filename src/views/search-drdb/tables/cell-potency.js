@@ -5,7 +5,8 @@ export default function CellPotency({
   potency,
   potencyUnit,
   potencyType,
-  rxType
+  rxType,
+  ineffective
 }) {
   if (potency !== undefined && potency !== null) {
     let displayPotType = true;
@@ -17,9 +18,10 @@ export default function CellPotency({
     }
     return <>
       {displayPotType ? `${potencyType}: ` : null}
-      {parseFloat(potency.toFixed(1)).toLocaleString('en-US')}
-      {' '}
-      {potencyUnit}
+      {ineffective ? <em>N.N.</em> : (
+        parseFloat(potency.toFixed(1)).toLocaleString('en-US') +
+        (potencyUnit ? ` ${potencyUnit}` : '')
+      )}
     </>;
   }
   else {

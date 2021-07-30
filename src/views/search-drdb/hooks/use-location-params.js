@@ -1,49 +1,6 @@
 import React from 'react';
 import isEqual from 'lodash/isEqual';
 import {useRouter} from 'found';
-import {
-  parseAndValidateMutation,
-  sanitizeMutations
-} from 'sierra-frontend/dist/utils/mutation';
-import useConfig from './use-config';
-
-
-function parseMutations(mutationText, config) {
-  const [mutList,] = sanitizeMutations(
-    mutationText.split(',').filter(mut => mut.trim()),
-    config,
-    /* removeErrors =*/ true
-  );
-  return mutList.reduce(
-    (acc, mut) => {
-      const {gene, pos, aas, ref, text} = parseAndValidateMutation(
-        mut, config
-      );
-      if (aas === 'ins' || aas === 'del') {
-        acc.push({
-          gene,
-          position: parseInt(pos),
-          refAminoAcid: ref,
-          aminoAcid: aas,
-          text
-        });
-      }
-      else {
-        for (const aa of aas) {
-          acc.push({
-            gene,
-            position: parseInt(pos),
-            refAminoAcid: ref,
-            aminoAcid: aa.replace('*', 'stop'),
-            text
-          });
-        }
-      }
-      return acc;
-    },
-    []
-  );
-}
 
 
 function parseAntibodies(antibodyText) {
@@ -66,10 +23,6 @@ function cleanQuery(query) {
     delete query.mutations;
   }
 
-  if (query.mut_match === 'all') {
-    delete query.mut_match;
-  }
-
   if (query.mutations !== undefined && query.variant !== undefined) {
     delete query.variant;
   }
@@ -87,7 +40,6 @@ function cleanQuery(query) {
 
 
 export default function useLocationParams() {
-  const {config, isPending} = useConfig();
   const {router, match} = useRouter();
   const {
     location: loc,
@@ -97,7 +49,6 @@ export default function useLocationParams() {
         form_only: formOnly,
         article: refName = null,
         mutations: mutationText = '',
-        mut_match: inputMutMatch,
         antibodies: antibodyText = '',
         variant: varName = null,
         cp: convPlasmaValue = '',
@@ -119,13 +70,12 @@ export default function useLocationParams() {
     [/* eslint-disable-line react-hooks/exhaustive-deps */]
   );
 
-  const mutationMatch = (
-    inputMutMatch === 'any' ? 'any' : 'all'
-  );
-
   const onChange = React.useCallback(
-    (action, value) => {
+    (action, value, clearAction = false) => {
       let query = {...loc.query};
+      if (clearAction) {
+        query = {};
+      }
       if (typeof action === 'string') {
         query[action] = value;
       }
@@ -149,7 +99,6 @@ export default function useLocationParams() {
       }
       else if (action === 'variant') {
         delete query.mutations;
-        delete query.mut_match;
       }
       else if (action === 'mutations') {
         delete query.variant;
@@ -168,16 +117,10 @@ export default function useLocationParams() {
   return React.useMemo(
     () => {
       const abNames = parseAntibodies(antibodyText);
-      let mutations = [];
-      if (!isPending) {
-        mutations = parseMutations(mutationText, config);
-      }
       return {
         formOnly,
         refName,
-        mutations,
         mutationText,
-        mutationMatch,
         abNames,
         varName,
         vaccineName,
@@ -186,12 +129,9 @@ export default function useLocationParams() {
       };
     },
     [
-      isPending,
-      config,
       formOnly,
       refName,
       mutationText,
-      mutationMatch,
       antibodyText,
       varName,
       vaccineName,

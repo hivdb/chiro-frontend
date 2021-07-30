@@ -6,38 +6,78 @@ import {H3, H4} from 'sierra-frontend/dist/components/heading-tags';
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
 
+import style from './style.module.scss';
+
 
 const type2Section = {
   'individual-mutation': 'indivMut',
-  'named-variant': 'comboMuts',
   'mutation-combination': 'comboMuts'
 };
 
 
-function SimpleTableWrapper({data, ...props}) {
+function SimpleTableWrapper({cacheKey, data, ...props}) {
+  const [hide, setHide] = React.useState(true);
+
+  const handleUnhide = React.useCallback(
+    evt => {
+      evt.preventDefault();
+      setHide(!hide);
+    },
+    [setHide, hide]
+  );
+
+  let hideNote;
   const filtered = data.filter(
     d => d.ineffective === 'experimental' || d.ineffective === null
   );
   const removedLen = data.length - filtered.length;
+  const hasNN = data.some(d => {
+    if (hide) {
+      return d.ineffective === 'experimental';
+    }
+    else {
+      return d.ineffective !== null;
+    }
+  });
+  if (hide) {
+    data = filtered;
+    hideNote = (
+      removedLen > 0 ?
+        <div><em>
+          <strong>{pluralize('result', removedLen, true)}</strong>{' '}
+          {pluralize('has', removedLen)}{' '}
+          been hided due to poor neutralizing
+          response against the control virus.
+        </em> (<a onClick={handleUnhide} href="#unhide">unhide</a>)
+        </div> : null
+    );
+  }
+  else {
+    hideNote = (
+      removedLen > 0 ?
+        <div><em>
+          <strong>{pluralize('result', removedLen, true)}</strong>{' '}
+          {pluralize('has', removedLen)}{' '}
+          poor neutralizing response against the control virus.
+        </em> (<a onClick={handleUnhide} href="#hide">hide</a>)
+        </div> : null
+    );
+  }
 
   const tableJSX = (
-    filtered.length > 0 ?
-      <SimpleTable {...props} data={filtered} /> : null
-  );
-
-  const hideNote = (
-    removedLen > 0 ?
-      <div><em>
-        <strong>{pluralize('result', removedLen, true)}</strong>{' '}
-        {pluralize('has', removedLen)}{' '}
-        been removed from the below table due to poor
-        neutralizing response against the control virus.
-      </em></div> : null
+    data.length > 0 ?
+      <SimpleTable
+       {...props}
+       cacheKey={`${cacheKey}__${hide}`}
+       data={data} /> : null
   );
 
   return <>
     {hideNote}
     {tableJSX}
+    {hasNN ? <p className={style.footnote}>
+      <strong><em>N.N.</em></strong>: not neutralized.
+    </p> : null}
   </>;
 }
 

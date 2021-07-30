@@ -62,14 +62,25 @@ function buildColDefs({
     controlIsoName: new ColumnDef({
       name: 'controlIsoName',
       label: labels.controlIsoName || 'Control',
-      render: (isoName, {controlPotency, potencyType, potencyUnit}) => (
-        <CellIsolate {...{
-          isoName,
-          potency: controlPotency,
-          potencyType,
-          potencyUnit,
-          isolateLookup
-        }} enablePotency />
+      render: (isoName, {
+        controlPotency,
+        potencyType,
+        potencyUnit,
+        ineffective
+      }) => (
+        <CellIsolate
+         {...{
+           isoName,
+           potency: controlPotency,
+           potencyType,
+           potencyUnit,
+           isolateLookup
+         }}
+         enablePotency
+         ineffective={
+           ineffective === 'control' ||
+           ineffective === 'both'
+         } />
       ),
       sort: rows => [...rows].sort(compareByControlIsolate)
     }),
@@ -87,12 +98,16 @@ function buildColDefs({
     potency: new ColumnDef({
       name: 'potency',
       label: labels.potency || 'Potency',
-      render: (potency, {rxType, potencyType, potencyUnit}) => (
+      render: (potency, {rxType, potencyType, potencyUnit, ineffective}) => (
         <CellPotency {...{
           potency,
           potencyType,
           potencyUnit,
-          rxType
+          rxType,
+          ineffective: (
+            ineffective === 'experimental' ||
+            ineffective === 'both'
+          )
         }} />
       ),
       sort: rows => [...rows].sort(comparePotency)
@@ -118,7 +133,9 @@ function buildColDefs({
       render: (fold, row) => <CellFold {...row} />,
       sort: rows => sortBy(
         rows,
-        [({ineffective}) => ineffective || '', 'fold']
+        [({ineffective}) => (
+          ineffective !== null && ineffective !== 'experimental'
+        ), 'fold']
       )
     }),
     vaccineName: new ColumnDef({
