@@ -14,7 +14,7 @@ export default class Donation extends React.Component {
       <section>
         <p>
           We are grateful to you for any amount of donation for supporting the
-          Stanford Coronavirus Antiviral Research Database.
+          Stanford Coronavirus Antiviral & Resistance Database (CoVDB).
           To make a donation, please click the “Donate to CoVDB” button. In the
           Stanford Make a Gift page, type in “
           <strong>COVID-19 Research Database-Dr. Shafer</strong>
