@@ -102,6 +102,7 @@ export default function AbSuscResults({
     loaded,
     id: 'mab-susc-results',
     cacheKey,
+    hideNN: true,
     suscResults: abSuscResults,
     isolateLookup,
     indivMutIndivFoldColumnDefs,

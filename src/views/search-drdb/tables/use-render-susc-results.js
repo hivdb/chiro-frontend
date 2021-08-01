@@ -15,8 +15,8 @@ const type2Section = {
 };
 
 
-function SimpleTableWrapper({cacheKey, data, ...props}) {
-  const [hide, setHide] = React.useState(true);
+function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
+  const [hide, setHide] = React.useState(hideNN);
 
   const handleUnhide = React.useCallback(
     evt => {
@@ -46,8 +46,8 @@ function SimpleTableWrapper({cacheKey, data, ...props}) {
         <div><em>
           <strong>{pluralize('result', removedLen, true)}</strong>{' '}
           {pluralize('has', removedLen)}{' '}
-          been hided due to poor neutralizing
-          response against the control virus.
+          been hidden due to poor neutralizing
+          activity against the control virus.
         </em> (<a onClick={handleUnhide} href="#unhide">unhide</a>)
         </div> : null
     );
@@ -58,7 +58,7 @@ function SimpleTableWrapper({cacheKey, data, ...props}) {
         <div><em>
           <strong>{pluralize('result', removedLen, true)}</strong>{' '}
           {pluralize('has', removedLen)}{' '}
-          poor neutralizing response against the control virus.
+          poor neutralizing activity against the control virus.
         </em> (<a onClick={handleUnhide} href="#hide">hide</a>)
         </div> : null
     );
@@ -87,6 +87,7 @@ export default function useRenderSuscResults({
   id,
   loaded,
   cacheKey,
+  hideNN = false,
   suscResults,
   isolateLookup,
   indivMutIndivFoldColumnDefs,
@@ -139,6 +140,7 @@ export default function useRenderSuscResults({
           suscResultsBySection.indivMut.indivFold.length > 0 ?
             <SimpleTableWrapper
              cacheKey={`${id}_indiv-mut_indiv-fold_${cacheKey}`}
+             hideNN={hideNN}
              columnDefs={indivMutIndivFoldColumnDefs}
              data={suscResultsBySection.indivMut.indivFold} /> : null
         );
@@ -146,6 +148,7 @@ export default function useRenderSuscResults({
           suscResultsBySection.indivMut.aggFold.length > 0 ?
             <SimpleTableWrapper
              cacheKey={`${id}_indiv-mut_agg-fold_${cacheKey}`}
+             hideNN={hideNN}
              columnDefs={indivMutAggFoldColumnDefs}
              data={suscResultsBySection.indivMut.aggFold} /> : null
         );
@@ -153,6 +156,7 @@ export default function useRenderSuscResults({
           suscResultsBySection.comboMuts.indivFold.length > 0 ?
             <SimpleTableWrapper
              cacheKey={`${id}_combo-muts_indiv-fold_${cacheKey}`}
+             hideNN={hideNN}
              columnDefs={comboMutsIndivFoldColumnDefs}
              data={suscResultsBySection.comboMuts.indivFold} /> : null
         );
@@ -160,6 +164,7 @@ export default function useRenderSuscResults({
           suscResultsBySection.comboMuts.aggFold.length > 0 ?
             <SimpleTableWrapper
              cacheKey={`${id}_combo-muts_agg-fold_${cacheKey}`}
+             hideNN={hideNN}
              columnDefs={comboMutsAggFoldColumnDefs}
              data={suscResultsBySection.comboMuts.aggFold} /> : null
         );
@@ -226,6 +231,7 @@ export default function useRenderSuscResults({
     [
       id,
       loaded,
+      hideNN,
       cacheKey,
       indivMutIndivFoldColumnDefs,
       indivMutAggFoldColumnDefs,
