@@ -27,7 +27,7 @@ export default function AbSuscResults({
     ],
     labels: {
       isoName: 'Mutation',
-      potency: 'Potency (IC50)',
+      potency: 'IC50',
       fold: 'Fold Reduction'
 
     }
@@ -49,7 +49,7 @@ export default function AbSuscResults({
     ],
     labels: {
       isoName: 'Mutation',
-      potency: 'Mean/Median Potency (IC50)',
+      potency: 'Mean/Median IC50',
       fold: 'Mean/Median Fold Reduction'
     }
   });
@@ -70,7 +70,7 @@ export default function AbSuscResults({
     ],
     labels: {
       isoName: 'Variant',
-      potency: 'Potency (IC50)',
+      potency: 'IC50',
       fold: 'Fold Reduction'
     }
   });
@@ -93,7 +93,7 @@ export default function AbSuscResults({
     ],
     labels: {
       isoName: 'Variant',
-      potency: 'Mean/Median Potency (IC50)',
+      potency: 'Mean/Median IC50',
       fold: 'Mean/Median Fold Reduction'
     }
   });
