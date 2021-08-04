@@ -20,12 +20,12 @@ import {
 } from '../hooks';
 
 
-function comparePotency(potA, potB) {
+export function comparePotency(potA, potB) {
   if (potA.potencyType !== potB.potencyType) {
     return potA.potencyType.localeCompare(potB.potencyType);
   }
   if (potA.potencyUnit !== potB.potencyUnit) {
-    return potA.potencyUnit.localeCompare(potB.potencyUnit);
+    return (potA.potencyUnit || '').localeCompare(potB.potencyUnit || '');
   }
   return potA.potency - potB.potency;
 }

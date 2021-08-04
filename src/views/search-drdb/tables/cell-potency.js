@@ -1,6 +1,48 @@
 import React from 'react';
 
 
+export function formatPotency({
+  potency, ineffective, potencyType,
+  potencyUnit, forceShowUnit
+}) {
+  let prefix, number, suffix;
+  const isICxx = /^IC\d+$/.test(potencyType);
+  const isNTxx = /^NT\d+$/.test(potencyType);
+  if (ineffective) {
+    if (isICxx) {
+      prefix = '>';
+    }
+    else if (isNTxx) {
+      prefix = '<';
+    }
+  }
+  else {
+    prefix = '';
+  }
+  if (potency < 1) {
+    number = potency.toPrecision(1);
+  }
+  else if (potency < 10) {
+    number = potency.toFixed(1);
+  }
+  else {
+    number = potency.toFixed(0);
+  }
+  number = parseFloat(number).toLocaleString('en-US');
+  if (forceShowUnit || (
+    potencyUnit && (!isICxx || potencyUnit !== 'ng/ml')
+  )) {
+    suffix = ` ${potencyUnit}`;
+  }
+  else {
+    suffix = '';
+  }
+
+  return `${prefix}${number}${suffix}`;
+}
+
+
+
 export default function CellPotency({
   potency,
   potencyUnit,
@@ -18,13 +60,10 @@ export default function CellPotency({
     }
     return <>
       {displayPotType ? `${potencyType}: ` : null}
-      {ineffective ? <em>N.N.</em> : (
-        parseFloat(potency.toFixed(1)).toLocaleString('en-US') +
-        (potencyUnit ? ` ${potencyUnit}` : '')
-      )}
+      {formatPotency({potency, ineffective, potencyType, potencyUnit})}
     </>;
   }
   else {
-    return '?';
+    return <em>N.A.</em>;
   }
 }

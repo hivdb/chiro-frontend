@@ -147,6 +147,8 @@ function usePrepareQuery({
 
       const sql = `
         SELECT
+          S.rx_name || S.control_iso_name || S.iso_name ||
+            S.ref_name || S.potency_type || S.assay_name AS uniq_key,
           S.ref_name,
           S.rx_name,
           S.control_iso_name,

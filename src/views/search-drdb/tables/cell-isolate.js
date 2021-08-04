@@ -1,6 +1,7 @@
 import React from 'react';
 import shortenMutList from '../shorten-mutlist';
 
+import {formatPotency} from './cell-potency';
 import style from '../style.module.scss';
 
 
@@ -59,10 +60,10 @@ export default function CellIsolate({
       {isolateDisplay}
       <div className={style['supplement-info']}>
         {potencyType}{': '}
-        {ineffective ? <em>N.N.</em> : (
-          parseFloat(potency.toFixed(1)).toLocaleString('en-US') +
-          (potencyUnit ? ` ${potencyUnit}` : '')
-        )}
+        {formatPotency({
+          potency, potencyType, ineffective,
+          potencyUnit, forceShowUnit: true
+        })}
       </div>
     </>;
   }

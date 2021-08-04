@@ -15,6 +15,8 @@ import AbSuscResults from './tables/ab-susc-results';
 import VPSuscResults from './tables/vp-susc-results';
 import CPSuscResults from './tables/cp-susc-results';
 
+import AbSuscSummary from './summary/ab-susc-summary';
+
 import style from './style.module.scss';
 
 
@@ -129,6 +131,13 @@ export default function SearchDRDBLayout({
           <Header as={H2} id="mab-susc-results">
             MAb Susceptibility Data
           </Header>
+          <AbSuscSummary
+           loaded={loaded}
+           antibodyLookup={antibodyLookup}
+           isolateAggs={isolateAggs}
+           articleValue={refName}
+           variantValue={varName}
+           mutationText={mutationText} />
           <AbSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, mutationText, abNames})}

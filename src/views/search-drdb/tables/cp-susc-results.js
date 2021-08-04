@@ -28,7 +28,7 @@ export default function CPSuscResults({
     labels: {
       isoName: 'Mutation',
       timing: 'Months',
-      potency: 'NT50',
+      potency: 'NT50 (Dilution)',
       fold: 'Fold Reduction'
     }
   });
@@ -52,7 +52,7 @@ export default function CPSuscResults({
     labels: {
       isoName: 'Mutation',
       timing: 'Months',
-      potency: 'Mean/Median NT50',
+      potency: 'Mean/Median NT50 (Dilution)',
       fold: 'Mean/Median Fold Reduction'
     }
   });
@@ -75,7 +75,7 @@ export default function CPSuscResults({
     labels: {
       isoName: 'Variant',
       timing: 'Months',
-      potency: 'NT50',
+      potency: 'NT50 (Dilution)',
       fold: 'Fold Reduction'
     }
   });
@@ -99,7 +99,7 @@ export default function CPSuscResults({
     labels: {
       isoName: 'Variant',
       timing: 'Months',
-      potency: 'Mean/Median NT50',
+      potency: 'Mean/Median NT50 (Dilution)',
       fold: 'Mean/Median Fold Reduction'
     }
   });

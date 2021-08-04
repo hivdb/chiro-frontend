@@ -31,14 +31,10 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
     d => d.ineffective === 'experimental' || d.ineffective === null
   );
   const removedLen = data.length - filtered.length;
-  const hasNN = data.some(d => {
-    if (hide) {
-      return d.ineffective === 'experimental';
-    }
-    else {
-      return d.ineffective !== null;
-    }
-  });
+  const hasNN = !hide && filtered.length > 0;
+  const hasNA = data.some(d => (
+    d.controlPotency === null || d.potency === null
+  ));
   if (hide) {
     data = filtered;
     hideNote = (
@@ -75,8 +71,15 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   return <>
     {hideNote}
     {tableJSX}
-    {hasNN ? <p className={style.footnote}>
-      <strong><em>N.N.</em></strong>: not neutralized.
+    {hasNA || hasNN ? <p className={style.footnote}>
+      {hasNA ? <>
+        <strong><em>N.A.</em></strong>: data point not available
+      </> : null}
+      {hasNA && hasNN ? '; ' : null}
+      {hasNN ? <>
+        <strong><em>N.N.</em></strong>: control virus not neutralized
+      </> : null}
+      .
     </p> : null}
   </>;
 }
@@ -121,7 +124,6 @@ export default function useRenderSuscResults({
     },
     [loaded, suscResults, isolateLookup]
   );
-
 
 
   return React.useMemo(

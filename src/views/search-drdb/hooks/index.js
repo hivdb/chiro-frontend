@@ -18,6 +18,7 @@ import useAbSuscResults from './use-ab-susc-results';
 import useCPSuscResults from './use-cp-susc-results';
 import useVPSuscResults from './use-vp-susc-results';
 import useSuscSummary from './use-susc-summary';
+import useAbSuscSummary from './use-ab-susc-summary';
 import useCPCount from './use-cp-count';
 import useArticleNumExpLookup from './use-article-numexp-lookup';
 import useAntibodyNumExpLookup from './use-antibody-numexp-lookup';
@@ -43,6 +44,7 @@ export {
   useCPSuscResults,
   useVPSuscResults,
   useSuscSummary,
+  useAbSuscSummary,
   useLookup,
   useCPCount,
   useCompareSuscResultsByAntibodies,
