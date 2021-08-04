@@ -43,7 +43,7 @@ class StatisticsInner extends React.Component {
         <Grid.Row centered>
           <Grid.Column width={16}>
             <Header as="h2" dividing id="target-stat">
-                Target
+              Target
             </Header>
             <TargetTable
              data={compoundTargets}
@@ -59,14 +59,14 @@ class StatisticsInner extends React.Component {
               <CompoundTable selectedTarget={selectedTarget}/>
             </Grid.Column>
           </Grid.Row>
-        : <></>}
+          : <></>}
       </Grid>
     }</>;
   }
 }
 
 
-export default function Statistics({match, ...props}) {
+export default function Statistics(props) {
   let {loading, error, data} = useQuery(SearchQuery);
   if (loading) {
     return (

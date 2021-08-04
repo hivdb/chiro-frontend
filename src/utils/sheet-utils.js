@@ -22,9 +22,7 @@ export function dumpTSV(rows, delimiter = '\t', utf8bom = false) {
   return dumpCSV(rows, delimiter, utf8bom);
 }
 
-export function dumpExcelSimple(
-  rows, sheetName = 'Sheet1', config = {}
-) {
+export function dumpExcelSimple(rows, sheetName = 'Sheet1', config = {}) {
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(rows);
   for (const key in ws) {
@@ -39,9 +37,9 @@ export function dumpExcelSimple(
   }
   XLSX.utils.book_append_sheet(wb, ws, sheetName);
   const wopts = {
-    bookType:'xlsx',
+    bookType: 'xlsx',
     bookSST: true,
-    type:'array',
+    type: 'array',
     cellStyles: true
   };
   const wbout = XLSX.write(wb, wopts);

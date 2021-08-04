@@ -31,14 +31,12 @@ export default class Banner extends React.Component {
   get subSectionElement() {
     const {children} = this.props;
     return children
-      .reduce(
-        (acc, child) => {
-          if (child instanceof Array) {
-            acc = [...acc, ...child];
-          }
-          return acc;
-        }, []
-      )
+      .reduce((acc, child) => {
+        if (child instanceof Array) {
+          acc = [...acc, ...child];
+        }
+        return acc;
+      }, [])
       .filter(node => node.type === this.constructor.SubSection);
   }
 
@@ -57,7 +55,7 @@ export default class Banner extends React.Component {
       narrow ? style['narrow'] : null
     );
 
-    return(
+    return (
       <section
        className={classNames}>
         <div className={style['banner-img-container']}>
