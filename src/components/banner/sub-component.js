@@ -1,15 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import makeClassNames from 'classnames';
 
 import style from './style.module.scss';
 
 
-export default function SubComponent(defaultAs, defaultClassName) {
-  return function(props) {
+export default function createSubComponent(defaultAs, defaultClassName) {
+
+  function SubComponent(props) {
     let {as, children, ...extras} = props;
-    if (as === undefined) {
-      as = defaultAs;
-    }
     extras.className = makeClassNames(
       style[defaultClassName],
       extras.className
@@ -21,5 +20,19 @@ export default function SubComponent(defaultAs, defaultClassName) {
         children
       )
     );
+  }
+
+  SubComponent.propTypes = {
+    as: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.func.isRequired
+    ]).isRequired,
+    children: PropTypes.node
   };
+
+  SubComponent.defaultProps = {
+    as: defaultAs
+  };
+
+  return SubComponent;
 }

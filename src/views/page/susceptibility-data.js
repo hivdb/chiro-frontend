@@ -15,8 +15,7 @@ import CMSPage from './cms';
 import style from './style.module.scss';
 
 
-export default function SusceptibilityData(props) {
-  const {location} = props;
+export default function SusceptibilityData() {
   const {router} = useRouter();
   const {
     articles,
@@ -70,8 +69,7 @@ export default function SusceptibilityData(props) {
   return (
     <CMSPage
      key="susceptibility-data"
-     pageName="susceptibility-data"
-     location={location}>
+     pageName="susceptibility-data">
       <SearchBox
        loaded={searchboxLoaded}
        formOnly
@@ -92,8 +90,7 @@ export default function SusceptibilityData(props) {
         {({
           articleDropdown,
           rxDropdown,
-          variantDropdown,
-          mutationsInput
+          variantDropdown
         }) => <div
          className={style['search-container']}
          data-loaded={searchboxLoaded}>

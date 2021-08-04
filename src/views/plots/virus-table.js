@@ -96,7 +96,7 @@ function reformExpData(expData) {
 }
 
 
-export default function VirusTable({match, ...props}) {
+export default function VirusTable(props) {
   let {loading, error, data} = useQuery(SearchQuery);
   if (loading) {
     return (

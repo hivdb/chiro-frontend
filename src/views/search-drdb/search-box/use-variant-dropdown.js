@@ -7,15 +7,12 @@ import {
   useVariantTotalNumExp
 } from '../hooks';
 
+import FragmentWithoutWarning from './fragment-without-warning';
+
 
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
-
-
-function FragmentWithoutWarning({key, children}) {
-  return <React.Fragment key={key}>{children}</React.Fragment>;
-}
 
 
 export default function useVariantDropdown({
@@ -160,9 +157,14 @@ export default function useVariantDropdown({
       }
     },
     [
-      isPending, variants, isolateAggs,
-      variantValue, mutationText, formOnly,
-      varTotalNumExp, varNumExpLookup,
+      isPending,
+      variants,
+      isolateAggs,
+      variantValue,
+      mutationText,
+      formOnly,
+      varTotalNumExp,
+      varNumExpLookup,
       isoAggNumExpLookup
     ]
   );

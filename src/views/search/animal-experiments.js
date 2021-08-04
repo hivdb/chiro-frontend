@@ -135,7 +135,8 @@ function resultColDefs(rows) {
         render: (_, {resultObjs}) => {
           const resultObj = arrayFind(
             resultObjs,
-            r => r.resultName === resultName);
+            r => r.resultName === resultName
+          );
           if (resultObj) {
             return symbols[resultObj.result];
           }
@@ -169,7 +170,7 @@ export default class AnimalExpTable extends React.Component {
             .join('$$$')
         )
       )
-    ).map(([aname, articleData], idx) => (
+    ).map(([, articleData], idx) => (
       <SimpleTable
        key={idx}
        color={colors[idx % colors.length]}

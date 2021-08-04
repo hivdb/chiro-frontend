@@ -10,6 +10,8 @@ import {
   useInfectedVariantNumExpLookup
 } from '../hooks';
 
+import FragmentWithoutWarning from './fragment-without-warning';
+
 
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
@@ -31,11 +33,6 @@ function rxSearch(options, query) {
       (rx.synonyms && rx.synonyms.some(syn => re.test(syn)))
     )
   ));
-}
-
-
-function FragmentWithoutWarning({key, children}) {
-  return <React.Fragment key={key}>{children}</React.Fragment>;
 }
 
 
@@ -187,7 +184,8 @@ export default function useRxDropdown({
                   description: pluralize(
                     'result',
                     infectedVariantNumExpLookup[varName] || 0,
-                    true),
+                    true
+                  ),
                   'data-num-exp': infectedVariantNumExpLookup[varName] || 0
                 })
               )
@@ -225,7 +223,8 @@ export default function useRxDropdown({
                   description: pluralize(
                     'result',
                     vaccNumExpLookup[vaccineName] || 0,
-                    true),
+                    true
+                  ),
                   'data-num-exp': vaccNumExpLookup[vaccineName] || 0,
                   type: VACCINE
                 })
@@ -255,8 +254,7 @@ export default function useRxDropdown({
                 ({
                   abName,
                   abbreviationName: abbr,
-                  synonyms,
-                  abClass
+                  synonyms
                 }) => ({
                   key: abName,
                   text: abbr ? `${abName} (${abbr})` : abName,
@@ -265,7 +263,8 @@ export default function useRxDropdown({
                   description: pluralize(
                     'result',
                     abNumExpLookup[abName] || 0,
-                    true),
+                    true
+                  ),
                   'data-is-empty': !abNumExpLookup[abName],
                   synonyms
                 })
@@ -277,16 +276,23 @@ export default function useRxDropdown({
       }
     },
     [
-      loaded, includeAll,
-      vaccines, antibodies, infectedVariants,
+      loaded,
+      includeAll,
+      vaccines,
+      antibodies,
+      infectedVariants,
       convPlasmaValue,
-      vaccineValue, antibodyValue,
+      vaccineValue,
+      antibodyValue,
       formOnly,
-      abNumExpLookup, isAbNumExpPending,
-      vaccNumExpLookup, isVaccNumExpPending,
+      abNumExpLookup,
+      isAbNumExpPending,
+      vaccNumExpLookup,
+      isVaccNumExpPending,
       infectedVariantNumExpLookup,
       isInfectedVariantNumExpPending,
-      rxTotalNumExp, isRxTotalNumExpPending
+      rxTotalNumExp,
+      isRxTotalNumExpPending
     ]
   );
   const handleChange = React.useCallback(

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {Link} from 'found';
@@ -43,6 +44,12 @@ export function Projects({className, projects = [], imagePrefix}) {
   </ul>;
 }
 
+Projects.propTypes = {
+  className: PropTypes.string,
+  projects: PropTypes.array,
+  imagePrefix: PropTypes.string.isRequired
+};
+
 
 export default function ProjectsSection({
   title,
@@ -57,5 +64,11 @@ export default function ProjectsSection({
       <Projects projects={projects} imagePrefix={imagePrefix} />
     </section>
   );
-
 }
+
+ProjectsSection.propTypes = {
+  title: PropTypes.node,
+  displayTitle: PropTypes.bool,
+  projects: PropTypes.array,
+  imagePrefix: PropTypes.string.isRequired
+};

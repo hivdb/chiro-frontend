@@ -1,6 +1,6 @@
 import React from 'react';
-import {Link} from 'found';
 import PropTypes from 'prop-types';
+import {Link, matchShape} from 'found';
 import {useQuery} from '@apollo/client';
 
 import {Grid, Header, Item, Loader} from 'semantic-ui-react';
@@ -94,12 +94,14 @@ class CompoundListInner extends React.Component {
               </p>
               <Item.Group divided>
                 {notMabCompounds.map(
-                  ({node: {
-                    name, synonyms, target, drugClassName,
-                    molecularFormula, molecularWeight,
-                    category, pubchemCid, casNumber, relatedCompounds, smiles,
-                    experimentCounts = [], description
-                  }}, idx) => (
+                  ({
+                    node: {
+                      name, synonyms, target, drugClassName,
+                      molecularFormula, molecularWeight,
+                      category, pubchemCid, casNumber, relatedCompounds, smiles,
+                      experimentCounts = [], description
+                    }
+                  }, idx) => (
                     <Item key={idx}>
                       <Item.Content>
                         <Item.Header
@@ -117,13 +119,14 @@ class CompoundListInner extends React.Component {
                           }}>
                             {(() => {
                               const total = experimentCounts.reduce(
-                                (acc, {count}) => acc + count, 0
+                                (acc, {count}) => acc + count,
+                                0
                               );
                               if (total > 1) {
                                 return `${total} experiment results`;
                               }
                               else {
-                                 return `${total} experiment result`;
+                                return `${total} experiment result`;
                               }
                             })()}
                           </Link>
@@ -173,7 +176,7 @@ class CompoundListInner extends React.Component {
                               {relatedCompounds.length > 0 ? (
                                 <span className={style['related-compounds']}>
                                   {relatedCompounds
-                                   .map(({name}) => name).join(', ')}
+                                    .map(({name}) => name).join(', ')}
                                 </span>
                               ) : null}
                               {synonyms.length > 0 ? (
@@ -280,3 +283,7 @@ export default function CompoundList({match, ...props}) {
      {...data} />
   );
 }
+
+CompoundList.propTypes = {
+  match: matchShape.isRequired
+};

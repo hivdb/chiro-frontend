@@ -36,10 +36,9 @@ class CellCultureMeasurementListInner extends React.Component {
             </p>
             <Item.Group divided>
               {cellCultureMeasurements.edges.map(
-                ({node: {
-                  name, fullName, synonyms,
-                  description
-                }}, idx) => (
+                ({
+                  node: {name, fullName, description}
+                }, idx) => (
                   <Item key={idx}>
                     <Item.Content>
                       <Item.Header>{name}</Item.Header>
@@ -63,7 +62,7 @@ class CellCultureMeasurementListInner extends React.Component {
 }
 
 
-export default function CellCultureMeasurementList({match, ...props}) {
+export default function CellCultureMeasurementList(props) {
   let {loading, error, data} = useQuery(query);
   if (loading) {
     return (

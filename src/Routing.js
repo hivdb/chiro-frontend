@@ -1,4 +1,5 @@
 import React, {lazy} from 'react';
+import PropTypes from 'prop-types';
 import {
   createBrowserRouter,
   makeRouteConfig,
@@ -44,6 +45,16 @@ const MutAnnotViewerLayout = lazy(
 const MutationViewerLayout = lazy(
   () => import('./views/mutation-viewer-layout')
 );
+
+function renderError({error}) {
+  return <div>{error.status === 404 ? 'Not found' : 'Error'}</div>;
+}
+
+renderError.propTypes = {
+  error: PropTypes.shape({
+    status: PropTypes.number.isRequired
+  }).isRequired
+};
 
 const BrowserRouter = createBrowserRouter({
 
@@ -109,9 +120,8 @@ const BrowserRouter = createBrowserRouter({
     </Route>
   ),
 
-  renderError: ({ error }) => (
-    <div>{error.status === 404 ? 'Not found' : 'Error'}</div>
-  ),
+  renderError
+      
 });
 
 export default BrowserRouter;

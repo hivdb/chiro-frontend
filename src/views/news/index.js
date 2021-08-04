@@ -19,9 +19,6 @@ class NewsInner extends React.Component {
 
   static propTypes = {
     loading: PropTypes.bool.isRequired,
-    status: PropTypes.string.isRequired,
-    code: PropTypes.string,
-    message: PropTypes.string,
     news: PropTypes.object
   }
 
@@ -48,7 +45,8 @@ class NewsInner extends React.Component {
             </Header>
             <Item.Group divided>
               {news.map(
-                ({publisher,
+                ({
+                  publisher,
                   title,
                   description,
                   url,
@@ -105,7 +103,7 @@ class NewsInner extends React.Component {
 }
 
 
-export default function News({match, ...props}) {
+export default function News(props) {
   const now = new Date();
   const ts = Math.ceil(now.getTime() / 3600000) * 3600;
   let {loading, error, data} = useQuery(query, {variables: {ts}});

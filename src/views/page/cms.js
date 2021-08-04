@@ -37,6 +37,8 @@ class CMSPage extends React.Component {
       columnDefs: PropTypes.array.isRequired,
       data: PropTypes.array.isRequired
     }).isRequired),
+    content: PropTypes.string.isRequired,
+    genomeMaps: PropTypes.object,
     children: PropTypes.node
   }
 
@@ -121,12 +123,13 @@ class CMSPage extends React.Component {
     const escapeHtml = this.props.escapeHtml === false ? false : true;
     let lastMod;
     if (!hideLastModified) {
-      lastMod = new Date(lastModified).toLocaleString(
-        'en-US', {
-          year: 'numeric', month: 'short', day: 'numeric',
-          hour: 'numeric', minute: 'numeric'
-        }
-      );
+      lastMod = new Date(lastModified).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      });
     }
     setTitle(pageTitle);
     return <>

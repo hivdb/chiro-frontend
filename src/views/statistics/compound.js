@@ -154,3 +154,7 @@ export default function CompoundTable({selectedTarget}) {
      {...data}
      selectedTarget={selectedTarget}/>);
 }
+
+CompoundTable.propTypes = {
+  selectedTarget: PropTypes.string
+};

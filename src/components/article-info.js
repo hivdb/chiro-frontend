@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 
 function initials(name) {
@@ -40,36 +41,41 @@ function normTitle(text) {
 }
 
 
-export default class ArticleInfo extends React.Component {
-
-  render() {
-    const {
-      pmid, pmcid, doi,
-      title, journal, authors, year
-    } = this.props;
+export default function ArticleInfo({
+  pmid, pmcid, doi,
+  title, journal, authors, year
+}) {
     
-    return <>
-      {etInt(authors)}. “{normTitle(title)}.” <em>{journal}</em>, {year}.
-      {doi.length > 0 ? <>
-        {' '}<a
-         href={`https://doi.org/${doi[0]}`}
-         rel="noopener noreferrer"
-         target="_blank">doi.org/{doi[0]}</a>.
-      </> : null}
-      {pmid.length > 0 ? <>
-        {' '}[<a
-         href={`https://www.ncbi.nlm.nih.gov/pubmed/${pmid[0]}/`}
-         rel="noopener noreferrer"
-         target="_blank">PubMed{pmid[0]}</a>]
-      </> : null}
-      {pmcid.length > 0 ? <>
-        {' '}[<a
-         href={`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${pmcid[0]}/`}
-         rel="noopener noreferrer"
-         target="_blank">PMC{pmcid[0]}</a>]
-      </> : null}
-    </>;
-
-  }
+  return <>
+    {etInt(authors)}. “{normTitle(title)}.” <em>{journal}</em>, {year}.
+    {doi.length > 0 ? <>
+      {' '}<a
+       href={`https://doi.org/${doi[0]}`}
+       rel="noopener noreferrer"
+       target="_blank">doi.org/{doi[0]}</a>.
+    </> : null}
+    {pmid.length > 0 ? <>
+      {' '}[<a
+       href={`https://www.ncbi.nlm.nih.gov/pubmed/${pmid[0]}/`}
+       rel="noopener noreferrer"
+       target="_blank">PubMed{pmid[0]}</a>]
+    </> : null}
+    {pmcid.length > 0 ? <>
+      {' '}[<a
+       href={`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${pmcid[0]}/`}
+       rel="noopener noreferrer"
+       target="_blank">PMC{pmcid[0]}</a>]
+    </> : null}
+  </>;
 
 }
+
+ArticleInfo.propTypes = {
+  pmid: PropTypes.array,
+  pmcid: PropTypes.array,
+  doi: PropTypes.array,
+  title: PropTypes.string,
+  journal: PropTypes.string,
+  authors: PropTypes.array,
+  year: PropTypes.number
+};

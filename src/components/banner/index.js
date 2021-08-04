@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import makeClassNames from 'classnames';
 
 import Slider from './slider';
-import SubComponent from './sub-component';
+import createSubComponent from './sub-component';
 import style from './style.module.scss';
 
 
@@ -25,10 +25,10 @@ export default class Banner extends React.Component {
     narrow: false
   }
 
-  static Title = SubComponent('h1', 'banner-header-title');
-  static Subtitle = SubComponent('div', 'banner-header-subtitle');
+  static Title = createSubComponent('h1', 'banner-header-title');
+  static Subtitle = createSubComponent('div', 'banner-header-subtitle');
   static Slider = Slider;
-  static Sidebar = SubComponent('div', 'banner-sidebar');
+  static Sidebar = createSubComponent('div', 'banner-sidebar');
 
   get titleElement() {
     const {children} = this.props;
@@ -61,7 +61,7 @@ export default class Banner extends React.Component {
       narrow ? style['narrow'] : null
     );
 
-    return(
+    return (
       <section
        className={classNames}>
         <div className={style['banner-img-container']}>

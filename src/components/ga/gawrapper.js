@@ -1,7 +1,12 @@
 import React from 'react';
+import {routerShape} from 'found';
 import ReactGA from 'react-ga';
 
 export default class GAWrapper extends React.Component {
+
+  static propTypes = {
+    router: routerShape.isRequired
+  }
 
   logPageView() {
     setTimeout(() => {

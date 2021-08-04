@@ -17,12 +17,12 @@ export default class Page extends React.Component {
   }
 
   render() {
-    const {params: {pageName}, location} = this.props.match;
+    const {params: {pageName}} = this.props.match;
     if (pageName === 'susceptibility-data') {
-      return <SusceptibilityDataPage location={location} />;
+      return <SusceptibilityDataPage />;
     }
     else {
-      return <CMSPage key={pageName} {...{pageName, location}} />;
+      return <CMSPage key={pageName} pageName={pageName} />;
     }
   }
 }

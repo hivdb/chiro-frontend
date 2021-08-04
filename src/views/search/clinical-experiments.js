@@ -29,7 +29,8 @@ function attachedTextColDef(type) {
 
 
 const tableColumns = [
-  authorYearColDef, virusSpeciesDef,
+  authorYearColDef,
+  virusSpeciesDef,
   new ColDef({name: 'regimenDetail', label: 'Regimen'}),
   new ColDef({name: 'studyTypeName', label: 'Study Type'}),
   new ColDef({name: 'numSubjects', label: '#'}),
@@ -47,7 +48,7 @@ const tableColumns = [
       }
     },
     sort: (data) => {
-      return data.sort(({articles:articles1}, {articles:articles2}) => {
+      return data.sort(({articles: articles1}, {articles: articles2}) => {
         const publishDate1 =
           articles1.length > 0 ? articles1[0].publishDate: null;
         const publishDate2 =
@@ -82,7 +83,8 @@ export default class ClinicalExpTable extends React.Component {
        cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data, data => orderBy(
-         data, [r => r.studyTypeOrdinal, r => r.numSubjects],
+         data, 
+         [r => r.studyTypeOrdinal, r => r.numSubjects],
          ['asc', 'desc']
        ))} />
     );

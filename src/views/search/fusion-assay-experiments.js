@@ -44,9 +44,7 @@ const tableColumns = [
     render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
       renderXX50(ec50, ec50cmp, ec50unit, ec50inactive)
     ),
-    sort: data => sortBy(
-      data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive']
-    )
+    sort: data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive'])
   }),
 ];
 

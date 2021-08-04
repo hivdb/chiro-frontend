@@ -1,6 +1,6 @@
 import React, {Suspense} from 'react';
 import PropTypes from 'prop-types';
-import {matchShape} from 'found';
+import {routerShape, matchShape} from 'found';
 import {Container} from 'semantic-ui-react';
 
 import Header from './header';
@@ -17,6 +17,7 @@ export default class Layout extends React.Component {
 
   static propTypes = {
     match: matchShape.isRequired,
+    router: routerShape.isRequired,
     children: PropTypes.node
   }
 

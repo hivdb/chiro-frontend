@@ -27,13 +27,16 @@ function cleanQuery(query) {
     delete query.variant;
   }
 
-  query = Object.keys(query).sort().reduce(
-    (sorted, key) => { 
-      sorted[key] = query[key]; 
-      return sorted;
-    }, 
-    {}
-  );
+  query = Object
+    .keys(query)
+    .sort()
+    .reduce(
+      (sorted, key) => { 
+        sorted[key] = query[key]; 
+        return sorted;
+      }, 
+      {}
+    );
 
   return query;
 }

@@ -15,7 +15,8 @@ function reformExpData(expData, sort = true) {
   const data = expData.edges.map(({node}) => node);
   if (sort === true) {
     return orderBy(
-      data, [
+      data, 
+      [
         row => ((row.articles[0] || {}).year || 0),
         row => ((row.articles[0] || {}).nickname || [''])[0]
       ],
@@ -48,9 +49,13 @@ function readableNum(num) {
 
 
 function renderXX50(
-  num, cmp, unit, inactive,
+  num, 
+  cmp, 
+  unit, 
+  inactive,
   default_unit = '\xb5M',
-  none = '?', converters = {}
+  none = '?', 
+  converters = {}
 ) {
   if (inactive) {
     return '>>>';
@@ -76,10 +81,11 @@ const authorYearColDef = new ColumnDef({
   render: articles => articles.map(
     ({nickname, journal, journalAbbr}, idx) => {
       return [
-        <Link key={idx} to={{
-          pathname: '/search/',
-          query: {article: nickname[0]}
-        }}>{nickname[0]}</Link>,
+        <Link
+         key={idx} to={{
+           pathname: '/search/',
+           query: {article: nickname[0]}
+         }}>{nickname[0]}</Link>,
         journalAbbr ? <div key={`j${idx}`}>({journalAbbr})</div> : (
           journal ? <div key={`j${idx}`}>({journal})</div> : null
         )
@@ -115,9 +121,7 @@ const compoundColDef = label => new ColumnDef({
   name: 'compoundNames',
   label,
   render: compoundNames => compoundNames.map(
-    name => name.replace(
-      /^MAb-(SARS-CoV-2-|SARS-CoV-|MERS-CoV-)?/, ''
-    )
+    name => name.replace(/^MAb-(SARS-CoV-2-|SARS-CoV-|MERS-CoV-)?/, '')
   ).join(' + '),
   sort: data => sortBy(data, ['compoundNames[0]'])
 });
@@ -126,7 +130,7 @@ const compoundColDef = label => new ColumnDef({
 const nameAndDescColDef = (name, label, none='?') => new ColumnDef({
   name,
   label,
-  render: (obj, data) => {
+  render: (obj) => {
     if (!obj) {
       return none;
     }

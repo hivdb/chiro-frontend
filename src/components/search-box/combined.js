@@ -57,6 +57,10 @@ function groupByCat(results) {
 class SearchBoxInner extends React.Component {
 
   static propTypes = {
+    fluid: PropTypes.bool,
+    size: PropTypes.oneOf([
+      'mini', 'tiny', 'small', 'large', 'big', 'huge', 'massive'
+    ]),
     data: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
@@ -142,9 +146,7 @@ class SearchBoxInner extends React.Component {
        input={{fluid: true}}
        loading={false}
        onResultSelect={this.handleResultSelect}
-       onSearchChange={debounce(
-         this.handleSearchChange, 500, {leading: true}
-       )}
+       onSearchChange={debounce(this.handleSearchChange, 500, {leading: true})}
        onFocus={this.handleFocus}
        onBlur={this.handleBlur}
        results={results}

@@ -36,10 +36,13 @@ class AnimalModelListInner extends React.Component {
             </p>
             <Item.Group divided>
               {animalModels.edges.map(
-                ({node: {
-                  name, fullName, synonyms,
-                  description, comment
-                }}, idx) => (
+                ({
+                  node: {
+                    name,
+                    description,
+                    comment
+                  }
+                }, idx) => (
                   <Item key={idx}>
                     <Item.Content>
                       <Item.Header>{name}</Item.Header>
@@ -65,7 +68,7 @@ class AnimalModelListInner extends React.Component {
 }
 
 
-export default function AnimalModelList({match, ...props}) {
+export default function AnimalModelList(props) {
   let {loading, error, data} = useQuery(query);
   if (loading) {
     return (

@@ -82,7 +82,8 @@ class GeneSeqGenerator extends React.Component {
 
   get fastaHeader() {
     const mutation_string = this.state.mutations.map(
-      (mut) => mut['display']).join(',');
+      (mut) => mut['display']
+    ).join(',');
     return `${this.state.geneName}_${mutation_string}`;
   }
 
@@ -102,8 +103,7 @@ class GeneSeqGenerator extends React.Component {
     if (!geneName || !mutations) {
       return;
     }
-    mutations = checkRefAAPos(
-      this.props.reference, geneName, mutations);
+    mutations = checkRefAAPos(this.props.reference, geneName, mutations);
     mutations = fixMutationDisplay(mutations);
 
     const AASeq =
@@ -122,7 +122,7 @@ class GeneSeqGenerator extends React.Component {
     return `${header}\n${this.state.AASeq}`;
   }
 
-  handleDownload = async(e) => {
+  handleDownload = async () => {
     const filename = this.fastaHeader;
     makeDownload(
       filename + '.fasta',

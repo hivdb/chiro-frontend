@@ -117,7 +117,7 @@ const columnDefs = [
   new ColumnDef({
     name: 'ec50Data',
     label: <>EC50<br />(live virus; ng/ml)</>,
-    render: (ec50Data, {hasExperiments, name, target}) => {
+    render: (ec50Data, {name, target}) => {
       ec50Data = ec50Data.filter(
         ({expCategoryName}) => expCategoryName === 'CellCulture'
       );
@@ -142,7 +142,7 @@ const columnDefs = [
   new ColumnDef({
     name: 'ec50Data',
     label: <>EC50<br />(pseudovirus; ng/ml)</>,
-    render: (ec50Data, {hasExperiments, name, target}) => {
+    render: (ec50Data, {name, target}) => {
       ec50Data = ec50Data.filter(
         ({expCategoryName}) => expCategoryName === 'Pseudovirus'
       );
@@ -201,32 +201,32 @@ const columnDefs = [
 
 
 
-export default class AntibodyTable extends React.Component {
+export default function AntibodyTable({compounds}) {
 
-  static propTypes = {
-    compounds: PropTypes.array.isRequired
-  }
-
-  render() {
-    const {compounds} = this.props;
-    const compoundsByTargetVirus = groupBy(
-      compounds, 'antibodyData.targetVirusName');
-    return <>
-      {orderedViruses.map(virus => <section className={style['ab-table']}>
-        <Header as="h2" dividing>
-          {virus}
-        </Header>
-        <SimpleTable
-         cacheKey="antibody"
-         columnDefs={columnDefs}
-         data={sortBy(compoundsByTargetVirus[virus], [
-           data => data.clinicalTrialObjs.length === 0,
-           '-hasExperiments',
-           'articles[0].nickname',
-           'name'
-         ]) || []} />
-      </section>)}
-    </>;
-  }
-
+  const compoundsByTargetVirus = groupBy(
+    compounds,
+    'antibodyData.targetVirusName'
+  );
+  return <>
+    {orderedViruses.map(virus => <section className={style['ab-table']}>
+      <Header as="h2" dividing>
+        {virus}
+      </Header>
+      <SimpleTable
+       cacheKey="antibody"
+       columnDefs={columnDefs}
+       data={sortBy(compoundsByTargetVirus[virus], [
+         data => data.clinicalTrialObjs.length === 0,
+         '-hasExperiments',
+         'articles[0].nickname',
+         'name'
+       ]) || []} />
+    </section>)}
+  </>;
+  
 }
+
+AntibodyTable.propTypes = {
+  compounds: PropTypes.array.isRequired
+};
+

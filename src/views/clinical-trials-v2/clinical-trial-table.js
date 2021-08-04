@@ -32,7 +32,12 @@ function shortenCompound(name) {
 }
 
 function renderIntervention(
-  text, {compoundSplitter, compoundDescMap, compoundNormMap}
+  text,
+  {
+    compoundSplitter,
+    compoundDescMap,
+    compoundNormMap
+  }
 ) {
   const splitted = text.split(compoundSplitter);
   const result = [];
@@ -46,10 +51,11 @@ function renderIntervention(
       // a compound
       const lower = splitted[i].toLocaleLowerCase();
       const compoundName = compoundNormMap[lower];
-      const norm = <Link className="header" to={{
-        pathname: '/search/',
-        query: {compound: compoundName}
-      }}>
+      const norm = <Link
+       className="header" to={{
+         pathname: '/search/',
+         query: {compound: compoundName}
+       }}>
         {compoundName}
       </Link>;
       const shorted = shortenCompound(splitted[i]);
@@ -121,7 +127,8 @@ function renderArticle(articles) {
 
 const tableColumns = [
   new ColDef({
-    name: 'trialNumbers', label: 'Trial Number',
+    name: 'trialNumbers',
+    label: 'Trial Number',
     render: tns => (
       tns.map((tn, idx) => (
         <div
@@ -165,7 +172,8 @@ const tableColumns = [
     render: monthYear
   }),
   new ColDef({
-    name: 'recruitmentStatus', label: 'Status',
+    name: 'recruitmentStatus',
+    label: 'Status',
     render: renderRecruitmentStatus
   }),
   new ColDef({
@@ -195,15 +203,13 @@ function getCompoundSplitter(compounds) {
 function getCompoundDescMap(compounds) {
   return (
     compounds.edges
-      .reduce(
-        (acc, {node: {name, synonyms, description}}) => {
-          acc[name.toLocaleLowerCase()] = description;
-          for (const syn of synonyms) {
-            acc[syn.toLocaleLowerCase()] = description;
-          }
-          return acc;
-        }, {}
-      )
+      .reduce((acc, {node: {name, synonyms, description}}) => {
+        acc[name.toLocaleLowerCase()] = description;
+        for (const syn of synonyms) {
+          acc[syn.toLocaleLowerCase()] = description;
+        }
+        return acc;
+      }, {})
   );
 }
 
@@ -211,15 +217,13 @@ function getCompoundDescMap(compounds) {
 function getCompoundNormMap(compounds) {
   return (
     compounds.edges
-      .reduce(
-        (acc, {node: {name, synonyms}}) => {
-          acc[name.toLocaleLowerCase()] = name;
-          for (const syn of synonyms) {
-            acc[syn.toLocaleLowerCase()] = name;
-          }
-          return acc;
-        }, {}
-      )
+      .reduce((acc, {node: {name, synonyms}}) => {
+        acc[name.toLocaleLowerCase()] = name;
+        for (const syn of synonyms) {
+          acc[syn.toLocaleLowerCase()] = name;
+        }
+        return acc;
+      }, {})
   );
 }
 
@@ -235,27 +239,25 @@ export default class ClinicalTrialTable extends React.Component {
   render() {
     let {cacheKey, data, compounds} = this.props;
 
-    data = orderBy(
-      data, [
-        function(o) {
-          if (o['recruitmentStatus'] === 'Published') {
-            return 1;
-          } else if (o['recruitmentStatus'] === 'Completed') {
-            return 2;
-          } else if (o['recruitmentStatus'] === 'Active') {
-            return 3;
-          } else if (o['recruitmentStatus'] === 'Pending') {
-            return 4;
-          } else if (o['recruitmentStatus'] === 'Delayed') {
-            return 5;
-          } else {
-            return 6;
-          }
-        }, function(o) {
-          return - o['numPatients'];
+    data = orderBy(data, [
+      function(o) {
+        if (o['recruitmentStatus'] === 'Published') {
+          return 1;
+        } else if (o['recruitmentStatus'] === 'Completed') {
+          return 2;
+        } else if (o['recruitmentStatus'] === 'Active') {
+          return 3;
+        } else if (o['recruitmentStatus'] === 'Pending') {
+          return 4;
+        } else if (o['recruitmentStatus'] === 'Delayed') {
+          return 5;
+        } else {
+          return 6;
         }
-      ]
-    );
+      }, function(o) {
+        return - o['numPatients'];
+      }
+    ]);
     const compoundSplitter = getCompoundSplitter(compounds);
     const compoundDescMap = getCompoundDescMap(compounds);
     const compoundNormMap = getCompoundNormMap(compounds);

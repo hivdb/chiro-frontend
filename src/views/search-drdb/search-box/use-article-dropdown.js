@@ -82,7 +82,8 @@ export default function useArticleDropdown({
                 description: pluralize(
                   'result',
                   numExpLookup[refName] || 0,
-                  true),
+                  true
+                ),
                 'data-is-empty': !numExpLookup[refName]
               })
             )
@@ -91,8 +92,12 @@ export default function useArticleDropdown({
       }
     },
     [
-      loaded, isPending, articles, articleValue,
-      formOnly, numExpLookup
+      loaded,
+      isPending,
+      articles,
+      articleValue,
+      formOnly,
+      numExpLookup
     ]
   );
 

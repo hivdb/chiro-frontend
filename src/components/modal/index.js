@@ -11,9 +11,11 @@ export default class Modal extends React.Component {
     onClose: PropTypes.func.isRequired,
     closeOnBlur: PropTypes.bool.isRequired,
     minHeight: PropTypes.oneOfType([
-      PropTypes.number, PropTypes.string]),
+      PropTypes.number, PropTypes.string
+    ]),
     width: PropTypes.oneOfType([
-      PropTypes.number, PropTypes.string]),
+      PropTypes.number, PropTypes.string
+    ]),
     children: PropTypes.node.isRequired
   }
 

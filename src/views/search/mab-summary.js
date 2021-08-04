@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import PageLoader from '../../components/page-loader';
 import Markdown from 'sierra-frontend/dist/components/markdown';
 
@@ -61,6 +62,22 @@ function MAbSummaryTable({
   </>;
 }
 
+MAbSummaryTable.propTypes = {
+  displayMAbs: PropTypes.array,
+  tables: PropTypes.shape({
+    MAbs: PropTypes.shape({
+      data: PropTypes.array.isRequired,
+      columnDefs: PropTypes.array.isRequired
+    })
+  }).isRequired,
+  imagePrefix: PropTypes.string.isRequired,
+  cmsPrefix: PropTypes.string.isRequired,
+  curCompound: PropTypes.shape({
+    name: PropTypes.string.isRequired
+  }).isRequired,
+  children: PropTypes.node
+};
+
 
 export default function MAbSummaryTableContainer({
   displayMAbs, curCompound, children
@@ -75,5 +92,12 @@ export default function MAbSummaryTableContainer({
 
 }
 
+MAbSummaryTableContainer.propTypes = {
+  displayMAbs: PropTypes.array,
+  curCompound: PropTypes.shape({
+    name: PropTypes.string.isRequired
+  }).isRequired,
+  children: PropTypes.node
+};
 
 MAbSummaryTableContainer.defaultProps = {children: null};

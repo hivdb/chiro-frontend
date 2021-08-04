@@ -22,7 +22,7 @@ export default class Slider extends React.Component {
   static propTypes = {
     title: PropTypes.node.isRequired,
     as: PropTypes.string.isRequired,
-    className: PropTypes.string,
+    children: PropTypes.node,
     endHref: PropTypes.string
   }
 
@@ -61,7 +61,7 @@ export default class Slider extends React.Component {
     this.setState({diffX});
   }, 25)
 
-  handleSwipeEnd = evt => {
+  handleSwipeEnd = () => {
     const {diffX, currentSectionIdx} = this.state;
     if (diffX < 0) {
       this.handleSlide(1);
@@ -111,7 +111,7 @@ export default class Slider extends React.Component {
 
   render() {
     const {currentSectionIdx, disablePrev, disableNext} = this.state;
-    const {as, title, className, children, endHref, ...extras} = this.props;
+    const {as, title, children, endHref, ...extras} = this.props;
     extras.className = makeClassNames(
       style['banner-slider'],
       extras.className

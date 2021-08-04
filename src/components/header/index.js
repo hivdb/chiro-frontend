@@ -88,7 +88,8 @@ export default class Header extends React.Component {
             |||
           </a>
           <ul className={makeClassNames(
-            style['nav'], showMenu ? style['show'] : null
+            style['nav'],
+            showMenu ? style['show'] : null
           )}>
             <NavItem to="/" {...navItemProps}>Home</NavItem>
             <NavItem to="/search/?form_only" {...navItemProps}>

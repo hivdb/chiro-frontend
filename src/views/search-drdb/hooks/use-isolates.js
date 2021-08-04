@@ -42,7 +42,7 @@ const ORDERD_ISOLATE_TYPE = [
 ];
 
 
-function classifyIsolate({varName, mutations, numMuts}) {
+function classifyIsolate({numMuts}) {
   if (numMuts > 1) {
     return 'mutation-combination';
   }

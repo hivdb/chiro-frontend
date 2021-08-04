@@ -120,38 +120,87 @@ export default function useSuscSummary({
   const orderBy = [];
 
   prepareAggFilter(
-    'rxType', rxType,
-    aggregateBy, where, params, orderBy);
+    'rxType', 
+    rxType,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
   prepareAggFilter(
-    'refName', refName,
-    aggregateBy, where, params, orderBy);
+    'refName', 
+    refName,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
   prepareAggFilter(
     'antibodyNames', (
       antibodyNames && antibodyNames.length ?
         csvJoin(antibodyNames) : null
     ),
-    aggregateBy, where, params, orderBy);
+    aggregateBy,
+    where,
+    params,
+    orderBy
+  );
   prepareAggFilter(
-    'vaccineName', vaccineName,
-    aggregateBy, where, params, orderBy);
+    'vaccineName', 
+    vaccineName,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
   prepareAggFilter(
-    'infectedVarName', infectedVarName,
-    aggregateBy, where, params, orderBy);
+    'infectedVarName', 
+    infectedVarName,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
   prepareAggFilter(
-    'controlIsoName', controlIsoName,
-    aggregateBy, where, params, orderBy);
+    'controlIsoName', 
+    controlIsoName,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
   prepareAggFilter(
-    'controlVarName', controlVarName,
-    aggregateBy, where, params, orderBy);
+    'controlVarName', 
+    controlVarName,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
   prepareAggFilter(
-    'isoName', isoName,
-    aggregateBy, where, params, orderBy);
+    'isoName', 
+    isoName,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
   prepareAggFilter(
-    'varName', varName,
-    aggregateBy, where, params, orderBy);
+    'varName', 
+    varName,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
   prepareAggFilter(
-    'isoAggkey', isoAggkey,
-    aggregateBy, where, params, orderBy);
+    'isoAggkey', 
+    isoAggkey,
+    aggregateBy, 
+    where, 
+    params, 
+    orderBy
+  );
 
   if (where.length === 0) {
     where.push('TRUE');

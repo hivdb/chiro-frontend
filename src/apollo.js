@@ -11,7 +11,8 @@ const link = new HttpLink({uri});
 
 
 export default new ApolloClient({
-  link, cache,
+  link,
+  cache,
   name: 'chiro-web-client',
   version: '0.1'
 });

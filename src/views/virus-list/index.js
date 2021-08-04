@@ -42,15 +42,16 @@ class VirusListInner extends React.Component {
             </p>
             <Item.Group divided>
               {sortBy(viruses.edges, ['ordinal']).map(
-                ({node: {
-                  name,
-                  fullName,
-                  synonyms,
-                  typeName,
-                  relatedViruses,
-                  experimentCounts,
-                  description
-                }}, idx) => (
+                ({
+                  node: {
+                    name,
+                    fullName,
+                    typeName,
+                    relatedViruses,
+                    experimentCounts,
+                    description
+                  }
+                }, idx) => (
                   <Item key={idx}>
                     <Item.Content>
                       <Item.Header
@@ -67,14 +68,13 @@ class VirusListInner extends React.Component {
                           query: {'virus': name}
                         }}>
                           {(() => {
-                            const total = experimentCounts.reduce(
-                              (acc, {count}) => acc + count, 0
-                            );
+                            const total = experimentCounts
+                              .reduce((acc, {count}) => acc + count, 0);
                             if (total > 1) {
                               return `${total} experiment results`;
                             }
                             else {
-                               return `${total} experiment result`;
+                              return `${total} experiment result`;
                             }
                           })()}
                         </Link>
@@ -94,7 +94,8 @@ class VirusListInner extends React.Component {
                         {relatedViruses.length > 0 ? (
                           <span className={style['related-viruses']}>
                             {relatedViruses.map(
-                              ({name}) => name).join(', ')}
+                              ({name}) => name
+                            ).join(', ')}
                           </span>
                         ) : null}
                       </Item.Extra>
@@ -114,7 +115,7 @@ class VirusListInner extends React.Component {
 }
 
 
-export default function VirusList({match, ...props}) {
+export default function VirusList(props) {
   let {loading, error, data} = useQuery(query);
   if (loading) {
     return (

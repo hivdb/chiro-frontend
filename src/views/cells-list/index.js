@@ -36,10 +36,12 @@ class CellsListInner extends React.Component {
             </p>
             <Item.Group divided>
               {multipleCells.edges.map(
-                ({node: {
-                  name, fullName, synonyms,
-                  relatedCells, description
-                }}, idx) => (
+                ({
+                  node: {
+                    name, fullName, synonyms,
+                    relatedCells, description
+                  }
+                }, idx) => (
                   <Item key={idx}>
                     <Item.Content>
                       <Item.Header>{name}</Item.Header>
@@ -75,7 +77,7 @@ class CellsListInner extends React.Component {
 }
 
 
-export default function CellsList({match, ...props}) {
+export default function CellsList(props) {
   let {loading, error, data} = useQuery(query);
   if (loading) {
     return (

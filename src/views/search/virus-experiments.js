@@ -25,7 +25,8 @@ function renderSI(num, cmp) {
 
 
 const tableColumns = [
-  authorYearColDef, virusSpeciesDef,
+  authorYearColDef,
+  virusSpeciesDef,
   new ColDef({
     name: 'moi',
     label: (
@@ -69,7 +70,8 @@ const tableColumns = [
     ),
     sort: data => sortBy(data, [
       'drugTiming[0].lower',
-      'drugTiming[0].upper']),
+      'drugTiming[0].upper'
+    ]),
   }),
   nameAndDescColDef(
     'cellsObj',
@@ -120,9 +122,7 @@ const tableColumns = [
     render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
       renderXX50(ec50, ec50cmp, ec50unit, ec50inactive)
     ),
-    sort: data => sortBy(
-      data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive']
-    )
+    sort: data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive'])
   }),
   new ColDef({
     name: 'si',
@@ -156,9 +156,7 @@ const tableColumnsIFN = [
     render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
       renderXX50(ec50, ec50cmp, ec50unit, ec50inactive, 'IU/ml', '-')
     ),
-    sort: data => sortBy(
-      data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive']
-    )
+    sort: data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive'])
   }),
   new ColDef({
     name: 'pcntInhibition',
@@ -184,24 +182,27 @@ const tableColumnsMAb = [
     ),
     render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
       renderXX50(
-        ec50, ec50cmp, ec50unit, ec50inactive, 'ng/ml', '-',
+        ec50, 
+        ec50cmp, 
+        ec50unit, 
+        ec50inactive, 
+        'ng/ml', 
+        '-',
         {'\xb5M-to-ng/ml': num => num * 150000}
       )
     ),
-    sort: data => sortBy(
-      data, [
-        ({ec50unit}) => (
-          ec50unit === '\xb5M' ?
-            'ng/ml' : ec50unit
-        ),
-        ({ec50, ec50unit}) => (
-          ec50unit === '\xb5M' ?
-            ec50 * 150000 : ec50
-        ),
-        'ec50cmp',
-        'ec50inactive'
-      ]
-    )
+    sort: data => sortBy(data, [
+      ({ec50unit}) => (
+        ec50unit === '\xb5M' ?
+          'ng/ml' : ec50unit
+      ),
+      ({ec50, ec50unit}) => (
+        ec50unit === '\xb5M' ?
+          ec50 * 150000 : ec50
+      ),
+      'ec50cmp',
+      'ec50inactive'
+    ])
   })
 ];
 

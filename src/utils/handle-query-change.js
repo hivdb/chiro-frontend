@@ -52,7 +52,7 @@ export default function handleQueryChange(actions, props) {
         changed = true;
       }
     }
-    else {  // viruses
+    else { // viruses
       if (value !== query.virus) {
         newQuery.virus = value;
         changed = true;

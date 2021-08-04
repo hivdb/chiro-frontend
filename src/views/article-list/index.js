@@ -73,13 +73,14 @@ class ArticleListInner extends React.Component {
                     }}>
                       {(() => {
                         const total = experimentCounts.reduce(
-                          (acc, {count}) => acc + count, 0
+                          (acc, {count}) => acc + count,
+                          0
                         );
                         if (total > 1) {
                           return `${total} experiment results`;
                         }
                         else {
-                           return `${total} experiment result`;
+                          return `${total} experiment result`;
                         }
                       })()}
                     </Link>)
@@ -99,7 +100,7 @@ class ArticleListInner extends React.Component {
 }
 
 
-export default function ArticleList({match, ...props}) {
+export default function ArticleList(props) {
   let {loading, error, data} = useQuery(query);
   if (loading) {
     return (

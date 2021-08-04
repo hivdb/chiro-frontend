@@ -1,5 +1,6 @@
 import React from 'react';
 import pluralize from 'pluralize';
+import PropTypes from 'prop-types';
 import {Header} from 'semantic-ui-react';
 import {H3, H4} from 'sierra-frontend/dist/components/heading-tags';
 
@@ -84,6 +85,11 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   </>;
 }
 
+SimpleTableWrapper.propTypes = {
+  cacheKey: PropTypes.string.isRequired,
+  data: PropTypes.array,
+  hideNN: PropTypes.bool
+};
 
 
 export default function useRenderSuscResults({
@@ -126,7 +132,7 @@ export default function useRenderSuscResults({
   );
 
 
-  return React.useMemo(
+  const element = React.useMemo(
     () => {
       if (loaded) {
         const numSections = (
@@ -242,4 +248,5 @@ export default function useRenderSuscResults({
       suscResultsBySection
     ]
   );
+  return element;
 }

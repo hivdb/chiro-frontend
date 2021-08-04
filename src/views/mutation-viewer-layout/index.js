@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {matchShape, routerShape} from 'found';
+import {matchShape} from 'found';
 
 import {Header} from 'semantic-ui-react';
 import Banner from '../../components/banner';
@@ -14,9 +14,7 @@ class MutationViewerLayout extends React.Component {
 
   static propTypes = {
     match: matchShape.isRequired,
-    router: routerShape.isRequired,
     children: PropTypes.node,
-    indexLoader: PropTypes.func.isRequired,
     lastModified: PropTypes.string.isRequired,
     pageTitle: PropTypes.string.isRequired,
     heroImage: PropTypes.string.isRequired,
@@ -46,12 +44,13 @@ class MutationViewerLayout extends React.Component {
     if (preset) {
       title += ` - ${preset.label}`;
     }
-    const lastMod = new Date(lastModified).toLocaleString(
-      'en-US', {
-        year: 'numeric', month: 'short', day: 'numeric',
-        hour: 'numeric', minute: 'numeric'
-      }
-    );
+    const lastMod = new Date(lastModified).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    });
 
     setTitle(title);
 
@@ -94,3 +93,7 @@ export default function MutationViewerLayoutLoader(props) {
      component={MutationViewerLayout} />
   );
 }
+
+MutationViewerLayoutLoader.propTypes = {
+  indexLoader: PropTypes.func.isRequired
+};

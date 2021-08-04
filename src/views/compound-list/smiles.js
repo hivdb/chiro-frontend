@@ -17,56 +17,59 @@ const smilesDrawer = new SmilesDrawer.Drawer({
 });
 
 
-class SmilesCanvas extends React.Component {
+function SmilesCanvas({smiles}) {
+  const canvas = React.useRef();
 
-  componentDidMount() {
-    const {smiles} = this.props;
-    SmilesDrawer.parse(smiles, tree => {
+  React.useEffect(
+    () => SmilesDrawer.parse(smiles, tree => {
       smilesDrawer.draw(tree, this.refs.canvas, "light", false);
-    });
+    }),
+    [smiles]
+  );
+
+  return <canvas ref={canvas} className={style['canvas-2d-struct']} />;
+
+}
+
+SmilesCanvas.propTypes = {
+  smiles: PropTypes.string.isRequired,
+};
+
+
+export default function Smiles({smiles, children}) {
+
+  const [active, setActive] = React.useState(false);
+
+  const handleClick = React.useCallback(
+    e => {
+      e.preventDefault();
+      setActive(!active);
+    },
+    [setActive, active]
+  );
+
+  if (!smiles) {
+    return children(null, null);
   }
 
-  render() {
-    return <canvas ref="canvas" className={style['canvas-2d-struct']} />;
-  }
+  return children(
+    <a
+     href="#2d-struct"
+     onClick={handleClick}>
+      2D structure
+    </a>,
+    this.state.active ? <>
+      <Message>
+        <SmilesCanvas smiles={smiles} />
+      </Message>
+    </> : null
+  );
 
 }
 
 
-export default class Smiles extends React.Component {
+Smiles.propTypes = {
+  smiles: PropTypes.string.isRequired,
+  children: PropTypes.func.isRequired
+};
 
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    smiles: PropTypes.string.isRequired,
-    children: PropTypes.func.isRequired
-  }
-
-  state = {active: false}
-
-  handleClick = e => {
-    e.preventDefault();
-    this.setState({active: !this.state.active});
-  }
-
-  render() {
-    const {smiles, children} = this.props;
-    if (!smiles) {
-      return children(null, null);
-    }
-
-    return children(
-      <a
-       href="#2d-struct"
-       onClick={this.handleClick}>
-        2D structure
-      </a>,
-      this.state.active ? <>
-        <Message>
-          <SmilesCanvas smiles={smiles} />
-        </Message>
-      </> : null
-    );
-
-  }
-
-}

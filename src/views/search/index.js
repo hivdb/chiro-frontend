@@ -48,10 +48,16 @@ class SearchInner extends React.Component {
     qStudyType: PropTypes.string,
     noRelatedCompounds: PropTypes.bool.isRequired,
     compound: compoundShape,
+    compoundTarget: PropTypes.object,
+    virus: PropTypes.object,
+    article: PropTypes.object,
     virusExperiments: virusExperimentsShape,
     biochemExperiments: biochemExperimentsShape,
     animalExperiments: animalExperimentsShape,
     fusionAssayExperiments: fusionAssayExperimentsShape,
+    pseudovirusExperiments: PropTypes.object,
+    clinicalExperiments: PropTypes.object,
+    clinicalTrials: PropTypes.object
   }
 
   static defaultProps = {
@@ -151,7 +157,7 @@ class SearchInner extends React.Component {
     ) : 0;
     const pseudovirusMAbs = pseudovirusExperiments ? (
       pseudovirusExperiments.edges.filter(({
-        node: {categoryName, compoundObjs}
+        node: {compoundObjs}
       }) => (
         compoundObjs.some(
           ({target}) => isTargetMAb(target)
@@ -162,12 +168,10 @@ class SearchInner extends React.Component {
     const mAbs = uniq([
       ...virusMAbs,
       ...pseudovirusMAbs
-    ].reduce(
-      (acc, {node: {compoundNames}}) => ([
-        ...acc,
-        ...compoundNames
-      ]), []
-    ));
+    ].reduce((acc, {node: {compoundNames}}) => ([
+      ...acc,
+      ...compoundNames
+    ]), []));
 
     return <Grid stackable className={style['search']}>
       <Grid.Row>
@@ -222,7 +226,7 @@ class SearchInner extends React.Component {
                         <Header as={H2}>
                           Target: {
                             compound.targetObj ?
-                            compound.targetObj.name : 'NA'
+                              compound.targetObj.name : 'NA'
                           }
                         </Header>
                         <p>{compound.targetObj ?
@@ -329,13 +333,14 @@ class SearchInner extends React.Component {
                           {clinicalExperiments.totalCount}
                         </li> : null}
                         {!loading && clinicalTrials.totalCount > 0 ? <li>
-                          <Link to={{
-                            pathname: '/clinical-trials/',
-                            query: {
-                              compound: qCompoundName,
-                              target: qCompoundTargetName
-                            }
-                          }} className={style['label']}>
+                          <Link
+                           to={{
+                             pathname: '/clinical-trials/',
+                             query: {
+                               compound: qCompoundName,
+                               target: qCompoundTargetName
+                             }
+                           }} className={style['label']}>
                             Clinical trials
                           </Link>
                           {clinicalTrials.totalCount}
@@ -444,7 +449,10 @@ export default function Search({match, ...props}) {
   } = match;
   let {loading, error, data} = useQuery(searchQuery, {
     variables: {
-      compoundName, compoundTargetName, virusName, articleNickname,
+      compoundName,
+      compoundTargetName,
+      virusName,
+      articleNickname,
       noRelatedCompounds: !!noRelatedCompounds,
       withCompound: !!compoundName,
       withVirus: !!virusName,
@@ -474,3 +482,8 @@ export default function Search({match, ...props}) {
      {...data} />
   );
 }
+
+
+Search.propTypes = {
+  match: matchShape.isRequired
+};

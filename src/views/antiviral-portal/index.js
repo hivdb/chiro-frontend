@@ -81,22 +81,26 @@ function AntiviralPortal() {
             virusDropdown,
             studyTypeDropdown
           }) => <>
-            <div className={style['home-search-item']}
+            <div
+             className={style['home-search-item']}
              data-type-item-container>
               <label className={style['home-search-label']}>Target</label>
               {compoundTargetDropdown}
             </div>
-            <div className={style['home-search-item']}
+            <div
+             className={style['home-search-item']}
              data-type-item-container>
               <label className={style['home-search-label']}>Compound</label>
               {compoundDropdown}
             </div>
-            <div className={style['home-search-item']}
+            <div
+             className={style['home-search-item']}
              data-type-item-container>
               <label className={style['home-search-label']}>Virus</label>
               {virusDropdown}
             </div>
-            <div className={style['home-search-item']}
+            <div
+             className={style['home-search-item']}
              data-type-item-container>
               <label className={style['home-search-label']}>Study Type</label>
               {studyTypeDropdown}

@@ -15,7 +15,8 @@ import style from './style.module.scss';
 
 
 const tableColumns = [
-  authorYearColDef, virusSpeciesDef,
+  authorYearColDef,
+  virusSpeciesDef,
   compoundColDef('Compound'),
   new ColDef({
     name: 'targetName',
@@ -36,9 +37,7 @@ const tableColumns = [
     render: (ic50, {ic50cmp, ic50unit, ic50inactive}) => (
       renderXX50(ic50, ic50cmp, ic50unit, ic50inactive)
     ),
-    sort: data => sortBy(
-      data, ['ic50unit', 'ic50', 'ic50cmp', 'ic50inactive']
-    )
+    sort: data => sortBy(data, ['ic50unit', 'ic50', 'ic50cmp', 'ic50inactive'])
   })
 ];
 

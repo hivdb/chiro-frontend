@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import {Popup} from 'semantic-ui-react';
 // import style from '../style.module.scss';
 
@@ -18,3 +19,7 @@ export default function CellAntibodies({
     })}
   </>;
 }
+
+CellAntibodies.propTypes = {
+  abNames: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+};

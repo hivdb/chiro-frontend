@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
 import {useQuery} from '@apollo/client';
 import {matchShape, routerShape} from 'found';
@@ -21,10 +21,6 @@ import ClinicalTrialTable from './clinical-trial-table';
 import style from './style.module.scss';
 import {groupTrials2, markDelayed} from './group-trials';
 
-import {
-  compoundShape
-} from './prop-types';
-
 const HREF_CT = 'https://clinicaltrials.gov/ct2/results?cond=COVID-19';
 const HREF_ICTRP = 'https://www.who.int/ictrp/en/';
 
@@ -38,11 +34,10 @@ class ClinicalTrialInner extends React.Component {
     qCompoundName: PropTypes.string,
     qCompoundTargetName: PropTypes.string,
     qCategoryName: PropTypes.string,
-    compound: compoundShape,
     compounds: PropTypes.object,
     compoundTargets: PropTypes.object,
     clinicalTrials: PropTypes.object,
-    clinicalTrialCategories: PropTypes.object
+    updateTime: PropTypes.object
   }
 
   static defaultProps = {
@@ -117,8 +112,10 @@ class ClinicalTrialInner extends React.Component {
   }
 
   get clinicalTrialGroups() {
-    let {loading, clinicalTrials, qCompoundTargetName,
-      match: {location: {query: {fromDate}}}} = this.props;
+    let {
+      loading, clinicalTrials, qCompoundTargetName,
+      match: {location: {query: {fromDate}}}
+    } = this.props;
     if (loading) {
       return {};
     }
@@ -217,8 +214,8 @@ class ClinicalTrialInner extends React.Component {
            placeholder={"Select item"}
            compoundTargetValue={qCompoundTargetName}
            compoundListFilter={({title}) => (
-            clinicalTrialCompoundList.includes(title)
-          )}
+             clinicalTrialCompoundList.includes(title)
+           )}
            onChange={this.handleExpSearchBoxChange}>
             {({
               compoundTargetDropdown,
@@ -239,8 +236,7 @@ class ClinicalTrialInner extends React.Component {
           }
         </Grid.Column>
         <Grid.Column width={8}>
-          {loading ? <Loader active inline="centered" /> :
-          <>
+          {loading ? <Loader active inline="centered" /> : <>
             {noResult ? <div>No result.</div> : (
               <ul className={style['category-stat']}>
                 {tableHeaders.map(
@@ -262,8 +258,7 @@ class ClinicalTrialInner extends React.Component {
           </>}
         </Grid.Column>
         <Grid.Column width={4} className={style['figure-panel']}>
-          {loading ? <Loader active inline="centered" /> :
-          <>
+          {loading ? <Loader active inline="centered" /> : <>
             <div className={style['figure-button']}>
               <Button
                type="button"
@@ -310,7 +305,7 @@ class ClinicalTrialInner extends React.Component {
                        compounds={compounds}
                        data={clinicalTrialGroups[name]} />
                     ];
-                })}
+                  })}
                 <BackToTop />
               </Grid.Column>
             </Grid.Row> : null
@@ -336,7 +331,9 @@ export default function ClinicalTrial({match, ...props}) {
   } = match;
   let {loading, error, data} = useQuery(searchQuery, {
     variables: {
-      compoundName, compoundTargetName, categoryName,
+      compoundName,
+      compoundTargetName,
+      categoryName,
       noRelatedCompounds: !!noRelatedCompounds
     }
   });
@@ -367,3 +364,7 @@ export default function ClinicalTrial({match, ...props}) {
      {...data} />
   );
 }
+
+ClinicalTrial.propTypes = {
+  match: matchShape.isRequired
+};

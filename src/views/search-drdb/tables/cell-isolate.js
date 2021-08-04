@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import shortenMutList from '../shorten-mutlist';
 
 import {formatPotency} from './cell-potency';
@@ -61,8 +62,11 @@ export default function CellIsolate({
       <div className={style['supplement-info']}>
         {potencyType}{': '}
         {formatPotency({
-          potency, potencyType, ineffective,
-          potencyUnit, forceShowUnit: true
+          potency,
+          potencyType,
+          ineffective,
+          potencyUnit,
+          forceShowUnit: true
         })}
       </div>
     </>;
@@ -71,3 +75,13 @@ export default function CellIsolate({
     return isolateDisplay;
   }
 }
+
+CellIsolate.propTypes = {
+  isoName: PropTypes.string.isRequired,
+  potency: PropTypes.number,
+  potencyUnit: PropTypes.string,
+  potencyType: PropTypes.string,
+  enablePotency: PropTypes.bool,
+  ineffective: PropTypes.bool,
+  isolateLookup: PropTypes.object
+};

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {/*Link, */matchShape} from 'found';
 import {Grid, Header/*, Loader*/} from 'semantic-ui-react';
 import FixedLoader from 'sierra-frontend/dist/components/fixed-loader';
 
@@ -28,7 +27,6 @@ export default function SearchDRDBLayout({
   vaccineName,
   convPlasmaValue,
   varName,
-  match,
   loaded,
   formOnly,
   onChange,
@@ -90,8 +88,7 @@ export default function SearchDRDBLayout({
         {({
           articleDropdown,
           rxDropdown,
-          variantDropdown,
-          mutationsInput
+          variantDropdown
         }) => (
           <StatHeader>
             {[
@@ -183,12 +180,24 @@ export default function SearchDRDBLayout({
 
 
 SearchDRDBLayout.propTypes = {
-  formOnly: PropTypes.bool.isRequired,
-  loaded: PropTypes.bool.isRequired,
-  match: matchShape.isRequired,
   refName: PropTypes.string,
+  mutationText: PropTypes.string,
   abNames: PropTypes.array,
+  vaccineName: PropTypes.string,
+  convPlasmaValue: PropTypes.string,
+  varName: PropTypes.string,
+  loaded: PropTypes.bool.isRequired,
+  formOnly: PropTypes.bool.isRequired,
+  onChange: PropTypes.func,
+  articles: PropTypes.array,
+  articleLookup: PropTypes.object,
+  antibodies: PropTypes.array,
   antibodyLookup: PropTypes.object,
+  vaccines: PropTypes.array,
+  infectedVariants: PropTypes.array,
+  variants: PropTypes.array,
+  isolateAggs: PropTypes.array,
+  isolateLookup: PropTypes.object,
   abSuscResults: PropTypes.array,
   cpSuscResults: PropTypes.array,
   vpSuscResults: PropTypes.array,

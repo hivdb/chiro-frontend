@@ -48,7 +48,7 @@ class SearchBoxInner extends React.Component {
     studyTypePlaceholder: PropTypes.string,
     compoundTargetPlaceholder: PropTypes.string,
     clinicalTrialCategoryPlaceholder: PropTypes.string,
-    placeholder: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
     dropdownProps: PropTypes.object.isRequired,
@@ -94,17 +94,24 @@ class SearchBoxInner extends React.Component {
   get articleOptions() {
     const {data, allowEmpty, placeholder, articlePlaceholder} = this.props;
     return data2Options(
-      data, ({category}) => category === 'articles',
-      allowEmpty, articlePlaceholder || placeholder);
+      data, 
+      ({category}) => category === 'articles',
+      allowEmpty, 
+      articlePlaceholder || placeholder
+    );
   }
 
   get targetOptions() {
     const {
       data, allowEmpty, placeholder,
-      compoundTargetPlaceholder} = this.props;
+      compoundTargetPlaceholder
+    } = this.props;
     return data2Options(
-      data, ({category}) => category === 'compoundTargets',
-      allowEmpty, compoundTargetPlaceholder || placeholder);
+      data, 
+      ({category}) => category === 'compoundTargets',
+      allowEmpty, 
+      compoundTargetPlaceholder || placeholder
+    );
   }
 
   get compoundOptions() {
@@ -135,8 +142,11 @@ class SearchBoxInner extends React.Component {
       );
     }
     return data2Options(
-      data, filter, allowEmpty,
-      compoundPlaceholder || placeholder);
+      data, 
+      filter, 
+      allowEmpty,
+      compoundPlaceholder || placeholder
+    );
   }
 
   getTargetFromCompound(compoundName) {
@@ -152,17 +162,24 @@ class SearchBoxInner extends React.Component {
   get virusOptions() {
     const {data, allowEmpty, virusPlaceholder, placeholder} = this.props;
     return data2Options(
-      data, ({category}) => category === 'viruses',
-      allowEmpty, virusPlaceholder || placeholder);
+      data, 
+      ({category}) => category === 'viruses',
+      allowEmpty, 
+      virusPlaceholder || placeholder
+    );
   }
 
   get clinicalTrialCategoryOptions() {
     const {
       data, allowEmpty, placeholder,
-      clinicalTrialCategoryPlaceholder} = this.props;
+      clinicalTrialCategoryPlaceholder
+    } = this.props;
     return data2Options(
-      data, ({category}) => category === 'clinicalTrialCategories',
-      allowEmpty, clinicalTrialCategoryPlaceholder || placeholder);
+      data, 
+      ({category}) => category === 'clinicalTrialCategories',
+      allowEmpty, 
+      clinicalTrialCategoryPlaceholder || placeholder
+    );
   }
 
   get studyTypeOptions() {

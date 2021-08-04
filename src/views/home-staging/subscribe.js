@@ -18,8 +18,8 @@ export default class Subscribe extends React.Component {
     };
   }
 
-  handleSubmit = e => {
-    window.open('about:blank','mailman-window','width=600,height=400');
+  handleSubmit = () => {
+    window.open('about:blank', 'mailman-window', 'width=600,height=400');
     setTimeout(() => this.setState({email: '', fullname: ''}), 250);
   }
 

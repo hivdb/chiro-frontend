@@ -48,13 +48,15 @@ class CompoundTargetListInner extends React.Component {
              changeTarget={x => x} />
             <Item.Group divided>
               {sortBy(compoundTargets.edges, ['ordinal']).map(
-                ({node: {
-                  name,
-                  compoundCount,
-                  experimentCounts,
-                  relatedCompoundTargets,
-                  description
-                }}, idx) => (
+                ({
+                  node: {
+                    name,
+                    compoundCount,
+                    experimentCounts,
+                    relatedCompoundTargets,
+                    description
+                  }
+                }, idx) => (
                   <Item key={idx} id={name}>
                     <Item.Content>
                       <Item.Header
@@ -72,13 +74,14 @@ class CompoundTargetListInner extends React.Component {
                         }}>
                           {(() => {
                             const total = experimentCounts.reduce(
-                              (acc, {count}) => acc + count, 0
+                              (acc, {count}) => acc + count,
+                              0
                             );
                             if (total > 1) {
                               return `${total} experiment results`;
                             }
                             else {
-                               return `${total} experiment result`;
+                              return `${total} experiment result`;
                             }
                           })()}
                         </Link>
@@ -100,7 +103,8 @@ class CompoundTargetListInner extends React.Component {
                         {relatedCompoundTargets.length > 0 ? (
                           <span className={style['related-compound-targets']}>
                             {relatedCompoundTargets.map(
-                              ({name}) => name).join(', ')}
+                              ({name}) => name
+                            ).join(', ')}
                           </span>
                         ) : null}
                       </Item.Extra>
@@ -120,7 +124,7 @@ class CompoundTargetListInner extends React.Component {
 }
 
 
-export default function CompoundTargetList({match, ...props}) {
+export default function CompoundTargetList(props) {
   let {loading, error, data} = useQuery(query);
   if (loading) {
     return (

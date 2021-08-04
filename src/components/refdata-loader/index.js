@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Loader} from 'semantic-ui-react';
 import {useQuery} from '@apollo/client';
 
@@ -9,8 +10,8 @@ import query from './query.gql.js';
 
 
 function mergeReferences(references, dbArticles, setRef) {
-  const articleLookup = dbArticles.edges.reduce(
-    (acc, {node}) => {
+  const articleLookup = dbArticles.edges
+    .reduce((acc, {node}) => {
       for (const refid of node.nickname) {
         acc[refid.toLocaleLowerCase()] = node;
       }
@@ -26,8 +27,7 @@ function mergeReferences(references, dbArticles, setRef) {
         acc[doi.toLocaleLowerCase()] = node;
       }
       return acc;
-    }, {}
-  );
+    }, {});
 
   return (
     references
@@ -52,16 +52,14 @@ function mergeReferences(references, dbArticles, setRef) {
 export default function RefDataLoader({
   references,
   setReference,
-  onLoad = () => null
+  onLoad
 }) {
   let {loading, error, data} = useQuery(query);
 
   React.useEffect(
     () => {
       if (!loading && !error) {
-        mergeReferences(
-          references, data.articles, setReference
-        );
+        mergeReferences(references, data.articles, setReference);
         onLoad();
       }
     },
@@ -76,3 +74,18 @@ export default function RefDataLoader({
   }
   return null;
 }
+
+RefDataLoader.propTypes = {
+  references: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired
+    }).isRequired
+  ).isRequired,
+  setReference: PropTypes.func.isRequired,
+  onLoad: PropTypes.func.isRequired
+};
+
+RefDataLoader.defaultProps = {
+  onLoad: () => null
+};
+

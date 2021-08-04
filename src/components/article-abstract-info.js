@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import {Message, Loader} from 'semantic-ui-react';
 import {useQuery} from '@apollo/client';
@@ -24,34 +25,38 @@ function AbstractMessage(nickname) {
 }
 
 
-export default class ArticleAbstractInfo extends React.Component {
+export default function ArticleAbstractInfo({nickname}) {
 
-  state = {hideAbstract: true}
+  const [hideAbstract, setHideAbstract] = React.useState(true);
 
-  handleHide = e => {
-    e.preventDefault();
-    this.setState({
-      hideAbstract: !this.state.hideAbstract,
-    });
-  }
+  const handleHide = React.useCallback(
+    e => {
+      e.preventDefault();
+      setHideAbstract(!hideAbstract);
+    },
+    [hideAbstract, setHideAbstract]
+  );
 
-  render() {
-    const {nickname} = this.props;
-    return (
-      <>
-        {' '}
-        <a href="#abstract"
-         style={{fontWeight: 'bold'}}
-         onClick={this.handleHide}>
-          view abstract
-        </a>
-        {' '}
-        <Message hidden={this.state.hideAbstract}>
-          {this.state.hideAbstract ?
-            '' : <AbstractMessage nickname={nickname}/>
-          }
-        </Message>
-      </>
-    );
-  }
+  return (
+    <>
+      {' '}
+      <a
+       href="#abstract"
+       style={{fontWeight: 'bold'}}
+       onClick={handleHide}>
+        view abstract
+      </a>
+      {' '}
+      <Message hidden={hideAbstract}>
+        {hideAbstract ?
+          '' : <AbstractMessage nickname={nickname}/>
+        }
+      </Message>
+    </>
+  );
+  
 }
+
+ArticleAbstractInfo.propTypes = {
+  nickname: PropTypes.string.isRequired
+};

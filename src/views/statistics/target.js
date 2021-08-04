@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import SimpleTable, {
   ColumnDef
 } from 'sierra-frontend/dist/components/simple-table';
@@ -26,19 +27,13 @@ function reformExpData(expData) {
 }
 
 
-export default class TargetTable extends React.Component {
+export default function TargetTable({changeTarget, data}) {
 
-  handleTarget = (target) => {
-    const {changeTarget} = this.props;
-    return (e) => {
-      changeTarget(target);
-    };
-  }
+  const tableColumns = React.useMemo(() => {
 
-  render() {
-    const {data} = this.props;
+    const handleTarget = target => () => changeTarget(target);
 
-    const tableColumns = [
+    return [
       new ColumnDef({
         name: 'name',
         label: 'Target',
@@ -46,7 +41,7 @@ export default class TargetTable extends React.Component {
           // const showName = getTargetShowName(name);
           return (
             <a
-             onClick={this.handleTarget(name)}
+             onClick={handleTarget(name)}
              href={"#" + name}>{name}</a>);
         }
       }),
@@ -95,12 +90,18 @@ export default class TargetTable extends React.Component {
         label: 'References',
       }),
     ];
+  }, [changeTarget]);
 
 
-    return (
-      <SimpleTable
-       columnDefs={tableColumns}
-       data={reformExpData(data)} />
-    );
-  }
+  return (
+    <SimpleTable
+     columnDefs={tableColumns}
+     data={reformExpData(data)} />
+  );
 }
+
+
+TargetTable.propTypes = {
+  changeTarget: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired
+};
