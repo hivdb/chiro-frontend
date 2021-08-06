@@ -1,55 +1,61 @@
 import React from 'react';
 
+import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
 export default function useArticleNumExperimentLookup({
-  skip,
-  antibodyValue,
-  vaccineValue,
-  convPlasmaValue,
-  variantValue,
-  mutationText
+  skip
 }) {
   let rxType;
+  let {
+    params: {
+      abNames,
+      vaccineName,
+      infectedVarName,
+      varName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
   const aggregateBy = [];
-  if (antibodyValue && antibodyValue.length > 0) {
-    if (antibodyValue[0] === 'any') {
+      
+  if (abNames && abNames.length > 0) {
+    if (abNames[0] === 'any') {
       rxType = 'antibody';
       aggregateBy.push('rx_type');
-      antibodyValue = null;
+      abNames = null;
     }
-    else if (antibodyValue.length === 1) {
+    else if (abNames.length === 1) {
       aggregateBy.push('antibody:indiv');
     }
     else {
       aggregateBy.push('antibody');
     }
   }
-  if (vaccineValue) {
-    if (vaccineValue === 'any') {
+  if (vaccineName) {
+    if (vaccineName === 'any') {
       rxType = 'vacc-plasma';
       aggregateBy.push('rx_type');
-      vaccineValue = null;
+      vaccineName = null;
     }
     else {
       aggregateBy.push('vaccine');
     }
   }
-  if (convPlasmaValue) {
-    if (convPlasmaValue === 'any') {
+  if (infectedVarName) {
+    if (infectedVarName === 'any') {
       rxType = 'conv-plasma';
       aggregateBy.push('rx_type');
-      convPlasmaValue = null;
+      infectedVarName = null;
     }
     else {
       aggregateBy.push('infected_variant');
     }
   }
-  if (variantValue) {
+  if (varName) {
     aggregateBy.push('variant');
   }
-  if (mutationText) {
+  if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
   const {
@@ -58,11 +64,11 @@ export default function useArticleNumExperimentLookup({
   } = useSuscSummary({
     aggregateBy: ['article', ...aggregateBy],
     rxType,
-    antibodyNames: antibodyValue,
-    vaccineName: vaccineValue,
-    infectedVarName: convPlasmaValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    antibodyNames: abNames,
+    vaccineName: vaccineName,
+    infectedVarName: infectedVarName,
+    varName: varName,
+    isoAggkey: isoAggkey,
     selectColumns: ['ref_name', 'num_experiments'],
     skip
   });
@@ -72,11 +78,11 @@ export default function useArticleNumExperimentLookup({
   } = useSuscSummary({
     aggregateBy,
     rxType,
-    antibodyNames: antibodyValue,
-    vaccineName: vaccineValue,
-    infectedVarName: convPlasmaValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    antibodyNames: abNames,
+    vaccineName: vaccineName,
+    infectedVarName: infectedVarName,
+    varName: varName,
+    isoAggkey: isoAggkey,
     selectColumns: ['num_experiments'],
     skip
   });

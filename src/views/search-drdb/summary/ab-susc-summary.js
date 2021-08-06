@@ -10,10 +10,7 @@ import {
 function AbSuscSummary({
   loaded,
   antibodyLookup,
-  isolateAggs,
-  articleValue, 
-  variantValue,
-  mutationText
+  isolateAggs
 }) {
   return null;
   /*const varSuscSummary = useSuscSummary({

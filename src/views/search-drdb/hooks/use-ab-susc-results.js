@@ -1,4 +1,5 @@
 import React from 'react';
+import LocationParams from './location-params';
 import useSuscResults from './use-susc-results';
 import useAntibodies from './use-antibodies';
 import {useCompareSuscResultsByAntibodies} from './use-compare-susc-results';
@@ -72,13 +73,18 @@ function usePrepareQuery({abNames, skip}) {
 }
 
 
-export default function useAntibodySuscResults({
-  refName,
-  mutationText,
-  varName,
-  abNames,
-  skip = false
-}) {
+export default function useAntibodySuscResults() {
+  const {
+    params: {
+      formOnly,
+      refName,
+      isoAggkey,
+      varName,
+      abNames
+    },
+    filterFlag
+  } = LocationParams.useMe();
+  const skip = formOnly || filterFlag.vaccine || filterFlag.infectedVariant;
   const {
     addColumns,
     where,
@@ -88,9 +94,7 @@ export default function useAntibodySuscResults({
   const {
     antibodyLookup,
     isPending: isAbLookupPending
-  } = useAntibodies({
-    skip
-  });
+  } = useAntibodies({skip});
 
   const addCompareSuscResults = useCompareSuscResultsByAntibodies(
     antibodyLookup
@@ -102,7 +106,7 @@ export default function useAntibodySuscResults({
     isPending
   } = useSuscResults({
     refName,
-    mutationText,
+    isoAggkey,
     varName,
     addColumns,
     where,

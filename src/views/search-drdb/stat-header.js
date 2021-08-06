@@ -6,6 +6,7 @@ import {H1} from 'sierra-frontend/dist/components/heading-tags';
 import StatHeader from '../../components/stat-header';
 import ArticleCard from './article-card';
 import PercentBars from './percent-bars';
+import LocationParams from './hooks/location-params';
 
 import SearchBox from './search-box';
 
@@ -13,43 +14,33 @@ import style from './style.module.scss';
 
 
 function SearchDRDBStatHeader({
-  abNames,
   antibodies,
-  article,
   articles,
-  convPlasmaValue,
-  formOnly,
   infectedVariants,
   isolateAggs,
   loaded,
-  mutationText,
-  onChange,
-  refName,
-  vaccineName,
   vaccines,
-  varName,
   variants,
   isolates
 }) {
+
+  const {
+    params: {
+      formOnly,
+      refName
+    }
+  } = LocationParams.useMe();
 
   return (
     <Grid.Row>
       <SearchBox
        loaded={loaded}
-       formOnly={formOnly}
-       articleValue={refName}
        articles={articles}
-       antibodyValue={abNames}
        antibodies={antibodies}
-       vaccineValue={vaccineName}
        vaccines={vaccines}
        infectedVariants={infectedVariants}
-       convPlasmaValue={convPlasmaValue}
-       variantValue={varName}
        variants={variants}
-       isolateAggs={isolateAggs}
-       mutationText={mutationText}
-       onChange={onChange}>
+       isolateAggs={isolateAggs}>
         {({
           articleDropdown,
           rxDropdown,
@@ -78,15 +69,9 @@ function SearchDRDBStatHeader({
                     lists to start searching.
                   </p>
                 </> : <>
-                  {article ? <ArticleCard article={article} /> : null}
+                  {refName ? <ArticleCard refName={refName} /> : null}
                   <PercentBars
                    loaded={loaded}
-                   articleValue={refName}
-                   antibodyValue={abNames}
-                   vaccineValue={vaccineName}
-                   convPlasmaValue={convPlasmaValue}
-                   variantValue={varName}
-                   mutationText={mutationText}
                    variants={variants}
                    isolateAggs={isolateAggs}
                    isolates={isolates} />
@@ -103,29 +88,17 @@ function SearchDRDBStatHeader({
 
 
 SearchDRDBStatHeader.propTypes = {
-  abNames: PropTypes.arrayOf(
-    PropTypes.string.isRequired
-  ),
   antibodies: PropTypes.array,
-  article: PropTypes.object,
   articles: PropTypes.array,
-  convPlasmaValue: PropTypes.string,
-  formOnly: PropTypes.bool.isRequired,
   infectedVariants: PropTypes.array,
   isolateAggs: PropTypes.array,
   loaded: PropTypes.bool.isRequired,
-  mutationText: PropTypes.string,
-  onChange: PropTypes.func,
-  refName: PropTypes.string,
-  vaccineName: PropTypes.string,
   vaccines: PropTypes.array,
-  varName: PropTypes.string,
   variants: PropTypes.array,
   isolates: PropTypes.array
 };
 
 SearchDRDBStatHeader.defaultProps = {
-  formOnly: false,
   loaded: false
 };
 

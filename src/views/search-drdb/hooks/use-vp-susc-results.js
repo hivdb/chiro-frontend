@@ -1,4 +1,5 @@
 import React from 'react';
+import LocationParams from './location-params';
 import useSuscResults from './use-susc-results';
 
 
@@ -34,14 +35,18 @@ function usePrepareQuery({vaccineName, skip}) {
 }
 
 
-export default function useVaccPlasmaSuscResults({
-  refName,
-  mutationText,
-  varName,
-  vaccineName,
-  skip = false
-}) {
-
+export default function useVaccPlasmaSuscResults() {
+  const {
+    params: {
+      formOnly,
+      refName,
+      isoAggkey,
+      varName,
+      vaccineName
+    },
+    filterFlag
+  } = LocationParams.useMe();
+  const skip = formOnly || filterFlag.antibody || filterFlag.infectedVariant;
   const {
     addColumns,
     joinClause,
@@ -55,7 +60,7 @@ export default function useVaccPlasmaSuscResults({
     isPending
   } = useSuscResults({
     refName,
-    mutationText,
+    isoAggkey,
     varName,
     addColumns,
     joinClause,

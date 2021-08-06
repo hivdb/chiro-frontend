@@ -3,6 +3,7 @@ import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 
 import {useArticleNumExpLookup} from '../hooks';
+import LocationParams from '../hooks/location-params';
 
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
@@ -11,23 +12,17 @@ const EMPTY_TEXT = 'Select item';
 
 export default function useArticleDropdown({
   loaded,
-  articleValue,
-  antibodyValue,
-  vaccineValue,
-  convPlasmaValue,
-  variantValue,
-  mutationText,
-  articles,
-  onChange,
-  formOnly
+  articles
 }) {
+  const {
+    params: {
+      formOnly,
+      refName: paramRefName
+    },
+    onChange
+  } = LocationParams.useMe();
   const [numExpLookup, isPending] = useArticleNumExpLookup({
-    skip: !loaded,
-    antibodyValue,
-    vaccineValue,
-    convPlasmaValue,
-    variantValue,
-    mutationText
+    skip: !loaded
   });
   const articleOptions = React.useMemo(
     () => {
@@ -39,9 +34,9 @@ export default function useArticleDropdown({
             value: ANY
           },
           {
-            key: articleValue,
-            text: articleValue,
-            value: articleValue
+            key: paramRefName,
+            text: paramRefName,
+            value: paramRefName
           }
         ];
       }
@@ -63,14 +58,14 @@ export default function useArticleDropdown({
             )
           },
           ...(
-            !articleValue || articles.some(
-              ({refName}) => articleValue === refName
+            !paramRefName || articles.some(
+              ({refName}) => paramRefName === refName
             ) ?
               [] :
               [{
-                key: articleValue,
-                text: articleValue,
-                value: articleValue
+                key: paramRefName,
+                text: paramRefName,
+                value: paramRefName
               }]
           ),
           ...articles
@@ -95,7 +90,7 @@ export default function useArticleDropdown({
       loaded,
       isPending,
       articles,
-      articleValue,
+      paramRefName,
       formOnly,
       numExpLookup
     ]
@@ -121,6 +116,6 @@ export default function useArticleDropdown({
      placeholder={EMPTY_TEXT}
      options={articleOptions}
      onChange={handleChange}
-     value={articleValue || defaultValue} />
+     value={paramRefName || defaultValue} />
   );
 }

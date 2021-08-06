@@ -10,6 +10,8 @@ import {
   useInfectedVariantNumExpLookup
 } from '../hooks';
 
+import LocationParams from '../hooks/location-params';
+
 import FragmentWithoutWarning from './fragment-without-warning';
 
 
@@ -38,15 +40,9 @@ function rxSearch(options, query) {
 
 export default function useRxDropdown({
   loaded,
-  articleValue,
-  convPlasmaValue,
-  vaccines, vaccineValue,
-  antibodies, antibodyValue,
-  variantValue,
-  mutationText,
-  infectedVariants,
-  onChange,
-  formOnly
+  vaccines,
+  antibodies,
+  infectedVariants
 }) {
   const [includeAll, setIncludeAll] = React.useState(false);
   const onSearchChange = React.useCallback(
@@ -56,10 +52,7 @@ export default function useRxDropdown({
     [setIncludeAll]
   );
   const commonParams = {
-    skip: !loaded,
-    articleValue,
-    variantValue,
-    mutationText
+    skip: !loaded
   };
   const [rxTotalNumExp, isRxTotalNumExpPending] = useRxTotalNumExp({
     ...commonParams
@@ -78,6 +71,16 @@ export default function useRxDropdown({
   ] = useInfectedVariantNumExpLookup({
     ...commonParams
   });
+
+  const {
+    params: {
+      infectedVarName: paramInfectedVarName,
+      vaccineName: paramVaccineName,
+      abNames: paramAbNames,
+      formOnly
+    },
+    onChange
+  } = LocationParams.useMe();
 
   const options = React.useMemo(
     () => {
@@ -100,10 +103,10 @@ export default function useRxDropdown({
             value: 'cp-any',
             type: CP
           },
-          ...(convPlasmaValue && convPlasmaValue !== 'any' ? [{
-            key: convPlasmaValue,
-            text: convPlasmaValue,
-            value: convPlasmaValue,
+          ...(paramInfectedVarName && paramInfectedVarName !== 'any' ? [{
+            key: paramInfectedVarName,
+            text: paramInfectedVarName,
+            value: paramInfectedVarName,
             type: CP
           }] : []),
           {
@@ -112,10 +115,10 @@ export default function useRxDropdown({
             value: 'vp-any',
             type: VACCINE
           },
-          ...(vaccineValue && vaccineValue !== 'any' ? [{
-            key: vaccineValue,
-            text: vaccineValue,
-            value: vaccineValue,
+          ...(paramVaccineName && paramVaccineName !== 'any' ? [{
+            key: paramVaccineName,
+            text: paramVaccineName,
+            value: paramVaccineName,
             type: VACCINE
           }] : []),
           {
@@ -125,13 +128,13 @@ export default function useRxDropdown({
             type: ANTIBODY
           },
           ...(
-            antibodyValue &&
-            antibodyValue.length > 0 &&
-            antibodyValue[0] !== 'any' ?
+            paramAbNames &&
+            paramAbNames.length > 0 &&
+            paramAbNames[0] !== 'any' ?
               [{
-                key: antibodyValue.join(','),
-                text: antibodyValue.join(' + '),
-                value: antibodyValue.join(','),
+                key: paramAbNames.join(','),
+                text: paramAbNames.join(' + '),
+                value: paramAbNames.join(','),
                 type: ANTIBODY
               }] : []
           )
@@ -212,7 +215,7 @@ export default function useRxDropdown({
             ...vaccines
               .filter(({vaccineName}) => (
                 includeAll ||
-                vaccineName === vaccineValue ||
+                vaccineName === paramVaccineName ||
                 !(/\+/.test(vaccineName))
               ))
               .map(
@@ -281,9 +284,9 @@ export default function useRxDropdown({
       vaccines,
       antibodies,
       infectedVariants,
-      convPlasmaValue,
-      vaccineValue,
-      antibodyValue,
+      paramInfectedVarName,
+      paramVaccineName,
+      paramAbNames,
       formOnly,
       abNumExpLookup,
       isAbNumExpPending,
@@ -330,23 +333,23 @@ export default function useRxDropdown({
   const defaultValue = formOnly ? EMPTY : ANY;
 
   let activeRx = defaultValue;
-  if (antibodyValue && antibodyValue[0] === 'any') {
+  if (paramAbNames && paramAbNames[0] === 'any') {
     activeRx = 'ab-any';
   }
-  else if (convPlasmaValue === 'any') {
+  else if (paramInfectedVarName === 'any') {
     activeRx = 'cp-any';
   }
-  else if (vaccineValue === 'any') {
+  else if (paramVaccineName === 'any') {
     activeRx = 'vp-any';
   }
-  else if (antibodyValue && antibodyValue.length > 0) {
-    activeRx = antibodyValue.join(',');
+  else if (paramAbNames && paramAbNames.length > 0) {
+    activeRx = paramAbNames.join(',');
   }
-  else if (convPlasmaValue) {
-    activeRx = convPlasmaValue;
+  else if (paramInfectedVarName) {
+    activeRx = paramInfectedVarName;
   }
-  else if (vaccineValue) {
-    activeRx = vaccineValue;
+  else if (paramVaccineName) {
+    activeRx = paramVaccineName;
   }
   return (
     <Dropdown

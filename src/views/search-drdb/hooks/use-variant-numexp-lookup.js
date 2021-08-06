@@ -1,47 +1,50 @@
 import React from 'react';
+import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useVariantTotalNumExperiment({
-  skip,
-  articleValue,
-  antibodyValue,
-  vaccineValue,
-  convPlasmaValue
-}) {
+export default function useVariantTotalNumExperiment({skip}) {
   let rxType;
+  let {
+    params: {
+      refName,
+      abNames,
+      vaccineName,
+      infectedVarName
+    }
+  } = LocationParams.useMe();
   const aggregateBy = [];
-  if (articleValue) {
+  if (refName) {
     aggregateBy.push('article');
   }
-  if (antibodyValue && antibodyValue.length > 0) {
-    if (antibodyValue[0] === 'any') {
+  if (abNames && abNames.length > 0) {
+    if (abNames[0] === 'any') {
       rxType = 'antibody';
       aggregateBy.push('rx_type');
-      antibodyValue = null;
+      abNames = null;
     }
-    else if (antibodyValue.length === 1) {
+    else if (abNames.length === 1) {
       aggregateBy.push('antibody:indiv');
     }
     else {
       aggregateBy.push('antibody');
     }
   }
-  if (vaccineValue) {
-    if (vaccineValue === 'any') {
+  if (vaccineName) {
+    if (vaccineName === 'any') {
       rxType = 'vacc-plasma';
       aggregateBy.push('rx_type');
-      vaccineValue = null;
+      vaccineName = null;
     }
     else {
       aggregateBy.push('vaccine');
     }
   }
-  if (convPlasmaValue) {
-    if (convPlasmaValue === 'any') {
+  if (infectedVarName) {
+    if (infectedVarName === 'any') {
       rxType = 'conv-plasma';
       aggregateBy.push('rx_type');
-      convPlasmaValue = null;
+      infectedVarName = null;
     }
     else {
       aggregateBy.push('infected_variant');
@@ -52,11 +55,11 @@ export default function useVariantTotalNumExperiment({
     isPending
   } = useSuscSummary({
     aggregateBy: ['variant', ...aggregateBy],
-    refName: articleValue,
+    refName,
     rxType,
-    antibodyNames: antibodyValue,
-    vaccineName: vaccineValue,
-    infectedVarName: convPlasmaValue,
+    antibodyNames: abNames,
+    vaccineName,
+    infectedVarName,
     selectColumns: ['var_name', 'num_experiments'],
     skip
   });

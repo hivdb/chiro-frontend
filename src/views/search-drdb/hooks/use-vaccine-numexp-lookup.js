@@ -1,22 +1,27 @@
 import React from 'react';
 
+import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
 export default function useVaccineNumExperimentLookup({
-  skip,
-  articleValue,
-  variantValue,
-  mutationText
+  skip
 }) {
   const aggregateBy = [];
-  if (articleValue) {
+  const {
+    params: {
+      refName,
+      varName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
+  if (refName) {
     aggregateBy.push('article');
   }
-  if (variantValue) {
+  if (varName) {
     aggregateBy.push('variant');
   }
-  if (mutationText) {
+  if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
   const {
@@ -24,9 +29,9 @@ export default function useVaccineNumExperimentLookup({
     isPending: isSuscSummaryPending
   } = useSuscSummary({
     aggregateBy: ['vaccine', ...aggregateBy],
-    refName: articleValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    refName,
+    varName,
+    isoAggkey,
     selectColumns: ['vaccine_name', 'num_experiments'],
     skip
   });
@@ -36,9 +41,9 @@ export default function useVaccineNumExperimentLookup({
   } = useSuscSummary({
     aggregateBy: ['rx_type', ...aggregateBy],
     rxType: 'vacc-plasma',
-    refName: articleValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    refName,
+    varName,
+    isoAggkey,
     selectColumns: ['num_experiments'],
     skip
   });

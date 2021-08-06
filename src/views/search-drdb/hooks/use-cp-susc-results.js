@@ -1,4 +1,5 @@
 import React from 'react';
+import LocationParams from './location-params';
 import useSuscResults from './use-susc-results';
 
 
@@ -42,14 +43,18 @@ function usePrepareQuery({infectedVarName, skip}) {
 }
 
 
-export default function useConvPlasmaSuscResults({
-  refName,
-  mutationText,
-  varName,
-  infectedVarName,
-  skip = false
-}) {
-
+export default function useConvPlasmaSuscResults() {
+  const {
+    params: {
+      formOnly,
+      refName,
+      isoAggkey,
+      varName,
+      infectedVarName
+    },
+    filterFlag
+  } = LocationParams.useMe();
+  const skip = formOnly || filterFlag.antibody || filterFlag.vaccine;
   const {
     addColumns,
     joinClause,
@@ -62,7 +67,7 @@ export default function useConvPlasmaSuscResults({
     isPending
   } = useSuscResults({
     refName,
-    mutationText,
+    isoAggkey,
     varName,
     addColumns,
     joinClause,

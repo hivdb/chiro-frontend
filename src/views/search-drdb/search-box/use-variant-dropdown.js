@@ -6,6 +6,7 @@ import {
   useIsolateAggNumExpLookup,
   useVariantTotalNumExp
 } from '../hooks';
+import LocationParams from '../hooks/location-params';
 
 import FragmentWithoutWarning from './fragment-without-warning';
 
@@ -18,22 +19,10 @@ const EMPTY_TEXT = 'Select item';
 export default function useVariantDropdown({
   loaded,
   variants,
-  isolateAggs,
-  articleValue,
-  antibodyValue,
-  vaccineValue,
-  convPlasmaValue,
-  variantValue,
-  mutationText,
-  onChange,
-  formOnly
+  isolateAggs
 }) {
   const commonParams = {
-    skip: !loaded,
-    articleValue,
-    antibodyValue,
-    vaccineValue,
-    convPlasmaValue
+    skip: !loaded
   };
 
   const [varTotalNumExp, isVarTotalNumExpPending] = useVariantTotalNumExp({
@@ -48,6 +37,15 @@ export default function useVariantDropdown({
   ] = useIsolateAggNumExpLookup({
     ...commonParams
   });
+
+  const {
+    params: {
+      varName: paramVarName,
+      isoAggkey: paramIsoAggKey,
+      formOnly
+    },
+    onChange
+  } = LocationParams.useMe();
 
   const isPending = (
     !loaded ||
@@ -65,15 +63,15 @@ export default function useVariantDropdown({
             text: 'Any',
             value: ANY
           },
-          ...(variantValue ? [{
-            key: variantValue,
-            text: variantValue,
-            value: variantValue
+          ...(paramVarName ? [{
+            key: paramVarName,
+            text: paramVarName,
+            value: paramVarName
           }] : []),
-          ...(mutationText ? [{
-            key: mutationText,
-            text: mutationText,
-            value: mutationText
+          ...(paramIsoAggKey ? [{
+            key: paramIsoAggKey,
+            text: paramIsoAggKey,
+            value: paramIsoAggKey
           }] : [])
         ];
       }
@@ -165,8 +163,8 @@ export default function useVariantDropdown({
       isPending,
       variants,
       isolateAggs,
-      variantValue,
-      mutationText,
+      paramVarName,
+      paramIsoAggKey,
       formOnly,
       varTotalNumExp,
       varNumExpLookup,
@@ -203,6 +201,6 @@ export default function useVariantDropdown({
      placeholder={EMPTY_TEXT}
      options={variantOptions}
      onChange={handleChange}
-     value={variantValue || mutationText || defaultValue} />
+     value={paramVarName || paramIsoAggKey || defaultValue} />
   );
 }

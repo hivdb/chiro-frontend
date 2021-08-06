@@ -1,6 +1,3 @@
-import useLocationParams, {
-  buildQuery as buildLocationQuery
-} from './use-location-params';
 import useConfig from './use-config';
 import useArticles from './use-articles';
 import useAntibodies from './use-antibodies';
@@ -34,8 +31,6 @@ import useIsolateNumExpLookup from './use-isolate-numexp-lookup';
 import useVariantTotalNumExp from './use-variant-total-numexp';
 
 export {
-  useLocationParams,
-  buildLocationQuery,
   useConfig,
   useArticles,
   useAntibodies,

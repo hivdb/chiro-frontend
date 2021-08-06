@@ -1,12 +1,9 @@
 import React from 'react';
-import {useQuery} from '@apollo/client';
 import FixedLoader from 'sierra-frontend/dist/components/fixed-loader';
 import GitHubCorner from '../../components/github-corner';
 
-import articleQuery from './search.gql';
-
+import LocationParams, {useCleanQuery} from './hooks/location-params';
 import {
-  useLocationParams,
   useArticles,
   useAntibodies,
   useVaccines,
@@ -21,28 +18,9 @@ import {
 import SearchDRDBLayout from './layout';
 
 
-export default function SearchDRDB(props) {
-  const {
-    formOnly,
-    refName,
-    mutationText,
-    abNames,
-    vaccineName,
-    convPlasmaValue,
-    varName,
-    onChange
-  } = useLocationParams();
-  const skip = formOnly !== undefined;
-  let {
-    loading: isArticlePending,
-    error,
-    data
-  } = useQuery(articleQuery, {
-    variables: {
-      articleNickname: refName
-    },
-    skip: skip || !refName
-  });
+function SearchDRDB(props) {
+
+  const {params: {formOnly}} = LocationParams.useMe();
   const {
     articles,
     articleLookup,
@@ -78,36 +56,17 @@ export default function SearchDRDB(props) {
   const {
     suscResults: abSuscResults,
     isPending: isAbResultPending
-  } = useAbSuscResults({
-    skip: skip || vaccineName || convPlasmaValue,
-    refName,
-    mutationText,
-    varName,
-    abNames
-  });
+  } = useAbSuscResults();
   const {
     suscResults: cpSuscResults,
     isPending: isCPPending
-  } = useCPSuscResults({
-    skip: skip || (abNames && abNames.length > 0) || vaccineName,
-    refName,
-    mutationText,
-    varName,
-    infectedVarName: convPlasmaValue
-  });
+  } = useCPSuscResults();
   const {
     suscResults: vpSuscResults,
     isPending: isVPPending
-  } = useVPSuscResults({
-    skip: skip || (abNames && abNames.length > 0) || convPlasmaValue,
-    refName,
-    mutationText,
-    varName,
-    vaccineName
-  });
+  } = useVPSuscResults();
 
   const searchBoxLoaded = (
-    !isArticlePending &&
     !isRefNameListPending &&
     !isAbLookupPending &&
     !isVaccPending &&
@@ -118,7 +77,6 @@ export default function SearchDRDB(props) {
   );
 
   const resultLoaded = (
-    !isArticlePending &&
     !isRefNameListPending &&
     !isAbLookupPending &&
     !isVaccPending &&
@@ -130,9 +88,6 @@ export default function SearchDRDB(props) {
     !isVPPending
   );
 
-  if (error) {
-    return `Error: ${error.message}`;
-  }
   if (!searchBoxLoaded) {
     return <FixedLoader />;
   }
@@ -140,13 +95,6 @@ export default function SearchDRDB(props) {
     return <>
       <SearchDRDBLayout
        loaded={resultLoaded}
-       refName={refName}
-       mutationText={mutationText}
-       abNames={abNames}
-       vaccineName={vaccineName}
-       convPlasmaValue={convPlasmaValue}
-       varName={varName}
-       onChange={onChange}
        formOnly={formOnly !== undefined}
        articles={articles}
        articleLookup={articleLookup}
@@ -161,11 +109,19 @@ export default function SearchDRDB(props) {
        abSuscResults={abSuscResults}
        cpSuscResults={cpSuscResults}
        vpSuscResults={vpSuscResults}
-       {...props}
-       {...data} />
+       {...props} />
       <GitHubCorner
        title="Download this database from GitHub"
        href="https://github.com/hivdb/covid-drdb-payload/releases" />
     </>;
   }
+}
+
+
+export default function Wrapper(props) {
+  useCleanQuery();
+
+  return <LocationParams.Provider>
+    <SearchDRDB {...props} />
+  </LocationParams.Provider>;
 }

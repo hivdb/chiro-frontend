@@ -7,9 +7,10 @@ import {
   TYPE_ISOAGG,
   TYPE_OTHER
 } from './types';
-import {
+import LocationParams, {
   buildLocationQuery
-} from '../../hooks';
+} from '../../hooks/location-params';
+
 import PercentBar from '../../../../components/percent-bar';
 
 import style from '../style.module.scss';
@@ -21,28 +22,25 @@ import VariantDesc from './desc';
 VariantSlice.propTypes = {
   index: PropTypes.number.isRequired,
   pcnt: PropTypes.number.isRequired,
-  item: itemShape.isRequired,
-  variantValue: PropTypes.string,
-  mutationText: PropTypes.string
+  item: itemShape.isRequired
 };
 
 export default function VariantSlice({
   pcnt,
   item,
-  index,
-  variantValue,
-  mutationText
+  item: {name, display, type, numExp},
+  index
 }) {
   const {
-    name,
-    display,
-    type,
-    numExp
-  } = item;
+    params: {
+      varName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
   const {match: {location: loc}} = useRouter();
   const isActive = !!(
-    (type === TYPE_VARIANT && variantValue === name) ||
-    (type === TYPE_ISOAGG && mutationText === name)
+    (type === TYPE_VARIANT && varName === name) ||
+    (type === TYPE_ISOAGG && isoAggkey === name)
   );
 
   return (

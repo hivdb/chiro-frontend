@@ -86,7 +86,7 @@ function calcResistanceLevel({
 function usePrepareQuery({
   skip,
   refName,
-  mutationText,
+  isoAggkey,
   varName,
   addColumns,
   joinClause,
@@ -111,7 +111,7 @@ function usePrepareQuery({
           params.$refName = refName;
         }
 
-        if (mutationText) {
+        if (isoAggkey) {
           myJoinClause.push(`
             JOIN isolate_pairs pair ON
               S.control_iso_name = pair.control_iso_name AND
@@ -120,7 +120,7 @@ function usePrepareQuery({
           where.push(`
             pair.iso_aggkey = $isoAggkey
           `);
-          params.$isoAggkey = mutationText;
+          params.$isoAggkey = isoAggkey;
         }
         else if (varName) {
           where.push(`
@@ -176,7 +176,7 @@ function usePrepareQuery({
     [
       skip,
       refName,
-      mutationText,
+      isoAggkey,
       varName,
       addColumns,
       joinClause,
@@ -189,7 +189,7 @@ function usePrepareQuery({
 
 export default function useSuscResults({
   refName,
-  mutationText,
+  isoAggkey,
   varName = null,
   addColumns = [],
   joinClause = [],
@@ -201,7 +201,7 @@ export default function useSuscResults({
   const {sql, params} = usePrepareQuery({
     skip,
     refName,
-    mutationText,
+    isoAggkey,
     varName,
     addColumns,
     joinClause,

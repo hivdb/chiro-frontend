@@ -14,19 +14,13 @@ import CPSuscResults from './tables/cp-susc-results';
 
 import AbSuscSummary from './summary/ab-susc-summary';
 
+import LocationParams from './hooks/location-params';
+
 import style from './style.module.scss';
 
 
 export default function SearchDRDBLayout({
-  refName,
-  mutationText,
-  abNames,
-  vaccineName,
-  convPlasmaValue,
-  varName,
   loaded,
-  formOnly,
-  onChange,
   articles,
   articleLookup,
   antibodies,
@@ -38,18 +32,28 @@ export default function SearchDRDBLayout({
   isolateLookup,
   abSuscResults,
   cpSuscResults,
-  vpSuscResults,
-  article
+  vpSuscResults
 }) {
 
   setTitle('Search susceptibility data');
   /* loading || redirectIfNeeded(props); */
 
+  const {
+    params: {
+      formOnly,
+      refName,
+      isoAggkey,
+      abNames,
+      vaccineName,
+      infectedVarName
+    }
+  } = LocationParams.useMe();
+
   const displayAbTables = (
     loaded &&
     !formOnly &&
     !vaccineName &&
-    !convPlasmaValue
+    !infectedVarName
   );
   const displayCPTables = (
     loaded &&
@@ -61,27 +65,18 @@ export default function SearchDRDBLayout({
     loaded &&
     !formOnly &&
     (!abNames || abNames.length === 0) &&
-    !convPlasmaValue
+    !infectedVarName
   );
 
   return <Grid stackable className={style['search']}>
     <DRDBStatHeader {...{
-      abNames,
       antibodies,
-      article,
       articles,
-      convPlasmaValue,
-      formOnly,
       infectedVariants,
       isolateAggs,
       isolates: Object.values(isolateLookup),
       loaded,
-      mutationText,
-      onChange,
-      refName,
-      vaccineName,
       vaccines,
-      varName,
       variants
     }} />
     {loaded ? null : <FixedLoader />}
@@ -94,13 +89,10 @@ export default function SearchDRDBLayout({
           <AbSuscSummary
            loaded={loaded}
            antibodyLookup={antibodyLookup}
-           isolateAggs={isolateAggs}
-           articleValue={refName}
-           variantValue={varName}
-           mutationText={mutationText} />
+           isolateAggs={isolateAggs} />
           <AbSuscResults
            loaded={loaded}
-           cacheKey={JSON.stringify({refName, mutationText, abNames})}
+           cacheKey={JSON.stringify({refName, isoAggkey, abNames})}
            articleLookup={articleLookup}
            antibodyLookup={antibodyLookup}
            isolateLookup={isolateLookup}
@@ -115,7 +107,7 @@ export default function SearchDRDBLayout({
           </Header>
           <VPSuscResults
            loaded={loaded}
-           cacheKey={JSON.stringify({refName, mutationText, vaccineName})}
+           cacheKey={JSON.stringify({refName, isoAggkey, vaccineName})}
            articleLookup={articleLookup}
            isolateLookup={isolateLookup}
            vpSuscResults={vpSuscResults} />
@@ -129,7 +121,7 @@ export default function SearchDRDBLayout({
           </Header>
           <CPSuscResults
            loaded={loaded}
-           cacheKey={JSON.stringify({refName, mutationText})}
+           cacheKey={JSON.stringify({refName, isoAggkey})}
            articleLookup={articleLookup}
            isolateLookup={isolateLookup}
            cpSuscResults={cpSuscResults} />
@@ -143,15 +135,7 @@ export default function SearchDRDBLayout({
 
 
 SearchDRDBLayout.propTypes = {
-  refName: PropTypes.string,
-  mutationText: PropTypes.string,
-  abNames: PropTypes.array,
-  vaccineName: PropTypes.string,
-  convPlasmaValue: PropTypes.string,
-  varName: PropTypes.string,
   loaded: PropTypes.bool.isRequired,
-  formOnly: PropTypes.bool.isRequired,
-  onChange: PropTypes.func,
   articles: PropTypes.array,
   articleLookup: PropTypes.object,
   antibodies: PropTypes.array,
@@ -163,11 +147,9 @@ SearchDRDBLayout.propTypes = {
   isolateLookup: PropTypes.object,
   abSuscResults: PropTypes.array,
   cpSuscResults: PropTypes.array,
-  vpSuscResults: PropTypes.array,
-  article: PropTypes.object
+  vpSuscResults: PropTypes.array
 };
 
 SearchDRDBLayout.defaultProps = {
-  formOnly: false,
   loaded: false
 };

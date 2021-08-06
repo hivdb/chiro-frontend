@@ -1,20 +1,23 @@
+import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useRxTotalNumExperiment({
-  skip,
-  articleValue,
-  variantValue,
-  mutationText
-}) {
+export default function useRxTotalNumExperiment({skip}) {
+  const {
+    params: {
+      refName,
+      varName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
   const aggregateBy = [];
-  if (articleValue) {
+  if (refName) {
     aggregateBy.push('article');
   }
-  if (variantValue) {
+  if (varName) {
     aggregateBy.push('variant');
   }
-  if (mutationText) {
+  if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
   const {
@@ -22,9 +25,9 @@ export default function useRxTotalNumExperiment({
     isPending
   } = useSuscSummary({
     aggregateBy,
-    refName: articleValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    refName,
+    varName,
+    isoAggkey,
     selectColumns: ['num_experiments'],
     skip
   });

@@ -1,20 +1,23 @@
+import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useAbSuscSummary({
-  skip,
-  articleValue,
-  variantValue,
-  mutationText
-}) {
+export default function useAbSuscSummary({skip}) {
+  const {
+    params: {
+      refName,
+      varName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
   const aggregateBy = ['antibody'];
-  if (articleValue) {
+  if (refName) {
     aggregateBy.push('article');
   }
-  if (variantValue) {
+  if (varName) {
     aggregateBy.push('variant');
   }
-  if (mutationText) {
+  if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
   const {
@@ -22,9 +25,9 @@ export default function useAbSuscSummary({
     isPending
   } = useSuscSummary({
     aggregateBy,
-    refName: articleValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    refName,
+    varName,
+    isoAggkey,
     skip
   });
   if (skip || isPending) {

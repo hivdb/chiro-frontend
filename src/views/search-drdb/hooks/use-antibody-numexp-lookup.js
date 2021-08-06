@@ -1,22 +1,25 @@
 import React from 'react';
 
+import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useAntibodyNumExperimentLookup({
-  skip,
-  articleValue,
-  variantValue,
-  mutationText
-}) {
+export default function useAntibodyNumExperimentLookup({skip}) {
   const aggregateBy = [];
-  if (articleValue) {
+  const {
+    params: {
+      refName,
+      varName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
+  if (refName) {
     aggregateBy.push('article');
   }
-  if (variantValue) {
+  if (varName) {
     aggregateBy.push('variant');
   }
-  if (mutationText) {
+  if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
   const {
@@ -24,9 +27,9 @@ export default function useAntibodyNumExperimentLookup({
     isPending: isSuscSummaryPending
   } = useSuscSummary({
     aggregateBy: ['antibody:indiv', ...aggregateBy],
-    refName: articleValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    refName,
+    varName,
+    isoAggkey,
     selectColumns: ['antibody_names', 'num_experiments'],
     skip
   });
@@ -36,9 +39,9 @@ export default function useAntibodyNumExperimentLookup({
   } = useSuscSummary({
     aggregateBy: ['rx_type', ...aggregateBy],
     rxType: 'antibody',
-    refName: articleValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    refName,
+    varName,
+    isoAggkey,
     selectColumns: ['num_experiments'],
     skip
   });

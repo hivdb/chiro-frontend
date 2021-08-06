@@ -1,22 +1,26 @@
 import React from 'react';
 
+import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useInfectedVariantNumExperimentLookup({
-  skip,
-  articleValue,
-  variantValue,
-  mutationText
-}) {
+export default function useInfectedVariantNumExperimentLookup({skip}) {
   const aggregateBy = [];
-  if (articleValue) {
+  const {
+    params: {
+      refName,
+      varName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
+    
+  if (refName) {
     aggregateBy.push('article');
   }
-  if (variantValue) {
+  if (varName) {
     aggregateBy.push('variant');
   }
-  if (mutationText) {
+  if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
   const {
@@ -24,9 +28,9 @@ export default function useInfectedVariantNumExperimentLookup({
     isPending: isSuscSummaryPending
   } = useSuscSummary({
     aggregateBy: ['infected_variant', ...aggregateBy],
-    refName: articleValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    refName,
+    varName,
+    isoAggkey,
     selectColumns: ['infected_var_name', 'num_experiments'],
     skip
   });
@@ -36,9 +40,9 @@ export default function useInfectedVariantNumExperimentLookup({
   } = useSuscSummary({
     aggregateBy: ['rx_type', ...aggregateBy],
     rxType: 'conv-plasma',
-    refName: articleValue,
-    varName: variantValue,
-    isoAggkey: mutationText,
+    refName,
+    varName,
+    isoAggkey,
     selectColumns: ['num_experiments'],
     skip
   });
