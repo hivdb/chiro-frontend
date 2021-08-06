@@ -1,12 +1,21 @@
 import useColumnDefs from './use-column-defs';
 import useRenderSuscResults from './use-render-susc-results';
 
+import {useAbSuscResults} from '../hooks';
+import LocationParams from '../hooks/location-params';
 
-export default function AbSuscResults({
-  loaded,
-  cacheKey,
-  abSuscResults
-}) {
+
+export default function AbSuscResults() {
+  const {
+    params: {
+      refName,
+      isoAggkey,
+      abNames
+    }
+  } = LocationParams.useMe();
+  const cacheKey = JSON.stringify({refName, isoAggkey, abNames});
+
+  const {suscResults, isPending} = useAbSuscResults();
 
   const indivMutIndivFoldColumnDefs = useColumnDefs({
     columns: [
@@ -84,11 +93,11 @@ export default function AbSuscResults({
   });
 
   return useRenderSuscResults({
-    loaded,
+    loaded: !isPending,
     id: 'mab-susc-results',
     cacheKey,
     hideNN: true,
-    suscResults: abSuscResults,
+    suscResults,
     indivMutIndivFoldColumnDefs,
     indivMutAggFoldColumnDefs,
     comboMutsIndivFoldColumnDefs,

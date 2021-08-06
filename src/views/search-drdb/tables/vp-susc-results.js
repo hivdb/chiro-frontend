@@ -1,12 +1,20 @@
 import useColumnDefs from './use-column-defs';
 import useRenderSuscResults from './use-render-susc-results';
 
+import {useVPSuscResults} from '../hooks';
+import LocationParams from '../hooks/location-params';
 
-export default function VPSuscResults({
-  loaded,
-  cacheKey,
-  vpSuscResults
-}) {
+
+export default function VPSuscResults() {
+  const {
+    params: {
+      refName,
+      isoAggkey,
+      vaccineName
+    }
+  } = LocationParams.useMe();
+  const cacheKey = JSON.stringify({refName, isoAggkey, vaccineName});
+  const {suscResults, isPending} = useVPSuscResults();
 
   const indivMutIndivFoldColumnDefs = useColumnDefs({
     columns: [
@@ -99,10 +107,10 @@ export default function VPSuscResults({
   });
 
   return useRenderSuscResults({
-    loaded,
+    loaded: !isPending,
     id: 'vp-susc-results',
     cacheKey,
-    suscResults: vpSuscResults,
+    suscResults,
     indivMutIndivFoldColumnDefs,
     indivMutAggFoldColumnDefs,
     comboMutsIndivFoldColumnDefs,

@@ -1,12 +1,20 @@
 import useColumnDefs from './use-column-defs';
 import useRenderSuscResults from './use-render-susc-results';
 
+import {useCPSuscResults} from '../hooks';
+import LocationParams from '../hooks/location-params';
 
-export default function CPSuscResults({
-  loaded,
-  cacheKey,
-  cpSuscResults
-}) {
+
+export default function CPSuscResults() {
+  const {
+    params: {
+      refName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
+  const cacheKey = JSON.stringify({refName, isoAggkey});
+
+  const {suscResults, isPending} = useCPSuscResults();
 
   const indivMutIndivFoldColumnDefs = useColumnDefs({
     columns: [
@@ -95,10 +103,10 @@ export default function CPSuscResults({
   });
 
   return useRenderSuscResults({
-    loaded,
+    loaded: !isPending,
     id: 'cp-susc-results',
     cacheKey,
-    suscResults: cpSuscResults,
+    suscResults,
     indivMutIndivFoldColumnDefs,
     indivMutAggFoldColumnDefs,
     comboMutsIndivFoldColumnDefs,
