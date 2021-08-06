@@ -14,10 +14,8 @@ import style from './style.module.scss';
 
 
 SearchDRDBStatHeader.propTypes = {
-  infectedVariants: PropTypes.array,
   isolateAggs: PropTypes.array,
   loaded: PropTypes.bool.isRequired,
-  variants: PropTypes.array,
   isolates: PropTypes.array
 };
 
@@ -26,10 +24,8 @@ SearchDRDBStatHeader.defaultProps = {
 };
 
 export default function SearchDRDBStatHeader({
-  infectedVariants,
   isolateAggs,
   loaded,
-  variants,
   isolates
 }) {
 
@@ -44,8 +40,6 @@ export default function SearchDRDBStatHeader({
     <Grid.Row>
       <SearchBox
        loaded={loaded}
-       infectedVariants={infectedVariants}
-       variants={variants}
        isolateAggs={isolateAggs}>
         {({
           articleDropdown,
@@ -78,7 +72,6 @@ export default function SearchDRDBStatHeader({
                   {refName ? <ArticleCard refName={refName} /> : null}
                   <PercentBars
                    loaded={loaded}
-                   variants={variants}
                    isolateAggs={isolateAggs}
                    isolates={isolates} />
                 </>

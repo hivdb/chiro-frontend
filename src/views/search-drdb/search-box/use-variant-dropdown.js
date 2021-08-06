@@ -7,6 +7,7 @@ import {
   useVariantTotalNumExp
 } from '../hooks';
 import LocationParams from '../hooks/location-params';
+import Variants from '../hooks/variants';
 
 import FragmentWithoutWarning from './fragment-without-warning';
 
@@ -18,9 +19,23 @@ const EMPTY_TEXT = 'Select item';
 
 export default function useVariantDropdown({
   loaded,
-  variants,
   isolateAggs
 }) {
+
+  const {
+    params: {
+      varName: paramVarName,
+      isoAggkey: paramIsoAggKey,
+      formOnly
+    },
+    onChange
+  } = LocationParams.useMe();
+
+  const {
+    variants,
+    isPending: isVarsPending
+  } = Variants.useMe();
+
   const commonParams = {
     skip: !loaded
   };
@@ -38,17 +53,9 @@ export default function useVariantDropdown({
     ...commonParams
   });
 
-  const {
-    params: {
-      varName: paramVarName,
-      isoAggkey: paramIsoAggKey,
-      formOnly
-    },
-    onChange
-  } = LocationParams.useMe();
-
   const isPending = (
     !loaded ||
+    isVarsPending ||
     isVarTotalNumExpPending ||
     isVarNumExpLookupPending ||
     isIsoAggNumExpLookupPending

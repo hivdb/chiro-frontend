@@ -7,6 +7,8 @@ import {
   useIsolateNumExpLookup
 } from '../../hooks';
 
+import Variants from '../../hooks/variants';
+
 import PercentBar from '../../../../components/percent-bar';
 
 import prepareItems from './prepare-items';
@@ -15,7 +17,6 @@ import VariantItem from './item';
 
 VariantPercentBar.propTypes = {
   loaded: PropTypes.bool.isRequired,
-  variants: PropTypes.array,
   isolateAggs: PropTypes.array,
   isolates: PropTypes.array
 };
@@ -23,10 +24,14 @@ VariantPercentBar.propTypes = {
 
 export default function VariantPercentBar({
   loaded,
-  variants,
   isolateAggs,
   isolates
 }) {
+  const {
+    variants,
+    isPending: isVarListPending
+  } = Variants.useMe();
+
   const [varLookup, isVarPending] = useVariantNumExpLookup({
     skip: !loaded
   });
@@ -39,7 +44,13 @@ export default function VariantPercentBar({
     skip: !loaded
   });
 
-  const isPending = !loaded || isVarPending || isIsoAggPending || isIsoPending;
+  const isPending = (
+    !loaded ||
+    isVarListPending ||
+    isVarPending ||
+    isIsoAggPending ||
+    isIsoPending
+  );
 
   const presentVariants = React.useMemo(
     () => {

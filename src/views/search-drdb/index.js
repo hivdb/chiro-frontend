@@ -5,8 +5,6 @@ import GitHubCorner from '../../components/github-corner';
 import {useCleanQuery} from './hooks/location-params';
 import {
   useProviders,
-  useInfectedVariants,
-  useVariants,
   useIsolates,
   useIsolateAggs,
   useAbSuscResults,
@@ -18,14 +16,6 @@ import SearchDRDBLayout from './layout';
 
 function SearchDRDB(props) {
 
-  const {
-    infectedVariants,
-    isPending: isInfectedVariantPending
-  } = useInfectedVariants();
-  const {
-    variants,
-    isPending: isVariantPending
-  } = useVariants();
   const {
     isolateLookup,
     isPending: isIsolatePending
@@ -49,15 +39,11 @@ function SearchDRDB(props) {
   } = useVPSuscResults();
 
   const searchBoxLoaded = (
-    !isInfectedVariantPending &&
-    !isVariantPending &&
     !isIsolatePending &&
     !isIsolateAggsPending
   );
 
   const resultLoaded = (
-    !isInfectedVariantPending &&
-    !isVariantPending &&
     !isIsolatePending &&
     !isAbResultPending &&
     !isCPPending &&
@@ -71,8 +57,6 @@ function SearchDRDB(props) {
     return <>
       <SearchDRDBLayout
        loaded={resultLoaded}
-       infectedVariants={infectedVariants}
-       variants={variants}
        isolateAggs={isolateAggs}
        isolateLookup={isolateLookup}
        abSuscResults={abSuscResults}

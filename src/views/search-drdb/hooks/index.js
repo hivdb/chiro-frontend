@@ -1,7 +1,5 @@
 import useConfig from './use-config';
 import useProviders from './use-providers';
-import useInfectedVariants from './use-infected-variants';
-import useVariants from './use-variants';
 import useIsolates, {compareMutations} from './use-isolates';
 import useIsolateAggs from './use-isolate-aggs';
 import useLookup from './use-lookup';
@@ -31,8 +29,6 @@ import useVariantTotalNumExp from './use-variant-total-numexp';
 export {
   useConfig,
   useProviders,
-  useInfectedVariants,
-  useVariants,
   useIsolates,
   useIsolateAggs,
   useAbSuscResults,

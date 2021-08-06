@@ -12,6 +12,7 @@ import {
 
 import Antibodies from '../hooks/antibodies';
 import Vaccines from '../hooks/vaccines';
+import InfectedVariants from '../hooks/infected-variants';
 import LocationParams from '../hooks/location-params';
 
 import FragmentWithoutWarning from './fragment-without-warning';
@@ -40,10 +41,7 @@ function rxSearch(options, query) {
 }
 
 
-export default function useRxDropdown({
-  loaded,
-  infectedVariants
-}) {
+export default function useRxDropdown({loaded}) {
   const [includeAll, setIncludeAll] = React.useState(false);
   const onSearchChange = React.useCallback(
     (event, {searchQuery}) => {
@@ -61,6 +59,11 @@ export default function useRxDropdown({
     vaccines,
     isPending: isVaccinesPending
   } = Vaccines.useMe();
+
+  const {
+    infectedVariants,
+    isPending: isInfectedVarsPending
+  } = InfectedVariants.useMe();
 
   const commonParams = {
     skip: !loaded
@@ -97,6 +100,7 @@ export default function useRxDropdown({
     !loaded ||
     isAntibodiesPending ||
     isVaccinesPending ||
+    isInfectedVarsPending ||
     isRxTotalNumExpPending ||
     isAbNumExpPending ||
     isVaccNumExpPending ||

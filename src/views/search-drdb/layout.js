@@ -21,10 +21,6 @@ import style from './style.module.scss';
 
 SearchDRDBLayout.propTypes = {
   loaded: PropTypes.bool.isRequired,
-  antibodies: PropTypes.array,
-  antibodyLookup: PropTypes.object,
-  infectedVariants: PropTypes.array,
-  variants: PropTypes.array,
   isolateAggs: PropTypes.array,
   isolateLookup: PropTypes.object,
   abSuscResults: PropTypes.array,
@@ -38,8 +34,6 @@ SearchDRDBLayout.defaultProps = {
 
 export default function SearchDRDBLayout({
   loaded,
-  infectedVariants,
-  variants,
   isolateAggs,
   isolateLookup,
   abSuscResults,
@@ -82,11 +76,9 @@ export default function SearchDRDBLayout({
 
   return <Grid stackable className={style['search']}>
     <DRDBStatHeader {...{
-      infectedVariants,
       isolateAggs,
       isolates: Object.values(isolateLookup),
-      loaded,
-      variants
+      loaded
     }} />
     {loaded ? null : <FixedLoader />}
     {displayAbTables ?

@@ -2,8 +2,6 @@ import React from 'react';
 
 import {
   useProviders,
-  useInfectedVariants,
-  useVariants,
   useIsolateAggs
 } from '../search-drdb/hooks';
 import SearchBox from '../search-drdb/search-box';
@@ -15,21 +13,11 @@ import style from './style.module.scss';
 export default function SusceptibilityData() {
   const ComboProvider = useProviders();
   const {
-    infectedVariants,
-    isPending: isCPPending
-  } = useInfectedVariants();
-  const {
-    variants,
-    isPending: isVariantPending
-  } = useVariants();
-  const {
     isolateAggs,
     isPending: isIsolateAggPending
   } = useIsolateAggs();
 
   const searchboxLoaded = (
-    !isCPPending &&
-    !isVariantPending &&
     !isIsolateAggPending
   );
 
@@ -40,8 +28,6 @@ export default function SusceptibilityData() {
       <ComboProvider>
         <SearchBox
          loaded={searchboxLoaded}
-         infectedVariants={infectedVariants || []}
-         variants={variants || []}
          isolateAggs={isolateAggs || []}>
           {({
             articleDropdown,

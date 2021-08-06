@@ -1,6 +1,6 @@
 import React from 'react';
 import useQuery from './use-query';
-import useVariants from './use-variants';
+import Variants from './variants';
 
 
 function countSpikeMutations(mutations) {
@@ -176,7 +176,7 @@ export default function useIsolates({
   const {
     variants,
     isPending: isVarsPending
-  } = useVariants({skip: skip || isPending});
+  } = Variants.useMe();
 
   const isolates = React.useMemo(
     () => {

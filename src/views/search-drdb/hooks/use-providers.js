@@ -3,13 +3,17 @@ import React from 'react';
 import Articles from './articles';
 import Antibodies from './antibodies';
 import Vaccines from './vaccines';
+import InfectedVariants from './infected-variants';
+import Variants from './variants';
 import LocationParams from './location-params';
 
 const providers = {
   locationParams: LocationParams.Provider,
   articles: Articles.Provider,
   antibodies: Antibodies.Provider,
-  vaccines: Vaccines.Provider
+  vaccines: Vaccines.Provider,
+  infectedVariants: InfectedVariants.Provider,
+  variants: Variants.Provider
 };
 
 
@@ -18,7 +22,9 @@ const defaultProviderNames = [
   'locationParams',
   'articles',
   'antibodies',
-  'vaccines'
+  'vaccines',
+  'infectedVariants',
+  'variants'
 ];
 
 
