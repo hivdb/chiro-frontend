@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 import {Grid, Header/*, Loader*/} from 'semantic-ui-react';
 import FixedLoader from 'sierra-frontend/dist/components/fixed-loader';
 
-import {H1, H2} from 'sierra-frontend/dist/components/heading-tags';
-import StatHeader from '../../components/stat-header';
-import ArticleInfo from '../../components/article-info';
+import {H2} from 'sierra-frontend/dist/components/heading-tags';
 import BackToTop from '../../components/back-to-top';
 import setTitle from '../../utils/set-title';
 
-import SearchBox from './search-box';
+import DRDBStatHeader from './stat-header';
 import AbSuscResults from './tables/ab-susc-results';
 import VPSuscResults from './tables/vp-susc-results';
 import CPSuscResults from './tables/cp-susc-results';
@@ -17,7 +15,6 @@ import CPSuscResults from './tables/cp-susc-results';
 import AbSuscSummary from './summary/ab-susc-summary';
 
 import style from './style.module.scss';
-
 
 
 export default function SearchDRDBLayout({
@@ -68,59 +65,25 @@ export default function SearchDRDBLayout({
   );
 
   return <Grid stackable className={style['search']}>
-    <Grid.Row>
-      <SearchBox
-       loaded={loaded}
-       formOnly={formOnly}
-       articleValue={refName}
-       articles={articles}
-       antibodyValue={abNames}
-       antibodies={antibodies}
-       vaccineValue={vaccineName}
-       vaccines={vaccines}
-       infectedVariants={infectedVariants}
-       convPlasmaValue={convPlasmaValue}
-       variantValue={varName}
-       variants={variants}
-       isolateAggs={isolateAggs}
-       mutationText={mutationText}
-       onChange={onChange}>
-        {({
-          articleDropdown,
-          rxDropdown,
-          variantDropdown
-        }) => (
-          <StatHeader>
-            {[
-              {
-                className: style['search-box'],
-                width: 4,
-                cells: [
-                  {label: 'Reference', value: articleDropdown},
-                  {label: 'Plasma / Monoclonal antibody', value: rxDropdown},
-                  {label: 'Variant', value: variantDropdown}
-                ]
-              },
-              {
-                width: 12,
-                className: style['search-summary'],
-                description: formOnly ? <>
-                  <Header as={H1} disableAnchor>
-                    Resistance Database Search
-                  </Header>
-                  <p>
-                    Select an option from left drop down
-                    lists to start searching.
-                  </p>
-                </> : <>
-                  {article ? <ArticleInfo {...article} /> : null}
-                </>
-              }
-            ]}
-          </StatHeader>
-        )}
-      </SearchBox>
-    </Grid.Row>
+    <DRDBStatHeader {...{
+      abNames,
+      antibodies,
+      article,
+      articles,
+      convPlasmaValue,
+      formOnly,
+      infectedVariants,
+      isolateAggs,
+      isolates: Object.values(isolateLookup),
+      loaded,
+      mutationText,
+      onChange,
+      refName,
+      vaccineName,
+      vaccines,
+      varName,
+      variants
+    }} />
     {loaded ? null : <FixedLoader />}
     {displayAbTables ?
       <Grid.Row centered>

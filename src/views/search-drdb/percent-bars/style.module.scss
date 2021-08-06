@@ -1,0 +1,60 @@
+@import '../../../styles/colors';
+
+.percent-bar-item_variant {
+
+  &::before, &::after {
+    background-color: $main-color;
+    filter: brightness(calc(var(--index) / 4 + .8));
+  }
+
+  &:global(__cta) {
+    color: $main-color;
+    filter: brightness(.4);
+  }
+
+  @for $i from 0 through 2 {
+    &[data-index="#{$i}"] > &:global(__cta) {
+      color: white;
+      filter: none;
+    }
+  }
+
+}
+
+.percent-bar-desc, .active-desc {
+  width: max-content;
+  .title {
+    padding-bottom: .3rem;
+    border-bottom: 1px solid $dividing-line;
+    margin-bottom: .5rem;
+    font-size: 1.2rem;
+    font-family: "Merriweather","Georgia","Cambria","Times New Roman","Times",serif;
+    .title-extra {
+      font-size: 1rem;
+      display: inline-block;
+      margin-left: .3rem;
+      font-weight: 400;
+      opacity: .7;
+    }
+  }
+
+  p, ul {
+    margin-top: .4rem;
+    margin-bottom: 0;
+    &:last-child {
+      margin-bottom: .4rem;
+    }
+    line-height: 1.4em;
+  }
+
+  ul {
+    padding-left: 1.5rem;
+  }
+
+}
+
+section.stat-section {
+  .percent-bars {
+    margin-top: .5rem;
+  }
+}

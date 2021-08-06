@@ -1,0 +1,33 @@
+@import '../../../styles/colors';
+
+.article-card {
+  background-color: rgba(0, 0, 0, .05);
+  padding: 1rem;
+
+  > .journal-year {
+    color: rgba(0, 0, 0, .4);
+
+  }
+
+  > .title {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    font-size: 1.3rem;
+    line-height: 1.5em;
+    font-family: "Merriweather","Georgia","Cambria","Times New Roman","Times",serif;
+  }
+
+  > ul.extids {
+    margin-top: 1rem;
+    margin-bottom: 0;
+    list-style-type: none;
+    padding-left: 0;
+    > li.extid {
+      display: inline-block;
+      &:not(:first-child) {
+        padding-left: 1rem;
+      }
+    }
+  }
+
+}

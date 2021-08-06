@@ -42,6 +42,44 @@ function cleanQuery(query) {
 }
 
 
+export function buildQuery(
+  action,
+  value, 
+  baseQuery = {}
+) {
+  let query = {...baseQuery};
+  if (typeof action === 'string') {
+    query[action] = value;
+  }
+  else {
+    query = {...query, ...action};
+  }
+
+  delete query.form_only;
+
+  if (action === 'vaccine') {
+    delete query.antibodies;
+    delete query.cp;
+  }
+  else if (action === 'antibodies') {
+    delete query.vaccine;
+    delete query.cp;
+  }
+  else if (action === 'cp') {
+    delete query.antibodies;
+    delete query.vaccine;
+  }
+  else if (action === 'variant') {
+    delete query.mutations;
+  }
+  else if (action === 'mutations') {
+    delete query.variant;
+  }
+
+  return cleanQuery(query);
+}
+
+
 export default function useLocationParams() {
   const {router, match} = useRouter();
   const {
@@ -75,39 +113,7 @@ export default function useLocationParams() {
 
   const onChange = React.useCallback(
     (action, value, clearAction = false) => {
-      let query = {...loc.query};
-      if (clearAction) {
-        query = {};
-      }
-      if (typeof action === 'string') {
-        query[action] = value;
-      }
-      else {
-        query = {...query, ...action};
-      }
-
-      delete query.form_only;
-
-      if (action === 'vaccine') {
-        delete query.antibodies;
-        delete query.cp;
-      }
-      else if (action === 'antibodies') {
-        delete query.vaccine;
-        delete query.cp;
-      }
-      else if (action === 'cp') {
-        delete query.antibodies;
-        delete query.vaccine;
-      }
-      else if (action === 'variant') {
-        delete query.mutations;
-      }
-      else if (action === 'mutations') {
-        delete query.variant;
-      }
-
-      query = cleanQuery(query);
+      const query = buildQuery(action, value, clearAction ? {} : loc.query);
 
       router.push({
         ...loc,

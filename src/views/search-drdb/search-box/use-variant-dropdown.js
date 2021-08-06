@@ -90,6 +90,11 @@ export default function useVariantDropdown({
           .sort((a, b) => b.numExp - a.numExp);
 
         const displayIsolateAggs = isolateAggs
+          .filter(
+            ({varName, isoType}) => (
+              varName === null || isoType === 'indiv-mut'
+            )
+          )
           .map(
             ({isoAggkey, isoAggDisplay}) => ({
               isoAggkey,

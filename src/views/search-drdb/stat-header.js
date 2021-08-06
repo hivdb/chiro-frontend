@@ -4,7 +4,8 @@ import {Grid, Header} from 'semantic-ui-react';
 
 import {H1} from 'sierra-frontend/dist/components/heading-tags';
 import StatHeader from '../../components/stat-header';
-import ArticleInfo from '../../components/article-info';
+import ArticleCard from './article-card';
+import PercentBars from './percent-bars';
 
 import SearchBox from './search-box';
 
@@ -27,7 +28,8 @@ function SearchDRDBStatHeader({
   vaccineName,
   vaccines,
   varName,
-  variants
+  variants,
+  isolates
 }) {
 
   return (
@@ -51,8 +53,7 @@ function SearchDRDBStatHeader({
         {({
           articleDropdown,
           rxDropdown,
-          variantDropdown,
-          mutationsInput
+          variantDropdown
         }) => (
           <StatHeader>
             {[
@@ -77,7 +78,18 @@ function SearchDRDBStatHeader({
                     lists to start searching.
                   </p>
                 </> : <>
-                  {article ? <ArticleInfo {...article} /> : null}
+                  {article ? <ArticleCard article={article} /> : null}
+                  <PercentBars
+                   loaded={loaded}
+                   articleValue={refName}
+                   antibodyValue={abNames}
+                   vaccineValue={vaccineName}
+                   convPlasmaValue={convPlasmaValue}
+                   variantValue={varName}
+                   mutationText={mutationText}
+                   variants={variants}
+                   isolateAggs={isolateAggs}
+                   isolates={isolates} />
                 </>
               }
             ]}
@@ -108,7 +120,8 @@ SearchDRDBStatHeader.propTypes = {
   vaccineName: PropTypes.string,
   vaccines: PropTypes.array,
   varName: PropTypes.string,
-  variants: PropTypes.array
+  variants: PropTypes.array,
+  isolates: PropTypes.array
 };
 
 SearchDRDBStatHeader.defaultProps = {

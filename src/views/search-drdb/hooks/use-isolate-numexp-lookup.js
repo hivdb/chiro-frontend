@@ -2,7 +2,7 @@ import React from 'react';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useIsolateAggNumExpLookup({
+export default function useIsolateNumExpLookup({
   skip,
   articleValue,
   antibodyValue,
@@ -51,13 +51,18 @@ export default function useIsolateAggNumExpLookup({
     suscSummary,
     isPending
   } = useSuscSummary({
-    aggregateBy: ['isolate_agg', ...aggregateBy],
+    aggregateBy: ['isolate', ...aggregateBy],
     refName: articleValue,
     rxType,
     antibodyNames: antibodyValue,
     vaccineName: vaccineValue,
     infectedVarName: convPlasmaValue,
-    selectColumns: ['iso_aggkey', 'num_experiments'],
+    selectColumns: [
+      'iso_name',
+      'potency_type',
+      'potency_unit',
+      'num_experiments'
+    ],
     skip
   });
 
@@ -67,8 +72,8 @@ export default function useIsolateAggNumExpLookup({
         return {};
       }
       const lookup = {};
-      for (const one of suscSummary) {
-        lookup[one.isoAggkey] = one.numExperiments;
+      for (const {isoName, numExperiments} of suscSummary) {
+        lookup[isoName] = numExperiments;
       }
       return lookup;
     },

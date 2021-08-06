@@ -48,11 +48,10 @@ export default function useIsolateAggs({
 } = {}) {
 
   const sql = `
-    SELECT iso_aggkey, iso_agg_display, iso_type
+    SELECT iso_aggkey, iso_agg_display, var_name, iso_type
     FROM susc_summary
     WHERE
-      aggregate_by = 'isolate_agg' AND
-      (var_name IS NULL OR iso_type = 'indiv-mut')
+      aggregate_by = 'isolate_agg'
   `;
 
   const {

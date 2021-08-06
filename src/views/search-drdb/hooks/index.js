@@ -1,4 +1,6 @@
-import useLocationParams from './use-location-params';
+import useLocationParams, {
+  buildQuery as buildLocationQuery
+} from './use-location-params';
 import useConfig from './use-config';
 import useArticles from './use-articles';
 import useAntibodies from './use-antibodies';
@@ -28,10 +30,12 @@ import useInfectedVariantNumExpLookup
 import useRxTotalNumExp from './use-rx-total-numexp';
 import useVariantNumExpLookup from './use-variant-numexp-lookup';
 import useIsolateAggNumExpLookup from './use-isolate-agg-numexp-lookup';
+import useIsolateNumExpLookup from './use-isolate-numexp-lookup';
 import useVariantTotalNumExp from './use-variant-total-numexp';
 
 export {
   useLocationParams,
+  buildLocationQuery,
   useConfig,
   useArticles,
   useAntibodies,
@@ -59,5 +63,6 @@ export {
   useRxTotalNumExp,
   useVariantNumExpLookup,
   useIsolateAggNumExpLookup,
+  useIsolateNumExpLookup,
   useVariantTotalNumExp
 };

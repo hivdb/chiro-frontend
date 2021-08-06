@@ -10,15 +10,13 @@ export function getSuscResultUniqKey(suscResult) {
     refName,
     rxName,
     controlIsoName,
-    isoName,
-    ordinalNumber
+    isoName
   } = suscResult;
   return [
     refName,
     rxName,
     controlIsoName,
-    isoName,
-    ordinalNumber
+    isoName
   ].join('$#\u0008#$');
 }
 
@@ -153,7 +151,6 @@ function usePrepareQuery({
           S.rx_name,
           S.control_iso_name,
           S.iso_name,
-          S.ordinal_number,
           S.section,
           S.potency_type,
           S.control_potency,

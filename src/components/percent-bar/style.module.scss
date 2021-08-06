@@ -1,0 +1,97 @@
+@import '../../styles/colors';
+
+$transition-offset: 4px;
+
+ul.percent-bar {
+  width: 100%;
+  padding-left: 0;
+  margin-top: $transition-offset;
+  margin-bottom: 0;
+  list-style-type: none;
+  position: relative;
+
+  li.percent-bar-item {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    font-size: .9rem;
+    white-space: nowrap;
+    text-overflow: clip;
+    // --available-pcnt: (.03 - var(--percent));
+    // text-indent: calc(#{"max"}(0, var(--available-pcnt)) / var(--available-pcnt) * 200%);
+    width: calc(100% * var(--percent));
+    &:not(:first-child) {
+      border-left: 2px solid white;
+    }
+    &::before {
+      transition: transform 100ms ease-in-out;
+      content: '';
+      position: absolute;
+      z-index: -1;
+      display: block;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .cta {
+      transition: transform 100ms ease-in-out;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: .25rem;
+      display: block;
+      border: none;
+      background-color: none;
+    }
+
+    .desc {
+      font-size: 1rem;
+      white-space: normal;
+      position: absolute;
+      z-index: 1000;
+      background-color: white;
+      border: 1px solid $dividing-line;
+      border-radius: .2rem;
+      box-shadow: 1px 1px 2px 1px rgba(0,0,0,.3);
+      padding: 1rem;
+      display: none;
+      transform: translate(
+        calc(var(--offset-x) + .5rem),
+        calc(var(--offset-y) + 1rem)
+      );
+    }
+
+    &:hover:not([data-disable-hover-desc="true"]) .desc {
+      display: block;
+    }
+
+    &[data-has-cta="true"] {
+      &::after {
+        transition: width 350ms ease-in-out;
+        content: '';
+        position: absolute;
+        z-index: -1;
+        display: block;
+        width: 0;
+        left: 0;
+        bottom: 0;
+        height: 2px;
+      }
+      &:hover, &[data-is-active="true"] {
+        &::before, .cta {
+          transform: translate(0, - $transition-offset);
+        }
+        &::after {
+          width: 100%;
+        }
+      }
+      &[data-is-active="true"] .cta {
+        pointer-events: none;
+        cursor: default;
+      }
+    }
+
+  }
+
+}

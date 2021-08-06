@@ -11,7 +11,7 @@ function initials(name) {
 }
 
 
-function etInt(authors) {
+export function etInt(authors) {
   /* Sergei A. Grando and Jeffrey D. Bernhard. "First Author, Second Author,
    * et Int, and Last Author": A Proposed Citation System for Biomedical
    * Papers. Science Editor 26(4):122–123, July–August 2003.
@@ -33,7 +33,7 @@ function etInt(authors) {
 }
 
 
-function normTitle(text) {
+export function normTitle(text) {
   if (text) {
     return text.trim().replace(/\.$/, '');
   }

@@ -68,26 +68,6 @@ ul.result-col-popup {
       }
 
     }
-    .search-summary {
-      font-size: 1.1rem;
-      line-height: 1.5em;
-      ul {
-        padding-left: 1.2rem;
-        > li {
-          > a.label {
-            display: inline-block;
-            font-weight: 700;
-            &::after {
-              content: ':';
-            }
-            min-width: 16rem;
-          }
-          > ul > li > a.label {
-            min-width: 16rem - 1.2rem;
-          }
-        }
-      }
-    }
     @media only screen and (max-width: 1000px) {
       .search-box[class*="four wide"]:global(.column),
       .search-summary[class*="twelve wide"]:global(.column) {
