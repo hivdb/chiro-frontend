@@ -1,6 +1,6 @@
 import useConfig from './use-config';
+import useProviders from './use-providers';
 import useArticles from './use-articles';
-import useAntibodies from './use-antibodies';
 import useVaccines from './use-vaccines';
 import useInfectedVariants from './use-infected-variants';
 import useVariants from './use-variants';
@@ -32,8 +32,8 @@ import useVariantTotalNumExp from './use-variant-total-numexp';
 
 export {
   useConfig,
+  useProviders,
   useArticles,
-  useAntibodies,
   useVaccines,
   useInfectedVariants,
   useVariants,

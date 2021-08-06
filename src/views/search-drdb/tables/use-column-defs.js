@@ -19,6 +19,8 @@ import {
   useCompareSuscResultsByAntibodies
 } from '../hooks';
 
+import Antibodies from '../hooks/antibodies';
+
 
 export function comparePotency(potA, potB) {
   if (potA.potencyType !== potB.potencyType) {
@@ -174,11 +176,15 @@ function buildColDefs({
 
 export default function useColumnDefs({
   articleLookup,
-  antibodyLookup,
   isolateLookup,
   columns,
   labels
 }) {
+  const {
+    antibodyLookup,
+    isPending: isAbLookupPending
+  } = Antibodies.useMe();
+
   const compareByAntibodies = (
     useCompareSuscResultsByAntibodies(antibodyLookup)
   );
@@ -192,8 +198,10 @@ export default function useColumnDefs({
     useCompareSuscResultsByInfectedIsolate(isolateLookup)
   );
 
+  const isPending = isAbLookupPending;
+
   return React.useMemo(
-    () => buildColDefs({
+    () => isPending ? [] : buildColDefs({
       articleLookup,
       antibodyLookup,
       isolateLookup,
@@ -205,6 +213,7 @@ export default function useColumnDefs({
       labels
     }),
     [
+      isPending,
       articleLookup,
       antibodyLookup,
       isolateLookup,

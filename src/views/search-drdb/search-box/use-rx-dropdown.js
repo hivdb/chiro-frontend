@@ -10,6 +10,7 @@ import {
   useInfectedVariantNumExpLookup
 } from '../hooks';
 
+import Antibodies from '../hooks/antibodies';
 import LocationParams from '../hooks/location-params';
 
 import FragmentWithoutWarning from './fragment-without-warning';
@@ -41,7 +42,6 @@ function rxSearch(options, query) {
 export default function useRxDropdown({
   loaded,
   vaccines,
-  antibodies,
   infectedVariants
 }) {
   const [includeAll, setIncludeAll] = React.useState(false);
@@ -51,6 +51,12 @@ export default function useRxDropdown({
     },
     [setIncludeAll]
   );
+
+  const {
+    antibodies,
+    isPending: isAntibodiesPending
+  } = Antibodies.useMe();
+
   const commonParams = {
     skip: !loaded
   };
@@ -82,15 +88,18 @@ export default function useRxDropdown({
     onChange
   } = LocationParams.useMe();
 
+  const isPending = (
+    !loaded ||
+    isAntibodiesPending ||
+    isRxTotalNumExpPending ||
+    isAbNumExpPending ||
+    isVaccNumExpPending ||
+    isInfectedVariantNumExpPending
+  );
+
   const options = React.useMemo(
     () => {
-      if (
-        !loaded ||
-        isRxTotalNumExpPending ||
-        isAbNumExpPending ||
-        isVaccNumExpPending ||
-        isInfectedVariantNumExpPending
-      ) {
+      if (isPending) {
         return [
           {
             key: 'any',
@@ -279,7 +288,7 @@ export default function useRxDropdown({
       }
     },
     [
-      loaded,
+      isPending,
       includeAll,
       vaccines,
       antibodies,
@@ -289,13 +298,9 @@ export default function useRxDropdown({
       paramAbNames,
       formOnly,
       abNumExpLookup,
-      isAbNumExpPending,
       vaccNumExpLookup,
-      isVaccNumExpPending,
       infectedVariantNumExpLookup,
-      isInfectedVariantNumExpPending,
-      rxTotalNumExp,
-      isRxTotalNumExpPending
+      rxTotalNumExp
     ]
   );
   const handleChange = React.useCallback(

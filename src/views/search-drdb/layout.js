@@ -23,8 +23,6 @@ export default function SearchDRDBLayout({
   loaded,
   articles,
   articleLookup,
-  antibodies,
-  antibodyLookup,
   vaccines,
   infectedVariants,
   variants,
@@ -70,7 +68,6 @@ export default function SearchDRDBLayout({
 
   return <Grid stackable className={style['search']}>
     <DRDBStatHeader {...{
-      antibodies,
       articles,
       infectedVariants,
       isolateAggs,
@@ -88,13 +85,11 @@ export default function SearchDRDBLayout({
           </Header>
           <AbSuscSummary
            loaded={loaded}
-           antibodyLookup={antibodyLookup}
            isolateAggs={isolateAggs} />
           <AbSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, isoAggkey, abNames})}
            articleLookup={articleLookup}
-           antibodyLookup={antibodyLookup}
            isolateLookup={isolateLookup}
            abSuscResults={abSuscResults} />
         </Grid.Column>

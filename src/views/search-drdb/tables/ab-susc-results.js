@@ -6,14 +6,12 @@ export default function AbSuscResults({
   loaded,
   cacheKey,
   articleLookup,
-  antibodyLookup,
   isolateLookup,
   abSuscResults
 }) {
 
   const indivMutIndivFoldColumnDefs = useColumnDefs({
     articleLookup,
-    antibodyLookup,
     isolateLookup,
     columns: [
       'refName',
@@ -34,7 +32,6 @@ export default function AbSuscResults({
   });
   const indivMutAggFoldColumnDefs = useColumnDefs({
     articleLookup,
-    antibodyLookup,
     isolateLookup,
     columns: [
       'refName',
@@ -56,7 +53,6 @@ export default function AbSuscResults({
 
   const comboMutsIndivFoldColumnDefs = useColumnDefs({
     articleLookup,
-    antibodyLookup,
     isolateLookup,
     columns: [
       'refName',
@@ -77,7 +73,6 @@ export default function AbSuscResults({
 
   const comboMutsAggFoldColumnDefs = useColumnDefs({
     articleLookup,
-    antibodyLookup,
     isolateLookup,
     columns: [
       'refName',

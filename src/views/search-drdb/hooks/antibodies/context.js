@@ -1,17 +1,8 @@
 import React from 'react';
-import maxBy from 'lodash/maxBy';
-import useQuery from './use-query';
+import PropTypes from 'prop-types';
+import useQuery from '../use-query';
 
-
-export function compareAntibodyLists(abListA, abListB) {
-  const priorityA = maxBy(abListA, 'priority').priority;
-  const priorityB = maxBy(abListB, 'priority').priority;
-  let cmp = priorityA - priorityB;
-  if (cmp) { return cmp; }
-  cmp = abListA.length - abListB.length;
-  return cmp;
-}
-
+const AntibodiesContext = React.createContext();
 
 function useJoinSynonyms({
   antibodyLookup,
@@ -60,13 +51,10 @@ function useJoinSynonyms({
 }
 
 
-function usePrepareQuery({skip}) {
+function usePrepareQuery() {
   return React.useMemo(
-    () => {
-      let sql;
-      if (!skip) {
-
-        sql = `
+    () => ({
+      sql: `
           SELECT
             A.ab_name,
             abbreviation_name,
@@ -84,27 +72,26 @@ function usePrepareQuery({skip}) {
               A.ab_name = S.antibody_names
           )
           ORDER BY priority, A.ab_name
-        `;
-      }
-      return {sql};
-    },
-    [skip]
+        `
+    }),
+    []
   );
 }
 
 
-export default function useAntibodies({
-  join = ['synonyms'],
-  skip = false
-} = {}) {
-  const {sql} = usePrepareQuery({skip});
+AntibodiesProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
+function AntibodiesProvider({children}) {
+  const {sql} = usePrepareQuery();
   const {
     payload: antibodies,
     isPending
-  } = useQuery({sql, skip});
+  } = useQuery({sql});
 
   const antibodyLookup = React.useMemo(
-    () => skip || isPending || !antibodies ? {} : antibodies.reduce(
+    () => isPending || !antibodies ? {} : antibodies.reduce(
       (acc, ab) => {
         acc[ab.abName] = ab;
         ab.visibility = ab.visibility === 1;
@@ -112,17 +99,32 @@ export default function useAntibodies({
       },
       {}
     ),
-    [skip, isPending, antibodies]
+    [isPending, antibodies]
   );
 
   const {isPending: isSynonymPending} = useJoinSynonyms({
     antibodyLookup,
-    skip: skip || isPending || !join.includes('synonyms')
+    skip: isPending
   });
 
-  return {
+  const contextValue = {
     antibodies,
     antibodyLookup,
     isPending: isPending || isSynonymPending
   };
+
+  return <AntibodiesContext.Provider value={contextValue}>
+    {children}
+  </AntibodiesContext.Provider>;
 }
+
+function useAntibodies() {
+  return React.useContext(AntibodiesContext);
+}
+
+const Antibodies = {
+  Provider: AntibodiesProvider,
+  useMe: useAntibodies
+};
+
+export default Antibodies;

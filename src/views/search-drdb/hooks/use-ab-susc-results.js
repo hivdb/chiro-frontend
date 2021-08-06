@@ -1,7 +1,7 @@
 import React from 'react';
+import Antibodies from './antibodies';
 import LocationParams from './location-params';
 import useSuscResults from './use-susc-results';
-import useAntibodies from './use-antibodies';
 import {useCompareSuscResultsByAntibodies} from './use-compare-susc-results';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
@@ -94,7 +94,7 @@ export default function useAntibodySuscResults() {
   const {
     antibodyLookup,
     isPending: isAbLookupPending
-  } = useAntibodies({skip});
+  } = Antibodies.useMe();
 
   const addCompareSuscResults = useCompareSuscResultsByAntibodies(
     antibodyLookup

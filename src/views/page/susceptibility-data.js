@@ -2,8 +2,8 @@ import React from 'react';
 import {useRouter} from 'found';
 
 import {
+  useProviders,
   useArticles,
-  useAntibodies,
   useVaccines,
   useInfectedVariants,
   useVariants,
@@ -17,14 +17,11 @@ import style from './style.module.scss';
 
 export default function SusceptibilityData() {
   const {router} = useRouter();
+  const ComboProvider = useProviders();
   const {
     articles,
     isPending: isRefNameListPending
   } = useArticles();
-  const {
-    antibodies,
-    isPending: isAbLookupPending
-  } = useAntibodies();
   const {
     vaccines,
     isPending: isVaccPending
@@ -44,7 +41,6 @@ export default function SusceptibilityData() {
 
   const searchboxLoaded = (
     !isRefNameListPending &&
-    !isAbLookupPending &&
     !isVaccPending &&
     !isCPPending &&
     !isVariantPending &&
@@ -70,52 +66,52 @@ export default function SusceptibilityData() {
     <CMSPage
      key="susceptibility-data"
      pageName="susceptibility-data">
-      <SearchBox
-       loaded={searchboxLoaded}
-       formOnly
-       articleValue={null}
-       articles={articles || []}
-       antibodyValue={null}
-       antibodies={antibodies || []}
-       vaccineValue={null}
-       vaccines={vaccines || []}
-       infectedVariants={infectedVariants || []}
-       variantValue={null}
-       variants={variants || []}
-       isolateAggs={isolateAggs || []}
-       mutations={[]}
-       mutationText={null}
-       mutationMatch="all"
-       onChange={onChange}>
-        {({
-          articleDropdown,
-          rxDropdown,
-          variantDropdown
-        }) => <div
-         className={style['search-container']}
-         data-loaded={searchboxLoaded}>
-          <div
-           className={style['search-item']}
-           data-type-item-container>
-            <label className={style['search-label']}>Reference</label>
-            {articleDropdown}
-          </div>
-          <div
-           className={style['search-item']}
-           data-type-item-container>
-            <label className={style['search-label']}>
-              Plasma / Monoclonal antibody
-            </label>
-            {rxDropdown}
-          </div>
-          <div
-           className={style['search-item']}
-           data-type-item-container>
-            <label className={style['search-label']}>Variant</label>
-            {variantDropdown}
-          </div>
-        </div>}
-      </SearchBox>
+      <ComboProvider>
+        <SearchBox
+         loaded={searchboxLoaded}
+         formOnly
+         articleValue={null}
+         articles={articles || []}
+         vaccineValue={null}
+         vaccines={vaccines || []}
+         infectedVariants={infectedVariants || []}
+         variantValue={null}
+         variants={variants || []}
+         isolateAggs={isolateAggs || []}
+         mutations={[]}
+         mutationText={null}
+         mutationMatch="all"
+         onChange={onChange}>
+          {({
+            articleDropdown,
+            rxDropdown,
+            variantDropdown
+          }) => <div
+           className={style['search-container']}
+           data-loaded={searchboxLoaded}>
+            <div
+             className={style['search-item']}
+             data-type-item-container>
+              <label className={style['search-label']}>Reference</label>
+              {articleDropdown}
+            </div>
+            <div
+             className={style['search-item']}
+             data-type-item-container>
+              <label className={style['search-label']}>
+                Plasma / Monoclonal antibody
+              </label>
+              {rxDropdown}
+            </div>
+            <div
+             className={style['search-item']}
+             data-type-item-container>
+              <label className={style['search-label']}>Variant</label>
+              {variantDropdown}
+            </div>
+          </div>}
+        </SearchBox>
+      </ComboProvider>
     </CMSPage>
   );
 }

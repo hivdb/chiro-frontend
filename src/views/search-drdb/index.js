@@ -2,10 +2,10 @@ import React from 'react';
 import FixedLoader from 'sierra-frontend/dist/components/fixed-loader';
 import GitHubCorner from '../../components/github-corner';
 
-import LocationParams, {useCleanQuery} from './hooks/location-params';
+import {useCleanQuery} from './hooks/location-params';
 import {
+  useProviders,
   useArticles,
-  useAntibodies,
   useVaccines,
   useInfectedVariants,
   useVariants,
@@ -20,17 +20,11 @@ import SearchDRDBLayout from './layout';
 
 function SearchDRDB(props) {
 
-  const {params: {formOnly}} = LocationParams.useMe();
   const {
     articles,
     articleLookup,
     isPending: isRefNameListPending
   } = useArticles();
-  const {
-    antibodies,
-    antibodyLookup,
-    isPending: isAbLookupPending
-  } = useAntibodies();
   const {
     vaccines,
     vaccineLookup,
@@ -68,7 +62,6 @@ function SearchDRDB(props) {
 
   const searchBoxLoaded = (
     !isRefNameListPending &&
-    !isAbLookupPending &&
     !isVaccPending &&
     !isInfectedVariantPending &&
     !isVariantPending &&
@@ -78,7 +71,6 @@ function SearchDRDB(props) {
 
   const resultLoaded = (
     !isRefNameListPending &&
-    !isAbLookupPending &&
     !isVaccPending &&
     !isInfectedVariantPending &&
     !isVariantPending &&
@@ -95,11 +87,8 @@ function SearchDRDB(props) {
     return <>
       <SearchDRDBLayout
        loaded={resultLoaded}
-       formOnly={formOnly !== undefined}
        articles={articles}
        articleLookup={articleLookup}
-       antibodies={antibodies}
-       antibodyLookup={antibodyLookup}
        vaccines={vaccines}
        infectedVariants={infectedVariants}
        vaccineLookup={vaccineLookup}
@@ -121,7 +110,9 @@ function SearchDRDB(props) {
 export default function Wrapper(props) {
   useCleanQuery();
 
-  return <LocationParams.Provider>
+  const ComboProvider = useProviders();
+
+  return <ComboProvider>
     <SearchDRDB {...props} />
-  </LocationParams.Provider>;
+  </ComboProvider>;
 }

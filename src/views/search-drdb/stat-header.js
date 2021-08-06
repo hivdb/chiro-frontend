@@ -13,8 +13,21 @@ import SearchBox from './search-box';
 import style from './style.module.scss';
 
 
-function SearchDRDBStatHeader({
-  antibodies,
+SearchDRDBStatHeader.propTypes = {
+  articles: PropTypes.array,
+  infectedVariants: PropTypes.array,
+  isolateAggs: PropTypes.array,
+  loaded: PropTypes.bool.isRequired,
+  vaccines: PropTypes.array,
+  variants: PropTypes.array,
+  isolates: PropTypes.array
+};
+
+SearchDRDBStatHeader.defaultProps = {
+  loaded: false
+};
+
+export default function SearchDRDBStatHeader({
   articles,
   infectedVariants,
   isolateAggs,
@@ -36,7 +49,6 @@ function SearchDRDBStatHeader({
       <SearchBox
        loaded={loaded}
        articles={articles}
-       antibodies={antibodies}
        vaccines={vaccines}
        infectedVariants={infectedVariants}
        variants={variants}
@@ -85,21 +97,3 @@ function SearchDRDBStatHeader({
   );
 
 }
-
-
-SearchDRDBStatHeader.propTypes = {
-  antibodies: PropTypes.array,
-  articles: PropTypes.array,
-  infectedVariants: PropTypes.array,
-  isolateAggs: PropTypes.array,
-  loaded: PropTypes.bool.isRequired,
-  vaccines: PropTypes.array,
-  variants: PropTypes.array,
-  isolates: PropTypes.array
-};
-
-SearchDRDBStatHeader.defaultProps = {
-  loaded: false
-};
-
-export default SearchDRDBStatHeader;

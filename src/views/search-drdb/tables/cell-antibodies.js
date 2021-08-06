@@ -5,13 +5,10 @@ import PropTypes from 'prop-types';
 
 
 export default function CellAntibodies({
-  abNames/*,
-  antibodyLookup*/
+  abNames
 }) {
   return <>
     {abNames.map((abName, idx) => {
-      // const {abbreviationName: abbr} = antibodyLookup[abName];
-
       return <React.Fragment key={abName}>
         {idx === 0 ? '' : ' + '}
         {abName}
