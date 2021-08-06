@@ -32,7 +32,6 @@ function groupSmallSlices(
     (acc, item) => acc + nestGet(item, sizeKey),
     0
   );
-  let prevSize;
   let remainItems = items.length;
   let groupItemSize = 0;
   const resultItems = [];
@@ -40,10 +39,7 @@ function groupSmallSlices(
   for (const item of items) {
     const size = nestGet(item, sizeKey);
     const pcnt = size / totalSize;
-    if (
-      size === prevSize ||
-      remainItems >= maxNumItems
-    ) {
+    if (remainItems >= maxNumItems) {
       groupItemSize += size;
       groupOrigItems.push(item);
     }
@@ -52,16 +48,19 @@ function groupSmallSlices(
         pcnt, item
       });
     }
-    prevSize = size;
     remainItems --;
   }
   resultItems.reverse();
   nestSet(groupItem, sizeKey, groupItemSize);
-  resultItems.push({
-    pcnt: groupItemSize / totalSize,
-    item: groupItem,
-    subItems: groupOrigItems.reverse()
-  });
+  if (groupItemSize > 0) {
+    resultItems.push({
+      pcnt: groupItemSize / totalSize,
+      item: {
+        ...groupItem,
+        subItems: groupOrigItems.reverse()
+      }
+    });
+  }
   return resultItems;
 }
 

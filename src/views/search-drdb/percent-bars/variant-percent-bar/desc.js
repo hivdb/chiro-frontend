@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 
 import {
-  TYPE_VARIANT
+  TYPE_VARIANT,
+  TYPE_ISOAGG,
+  TYPE_OTHER
 } from './types';
 
 import style from '../style.module.scss';
@@ -40,18 +42,25 @@ export default function VariantDesc({
       </div>
       <p>
         This category contains{' '}
-        <strong>{numExp}</strong> {pluralize('result', numExp)}.{' '}
+        <strong>{numExp}</strong> {pluralize('result', numExp)}{' '}
         {type === TYPE_VARIANT ? <>
-          Following{' '}
+          from{' '}
           <strong>{pluralize('isolate', subItems.length, true)}</strong>
-          {' '}{pluralize('is', subItems.length)} identified as{' '}
+          {' '}{pluralize('is', subItems.length)} which are identified as{' '}
           <strong>{display}</strong> variant:
         </> : null}
+        {type === TYPE_ISOAGG ? '.' : null}
+        {type === TYPE_OTHER ? <>
+          from{' '}
+          <strong>{pluralize('variant', subItems.length, true)}</strong>:
+        </> : null}
       </p>
-      {type === TYPE_VARIANT ? (
+      {type === TYPE_VARIANT || type === TYPE_OTHER ? (
         <ul>
-          {subItems.map(({display, numExp}) => (
-            <li>{display} (n=<strong>{numExp}</strong>)</li>
+          {subItems.map(({name, display, numExp}) => (
+            <li key={name}>
+              {display} (n=<strong>{numExp}</strong>)
+            </li>
           ))}
         </ul>
       ) : null}

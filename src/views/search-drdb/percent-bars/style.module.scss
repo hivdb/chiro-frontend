@@ -23,6 +23,9 @@
 
 .percent-bar-desc, .active-desc {
   width: max-content;
+  max-width: 40rem;
+  font-size: .9rem;
+
   .title {
     padding-bottom: .3rem;
     border-bottom: 1px solid $dividing-line;

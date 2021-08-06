@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 import style from './style.module.scss';
 
+const BLEED_BOUNDARY = 20;
+
 
 function useMouseTrack({skip}) {
   const trackRef = React.useRef();
@@ -26,8 +28,22 @@ function useMouseTrack({skip}) {
     evt => {
       if (skip) { return; }
       const {x, y} = initPos;
-      trackRef.current.style.setProperty('--offset-x', `${evt.clientX - x}px`);
-      trackRef.current.style.setProperty('--offset-y', `${evt.clientY - y}px`);
+      const {clientX, clientY} = evt;
+      const {width, height} = trackRef.current.getBoundingClientRect();
+      const {innerWidth, innerHeight} = window;
+      let offsetX = clientX - x;
+      let offsetY = clientY - y;
+      const overflowX = clientX + width + BLEED_BOUNDARY - innerWidth;
+      if (overflowX > 0) {
+        offsetX -= overflowX;
+      }
+      const overflowY = clientY + height + BLEED_BOUNDARY - innerHeight;
+      if (overflowY > 0) {
+        offsetY -= overflowY;
+      }
+
+      trackRef.current.style.setProperty('--offset-x', `${offsetX}px`);
+      trackRef.current.style.setProperty('--offset-y', `${offsetY}px`);
     },
     [initPos, skip]
   );
