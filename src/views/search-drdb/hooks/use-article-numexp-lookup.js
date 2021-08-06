@@ -4,9 +4,7 @@ import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useArticleNumExperimentLookup({
-  skip
-}) {
+export default function useArticleNumExperimentLookup(skip) {
   let rxType;
   let {
     params: {
@@ -65,10 +63,10 @@ export default function useArticleNumExperimentLookup({
     aggregateBy: ['article', ...aggregateBy],
     rxType,
     antibodyNames: abNames,
-    vaccineName: vaccineName,
-    infectedVarName: infectedVarName,
-    varName: varName,
-    isoAggkey: isoAggkey,
+    vaccineName,
+    infectedVarName,
+    varName,
+    isoAggkey,
     selectColumns: ['ref_name', 'num_experiments'],
     skip
   });
@@ -79,10 +77,10 @@ export default function useArticleNumExperimentLookup({
     aggregateBy,
     rxType,
     antibodyNames: abNames,
-    vaccineName: vaccineName,
-    infectedVarName: infectedVarName,
-    varName: varName,
-    isoAggkey: isoAggkey,
+    vaccineName,
+    infectedVarName,
+    varName,
+    isoAggkey,
     selectColumns: ['num_experiments'],
     skip
   });

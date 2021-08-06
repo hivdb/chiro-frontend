@@ -6,12 +6,14 @@ import {useArticleNumExpLookup} from '../hooks';
 import Articles from '../hooks/articles';
 import LocationParams from '../hooks/location-params';
 
+import style from './style.module.scss';
+
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
 
 
-export default function useArticleDropdown({loaded}) {
+export default function useArticleDropdown() {
   const {
     params: {
       formOnly,
@@ -27,13 +29,11 @@ export default function useArticleDropdown({loaded}) {
   const [
     numExpLookup,
     isNumExpLookupPending
-  ] = useArticleNumExpLookup({
-    skip: !loaded
-  });
+  ] = useArticleNumExpLookup();
   const isPending = isRefLookupPending || isNumExpLookupPending;
   const articleOptions = React.useMemo(
     () => {
-      if (!loaded || isPending) {
+      if (isPending) {
         return [
           {
             key: 'any',
@@ -92,7 +92,6 @@ export default function useArticleDropdown({loaded}) {
       }
     },
     [
-      loaded,
       isPending,
       articles,
       articleLookup,
@@ -117,11 +116,15 @@ export default function useArticleDropdown({loaded}) {
   const defaultValue = formOnly ? EMPTY : ANY;
 
   return (
-    <Dropdown
-     search direction="left"
-     placeholder={EMPTY_TEXT}
-     options={articleOptions}
-     onChange={handleChange}
-     value={paramRefName || defaultValue} />
+    <div
+     data-loaded={!isPending}
+     className={style['search-box-dropdown-container']}>
+      <Dropdown
+       search direction="left"
+       placeholder={EMPTY_TEXT}
+       options={articleOptions}
+       onChange={handleChange}
+       value={paramRefName || defaultValue} />
+    </div>
   );
 }

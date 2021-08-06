@@ -2,7 +2,7 @@ import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useRxTotalNumExperiment({skip}) {
+export default function useRxTotalNumExperiment(skip) {
   const {
     params: {
       refName,

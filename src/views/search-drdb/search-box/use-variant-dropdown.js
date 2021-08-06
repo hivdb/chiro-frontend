@@ -8,8 +8,10 @@ import {
 } from '../hooks';
 import LocationParams from '../hooks/location-params';
 import Variants from '../hooks/variants';
+import IsolateAggs from '../hooks/isolate-aggs';
 
 import FragmentWithoutWarning from './fragment-without-warning';
+import style from './style.module.scss';
 
 
 const EMPTY = '__EMPTY';
@@ -17,10 +19,7 @@ const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
 
 
-export default function useVariantDropdown({
-  loaded,
-  isolateAggs
-}) {
+export default function useVariantDropdown() {
 
   const {
     params: {
@@ -36,26 +35,21 @@ export default function useVariantDropdown({
     isPending: isVarsPending
   } = Variants.useMe();
 
-  const commonParams = {
-    skip: !loaded
-  };
+  const {
+    isolateAggs,
+    isPending: isIsoAggsPending
+  } = IsolateAggs.useMe();
 
-  const [varTotalNumExp, isVarTotalNumExpPending] = useVariantTotalNumExp({
-    ...commonParams
-  });
-  const [varNumExpLookup, isVarNumExpLookupPending] = useVariantNumExpLookup({
-    ...commonParams
-  });
+  const [varTotalNumExp, isVarTotalNumExpPending] = useVariantTotalNumExp();
+  const [varNumExpLookup, isVarNumExpLookupPending] = useVariantNumExpLookup();
   const [
     isoAggNumExpLookup,
     isIsoAggNumExpLookupPending
-  ] = useIsolateAggNumExpLookup({
-    ...commonParams
-  });
+  ] = useIsolateAggNumExpLookup();
 
   const isPending = (
-    !loaded ||
     isVarsPending ||
+    isIsoAggsPending ||
     isVarTotalNumExpPending ||
     isVarNumExpLookupPending ||
     isIsoAggNumExpLookupPending
@@ -203,11 +197,15 @@ export default function useVariantDropdown({
   const defaultValue = formOnly ? EMPTY : ANY;
 
   return (
-    <Dropdown
-     search direction="right"
-     placeholder={EMPTY_TEXT}
-     options={variantOptions}
-     onChange={handleChange}
-     value={paramVarName || paramIsoAggKey || defaultValue} />
+    <div
+     data-loaded={!isPending}
+     className={style['search-box-dropdown-container']}>
+      <Dropdown
+       search direction="right"
+       placeholder={EMPTY_TEXT}
+       options={variantOptions}
+       onChange={handleChange}
+       value={paramVarName || paramIsoAggKey || defaultValue} />
+    </div>
   );
 }

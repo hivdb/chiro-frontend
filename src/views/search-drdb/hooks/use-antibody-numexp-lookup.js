@@ -4,7 +4,7 @@ import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useAntibodyNumExperimentLookup({skip}) {
+export default function useAntibodyNumExperimentLookup(skip) {
   const aggregateBy = [];
   const {
     params: {

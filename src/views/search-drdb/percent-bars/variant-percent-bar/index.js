@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {
   useVariantNumExpLookup, 
@@ -9,6 +8,7 @@ import {
 
 import Variants from '../../hooks/variants';
 import Isolates from '../../hooks/isolates';
+import IsolateAggs from '../../hooks/isolate-aggs';
 
 import PercentBar from '../../../../components/percent-bar';
 
@@ -16,16 +16,7 @@ import prepareItems from './prepare-items';
 import VariantItem from './item';
 
 
-VariantPercentBar.propTypes = {
-  loaded: PropTypes.bool.isRequired,
-  isolateAggs: PropTypes.array
-};
-
-
-export default function VariantPercentBar({
-  loaded,
-  isolateAggs
-}) {
+export default function VariantPercentBar() {
   const {
     variants,
     isPending: isVarListPending
@@ -36,23 +27,20 @@ export default function VariantPercentBar({
     isPending: isIsoListPending
   } = Isolates.useMe();
 
-  const [varLookup, isVarPending] = useVariantNumExpLookup({
-    skip: !loaded
-  });
+  const {
+    isolateAggs,
+    isPending: isIsoAggListPending
+  } = IsolateAggs.useMe();
 
-  const [isoAggLookup, isIsoAggPending] = useIsolateAggNumExpLookup({
-    skip: !loaded
-  });
-
-  const [isoLookup, isIsoPending] = useIsolateNumExpLookup({
-    skip: !loaded
-  });
+  const [varLookup, isVarPending] = useVariantNumExpLookup();
+  const [isoAggLookup, isIsoAggPending] = useIsolateAggNumExpLookup();
+  const [isoLookup, isIsoPending] = useIsolateNumExpLookup();
 
   const isPending = (
-    !loaded ||
     isVarListPending ||
     isIsoListPending ||
     isVarPending ||
+    isIsoAggListPending ||
     isIsoAggPending ||
     isIsoPending
   );

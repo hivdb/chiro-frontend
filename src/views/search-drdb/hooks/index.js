@@ -1,6 +1,5 @@
 import useConfig from './use-config';
 import useProviders from './use-providers';
-import useIsolateAggs from './use-isolate-aggs';
 import useLookup from './use-lookup';
 import {
   useCompareSuscResultsByAntibodies,
@@ -28,7 +27,6 @@ import useVariantTotalNumExp from './use-variant-total-numexp';
 export {
   useConfig,
   useProviders,
-  useIsolateAggs,
   useAbSuscResults,
   useCPSuscResults,
   useVPSuscResults,

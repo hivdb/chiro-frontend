@@ -16,6 +16,7 @@ import InfectedVariants from '../hooks/infected-variants';
 import LocationParams from '../hooks/location-params';
 
 import FragmentWithoutWarning from './fragment-without-warning';
+import style from './style.module.scss';
 
 
 const EMPTY = '__EMPTY';
@@ -41,7 +42,7 @@ function rxSearch(options, query) {
 }
 
 
-export default function useRxDropdown({loaded}) {
+export default function useRxDropdown() {
   const [includeAll, setIncludeAll] = React.useState(false);
   const onSearchChange = React.useCallback(
     (event, {searchQuery}) => {
@@ -65,26 +66,14 @@ export default function useRxDropdown({loaded}) {
     isPending: isInfectedVarsPending
   } = InfectedVariants.useMe();
 
-  const commonParams = {
-    skip: !loaded
-  };
-  const [rxTotalNumExp, isRxTotalNumExpPending] = useRxTotalNumExp({
-    ...commonParams
-  });
-  const [abNumExpLookup, isAbNumExpPending] = useAntibodyNumExpLookup({
-    ...commonParams
-  });
-
-  const [vaccNumExpLookup, isVaccNumExpPending] = useVaccineNumExpLookup({
-    ...commonParams
-  });
+  const [rxTotalNumExp, isRxTotalNumExpPending] = useRxTotalNumExp();
+  const [abNumExpLookup, isAbNumExpPending] = useAntibodyNumExpLookup();
+  const [vaccNumExpLookup, isVaccNumExpPending] = useVaccineNumExpLookup();
 
   const [
     infectedVariantNumExpLookup,
     isInfectedVariantNumExpPending
-  ] = useInfectedVariantNumExpLookup({
-    ...commonParams
-  });
+  ] = useInfectedVariantNumExpLookup();
 
   const {
     params: {
@@ -97,7 +86,6 @@ export default function useRxDropdown({loaded}) {
   } = LocationParams.useMe();
 
   const isPending = (
-    !loaded ||
     isAntibodiesPending ||
     isVaccinesPending ||
     isInfectedVarsPending ||
@@ -367,13 +355,17 @@ export default function useRxDropdown({loaded}) {
     activeRx = paramVaccineName;
   }
   return (
-    <Dropdown
-     direction="right"
-     search={rxSearch}
-     options={options}
-     placeholder={EMPTY_TEXT}
-     onChange={handleChange}
-     onSearchChange={onSearchChange}
-     value={activeRx} />
+    <div
+     data-loaded={!isPending}
+     className={style['search-box-dropdown-container']}>
+      <Dropdown
+       direction="right"
+       search={rxSearch}
+       options={options}
+       placeholder={EMPTY_TEXT}
+       onChange={handleChange}
+       onSearchChange={onSearchChange}
+       value={activeRx} />
+    </div>
   );
 }

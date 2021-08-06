@@ -21,7 +21,6 @@ import style from './style.module.scss';
 
 SearchDRDBLayout.propTypes = {
   loaded: PropTypes.bool.isRequired,
-  isolateAggs: PropTypes.array,
   abSuscResults: PropTypes.array,
   cpSuscResults: PropTypes.array,
   vpSuscResults: PropTypes.array
@@ -33,7 +32,6 @@ SearchDRDBLayout.defaultProps = {
 
 export default function SearchDRDBLayout({
   loaded,
-  isolateAggs,
   abSuscResults,
   cpSuscResults,
   vpSuscResults
@@ -73,10 +71,7 @@ export default function SearchDRDBLayout({
   );
 
   return <Grid stackable className={style['search']}>
-    <DRDBStatHeader {...{
-      isolateAggs,
-      loaded
-    }} />
+    <DRDBStatHeader />
     {loaded ? null : <FixedLoader />}
     {displayAbTables ?
       <Grid.Row centered>
@@ -84,9 +79,7 @@ export default function SearchDRDBLayout({
           <Header as={H2} id="mab-susc-results">
             MAb Susceptibility Data
           </Header>
-          <AbSuscSummary
-           loaded={loaded}
-           isolateAggs={isolateAggs} />
+          <AbSuscSummary loaded={loaded} />
           <AbSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, isoAggkey, abNames})}

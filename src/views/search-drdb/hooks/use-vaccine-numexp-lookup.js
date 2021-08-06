@@ -4,9 +4,7 @@ import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useVaccineNumExperimentLookup({
-  skip
-}) {
+export default function useVaccineNumExperimentLookup(skip) {
   const aggregateBy = [];
   const {
     params: {

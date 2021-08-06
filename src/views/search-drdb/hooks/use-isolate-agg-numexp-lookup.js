@@ -3,7 +3,7 @@ import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useIsolateAggNumExpLookup({skip}) {
+export default function useIsolateAggNumExpLookup(skip) {
   let rxType;
   let {
     params: {

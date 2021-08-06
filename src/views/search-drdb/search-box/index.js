@@ -5,27 +5,14 @@ import useVariantDropdown from './use-variant-dropdown';
 import useRxDropdown from './use-rx-dropdown';
 
 SearchBox.propTypes = {
-  loaded: PropTypes.bool.isRequired,
-  isolateAggs: PropTypes.array,
   children: PropTypes.func
 };
 
-SearchBox.defaultProps = {
-  loaded: false
-};
+export default function SearchBox({children}) {
 
-export default function SearchBox({
-  loaded,
-  isolateAggs,
-  children
-}) {
-
-  const articleDropdown = useArticleDropdown({loaded});
-  const rxDropdown = useRxDropdown({loaded});
-  const variantDropdown = useVariantDropdown({
-    loaded,
-    isolateAggs
-  });
+  const articleDropdown = useArticleDropdown();
+  const rxDropdown = useRxDropdown();
+  const variantDropdown = useVariantDropdown();
 
   return <>
     {children({

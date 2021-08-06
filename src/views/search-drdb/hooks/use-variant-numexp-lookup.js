@@ -3,7 +3,7 @@ import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useVariantTotalNumExperiment({skip}) {
+export default function useVariantTotalNumExperiment(skip) {
   let rxType;
   let {
     params: {

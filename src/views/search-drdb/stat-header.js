@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {Grid, Header} from 'semantic-ui-react';
 
 import {H1} from 'sierra-frontend/dist/components/heading-tags';
@@ -13,19 +12,7 @@ import SearchBox from './search-box';
 import style from './style.module.scss';
 
 
-SearchDRDBStatHeader.propTypes = {
-  isolateAggs: PropTypes.array,
-  loaded: PropTypes.bool.isRequired
-};
-
-SearchDRDBStatHeader.defaultProps = {
-  loaded: false
-};
-
-export default function SearchDRDBStatHeader({
-  isolateAggs,
-  loaded
-}) {
+export default function SearchDRDBStatHeader() {
 
   const {
     params: {
@@ -36,9 +23,7 @@ export default function SearchDRDBStatHeader({
 
   return (
     <Grid.Row>
-      <SearchBox
-       loaded={loaded}
-       isolateAggs={isolateAggs}>
+      <SearchBox>
         {({
           articleDropdown,
           rxDropdown,
@@ -68,9 +53,7 @@ export default function SearchDRDBStatHeader({
                   </p>
                 </> : <>
                   {refName ? <ArticleCard refName={refName} /> : null}
-                  <PercentBars
-                   loaded={loaded}
-                   isolateAggs={isolateAggs} />
+                  <PercentBars />
                 </>
               }
             ]}

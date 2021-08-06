@@ -4,7 +4,7 @@ import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useInfectedVariantNumExperimentLookup({skip}) {
+export default function useInfectedVariantNumExperimentLookup(skip) {
   const aggregateBy = [];
   const {
     params: {

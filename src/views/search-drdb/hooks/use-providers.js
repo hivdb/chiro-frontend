@@ -7,6 +7,7 @@ import Vaccines from './vaccines';
 import InfectedVariants from './infected-variants';
 import Variants from './variants';
 import Isolates from './isolates';
+import IsolateAggs from './isolate-aggs';
 
 const providers = {
   locationParams: LocationParams.Provider,
@@ -15,7 +16,8 @@ const providers = {
   vaccines: Vaccines.Provider,
   infectedVariants: InfectedVariants.Provider,
   variants: Variants.Provider,
-  isolates: Isolates.Provider
+  isolates: Isolates.Provider,
+  isolateAggs: IsolateAggs.Provider
 };
 
 
@@ -27,7 +29,8 @@ const presetProviderNames = {
     'antibodies',
     'vaccines',
     'infectedVariants',
-    'variants'
+    'variants',
+    'isolateAggs'
   ],
   all: [
     'locationParams',
@@ -36,7 +39,8 @@ const presetProviderNames = {
     'vaccines',
     'infectedVariants',
     'variants',
-    'isolates' // isolates depends on variants
+    'isolates', // isolates depends on variants
+    'isolateAggs'
   ]
 };
 

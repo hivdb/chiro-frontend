@@ -1,9 +1,7 @@
-import React from 'react';
-import useQuery from './use-query';
-import {compareMutations} from './isolates';
+import {compareMutations} from '../isolates';
 
 
-function getMutations(isoAggkey) {
+export function getMutations(isoAggkey) {
   const mutations = isoAggkey.split('+');
   const results = [];
   let curGene;
@@ -26,7 +24,6 @@ function getMutations(isoAggkey) {
   return results;
 }
 
-
 export function compareIsolateAggs(isoAggA, isoAggB) {
   if (!isoAggA) {
     return 1;
@@ -40,40 +37,4 @@ export function compareIsolateAggs(isoAggA, isoAggB) {
   }
 
   return compareMutations(isoAggA.mutations, isoAggB.mutations);
-}
-
-
-export default function useIsolateAggs({
-  skip = false
-} = {}) {
-
-  const sql = `
-    SELECT iso_aggkey, iso_agg_display, var_name, iso_type
-    FROM susc_summary
-    WHERE
-      aggregate_by = 'isolate_agg'
-  `;
-
-  const {
-    payload,
-    isPending
-  } = useQuery({sql, skip});
-
-  const lookup = React.useMemo(
-    () => skip || isPending || !payload ? {} : payload.reduce(
-      (acc, isoAgg) => {
-        isoAgg.mutations = getMutations(isoAgg.isoAggkey);
-        acc[isoAgg.isoAggkey] = isoAgg;
-        return acc;
-      },
-      {}
-    ),
-    [skip, isPending, payload]
-  );
-
-  return {
-    isolateAggs: payload && payload.sort(compareIsolateAggs),
-    isolateAggLookup: lookup,
-    isPending: isPending
-  };
 }
