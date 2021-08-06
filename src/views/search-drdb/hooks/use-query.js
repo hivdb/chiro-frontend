@@ -81,7 +81,7 @@ const execSQL = memoize(
       id: myId,
       action: 'exec',
       sql,
-      params: params
+      params
     });
 
     return await promise;

@@ -134,8 +134,8 @@ export default function CompoundTable({selectedTarget}) {
   let {loading, error, data} = useQuery(SearchQuery, {
     variables: {
       compoundTarget: selectedTarget,
-      countIndividualCompound: countIndividualCompound,
-      withPendingList: withPendingList,
+      countIndividualCompound,
+      withPendingList,
       completeList: !withPendingList
     }
   });

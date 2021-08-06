@@ -68,9 +68,9 @@ class GeneSeqGenerator extends React.Component {
         a.key.length < 4 || b.key.length < 4
       )) {
         return (a.key.length - b.key.length);
-      } else if ( a.key < b.key) {
+      } else if (a.key < b.key) {
         return -1;
-      } else if ( a.key > b.key) {
+      } else if (a.key > b.key) {
         return 1;
       } else {
         return 0;
