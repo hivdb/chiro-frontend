@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   useProviders,
-  useVaccines,
   useInfectedVariants,
   useVariants,
   useIsolateAggs
@@ -15,10 +14,6 @@ import style from './style.module.scss';
 
 export default function SusceptibilityData() {
   const ComboProvider = useProviders();
-  const {
-    vaccines,
-    isPending: isVaccPending
-  } = useVaccines();
   const {
     infectedVariants,
     isPending: isCPPending
@@ -33,7 +28,6 @@ export default function SusceptibilityData() {
   } = useIsolateAggs();
 
   const searchboxLoaded = (
-    !isVaccPending &&
     !isCPPending &&
     !isVariantPending &&
     !isIsolateAggPending
@@ -46,7 +40,6 @@ export default function SusceptibilityData() {
       <ComboProvider>
         <SearchBox
          loaded={searchboxLoaded}
-         vaccines={vaccines || []}
          infectedVariants={infectedVariants || []}
          variants={variants || []}
          isolateAggs={isolateAggs || []}>

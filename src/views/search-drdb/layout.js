@@ -23,7 +23,6 @@ SearchDRDBLayout.propTypes = {
   loaded: PropTypes.bool.isRequired,
   antibodies: PropTypes.array,
   antibodyLookup: PropTypes.object,
-  vaccines: PropTypes.array,
   infectedVariants: PropTypes.array,
   variants: PropTypes.array,
   isolateAggs: PropTypes.array,
@@ -39,7 +38,6 @@ SearchDRDBLayout.defaultProps = {
 
 export default function SearchDRDBLayout({
   loaded,
-  vaccines,
   infectedVariants,
   variants,
   isolateAggs,
@@ -88,7 +86,6 @@ export default function SearchDRDBLayout({
       isolateAggs,
       isolates: Object.values(isolateLookup),
       loaded,
-      vaccines,
       variants
     }} />
     {loaded ? null : <FixedLoader />}

@@ -2,12 +2,14 @@ import React from 'react';
 
 import Articles from './articles';
 import Antibodies from './antibodies';
+import Vaccines from './vaccines';
 import LocationParams from './location-params';
 
 const providers = {
+  locationParams: LocationParams.Provider,
   articles: Articles.Provider,
   antibodies: Antibodies.Provider,
-  locationParams: LocationParams.Provider
+  vaccines: Vaccines.Provider
 };
 
 
@@ -15,7 +17,8 @@ const providers = {
 const defaultProviderNames = [
   'locationParams',
   'articles',
-  'antibodies'
+  'antibodies',
+  'vaccines'
 ];
 
 

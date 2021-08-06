@@ -1,6 +1,5 @@
 import useConfig from './use-config';
 import useProviders from './use-providers';
-import useVaccines from './use-vaccines';
 import useInfectedVariants from './use-infected-variants';
 import useVariants from './use-variants';
 import useIsolates, {compareMutations} from './use-isolates';
@@ -32,7 +31,6 @@ import useVariantTotalNumExp from './use-variant-total-numexp';
 export {
   useConfig,
   useProviders,
-  useVaccines,
   useInfectedVariants,
   useVariants,
   useIsolates,

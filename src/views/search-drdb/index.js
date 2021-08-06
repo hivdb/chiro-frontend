@@ -5,7 +5,6 @@ import GitHubCorner from '../../components/github-corner';
 import {useCleanQuery} from './hooks/location-params';
 import {
   useProviders,
-  useVaccines,
   useInfectedVariants,
   useVariants,
   useIsolates,
@@ -19,11 +18,6 @@ import SearchDRDBLayout from './layout';
 
 function SearchDRDB(props) {
 
-  const {
-    vaccines,
-    vaccineLookup,
-    isPending: isVaccPending
-  } = useVaccines();
   const {
     infectedVariants,
     isPending: isInfectedVariantPending
@@ -55,7 +49,6 @@ function SearchDRDB(props) {
   } = useVPSuscResults();
 
   const searchBoxLoaded = (
-    !isVaccPending &&
     !isInfectedVariantPending &&
     !isVariantPending &&
     !isIsolatePending &&
@@ -63,7 +56,6 @@ function SearchDRDB(props) {
   );
 
   const resultLoaded = (
-    !isVaccPending &&
     !isInfectedVariantPending &&
     !isVariantPending &&
     !isIsolatePending &&
@@ -79,9 +71,7 @@ function SearchDRDB(props) {
     return <>
       <SearchDRDBLayout
        loaded={resultLoaded}
-       vaccines={vaccines}
        infectedVariants={infectedVariants}
-       vaccineLookup={vaccineLookup}
        variants={variants}
        isolateAggs={isolateAggs}
        isolateLookup={isolateLookup}

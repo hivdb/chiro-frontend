@@ -17,7 +17,6 @@ SearchDRDBStatHeader.propTypes = {
   infectedVariants: PropTypes.array,
   isolateAggs: PropTypes.array,
   loaded: PropTypes.bool.isRequired,
-  vaccines: PropTypes.array,
   variants: PropTypes.array,
   isolates: PropTypes.array
 };
@@ -30,7 +29,6 @@ export default function SearchDRDBStatHeader({
   infectedVariants,
   isolateAggs,
   loaded,
-  vaccines,
   variants,
   isolates
 }) {
@@ -46,7 +44,6 @@ export default function SearchDRDBStatHeader({
     <Grid.Row>
       <SearchBox
        loaded={loaded}
-       vaccines={vaccines}
        infectedVariants={infectedVariants}
        variants={variants}
        isolateAggs={isolateAggs}>
