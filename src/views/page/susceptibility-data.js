@@ -1,9 +1,7 @@
 import React from 'react';
-import {useRouter} from 'found';
 
 import {
   useProviders,
-  useArticles,
   useVaccines,
   useInfectedVariants,
   useVariants,
@@ -16,12 +14,7 @@ import style from './style.module.scss';
 
 
 export default function SusceptibilityData() {
-  const {router} = useRouter();
   const ComboProvider = useProviders();
-  const {
-    articles,
-    isPending: isRefNameListPending
-  } = useArticles();
   const {
     vaccines,
     isPending: isVaccPending
@@ -40,26 +33,10 @@ export default function SusceptibilityData() {
   } = useIsolateAggs();
 
   const searchboxLoaded = (
-    !isRefNameListPending &&
     !isVaccPending &&
     !isCPPending &&
     !isVariantPending &&
     !isIsolateAggPending
-  );
-
-  const onChange = React.useCallback(
-    (action, value) => {
-      let query = action;
-      if (typeof action === 'string') {
-        query = {};
-        query[action] = value;
-      }
-      router.push({
-        pathname: '/search-drdb/',
-        query
-      });
-    },
-    [router]
   );
 
   return (
@@ -69,19 +46,10 @@ export default function SusceptibilityData() {
       <ComboProvider>
         <SearchBox
          loaded={searchboxLoaded}
-         formOnly
-         articleValue={null}
-         articles={articles || []}
-         vaccineValue={null}
          vaccines={vaccines || []}
          infectedVariants={infectedVariants || []}
-         variantValue={null}
          variants={variants || []}
-         isolateAggs={isolateAggs || []}
-         mutations={[]}
-         mutationText={null}
-         mutationMatch="all"
-         onChange={onChange}>
+         isolateAggs={isolateAggs || []}>
           {({
             articleDropdown,
             rxDropdown,

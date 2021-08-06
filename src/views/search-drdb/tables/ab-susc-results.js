@@ -5,13 +5,11 @@ import useRenderSuscResults from './use-render-susc-results';
 export default function AbSuscResults({
   loaded,
   cacheKey,
-  articleLookup,
   isolateLookup,
   abSuscResults
 }) {
 
   const indivMutIndivFoldColumnDefs = useColumnDefs({
-    articleLookup,
     isolateLookup,
     columns: [
       'refName',
@@ -31,7 +29,6 @@ export default function AbSuscResults({
     }
   });
   const indivMutAggFoldColumnDefs = useColumnDefs({
-    articleLookup,
     isolateLookup,
     columns: [
       'refName',
@@ -52,7 +49,6 @@ export default function AbSuscResults({
   });
 
   const comboMutsIndivFoldColumnDefs = useColumnDefs({
-    articleLookup,
     isolateLookup,
     columns: [
       'refName',
@@ -72,7 +68,6 @@ export default function AbSuscResults({
   });
 
   const comboMutsAggFoldColumnDefs = useColumnDefs({
-    articleLookup,
     isolateLookup,
     columns: [
       'refName',

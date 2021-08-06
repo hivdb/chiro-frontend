@@ -6,7 +6,6 @@ import useRxDropdown from './use-rx-dropdown';
 
 SearchBox.propTypes = {
   loaded: PropTypes.bool.isRequired,
-  articles: PropTypes.array,
   vaccines: PropTypes.array,
   infectedVariants: PropTypes.array,
   variants: PropTypes.array,
@@ -20,7 +19,6 @@ SearchBox.defaultProps = {
 
 export default function SearchBox({
   loaded,
-  articles,
   vaccines,
   infectedVariants,
   variants,
@@ -28,10 +26,7 @@ export default function SearchBox({
   children
 }) {
 
-  const articleDropdown = useArticleDropdown({
-    loaded,
-    articles
-  });
+  const articleDropdown = useArticleDropdown({loaded});
   const rxDropdown = useRxDropdown({
     loaded,
     vaccines,

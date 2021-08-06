@@ -3,6 +3,7 @@ import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 
 import {useArticleNumExpLookup} from '../hooks';
+import Articles from '../hooks/articles';
 import LocationParams from '../hooks/location-params';
 
 const EMPTY = '__EMPTY';
@@ -10,10 +11,7 @@ const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
 
 
-export default function useArticleDropdown({
-  loaded,
-  articles
-}) {
+export default function useArticleDropdown({loaded}) {
   const {
     params: {
       formOnly,
@@ -21,9 +19,18 @@ export default function useArticleDropdown({
     },
     onChange
   } = LocationParams.useMe();
-  const [numExpLookup, isPending] = useArticleNumExpLookup({
+  const {
+    articles,
+    articleLookup,
+    isPending: isRefLookupPending
+  } = Articles.useMe();
+  const [
+    numExpLookup,
+    isNumExpLookupPending
+  ] = useArticleNumExpLookup({
     skip: !loaded
   });
+  const isPending = isRefLookupPending || isNumExpLookupPending;
   const articleOptions = React.useMemo(
     () => {
       if (!loaded || isPending) {
@@ -58,9 +65,7 @@ export default function useArticleDropdown({
             )
           },
           ...(
-            !paramRefName || articles.some(
-              ({refName}) => paramRefName === refName
-            ) ?
+            (!paramRefName || paramRefName in articleLookup) ?
               [] :
               [{
                 key: paramRefName,
@@ -90,6 +95,7 @@ export default function useArticleDropdown({
       loaded,
       isPending,
       articles,
+      articleLookup,
       paramRefName,
       formOnly,
       numExpLookup

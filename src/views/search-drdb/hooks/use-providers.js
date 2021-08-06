@@ -1,9 +1,11 @@
 import React from 'react';
 
+import Articles from './articles';
 import Antibodies from './antibodies';
 import LocationParams from './location-params';
 
 const providers = {
+  articles: Articles.Provider,
   antibodies: Antibodies.Provider,
   locationParams: LocationParams.Provider
 };
@@ -12,6 +14,7 @@ const providers = {
 // dependency order: bottom ones are depended on the top ones
 const defaultProviderNames = [
   'locationParams',
+  'articles',
   'antibodies'
 ];
 

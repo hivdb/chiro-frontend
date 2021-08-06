@@ -33,7 +33,7 @@ function LocationParamsProvider({children}) {
       const query = buildQuery(action, value, clearAction ? {} : loc.query);
 
       router.push({
-        ...loc,
+        pathname: '/search-drdb/',
         query
       });
     },

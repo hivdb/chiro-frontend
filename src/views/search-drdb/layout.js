@@ -19,10 +19,26 @@ import LocationParams from './hooks/location-params';
 import style from './style.module.scss';
 
 
+SearchDRDBLayout.propTypes = {
+  loaded: PropTypes.bool.isRequired,
+  antibodies: PropTypes.array,
+  antibodyLookup: PropTypes.object,
+  vaccines: PropTypes.array,
+  infectedVariants: PropTypes.array,
+  variants: PropTypes.array,
+  isolateAggs: PropTypes.array,
+  isolateLookup: PropTypes.object,
+  abSuscResults: PropTypes.array,
+  cpSuscResults: PropTypes.array,
+  vpSuscResults: PropTypes.array
+};
+
+SearchDRDBLayout.defaultProps = {
+  loaded: false
+};
+
 export default function SearchDRDBLayout({
   loaded,
-  articles,
-  articleLookup,
   vaccines,
   infectedVariants,
   variants,
@@ -68,7 +84,6 @@ export default function SearchDRDBLayout({
 
   return <Grid stackable className={style['search']}>
     <DRDBStatHeader {...{
-      articles,
       infectedVariants,
       isolateAggs,
       isolates: Object.values(isolateLookup),
@@ -89,7 +104,6 @@ export default function SearchDRDBLayout({
           <AbSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, isoAggkey, abNames})}
-           articleLookup={articleLookup}
            isolateLookup={isolateLookup}
            abSuscResults={abSuscResults} />
         </Grid.Column>
@@ -103,7 +117,6 @@ export default function SearchDRDBLayout({
           <VPSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, isoAggkey, vaccineName})}
-           articleLookup={articleLookup}
            isolateLookup={isolateLookup}
            vpSuscResults={vpSuscResults} />
         </Grid.Column>
@@ -117,7 +130,6 @@ export default function SearchDRDBLayout({
           <CPSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, isoAggkey})}
-           articleLookup={articleLookup}
            isolateLookup={isolateLookup}
            cpSuscResults={cpSuscResults} />
         </Grid.Column>
@@ -127,24 +139,3 @@ export default function SearchDRDBLayout({
   
 
 }
-
-
-SearchDRDBLayout.propTypes = {
-  loaded: PropTypes.bool.isRequired,
-  articles: PropTypes.array,
-  articleLookup: PropTypes.object,
-  antibodies: PropTypes.array,
-  antibodyLookup: PropTypes.object,
-  vaccines: PropTypes.array,
-  infectedVariants: PropTypes.array,
-  variants: PropTypes.array,
-  isolateAggs: PropTypes.array,
-  isolateLookup: PropTypes.object,
-  abSuscResults: PropTypes.array,
-  cpSuscResults: PropTypes.array,
-  vpSuscResults: PropTypes.array
-};
-
-SearchDRDBLayout.defaultProps = {
-  loaded: false
-};

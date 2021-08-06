@@ -1,10 +1,14 @@
 import React from 'react';
-import useQuery from './use-query';
+import PropTypes from 'prop-types';
+import useQuery from '../use-query';
 
+const ArticlesContext = React.createContext();
 
-export default function useArticles({
-  skip = false
-} = {}) {
+ArticlesProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
+function ArticlesProvider({children}) {
 
   const sql = `
     SELECT
@@ -22,11 +26,11 @@ export default function useArticles({
   const {
     payload,
     isPending
-  } = useQuery({sql, skip});
+  } = useQuery({sql});
 
   const articles = React.useMemo(
     () => {
-      if (skip || isPending || !payload) {
+      if (isPending || !payload) {
         return [];
       }
       return payload.map(
@@ -44,19 +48,34 @@ export default function useArticles({
         }
       );
     },
-    [skip, isPending, payload]
+    [isPending, payload]
   );
 
   const articleLookup = React.useMemo(
-    () => skip || isPending || !articles ? {} : articles.reduce(
+    () => isPending || !articles ? {} : articles.reduce(
       (acc, article) => {
         acc[article.refName] = article;
         return acc;
       },
       {}
     ),
-    [skip, isPending, articles]
+    [isPending, articles]
   );
 
-  return {articles, articleLookup, isPending};
+  const contextValue = {articles, articleLookup, isPending};
+
+  return <ArticlesContext.Provider value={contextValue}>
+    {children}
+  </ArticlesContext.Provider>;
 }
+
+function useArticles() {
+  return React.useContext(ArticlesContext);
+}
+
+const Articles = {
+  Provider: ArticlesProvider,
+  useMe: useArticles
+};
+
+export default Articles;

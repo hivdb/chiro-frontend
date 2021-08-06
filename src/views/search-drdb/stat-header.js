@@ -14,7 +14,6 @@ import style from './style.module.scss';
 
 
 SearchDRDBStatHeader.propTypes = {
-  articles: PropTypes.array,
   infectedVariants: PropTypes.array,
   isolateAggs: PropTypes.array,
   loaded: PropTypes.bool.isRequired,
@@ -28,7 +27,6 @@ SearchDRDBStatHeader.defaultProps = {
 };
 
 export default function SearchDRDBStatHeader({
-  articles,
   infectedVariants,
   isolateAggs,
   loaded,
@@ -48,7 +46,6 @@ export default function SearchDRDBStatHeader({
     <Grid.Row>
       <SearchBox
        loaded={loaded}
-       articles={articles}
        vaccines={vaccines}
        infectedVariants={infectedVariants}
        variants={variants}

@@ -19,6 +19,7 @@ import {
   useCompareSuscResultsByAntibodies
 } from '../hooks';
 
+import Articles from '../hooks/articles';
 import Antibodies from '../hooks/antibodies';
 
 
@@ -175,11 +176,14 @@ function buildColDefs({
 
 
 export default function useColumnDefs({
-  articleLookup,
   isolateLookup,
   columns,
   labels
 }) {
+  const {
+    articleLookup,
+    isPending: isRefLookupPending
+  } = Articles.useMe();
   const {
     antibodyLookup,
     isPending: isAbLookupPending
@@ -198,7 +202,9 @@ export default function useColumnDefs({
     useCompareSuscResultsByInfectedIsolate(isolateLookup)
   );
 
-  const isPending = isAbLookupPending;
+  const isPending = (
+    isRefLookupPending || isAbLookupPending
+  );
 
   return React.useMemo(
     () => isPending ? [] : buildColDefs({
