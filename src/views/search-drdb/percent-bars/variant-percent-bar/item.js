@@ -47,6 +47,7 @@ export default function VariantSlice({
 
   return (
     <PercentBar.Item
+     fixedHoverDesc
      index={index}
      isActive={isActive}
      to={{

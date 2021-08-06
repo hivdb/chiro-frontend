@@ -77,7 +77,7 @@ export default function CellIsolate({
 }
 
 CellIsolate.propTypes = {
-  isoName: PropTypes.string.isRequired,
+  isoName: PropTypes.string,
   potency: PropTypes.number,
   potencyUnit: PropTypes.string,
   potencyType: PropTypes.string,

@@ -29,9 +29,10 @@ export function formatPotency({
     number = potency.toFixed(0);
   }
   number = parseFloat(number).toLocaleString('en-US');
-  if (forceShowUnit || (
-    potencyUnit && (!isICxx || potencyUnit !== 'ng/ml')
-  )) {
+  if (
+    potencyUnit &&
+    (forceShowUnit || !isICxx || potencyUnit !== 'ng/ml')
+  ) {
     suffix = ` ${potencyUnit}`;
   }
   else {

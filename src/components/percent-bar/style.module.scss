@@ -9,6 +9,7 @@ ul.percent-bar {
   margin-bottom: 0;
   list-style-type: none;
   position: relative;
+  white-space: nowrap;
 
   li.percent-bar-item {
     position: relative;
@@ -59,6 +60,13 @@ ul.percent-bar {
       transform: translate(
         calc(var(--offset-x) + .5rem),
         calc(var(--offset-y) + 1rem)
+      );
+    }
+
+    &:hover[data-fixed-hover-desc="true"] .desc {
+      transform: translate(
+        var(--offset-x),
+        var(--offset-y)
       );
     }
 

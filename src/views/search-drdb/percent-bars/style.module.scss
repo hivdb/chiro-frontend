@@ -51,7 +51,26 @@
   }
 
   ul {
-    padding-left: 1.5rem;
+    &[data-compact="true"] {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    padding-left: 0;
+    list-style-type: none;
+
+    li {
+      position: relative;
+      padding-left: 1rem;
+      &::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        display: inline-block;
+        color: rgba(0, 0, 0, .4);
+        padding-left: .5rem;
+        padding-right: .25rem;
+      }
+    }
   }
 
 }

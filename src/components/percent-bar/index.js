@@ -8,7 +8,7 @@ import style from './style.module.scss';
 const BLEED_BOUNDARY = 20;
 
 
-function useMouseTrack({skip}) {
+function useMouseTrack({fixed, skip}) {
   const trackRef = React.useRef();
   const [initPos, setInitPos] = React.useState({
     x: null,
@@ -27,25 +27,42 @@ function useMouseTrack({skip}) {
   const onMouseMove = React.useCallback(
     evt => {
       if (skip) { return; }
+      let offsetX = 0,
+        offsetY = 0;
+
       const {x, y} = initPos;
-      const {clientX, clientY} = evt;
+      let {clientX, clientY} = evt;
+      if (fixed) {
+        clientX = x;
+        clientY = y;
+      }
+
+      offsetX = clientX - x;
+      offsetY = clientY - y;
+
       const {width, height} = trackRef.current.getBoundingClientRect();
       const {innerWidth, innerHeight} = window;
-      let offsetX = clientX - x;
-      let offsetY = clientY - y;
+
       const overflowX = clientX + width + BLEED_BOUNDARY - innerWidth;
-      if (overflowX > 0) {
+      if (width > innerWidth) {
+        offsetX = BLEED_BOUNDARY;
+      }
+      else if (overflowX > 0) {
         offsetX -= overflowX;
       }
       const overflowY = clientY + height + BLEED_BOUNDARY - innerHeight;
-      if (overflowY > 0) {
+      if (height > innerHeight) {
+        offsetY = - y;
+      }
+      else if (overflowY > 0) {
         offsetY -= overflowY;
       }
 
       trackRef.current.style.setProperty('--offset-x', `${offsetX}px`);
       trackRef.current.style.setProperty('--offset-y', `${offsetY}px`);
+
     },
-    [initPos, skip]
+    [initPos, skip, fixed]
   );
 
   const onMouseLeave = React.useCallback(
@@ -71,6 +88,7 @@ function PercentBarItem({
   className,
   isActive,
   disableHoverDesc,
+  fixedHoverDesc,
   index,
   href,
   to,
@@ -135,6 +153,7 @@ function PercentBarItem({
     onMouseMove,
     onMouseLeave
   } = useMouseTrack({
+    fixed: fixedHoverDesc,
     skip: disableHoverDesc
   });
 
@@ -152,6 +171,7 @@ function PercentBarItem({
      onMouseMove={onMouseMove}
      onMouseLeave={onMouseLeave}
      data-is-active={isActive}
+     data-fixed-hover-desc={fixedHoverDesc}
      data-disable-hover-desc={disableHoverDesc}
      data-has-cta={hasCTA}
      data-index={index}
@@ -173,6 +193,7 @@ function PercentBarItem({
 PercentBarItem.propTypes = {
   isActive: PropTypes.bool,
   disableHoverDesc: PropTypes.bool,
+  fixedHoverDesc: PropTypes.bool,
   href: PropTypes.string,
   to: PropTypes.oneOfType([
     PropTypes.string.isRequired,
@@ -188,6 +209,7 @@ PercentBarItem.propTypes = {
 
 PercentBarItem.defaultProps = {
   isActive: false,
+  fixedHoverDesc: false,
   disableHoverDesc: false
 };
 

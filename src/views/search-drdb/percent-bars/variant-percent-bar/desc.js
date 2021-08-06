@@ -30,6 +30,8 @@ export default function VariantDesc({
     subItems
   } = item;
 
+  const compactList = subItems && subItems.length > 30;
+
   return (
     <div className={className}>
       <div className={style['title']}>
@@ -42,21 +44,21 @@ export default function VariantDesc({
       </div>
       <p>
         This category contains{' '}
-        <strong>{numExp}</strong> {pluralize('result', numExp)}{' '}
+        <strong>{numExp}</strong> {pluralize('result', numExp)}
         {type === TYPE_VARIANT ? <>
-          from{' '}
+          {' from '}
           <strong>{pluralize('isolate', subItems.length, true)}</strong>
-          {' '}{pluralize('is', subItems.length)} which are identified as{' '}
+          {' '}which {pluralize('is', subItems.length)} identified as{' '}
           <strong>{display}</strong> variant:
         </> : null}
         {type === TYPE_ISOAGG ? '.' : null}
         {type === TYPE_OTHER ? <>
-          from{' '}
+          {' from '}
           <strong>{pluralize('variant', subItems.length, true)}</strong>:
         </> : null}
       </p>
       {type === TYPE_VARIANT || type === TYPE_OTHER ? (
-        <ul>
+        <ul data-compact={compactList}>
           {subItems.map(({name, display, numExp}) => (
             <li key={name}>
               {display} (n=<strong>{numExp}</strong>)

@@ -70,10 +70,10 @@ function useJoinMutations({
             V.position,
             V.amino_acid,
             R.amino_acid AS ref_amino_acid
-          FROM isolate_mutations V, ref_amino_acid R
-          WHERE
-            V.gene = R.gene AND
-            V.position = R.position
+          FROM isolate_mutations V
+            LEFT JOIN ref_amino_acid R ON
+              V.gene = R.gene AND
+              V.position = R.position
           ORDER BY V.gene, V.position, V.amino_acid
         `;
       }
@@ -156,7 +156,13 @@ export default function useIsolates({
 } = {}) {
 
   const sql = `
-    SELECT I.iso_name, var_name, expandable, count AS susc_result_count
+    SELECT
+      I.iso_name,
+      var_name,
+      expandable,
+      gisaid_id,
+      genbank_accn,
+      count AS susc_result_count
     FROM isolates I
     LEFT JOIN isolate_stats IStat ON
       I.iso_name=IStat.iso_name AND IStat.stat_group='susc_results'

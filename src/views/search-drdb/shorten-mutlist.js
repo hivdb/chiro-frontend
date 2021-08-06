@@ -1,6 +1,7 @@
 import {consecutiveGroupsBy} from 'sierra-frontend/dist/utils/array-groups';
 
 export default function shortenMutationList(mutations) {
+  mutations = mutations.filter(({gene}) => gene === 'S');
   const merged = [];
   const groups = consecutiveGroupsBy(
     mutations,

@@ -73,7 +73,9 @@ export default function useIsolateNumExpLookup({
       }
       const lookup = {};
       for (const {isoName, numExperiments} of suscSummary) {
-        lookup[isoName] = numExperiments;
+        // we have multiple rows since different control isolate
+        lookup[isoName] = lookup[isoName] || 0;
+        lookup[isoName] += numExperiments;
       }
       return lookup;
     },

@@ -25,27 +25,35 @@ function groupSmallSlices(
   array, 
   sizeKey, 
   groupItem,
-  maxNumItems
+  maxNumItems,
+  maxScaledGroupPcnt = 0.35
 ) {
   const items = [...array].reverse();
-  const totalSize = items.reduce(
+  let totalSize = items.reduce(
     (acc, item) => acc + nestGet(item, sizeKey),
     0
   );
   let remainItems = items.length;
+  let groupPcnt = .0;
   let groupItemSize = 0;
   const resultItems = [];
   const groupOrigItems = [];
   for (const item of items) {
     const size = nestGet(item, sizeKey);
-    const pcnt = size / totalSize;
     if (remainItems >= maxNumItems) {
+      groupPcnt += size / totalSize;
       groupItemSize += size;
       groupOrigItems.push(item);
     }
     else {
+      if (groupPcnt > maxScaledGroupPcnt) {
+        groupPcnt = maxScaledGroupPcnt;
+        const remainSize = totalSize - groupItemSize;
+        totalSize = (remainSize / (1 - groupPcnt)).toFixed();
+      }
       resultItems.push({
-        pcnt, item
+        pcnt: size / totalSize,
+        item
       });
     }
     remainItems --;
@@ -54,7 +62,7 @@ function groupSmallSlices(
   nestSet(groupItem, sizeKey, groupItemSize);
   if (groupItemSize > 0) {
     resultItems.push({
-      pcnt: groupItemSize / totalSize,
+      pcnt: groupPcnt,
       item: {
         ...groupItem,
         subItems: groupOrigItems.reverse()
@@ -78,12 +86,43 @@ function prepareVariants({
       isoName in isoLookup &&
       varName !== null
     ))
-    .reduce((acc, {isoName, varName, mutations}) => {
+    .reduce((acc, {
+      isoName,
+      varName,
+      gisaidId,
+      genbankAccn,
+      mutations
+    }) => {
       acc[varName] = acc[varName] || [];
+      const isSpikeOnly = mutations.every(({gene}) => gene === 'S');
+      const displaySuffix = isSpikeOnly ? null : <>
+        {' + '}<em>non-Spike mutations</em>
+      </>;
+      const shortMuts = shortenMutList(mutations);
+      const display = <>
+        {genbankAccn ? <>
+          <a
+           href={`https://www.ncbi.nlm.nih.gov/nuccore/${genbankAccn}`}
+           target="_blank" rel="noreferrer">
+            <strong>{genbankAccn}</strong>
+          </a>{': '}
+        </> : null}
+        {!genbankAccn && gisaidId ? <>
+          <a
+           href="https://platform.epicov.org/epi3/frontend"
+           target="_blank" rel="noreferrer">
+            <strong>EPI_ISL_{gisaidId}</strong>
+          </a>{': '}
+        </> : null}
+
+        {shortMuts.length > 0 ?
+          shortMuts.join(' + ') : <em>Spike wildtype</em>}
+        {displaySuffix}
+      </>;
       acc[varName].push({
         name: isoName,
         type: TYPE_ISO,
-        display: shortenMutList(mutations).join(' + '),
+        display: display,
         displayExtra: null,
         numExp: isoLookup[isoName]
       });
@@ -98,7 +137,7 @@ function prepareVariants({
         type: TYPE_VARIANT,
         display: varName,
         displayExtra: synonyms.join('; '),
-        subItems: namedIsoLookup[varName],
+        subItems: namedIsoLookup[varName] || [],
         numExp: varLookup[varName]
       })),
     ...isolateAggs
@@ -119,9 +158,6 @@ function prepareVariants({
       let cmp = v2.numExp - v1.numExp; // desc
       if (cmp === 0) {
         cmp = v1.type - v2.type; // asc
-      }
-      if (cmp === 0) {
-        cmp = v1.name.localeCompare(v2.name);
       }
       return cmp;
     }
