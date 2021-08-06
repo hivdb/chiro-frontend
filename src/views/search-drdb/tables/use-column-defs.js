@@ -21,6 +21,7 @@ import {
 
 import Articles from '../hooks/articles';
 import Antibodies from '../hooks/antibodies';
+import Isolates from '../hooks/isolates';
 
 
 export function comparePotency(potA, potB) {
@@ -176,7 +177,6 @@ function buildColDefs({
 
 
 export default function useColumnDefs({
-  isolateLookup,
   columns,
   labels
 }) {
@@ -188,6 +188,10 @@ export default function useColumnDefs({
     antibodyLookup,
     isPending: isAbLookupPending
   } = Antibodies.useMe();
+  const {
+    isolateLookup,
+    isPending: isIsoLookupPending
+  } = Isolates.useMe();
 
   const compareByAntibodies = (
     useCompareSuscResultsByAntibodies(antibodyLookup)
@@ -203,7 +207,7 @@ export default function useColumnDefs({
   );
 
   const isPending = (
-    isRefLookupPending || isAbLookupPending
+    isRefLookupPending || isAbLookupPending || isIsoLookupPending
   );
 
   return React.useMemo(

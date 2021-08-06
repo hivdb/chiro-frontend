@@ -22,7 +22,6 @@ import style from './style.module.scss';
 SearchDRDBLayout.propTypes = {
   loaded: PropTypes.bool.isRequired,
   isolateAggs: PropTypes.array,
-  isolateLookup: PropTypes.object,
   abSuscResults: PropTypes.array,
   cpSuscResults: PropTypes.array,
   vpSuscResults: PropTypes.array
@@ -35,7 +34,6 @@ SearchDRDBLayout.defaultProps = {
 export default function SearchDRDBLayout({
   loaded,
   isolateAggs,
-  isolateLookup,
   abSuscResults,
   cpSuscResults,
   vpSuscResults
@@ -77,7 +75,6 @@ export default function SearchDRDBLayout({
   return <Grid stackable className={style['search']}>
     <DRDBStatHeader {...{
       isolateAggs,
-      isolates: Object.values(isolateLookup),
       loaded
     }} />
     {loaded ? null : <FixedLoader />}
@@ -93,7 +90,6 @@ export default function SearchDRDBLayout({
           <AbSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, isoAggkey, abNames})}
-           isolateLookup={isolateLookup}
            abSuscResults={abSuscResults} />
         </Grid.Column>
       </Grid.Row> : null}
@@ -106,7 +102,6 @@ export default function SearchDRDBLayout({
           <VPSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, isoAggkey, vaccineName})}
-           isolateLookup={isolateLookup}
            vpSuscResults={vpSuscResults} />
         </Grid.Column>
       </Grid.Row> : null}
@@ -119,7 +114,6 @@ export default function SearchDRDBLayout({
           <CPSuscResults
            loaded={loaded}
            cacheKey={JSON.stringify({refName, isoAggkey})}
-           isolateLookup={isolateLookup}
            cpSuscResults={cpSuscResults} />
         </Grid.Column>
       </Grid.Row> : null}

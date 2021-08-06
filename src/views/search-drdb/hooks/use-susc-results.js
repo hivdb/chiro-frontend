@@ -1,7 +1,7 @@
 import React from 'react';
 
 import useQuery from './use-query';
-import useIsolates from './use-isolates';
+import Isolates from './isolates';
 import {useCompareSuscResultsByIsolate} from './use-compare-susc-results';
 
 
@@ -216,9 +216,7 @@ export default function useSuscResults({
   const {
     isolateLookup,
     isPending: isIsolatePending
-  } = useIsolates({
-    skip: skip || isPending
-  });
+  } = Isolates.useMe();
 
   const compareByIsolates = useCompareSuscResultsByIsolate(isolateLookup);
 

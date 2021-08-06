@@ -5,12 +5,10 @@ import useRenderSuscResults from './use-render-susc-results';
 export default function CPSuscResults({
   loaded,
   cacheKey,
-  isolateLookup,
   cpSuscResults
 }) {
 
   const indivMutIndivFoldColumnDefs = useColumnDefs({
-    isolateLookup,
     columns: [
       'refName',
       'assayName',
@@ -32,7 +30,6 @@ export default function CPSuscResults({
   });
 
   const indivMutAggFoldColumnDefs = useColumnDefs({
-    isolateLookup,
     columns: [
       'refName',
       'assayName',
@@ -55,7 +52,6 @@ export default function CPSuscResults({
   });
 
   const comboMutsIndivFoldColumnDefs = useColumnDefs({
-    isolateLookup,
     columns: [
       'refName',
       'assayName',
@@ -77,7 +73,6 @@ export default function CPSuscResults({
   });
 
   const comboMutsAggFoldColumnDefs = useColumnDefs({
-    isolateLookup,
     columns: [
       'refName',
       'assayName',
@@ -104,7 +99,6 @@ export default function CPSuscResults({
     id: 'cp-susc-results',
     cacheKey,
     suscResults: cpSuscResults,
-    isolateLookup,
     indivMutIndivFoldColumnDefs,
     indivMutAggFoldColumnDefs,
     comboMutsIndivFoldColumnDefs,

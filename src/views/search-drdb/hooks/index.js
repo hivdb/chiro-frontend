@@ -1,6 +1,5 @@
 import useConfig from './use-config';
 import useProviders from './use-providers';
-import useIsolates, {compareMutations} from './use-isolates';
 import useIsolateAggs from './use-isolate-aggs';
 import useLookup from './use-lookup';
 import {
@@ -29,7 +28,6 @@ import useVariantTotalNumExp from './use-variant-total-numexp';
 export {
   useConfig,
   useProviders,
-  useIsolates,
   useIsolateAggs,
   useAbSuscResults,
   useCPSuscResults,
@@ -42,7 +40,6 @@ export {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
   useCompareSuscResultsByInfectedIsolate,
-  compareMutations,
   useArticleNumExpLookup,
   useAntibodyNumExpLookup,
   useVaccineNumExpLookup,

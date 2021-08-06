@@ -11,7 +11,7 @@ import style from './style.module.scss';
 
 
 export default function SusceptibilityData() {
-  const ComboProvider = useProviders();
+  const ComboProvider = useProviders('searchBoxOnly');
   const {
     isolateAggs,
     isPending: isIsolateAggPending

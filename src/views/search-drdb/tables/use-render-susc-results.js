@@ -7,12 +7,21 @@ import {H3, H4} from 'sierra-frontend/dist/components/heading-tags';
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
 
+import Isolates from '../hooks/isolates';
+
 import style from './style.module.scss';
 
 
 const type2Section = {
   'individual-mutation': 'indivMut',
   'mutation-combination': 'comboMuts'
+};
+
+
+SimpleTableWrapper.propTypes = {
+  cacheKey: PropTypes.string.isRequired,
+  data: PropTypes.array,
+  hideNN: PropTypes.bool
 };
 
 
@@ -85,12 +94,6 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   </>;
 }
 
-SimpleTableWrapper.propTypes = {
-  cacheKey: PropTypes.string.isRequired,
-  data: PropTypes.array,
-  hideNN: PropTypes.bool
-};
-
 
 export default function useRenderSuscResults({
   id,
@@ -98,16 +101,22 @@ export default function useRenderSuscResults({
   cacheKey,
   hideNN = false,
   suscResults,
-  isolateLookup,
   indivMutIndivFoldColumnDefs,
   indivMutAggFoldColumnDefs,
   comboMutsIndivFoldColumnDefs,
   comboMutsAggFoldColumnDefs
 }) {
 
+  const {
+    isolateLookup,
+    isPending: isIsoLookupPending
+  } = Isolates.useMe();
+
+  const isPending = !loaded || isIsoLookupPending;
+
   const suscResultsBySection = React.useMemo(
     () => {
-      if (!loaded) {
+      if (isPending) {
         return;
       }
       return suscResults.reduce(
@@ -128,13 +137,13 @@ export default function useRenderSuscResults({
         }
       );
     },
-    [loaded, suscResults, isolateLookup]
+    [isPending, suscResults, isolateLookup]
   );
 
 
   const element = React.useMemo(
     () => {
-      if (loaded) {
+      if (!isPending) {
         const numSections = (
           Object.entries(suscResultsBySection)
             .filter(
@@ -238,7 +247,7 @@ export default function useRenderSuscResults({
     },
     [
       id,
-      loaded,
+      isPending,
       hideNN,
       cacheKey,
       indivMutIndivFoldColumnDefs,

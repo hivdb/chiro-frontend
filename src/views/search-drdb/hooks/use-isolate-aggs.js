@@ -1,6 +1,6 @@
 import React from 'react';
 import useQuery from './use-query';
-import {compareMutations} from './use-isolates';
+import {compareMutations} from './isolates';
 
 
 function getMutations(isoAggkey) {

@@ -5,7 +5,6 @@ import GitHubCorner from '../../components/github-corner';
 import {useCleanQuery} from './hooks/location-params';
 import {
   useProviders,
-  useIsolates,
   useIsolateAggs,
   useAbSuscResults,
   useCPSuscResults,
@@ -16,10 +15,6 @@ import SearchDRDBLayout from './layout';
 
 function SearchDRDB(props) {
 
-  const {
-    isolateLookup,
-    isPending: isIsolatePending
-  } = useIsolates();
   const {
     isolateAggs,
     isPending: isIsolateAggsPending
@@ -39,12 +34,10 @@ function SearchDRDB(props) {
   } = useVPSuscResults();
 
   const searchBoxLoaded = (
-    !isIsolatePending &&
     !isIsolateAggsPending
   );
 
   const resultLoaded = (
-    !isIsolatePending &&
     !isAbResultPending &&
     !isCPPending &&
     !isVPPending
@@ -58,7 +51,6 @@ function SearchDRDB(props) {
       <SearchDRDBLayout
        loaded={resultLoaded}
        isolateAggs={isolateAggs}
-       isolateLookup={isolateLookup}
        abSuscResults={abSuscResults}
        cpSuscResults={cpSuscResults}
        vpSuscResults={vpSuscResults}
@@ -74,7 +66,7 @@ function SearchDRDB(props) {
 export default function Wrapper(props) {
   useCleanQuery();
 
-  const ComboProvider = useProviders();
+  const ComboProvider = useProviders('all');
 
   return <ComboProvider>
     <SearchDRDB {...props} />

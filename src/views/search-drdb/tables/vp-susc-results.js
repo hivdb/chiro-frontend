@@ -5,12 +5,10 @@ import useRenderSuscResults from './use-render-susc-results';
 export default function VPSuscResults({
   loaded,
   cacheKey,
-  isolateLookup,
   vpSuscResults
 }) {
 
   const indivMutIndivFoldColumnDefs = useColumnDefs({
-    isolateLookup,
     columns: [
       'refName',
       'assayName',
@@ -33,7 +31,6 @@ export default function VPSuscResults({
   });
 
   const indivMutAggFoldColumnDefs = useColumnDefs({
-    isolateLookup,
     columns: [
       'refName',
       'assayName',
@@ -57,7 +54,6 @@ export default function VPSuscResults({
   });
 
   const comboMutsIndivFoldColumnDefs = useColumnDefs({
-    isolateLookup,
     columns: [
       'refName',
       'assayName',
@@ -80,7 +76,6 @@ export default function VPSuscResults({
   });
 
   const comboMutsAggFoldColumnDefs = useColumnDefs({
-    isolateLookup,
     columns: [
       'refName',
       'assayName',
@@ -108,7 +103,6 @@ export default function VPSuscResults({
     id: 'vp-susc-results',
     cacheKey,
     suscResults: vpSuscResults,
-    isolateLookup,
     indivMutIndivFoldColumnDefs,
     indivMutAggFoldColumnDefs,
     comboMutsIndivFoldColumnDefs,

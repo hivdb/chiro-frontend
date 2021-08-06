@@ -15,8 +15,7 @@ import style from './style.module.scss';
 
 SearchDRDBStatHeader.propTypes = {
   isolateAggs: PropTypes.array,
-  loaded: PropTypes.bool.isRequired,
-  isolates: PropTypes.array
+  loaded: PropTypes.bool.isRequired
 };
 
 SearchDRDBStatHeader.defaultProps = {
@@ -25,8 +24,7 @@ SearchDRDBStatHeader.defaultProps = {
 
 export default function SearchDRDBStatHeader({
   isolateAggs,
-  loaded,
-  isolates
+  loaded
 }) {
 
   const {
@@ -72,8 +70,7 @@ export default function SearchDRDBStatHeader({
                   {refName ? <ArticleCard refName={refName} /> : null}
                   <PercentBars
                    loaded={loaded}
-                   isolateAggs={isolateAggs}
-                   isolates={isolates} />
+                   isolateAggs={isolateAggs} />
                 </>
               }
             ]}

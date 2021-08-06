@@ -8,6 +8,7 @@ import {
 } from '../../hooks';
 
 import Variants from '../../hooks/variants';
+import Isolates from '../../hooks/isolates';
 
 import PercentBar from '../../../../components/percent-bar';
 
@@ -17,20 +18,23 @@ import VariantItem from './item';
 
 VariantPercentBar.propTypes = {
   loaded: PropTypes.bool.isRequired,
-  isolateAggs: PropTypes.array,
-  isolates: PropTypes.array
+  isolateAggs: PropTypes.array
 };
 
 
 export default function VariantPercentBar({
   loaded,
-  isolateAggs,
-  isolates
+  isolateAggs
 }) {
   const {
     variants,
     isPending: isVarListPending
   } = Variants.useMe();
+
+  const {
+    isolates,
+    isPending: isIsoListPending
+  } = Isolates.useMe();
 
   const [varLookup, isVarPending] = useVariantNumExpLookup({
     skip: !loaded
@@ -47,6 +51,7 @@ export default function VariantPercentBar({
   const isPending = (
     !loaded ||
     isVarListPending ||
+    isIsoListPending ||
     isVarPending ||
     isIsoAggPending ||
     isIsoPending

@@ -1,11 +1,12 @@
 import React from 'react';
 
+import LocationParams from './location-params';
 import Articles from './articles';
 import Antibodies from './antibodies';
 import Vaccines from './vaccines';
 import InfectedVariants from './infected-variants';
 import Variants from './variants';
-import LocationParams from './location-params';
+import Isolates from './isolates';
 
 const providers = {
   locationParams: LocationParams.Provider,
@@ -13,25 +14,37 @@ const providers = {
   antibodies: Antibodies.Provider,
   vaccines: Vaccines.Provider,
   infectedVariants: InfectedVariants.Provider,
-  variants: Variants.Provider
+  variants: Variants.Provider,
+  isolates: Isolates.Provider
 };
 
 
-// dependency order: bottom ones are depended on the top ones
-const defaultProviderNames = [
-  'locationParams',
-  'articles',
-  'antibodies',
-  'vaccines',
-  'infectedVariants',
-  'variants'
-];
+// dependency order: top ones are depended by the bottom ones
+const presetProviderNames = {
+  searchBoxOnly: [
+    'locationParams',
+    'articles',
+    'antibodies',
+    'vaccines',
+    'infectedVariants',
+    'variants'
+  ],
+  all: [
+    'locationParams',
+    'articles',
+    'antibodies',
+    'vaccines',
+    'infectedVariants',
+    'variants',
+    'isolates' // isolates depends on variants
+  ]
+};
 
 
-export default function useProviders(providerNames) {
-  if (!providerNames) {
-    providerNames = [...defaultProviderNames].reverse();
-  }
+export default function useProviders(preset) {
+  const providerNames = [
+    ...presetProviderNames[preset]
+  ].reverse();
 
   return React.useCallback(
     ({children}) => {

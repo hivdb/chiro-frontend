@@ -1,5 +1,5 @@
 import React from 'react';
-import {compareIsolates} from './use-isolates';
+import {compareIsolates} from './isolates';
 import Antibodies, {compareAntibodyLists} from './antibodies';
 
 
