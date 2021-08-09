@@ -1,10 +1,14 @@
 import React from 'react';
+import {csvStringify} from 'sierra-frontend/dist/utils/csv';
 
 import LocationParams from './location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useAntibodyNumExperimentLookup(skip) {
+export default function useAntibodyNumExperimentLookup(
+  skip,
+  abAggregateBy = 'antibody:indiv'
+) {
   const aggregateBy = [];
   const {
     params: {
@@ -26,7 +30,7 @@ export default function useAntibodyNumExperimentLookup(skip) {
     suscSummary,
     isPending: isSuscSummaryPending
   } = useSuscSummary({
-    aggregateBy: ['antibody:indiv', ...aggregateBy],
+    aggregateBy: [abAggregateBy, ...aggregateBy],
     refName,
     varName,
     isoAggkey,
@@ -56,7 +60,7 @@ export default function useAntibodyNumExperimentLookup(skip) {
         __ANY: anySuscSummary[0]?.numExperiments || 0
       };
       for (const one of suscSummary) {
-        lookup[one.antibodyNames.join(',')] = one.numExperiments;
+        lookup[csvStringify(one.antibodyNames)] = one.numExperiments;
       }
       return lookup;
     },

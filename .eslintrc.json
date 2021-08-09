@@ -81,6 +81,9 @@
       "warn",
       "never"
     ],
+    "space-infix-ops": [
+      "warn"
+    ],
     "array-bracket-newline": [
       "warn",
       "consistent"

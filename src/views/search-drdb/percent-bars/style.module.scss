@@ -1,32 +1,60 @@
 @import '../../../styles/colors';
+@import '../../../styles/variables';
 
-.percent-bar-item_variant {
+@mixin percent-bar-item($color, $nth) {
 
   &::before, &::after {
-    background-color: $main-color;
+    background-color: $color;
     filter: brightness(calc(var(--index) / 4 + .8));
   }
 
-  &:global(__cta) {
-    color: $main-color;
-    filter: brightness(.4);
+  & > &:global(__cta), & > &:global(__remove) {
+    color: $color;
+    filter: brightness(.6);
+    &:hover {
+      color: $color;
+    }
   }
 
-  @for $i from 0 through 2 {
-    &[data-index="#{$i}"] > &:global(__cta) {
+  @for $i from 0 through $nth {
+    &[data-index="#{$i}"] > &:global(__cta), &[data-index="#{$i}"] > &:global(__remove) {
       color: white;
       filter: none;
+      &:hover {
+        color: white;
+      }
     }
   }
 
 }
 
-.percent-bar-desc, .active-desc {
+.percent-bar-item_variant {
+  @include percent-bar-item($main-color, 2);
+}
+
+.percent-bar-item_rx {
+  @include percent-bar-item(#d14204, 4);
+}
+
+.percent-bar-item_variant, .percent-bar-item_rx {
+  &[data-is-active="true"] .percent-bar-desc {
+    .title .title-action {
+      display: block;
+      float: right;
+      font-size: .9rem;
+      margin-left: 2rem;
+      font-family: $font-family;
+    }
+  }
+}
+
+.percent-bar-desc {
   width: max-content;
   max-width: 40rem;
   font-size: .9rem;
 
   .title {
+    position: relative;
     padding-bottom: .3rem;
     border-bottom: 1px solid $dividing-line;
     margin-bottom: .5rem;
@@ -39,6 +67,11 @@
       font-weight: 400;
       opacity: .7;
     }
+    .title-action {
+      display: none;
+    }
+
+
   }
 
   p, ul {
@@ -51,6 +84,8 @@
   }
 
   ul {
+    max-height: 25rem;
+    overflow: auto;
     &[data-compact="true"] {
       display: flex;
       flex-wrap: wrap;

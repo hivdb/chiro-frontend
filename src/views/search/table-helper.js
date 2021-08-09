@@ -127,7 +127,7 @@ const compoundColDef = label => new ColumnDef({
 });
 
 
-const nameAndDescColDef = (name, label, none='?') => new ColumnDef({
+const nameAndDescColDef = (name, label, none = '?') => new ColumnDef({
   name,
   label,
   render: (obj) => {

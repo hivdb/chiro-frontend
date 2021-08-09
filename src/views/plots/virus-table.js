@@ -26,7 +26,7 @@ class VirusTableInner extends React.Component {
     } = this.props;
 
     return <>{
-      loading? <Loader active inline="centered" /> :
+      loading ? <Loader active inline="centered" /> :
       <TargetTable data={viruses}/>
     }</>;
   }

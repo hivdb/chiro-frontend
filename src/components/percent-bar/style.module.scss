@@ -43,7 +43,20 @@ ul.percent-bar {
       padding: .25rem;
       display: block;
       border: none;
-      background-color: none;
+      background-color: transparent;
+    }
+
+    .remove {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 1.2rem;
+      margin-right: .5rem;
+      opacity: .8;
+      transition: opacity 150ms ease-in-out;
+      &:hover {
+        opacity: 1;
+      }
     }
 
     .desc {
@@ -74,6 +87,12 @@ ul.percent-bar {
       display: block;
     }
 
+    &:hover, &[data-is-active="true"] {
+      &::before, .cta {
+        transform: translate(0, - $transition-offset);
+      }
+    }
+
     &[data-has-cta="true"] {
       &::after {
         transition: width 350ms ease-in-out;
@@ -87,9 +106,6 @@ ul.percent-bar {
         height: 2px;
       }
       &:hover, &[data-is-active="true"] {
-        &::before, .cta {
-          transform: translate(0, - $transition-offset);
-        }
         &::after {
           width: 100%;
         }

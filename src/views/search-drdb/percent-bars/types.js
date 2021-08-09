@@ -1,0 +1,19 @@
+const TYPE_INFVAR = 0;
+const TYPE_VACCINE = 1;
+const TYPE_MAB = 2;
+const TYPE_MAB_INDIV = 3;
+const TYPE_VARIANT = 4;
+const TYPE_ISOAGG = 5;
+const TYPE_ISO = 6;
+const TYPE_OTHER = 7;
+
+export {
+  TYPE_INFVAR,
+  TYPE_VACCINE,
+  TYPE_MAB,
+  TYPE_MAB_INDIV,
+  TYPE_VARIANT,
+  TYPE_ISOAGG,
+  TYPE_ISO,
+  TYPE_OTHER
+};

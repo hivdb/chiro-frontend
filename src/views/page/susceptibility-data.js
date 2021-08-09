@@ -26,21 +26,23 @@ export default function SusceptibilityData() {
             <div
              className={style['search-item']}
              data-type-item-container>
-              <label className={style['search-label']}>Reference</label>
+              <label className={style['search-label']}>References</label>
               {articleDropdown}
             </div>
             <div
              className={style['search-item']}
              data-type-item-container>
               <label className={style['search-label']}>
-                Plasma / Monoclonal antibody
+                Plasma Abs / mAbs
               </label>
               {rxDropdown}
             </div>
             <div
              className={style['search-item']}
              data-type-item-container>
-              <label className={style['search-label']}>Variant</label>
+              <label className={style['search-label']}>
+                Variants / Mutations
+              </label>
               {variantDropdown}
             </div>
           </div>}

@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Link, useRouter} from 'found';
 import {useQuery} from '@apollo/client';
+import {TiDelete} from '@react-icons/all-files/ti/TiDelete';
+
+import {buildLocationQuery} from '../hooks/location-params';
 
 import articleQuery from './search.gql';
 import style from './style.module.scss';
@@ -51,30 +55,40 @@ export default function ArticleCard({refName}) {
     skip: !refName
   });
 
+  const {match: {location: loc}} = useRouter();
+
   if (error) {
     console.error(`ArticleCard: ${error}`);
+    return null;
   }
 
-  if (loading || error || !data?.article) {
+  if (!refName) {
     return null;
   }
 
   const {
-    article: {
-      authors,
-      title,
-      journal,
-      year,
-      doi,
-      pmid,
-      pmcid
-    }
-  } = data;
+    authors = [],
+    title,
+    journal,
+    year,
+    doi = [],
+    pmid = [],
+    pmcid = []
+  } = data?.article || {};
 
   return (
     <section
-     data-loaded={!loading}
+     data-loaded={!loading && !!data?.article}
      className={style['article-card']}>
+      <div className={style['action']}>
+        <Link
+         className={style['remove']}
+         to={{
+           pathname: loc.pathname,
+           query: buildLocationQuery('article', undefined, loc.query)
+         }}><TiDelete/>
+        </Link>
+      </div>
       <div className={style['journal-year']}>
         {journal} ({year})
       </div>

@@ -1,13 +1,22 @@
 import nestGet from 'lodash/get';
 import nestSet from 'lodash/set';
+import {buildLocationQuery} from '../hooks/location-params';
+
+import {
+  TYPE_VARIANT,
+  TYPE_ISOAGG,
+  TYPE_INFVAR,
+  TYPE_VACCINE,
+  TYPE_MAB
+} from './types';
 
 
 export function groupSmallSlices(
   array, 
   sizeKey, 
   groupItem,
-  maxNumItems,
-  maxScaledGroupPcnt = 0.35
+  maxNumItems/*,
+  maxScaledGroupPcnt = 0.35*/
 ) {
   const items = [...array].reverse();
   let totalSize = items.reduce(
@@ -27,11 +36,11 @@ export function groupSmallSlices(
       groupOrigItems.push(item);
     }
     else {
-      if (groupPcnt > maxScaledGroupPcnt) {
+      /*if (groupPcnt > maxScaledGroupPcnt) {
         groupPcnt = maxScaledGroupPcnt;
         const remainSize = totalSize - groupItemSize;
         totalSize = (remainSize / (1 - groupPcnt)).toFixed();
-      }
+      }*/
       resultItems.push({
         pcnt: size / totalSize,
         item
@@ -51,4 +60,53 @@ export function groupSmallSlices(
     });
   }
   return resultItems;
+}
+
+
+export function typeToAction(type) {
+  let action;
+
+  switch (type) {
+    case TYPE_VARIANT:
+      action = 'variant';
+      break;
+    case TYPE_ISOAGG:
+      action = 'mutations';
+      break;
+    case TYPE_INFVAR:
+      action = 'cp';
+      break;
+    case TYPE_VACCINE:
+      action = 'vaccine';
+      break;
+    case TYPE_MAB:
+      action = 'antibodies';
+      break;
+    default:
+      console.warn(`type not allowed: ${type}`);
+  }
+
+  return action;
+}
+
+
+export function buildResetQuery(type, baseQuery) {
+  const action = typeToAction(type);
+  return buildLocationQuery(
+    action,
+    undefined,
+    baseQuery
+  );
+}
+
+export function buildFilterQuery(type, value, baseQuery) {
+  const action = typeToAction(type);
+  if (action === 'antibodies') {
+    value = 'any';
+  }
+  return buildLocationQuery(
+    action,
+    value,
+    baseQuery
+  );
 }

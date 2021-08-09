@@ -170,7 +170,7 @@ class GeneSeqGenerator extends React.Component {
             <span className={style['aaseq']}>{this.state.AASeq}</span>
           </p>
 
-        </>: <>
+        </> : <>
           <p className={style['desc-em']}>
             Please select gene and input mutations.
           </p>
@@ -238,7 +238,7 @@ function checkRefAAPos(reference, geneName, mutations) {
     if (!gene['AA']) {
       return null;
     }
-    const refAA = gene['AA'][pos-1];
+    const refAA = gene['AA'][pos - 1];
     if (!refAA) {
       return null;
     }
@@ -271,7 +271,7 @@ function generateSequence(reference, geneName, mutations) {
   for (const mut of mutations) {
     const pos = mut['pos'];
     if (mut['mut']) {
-      refAASeq[pos-1] = mut['mut'];
+      refAASeq[pos - 1] = mut['mut'];
     }
   }
 

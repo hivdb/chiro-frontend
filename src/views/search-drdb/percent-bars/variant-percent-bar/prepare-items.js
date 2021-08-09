@@ -9,7 +9,7 @@ import {
   TYPE_ISOAGG,
   TYPE_ISO,
   TYPE_OTHER
-} from './types';
+} from '../types';
 
 
 export default function prepareItems({

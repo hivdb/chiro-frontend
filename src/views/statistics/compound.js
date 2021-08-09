@@ -110,7 +110,7 @@ class CompoundTableInner extends React.Component {
 
     return (
       <>{
-        loading? <Loader active inline="centered" /> :
+        loading ? <Loader active inline="centered" /> :
         <SimpleTable
          cacheKey={cacheKey}
          columnDefs={tableColumns}

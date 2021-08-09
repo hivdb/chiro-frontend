@@ -35,24 +35,33 @@ export default function SearchDRDBStatHeader() {
                 className: style['search-box'],
                 width: 4,
                 cells: [
-                  {label: 'Reference', value: articleDropdown},
-                  {label: 'Plasma / Monoclonal antibody', value: rxDropdown},
-                  {label: 'Variant', value: variantDropdown}
+                  {label: 'References', value: articleDropdown},
+                  {
+                    label: 'Plasma Abs / mAbs',
+                    value: rxDropdown
+                  },
+                  {
+                    label: (
+                      'Variants / Mutations'
+                    ),
+                    value: variantDropdown
+                  }
                 ]
               },
               {
                 width: 12,
                 className: style['search-summary'],
-                description: formOnly ? <>
-                  <Header as={H1} disableAnchor>
-                    Resistance Database Search
-                  </Header>
-                  <p>
-                    Select an option from left drop down
-                    lists to start searching.
-                  </p>
-                </> : <>
-                  {refName ? <ArticleCard refName={refName} /> : null}
+                description: <>
+                  {formOnly ? <>
+                    <Header as={H1} disableAnchor>
+                      Resistance Database Search
+                    </Header>
+                    <p>
+                      Select a condition to start searching.
+                    </p>
+                  </> : <>
+                    {refName ? <ArticleCard refName={refName} /> : null}
+                  </>}
                   <PercentBars />
                 </>
               }

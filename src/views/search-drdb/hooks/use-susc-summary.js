@@ -57,8 +57,8 @@ const AGG_OPTION_BY_VALUE_NAME = {
 };
 
 const ORDER_BY_VALUE_NAME = {
-  antibodyNames: ['antibody_order'],
-  vaccineName: ['vaccine_order']
+  antibodyNames: ['CAST(antibody_order AS INTEGER)'],
+  vaccineName: ['CAST(vaccine_order AS INTEGER)']
 };
 
 
@@ -77,9 +77,6 @@ function prepareAggFilter(
       if (aggregateBy.includes(aggOpt)) {
         where.push(`${snakeCase(valueName)} = $${valueName}`);
         params[`$${valueName}`] = value;
-        orderBy.push(
-          ORDER_BY_VALUE_NAME[valueName] || [snakeCase(valueName)]
-        );
         noMatch = false;
         break;
       }
@@ -95,6 +92,9 @@ function prepareAggFilter(
       }
     }
   }
+  orderBy.push(
+    ORDER_BY_VALUE_NAME[valueName] || [snakeCase(valueName)]
+  );
   return [where, params, orderBy];
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link, useRouter} from 'found';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 
@@ -6,11 +7,12 @@ import {
   TYPE_VARIANT,
   TYPE_ISOAGG,
   TYPE_OTHER
-} from './types';
+} from '../types';
 
 import style from '../style.module.scss';
 
-import {itemShape} from './prop-types';
+import {buildResetQuery, buildFilterQuery} from '../funcs';
+import {itemShape} from '../prop-types';
 
 
 VariantDesc.propTypes = {
@@ -30,6 +32,7 @@ export default function VariantDesc({
     subItems
   } = item;
 
+  const {match: {location: loc}} = useRouter();
   const compactList = subItems && subItems.length > 30;
 
   return (
@@ -41,6 +44,15 @@ export default function VariantDesc({
             ({displayExtra})
           </div>
         ) : null}
+        {type !== TYPE_OTHER ?
+          <div className={style['title-action']}>
+            [
+            <Link to={{
+              pathname: loc.pathname,
+              query: buildResetQuery(type, loc.query)
+            }}>clear filter</Link>
+            ]
+          </div> : null}
       </div>
       <p>
         This category contains{' '}
@@ -59,9 +71,16 @@ export default function VariantDesc({
       </p>
       {type === TYPE_VARIANT || type === TYPE_OTHER ? (
         <ul data-compact={compactList}>
-          {subItems.map(({name, display, numExp}) => (
+          {subItems.map(({name, type, display, numExp}) => (
             <li key={name}>
-              {display} (n=<strong>{numExp}</strong>)
+              {type === TYPE_VARIANT || type === TYPE_ISOAGG ? (
+                <Link to={{
+                  pathname: loc.pathname,
+                  query: buildFilterQuery(type, name, loc.query)
+                }}>
+                  {display}
+                </Link>
+              ) : display} (n=<strong>{numExp}</strong>)
             </li>
           ))}
         </ul>

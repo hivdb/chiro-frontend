@@ -118,7 +118,7 @@ function renderArticle(articles) {
       return (
         <span key={idx}>
           <Link to={url}>{nickname}</Link>
-          {idx < (articles.length - 1) ? '; ': null}
+          {idx < (articles.length - 1) ? '; ' : null}
         </span>
       );
     })}

@@ -40,7 +40,7 @@ const tableColumns = [
     name: 'publishDate',
     label: 'Publish Date',
     render: (year, {articles}) => {
-      const publishDate = articles.length > 0? articles[0].publishDate: null;
+      const publishDate = articles.length > 0 ? articles[0].publishDate : null;
       if (publishDate) {
         return publishDate.slice(0, 10);
       } else {
@@ -50,9 +50,9 @@ const tableColumns = [
     sort: (data) => {
       return data.sort(({articles: articles1}, {articles: articles2}) => {
         const publishDate1 =
-          articles1.length > 0 ? articles1[0].publishDate: null;
+          articles1.length > 0 ? articles1[0].publishDate : null;
         const publishDate2 =
-          articles1.length > 0 ? articles2[0].publishDate: null;
+          articles1.length > 0 ? articles2[0].publishDate : null;
 
         if (!publishDate1) {
           return -1;

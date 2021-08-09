@@ -9,14 +9,25 @@ import {
 import Variants from '../../hooks/variants';
 import Isolates from '../../hooks/isolates';
 import IsolateAggs from '../../hooks/isolate-aggs';
+import LocationParams from '../../hooks/location-params';
 
 import PercentBar from '../../../../components/percent-bar';
 
+import VariantRxItem from '../item';
+
 import prepareItems from './prepare-items';
-import VariantItem from './item';
+import VariantDesc from './desc';
 
 
 export default function VariantPercentBar() {
+
+  const {
+    params: {
+      varName,
+      isoAggkey
+    }
+  } = LocationParams.useMe();
+
   const {
     variants,
     isPending: isVarListPending
@@ -51,17 +62,33 @@ export default function VariantPercentBar() {
         return [];
       }
       else {
+        let filteredVarLookup = varLookup;
+        let filteredIsoAggLookup = isoAggLookup;
+
+        if (varName && varName !== 'any') {
+          filteredVarLookup = {};
+          filteredVarLookup[varName] = varLookup[varName];
+          filteredIsoAggLookup = {};
+        }
+        else if (isoAggkey && isoAggkey !== 'any') {
+          filteredIsoAggLookup = {};
+          filteredIsoAggLookup[isoAggkey] = isoAggLookup[isoAggkey];
+          filteredVarLookup = {};
+        }
+
         return prepareItems({
           variants,
           isolateAggs,
           isolates,
-          varLookup,
-          isoAggLookup,
+          varLookup: filteredVarLookup,
+          isoAggLookup: filteredIsoAggLookup,
           isoLookup
         });
       }
     },
     [
+      varName,
+      isoAggkey,
       isPending,
       variants,
       isolateAggs,
@@ -79,8 +106,10 @@ export default function VariantPercentBar() {
           pcnt,
           item
         }, index) => (
-          <VariantItem
+          <VariantRxItem
            key={item.name}
+           styleType="variant"
+           descComponent={VariantDesc}
            {...{
              pcnt,
              item,

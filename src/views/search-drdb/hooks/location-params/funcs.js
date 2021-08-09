@@ -10,7 +10,7 @@ export function cleanQuery(query) {
   query = {...query};
   if (query.form_only) {
     query = {
-      form_only: ''
+      form_only: null
     };
   }
 
@@ -20,6 +20,21 @@ export function cleanQuery(query) {
 
   if (query.mutations !== undefined && query.variant !== undefined) {
     delete query.variant;
+  }
+
+  query = Object
+    .entries(query)
+    .filter(([, val]) => val !== undefined)
+    .reduce(
+      (acc, [key, val]) => {
+        acc[key] = val;
+        return acc;
+      },
+      {}
+    );
+  if (Object.keys(query).length === 0) {
+    // force form_only since loading all take too long
+    query.form_only = null;
   }
 
   query = Object
