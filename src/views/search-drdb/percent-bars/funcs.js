@@ -51,13 +51,21 @@ export function groupSmallSlices(
   resultItems.reverse();
   nestSet(groupItem, sizeKey, groupItemSize);
   if (groupItemSize > 0) {
-    resultItems.push({
-      pcnt: groupPcnt,
-      item: {
-        ...groupItem,
-        subItems: groupOrigItems.reverse()
-      }
-    });
+    if (groupOrigItems.length > 1) {
+      resultItems.push({
+        pcnt: groupPcnt,
+        item: {
+          ...groupItem,
+          subItems: groupOrigItems.reverse()
+        }
+      });
+    }
+    else {
+      resultItems.push({
+        pcnt: groupPcnt,
+        item: groupOrigItems[0]
+      });
+    }
   }
   return resultItems;
 }
