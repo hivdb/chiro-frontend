@@ -1,25 +1,20 @@
 import React from 'react';
 
-import {
-  useVariantNumExpLookup, 
-  useIsolateAggNumExpLookup,
-  useIsolateNumExpLookup
-} from '../../hooks';
-
 import Variants from '../../hooks/variants';
 import Isolates from '../../hooks/isolates';
+import {NumExpStats} from '../../hooks/susc-summary';
 import IsolateAggs from '../../hooks/isolate-aggs';
 import LocationParams from '../../hooks/location-params';
 
 import PercentBar from '../../../../components/percent-bar';
 
-import VariantRxItem from '../item';
+import VirusRxItem from '../item';
 
 import prepareItems from './prepare-items';
-import VariantDesc from './desc';
+import VirusDesc from './desc';
 
 
-export default function VariantPercentBar() {
+export default function VirusPercentBar() {
 
   const {
     params: {
@@ -43,9 +38,9 @@ export default function VariantPercentBar() {
     isPending: isIsoAggListPending
   } = IsolateAggs.useMe();
 
-  const [varLookup, isVarPending] = useVariantNumExpLookup();
-  const [isoAggLookup, isIsoAggPending] = useIsolateAggNumExpLookup();
-  const [isoLookup, isIsoPending] = useIsolateNumExpLookup();
+  const [varLookup, isVarPending] = NumExpStats.useVar();
+  const [isoAggLookup, isIsoAggPending] = NumExpStats.useIsoAgg();
+  const [isoLookup, isIsoPending] = NumExpStats.useIso();
 
   const isPending = (
     isVarListPending ||
@@ -106,10 +101,10 @@ export default function VariantPercentBar() {
           pcnt,
           item
         }, index) => (
-          <VariantRxItem
+          <VirusRxItem
            key={item.name}
            styleType="variant"
-           descComponent={VariantDesc}
+           descComponent={VirusDesc}
            {...{
              pcnt,
              item,

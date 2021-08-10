@@ -1,9 +1,9 @@
 import React from 'react';
-import LocationParams from './location-params';
+import LocationParams from '../location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useIsolateAggNumExpLookup(skip) {
+export default function useVariantNumExp() {
   let rxType;
   let {
     params: {
@@ -50,32 +50,31 @@ export default function useIsolateAggNumExpLookup(skip) {
       aggregateBy.push('infected_variant');
     }
   }
-  const {
+  const [
     suscSummary,
     isPending
-  } = useSuscSummary({
-    aggregateBy: ['isolate_agg', ...aggregateBy],
+  ] = useSuscSummary({
+    aggregateBy: ['variant', ...aggregateBy],
     refName,
     rxType,
     antibodyNames: abNames,
     vaccineName,
     infectedVarName,
-    selectColumns: ['iso_aggkey', 'num_experiments'],
-    skip
+    selectColumns: ['var_name', 'num_experiments']
   });
 
   const lookup = React.useMemo(
     () => {
-      if (skip || isPending) {
+      if (isPending) {
         return {};
       }
       const lookup = {};
       for (const one of suscSummary) {
-        lookup[one.isoAggkey] = one.numExperiments;
+        lookup[one.varName] = one.numExperiments;
       }
       return lookup;
     },
-    [skip, isPending, suscSummary]
+    [isPending, suscSummary]
   );
   return [lookup, isPending];
 }

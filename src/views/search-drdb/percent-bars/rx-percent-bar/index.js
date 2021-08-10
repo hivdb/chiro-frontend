@@ -1,13 +1,8 @@
 import React from 'react';
 
-import {
-  useVaccineNumExpLookup, 
-  useAntibodyNumExpLookup,
-  useInfectedVariantNumExpLookup
-} from '../../hooks';
-
 import Vaccines from '../../hooks/vaccines';
 import Antibodies from '../../hooks/antibodies';
+import {NumExpStats} from '../../hooks/susc-summary';
 import InfectedVariants from '../../hooks/infected-variants';
 import LocationParams from '../../hooks/location-params';
 
@@ -25,7 +20,7 @@ export default function RxPercentBar() {
       infectedVarName,
       abNames
     }
-  } = LocationParams.useMe(); 
+  } = LocationParams.useMe();
 
   const {
     vaccines,
@@ -43,15 +38,14 @@ export default function RxPercentBar() {
     isPending: isInfVarListPending
   } = InfectedVariants.useMe();
 
-  const [vaccNumExpLookup, isVaccNumExpPending] = useVaccineNumExpLookup();
-  const [abNumExpLookup, isAbNumExpPending] = useAntibodyNumExpLookup(
-    /* skip = */false,
+  const [vaccNumExpLookup, isVaccNumExpPending] = NumExpStats.useVacc();
+  const [abNumExpLookup, isAbNumExpPending] = NumExpStats.useAb(
     /* abAggregateBy = */'antibody'
   );
   const [
     infVarNumExpLookup,
     isInfVarNumExpPending
-  ] = useInfectedVariantNumExpLookup();
+  ] = NumExpStats.useInfVar();
 
   const isPending = (
     isVaccListPending ||

@@ -1,11 +1,7 @@
 import React from 'react';
 import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
-import {
-  useVariantNumExpLookup,
-  useIsolateAggNumExpLookup,
-  useVariantTotalNumExp
-} from '../hooks';
+import {NumExpStats} from '../hooks/susc-summary';
 import LocationParams from '../hooks/location-params';
 import Variants from '../hooks/variants';
 import IsolateAggs from '../hooks/isolate-aggs';
@@ -19,7 +15,7 @@ const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
 
 
-export default function useVariantDropdown() {
+export default function useVirusDropdown() {
 
   const {
     params: {
@@ -40,12 +36,18 @@ export default function useVariantDropdown() {
     isPending: isIsoAggsPending
   } = IsolateAggs.useMe();
 
-  const [varTotalNumExp, isVarTotalNumExpPending] = useVariantTotalNumExp();
-  const [varNumExpLookup, isVarNumExpLookupPending] = useVariantNumExpLookup();
+  const [
+    varTotalNumExp,
+    isVarTotalNumExpPending
+  ] = NumExpStats.useVirusTotal();
+  const [
+    varNumExpLookup,
+    isVarNumExpLookupPending
+  ] = NumExpStats.useVar();
   const [
     isoAggNumExpLookup,
     isIsoAggNumExpLookupPending
-  ] = useIsolateAggNumExpLookup();
+  ] = NumExpStats.useIsoAgg();
 
   const isPending = (
     isVarsPending ||

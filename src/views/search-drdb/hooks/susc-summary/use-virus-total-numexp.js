@@ -1,9 +1,8 @@
-import React from 'react';
-import LocationParams from './location-params';
+import LocationParams from '../location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useVariantTotalNumExperiment(skip) {
+export default function useVirusTotalNumExp() {
   let rxType;
   let {
     params: {
@@ -50,32 +49,22 @@ export default function useVariantTotalNumExperiment(skip) {
       aggregateBy.push('infected_variant');
     }
   }
-  const {
+  const [
     suscSummary,
     isPending
-  } = useSuscSummary({
-    aggregateBy: ['variant', ...aggregateBy],
+  ] = useSuscSummary({
+    aggregateBy,
     refName,
     rxType,
     antibodyNames: abNames,
     vaccineName,
     infectedVarName,
-    selectColumns: ['var_name', 'num_experiments'],
-    skip
+    selectColumns: ['num_experiments']
   });
-
-  const lookup = React.useMemo(
-    () => {
-      if (skip || isPending) {
-        return {};
-      }
-      const lookup = {};
-      for (const one of suscSummary) {
-        lookup[one.varName] = one.numExperiments;
-      }
-      return lookup;
-    },
-    [skip, isPending, suscSummary]
-  );
-  return [lookup, isPending];
+  if (isPending) {
+    return [null, true];
+  }
+  else {
+    return [suscSummary[0]?.numExperiments || 0, false];
+  }
 }

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import LocationParams from './location-params';
+import LocationParams from '../location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useVaccineNumExperimentLookup(skip) {
+export default function useInfectedVariantNumExp() {
   const aggregateBy = [];
   const {
     params: {
@@ -13,6 +13,7 @@ export default function useVaccineNumExperimentLookup(skip) {
       isoAggkey
     }
   } = LocationParams.useMe();
+
   if (refName) {
     aggregateBy.push('article');
   }
@@ -22,45 +23,43 @@ export default function useVaccineNumExperimentLookup(skip) {
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
-  const {
+  const [
     suscSummary,
-    isPending: isSuscSummaryPending
-  } = useSuscSummary({
-    aggregateBy: ['vaccine', ...aggregateBy],
+    isSuscSummaryPending
+  ] = useSuscSummary({
+    aggregateBy: ['infected_variant', ...aggregateBy],
     refName,
     varName,
     isoAggkey,
-    selectColumns: ['vaccine_name', 'num_experiments'],
-    skip
+    selectColumns: ['infected_var_name', 'num_experiments']
   });
-  const {
-    suscSummary: anySuscSummary,
-    isPending: isAnySuscSummaryPending
-  } = useSuscSummary({
+  const [
+    anySuscSummary,
+    isAnySuscSummaryPending
+  ] = useSuscSummary({
     aggregateBy: ['rx_type', ...aggregateBy],
-    rxType: 'vacc-plasma',
+    rxType: 'conv-plasma',
     refName,
     varName,
     isoAggkey,
-    selectColumns: ['num_experiments'],
-    skip
+    selectColumns: ['num_experiments']
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;
 
   const lookup = React.useMemo(
     () => {
-      if (skip || isPending) {
+      if (isPending) {
         return {};
       }
       const lookup = {
         __ANY: anySuscSummary[0]?.numExperiments || 0
       };
       for (const one of suscSummary) {
-        lookup[one.vaccineName] = one.numExperiments;
+        lookup[one.infectedVarName] = one.numExperiments;
       }
       return lookup;
     },
-    [skip, isPending, suscSummary, anySuscSummary]
+    [isPending, suscSummary, anySuscSummary]
   );
   return [lookup, isPending];
 }

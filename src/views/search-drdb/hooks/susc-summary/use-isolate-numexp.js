@@ -1,8 +1,9 @@
-import LocationParams from './location-params';
+import React from 'react';
+import LocationParams from '../location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useVariantTotalNumExperiment(skip) {
+export default function useIsolateNumExp() {
   let rxType;
   let {
     params: {
@@ -49,23 +50,38 @@ export default function useVariantTotalNumExperiment(skip) {
       aggregateBy.push('infected_variant');
     }
   }
-  const {
+  const [
     suscSummary,
     isPending
-  } = useSuscSummary({
-    aggregateBy,
+  ] = useSuscSummary({
+    aggregateBy: ['isolate', ...aggregateBy],
     refName,
     rxType,
     antibodyNames: abNames,
     vaccineName,
     infectedVarName,
-    selectColumns: ['num_experiments'],
-    skip
+    selectColumns: [
+      'iso_name',
+      'potency_type',
+      'potency_unit',
+      'num_experiments'
+    ]
   });
-  if (skip || isPending) {
-    return [null, true];
-  }
-  else {
-    return [suscSummary[0]?.numExperiments || 0, false];
-  }
+
+  const lookup = React.useMemo(
+    () => {
+      if (isPending) {
+        return {};
+      }
+      const lookup = {};
+      for (const {isoName, numExperiments} of suscSummary) {
+        // we have multiple rows since different control isolate
+        lookup[isoName] = lookup[isoName] || 0;
+        lookup[isoName] += numExperiments;
+      }
+      return lookup;
+    },
+    [isPending, suscSummary]
+  );
+  return [lookup, isPending];
 }

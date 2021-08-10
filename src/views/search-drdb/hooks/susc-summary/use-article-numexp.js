@@ -1,10 +1,10 @@
 import React from 'react';
 
-import LocationParams from './location-params';
+import LocationParams from '../location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useArticleNumExperimentLookup(skip) {
+export default function useArticleNumExp() {
   let rxType;
   let {
     params: {
@@ -16,7 +16,7 @@ export default function useArticleNumExperimentLookup(skip) {
     }
   } = LocationParams.useMe();
   const aggregateBy = [];
-      
+
   if (abNames && abNames.length > 0) {
     if (abNames[0] === 'any') {
       rxType = 'antibody';
@@ -56,10 +56,10 @@ export default function useArticleNumExperimentLookup(skip) {
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
-  const {
+  const [
     suscSummary,
-    isPending: isSuscSummaryPending
-  } = useSuscSummary({
+    isSuscSummaryPending
+  ] = useSuscSummary({
     aggregateBy: ['article', ...aggregateBy],
     rxType,
     antibodyNames: abNames,
@@ -67,13 +67,12 @@ export default function useArticleNumExperimentLookup(skip) {
     infectedVarName,
     varName,
     isoAggkey,
-    selectColumns: ['ref_name', 'num_experiments'],
-    skip
+    selectColumns: ['ref_name', 'num_experiments']
   });
-  const {
-    suscSummary: anySuscSummary,
-    isPending: isAnySuscSummaryPending
-  } = useSuscSummary({
+  const [
+    anySuscSummary,
+    isAnySuscSummaryPending
+  ] = useSuscSummary({
     aggregateBy,
     rxType,
     antibodyNames: abNames,
@@ -81,14 +80,13 @@ export default function useArticleNumExperimentLookup(skip) {
     infectedVarName,
     varName,
     isoAggkey,
-    selectColumns: ['num_experiments'],
-    skip
+    selectColumns: ['num_experiments']
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;
 
   const lookup = React.useMemo(
     () => {
-      if (skip || isPending) {
+      if (isPending) {
         return {};
       }
       const lookup = {
@@ -99,7 +97,7 @@ export default function useArticleNumExperimentLookup(skip) {
       }
       return lookup;
     },
-    [skip, isPending, suscSummary, anySuscSummary]
+    [isPending, suscSummary, anySuscSummary]
   );
   return [lookup, isPending];
 }

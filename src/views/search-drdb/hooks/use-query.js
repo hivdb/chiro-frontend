@@ -14,7 +14,7 @@ import useConfig from './use-config';
 const createClient = memoize(
   async function initClient(drdbVersion) {
     const worker = new Worker('/worker.sql-wasm.js');
-  
+
     const {payload} = await loadBinary(
       `covid-drdb-${drdbVersion}.db`
     );
@@ -45,7 +45,7 @@ const createClient = memoize(
 
 const execSQL = memoize(
   async function execSQL({sql, params, drdbVersion}) {
-    const start = new Date().getTime(); 
+    const start = new Date().getTime();
     const worker = await createClient(drdbVersion);
 
     const myId = parseInt(

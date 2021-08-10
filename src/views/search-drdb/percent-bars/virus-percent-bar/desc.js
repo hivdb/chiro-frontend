@@ -15,12 +15,12 @@ import {buildResetQuery, buildFilterQuery} from '../funcs';
 import {itemShape} from '../prop-types';
 
 
-VariantDesc.propTypes = {
+VirusDesc.propTypes = {
   className: PropTypes.string,
   item: itemShape.isRequired
 };
 
-export default function VariantDesc({
+export default function VirusDesc({
   className,
   item
 }) {

@@ -3,15 +3,9 @@ import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 import escapeRegExp from 'lodash/escapeRegExp';
 
-import {
-  useRxTotalNumExp,
-  useAntibodyNumExpLookup,
-  useVaccineNumExpLookup,
-  useInfectedVariantNumExpLookup
-} from '../hooks';
-
 import Antibodies from '../hooks/antibodies';
 import Vaccines from '../hooks/vaccines';
+import {NumExpStats} from '../hooks/susc-summary';
 import InfectedVariants from '../hooks/infected-variants';
 import LocationParams from '../hooks/location-params';
 
@@ -66,14 +60,10 @@ export default function useRxDropdown() {
     isPending: isInfectedVarsPending
   } = InfectedVariants.useMe();
 
-  const [rxTotalNumExp, isRxTotalNumExpPending] = useRxTotalNumExp();
-  const [abNumExpLookup, isAbNumExpPending] = useAntibodyNumExpLookup();
-  const [vaccNumExpLookup, isVaccNumExpPending] = useVaccineNumExpLookup();
-
-  const [
-    infectedVariantNumExpLookup,
-    isInfectedVariantNumExpPending
-  ] = useInfectedVariantNumExpLookup();
+  const [rxTotalNumExp, isRxTotalNumExpPending] = NumExpStats.useRxTotal();
+  const [abNumExpLookup, isAbNumExpPending] = NumExpStats.useAb();
+  const [vaccNumExpLookup, isVaccNumExpPending] = NumExpStats.useVacc();
+  const [infVarNumExpLookup, isInfVarNumExpPending] = NumExpStats.useInfVar();
 
   const {
     params: {
@@ -92,7 +82,7 @@ export default function useRxDropdown() {
     isRxTotalNumExpPending ||
     isAbNumExpPending ||
     isVaccNumExpPending ||
-    isInfectedVariantNumExpPending
+    isInfVarNumExpPending
   );
 
   const options = React.useMemo(
@@ -164,7 +154,7 @@ export default function useRxDropdown() {
               true
             )
           },
-          ...(infectedVariantNumExpLookup[ANY] > 0 ? [
+          ...(infVarNumExpLookup[ANY] > 0 ? [
             {
               key: 'cp-divider',
               as: FragmentWithoutWarning,
@@ -176,7 +166,7 @@ export default function useRxDropdown() {
               value: 'cp-any',
               description: pluralize(
                 'result',
-                infectedVariantNumExpLookup[ANY],
+                infVarNumExpLookup[ANY],
                 true
               ),
               type: CP
@@ -193,14 +183,14 @@ export default function useRxDropdown() {
                   type: CP,
                   description: pluralize(
                     'result',
-                    infectedVariantNumExpLookup[varName] || 0,
+                    infVarNumExpLookup[varName] || 0,
                     true
                   ),
-                  'data-num-exp': infectedVariantNumExpLookup[varName] || 0
+                  'data-num-exp': infVarNumExpLookup[varName] || 0
                 })
               )
               .filter(v => v['data-num-exp'] > 0)
-              .sort((a, b) => b['data-num-exp'] - a['data-num-exp']),
+              .sort((a, b) => b['data-num-exp'] - a['data-num-exp'])
           ] : []),
           ...(vaccNumExpLookup[ANY] > 0 ? [
             {
@@ -240,7 +230,7 @@ export default function useRxDropdown() {
                 })
               )
               .filter(v => v['data-num-exp'] > 0)
-              .sort((a, b) => b['data-num-exp'] - a['data-num-exp']),
+              .sort((a, b) => b['data-num-exp'] - a['data-num-exp'])
           ] : []),
           ...(abNumExpLookup[ANY] > 0 ? [
             {
@@ -297,7 +287,7 @@ export default function useRxDropdown() {
       formOnly,
       abNumExpLookup,
       vaccNumExpLookup,
-      infectedVariantNumExpLookup,
+      infVarNumExpLookup,
       rxTotalNumExp
     ]
   );

@@ -1,9 +1,9 @@
 import React from 'react';
-import LocationParams from './location-params';
+import LocationParams from '../location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useIsolateNumExpLookup(skip) {
+export default function useIsolateAggNumExp() {
   let rxType;
   let {
     params: {
@@ -50,39 +50,31 @@ export default function useIsolateNumExpLookup(skip) {
       aggregateBy.push('infected_variant');
     }
   }
-  const {
+  const [
     suscSummary,
     isPending
-  } = useSuscSummary({
-    aggregateBy: ['isolate', ...aggregateBy],
+  ] = useSuscSummary({
+    aggregateBy: ['isolate_agg', ...aggregateBy],
     refName,
     rxType,
     antibodyNames: abNames,
     vaccineName,
     infectedVarName,
-    selectColumns: [
-      'iso_name',
-      'potency_type',
-      'potency_unit',
-      'num_experiments'
-    ],
-    skip
+    selectColumns: ['iso_aggkey', 'num_experiments']
   });
 
   const lookup = React.useMemo(
     () => {
-      if (skip || isPending) {
+      if (isPending) {
         return {};
       }
       const lookup = {};
-      for (const {isoName, numExperiments} of suscSummary) {
-        // we have multiple rows since different control isolate
-        lookup[isoName] = lookup[isoName] || 0;
-        lookup[isoName] += numExperiments;
+      for (const one of suscSummary) {
+        lookup[one.isoAggkey] = one.numExperiments;
       }
       return lookup;
     },
-    [skip, isPending, suscSummary]
+    [isPending, suscSummary]
   );
   return [lookup, isPending];
 }

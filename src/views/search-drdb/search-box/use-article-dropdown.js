@@ -2,8 +2,8 @@ import React from 'react';
 import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 
-import {useArticleNumExpLookup} from '../hooks';
 import Articles from '../hooks/articles';
+import {NumExpStats} from '../hooks/susc-summary';
 import LocationParams from '../hooks/location-params';
 
 import style from './style.module.scss';
@@ -29,7 +29,7 @@ export default function useArticleDropdown() {
   const [
     numExpLookup,
     isNumExpLookupPending
-  ] = useArticleNumExpLookup();
+  ] = NumExpStats.useRef();
   const isPending = isRefLookupPending || isNumExpLookupPending;
   const articleOptions = React.useMemo(
     () => {

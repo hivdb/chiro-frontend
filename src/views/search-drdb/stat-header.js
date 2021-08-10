@@ -27,7 +27,7 @@ export default function SearchDRDBStatHeader() {
         {({
           articleDropdown,
           rxDropdown,
-          variantDropdown
+          virusDropdown
         }) => (
           <StatHeader>
             {[
@@ -44,7 +44,7 @@ export default function SearchDRDBStatHeader() {
                     label: (
                       'Variants / Mutations'
                     ),
-                    value: variantDropdown
+                    value: virusDropdown
                   }
                 ]
               },

@@ -21,7 +21,7 @@ export default function SusceptibilityData() {
           {({
             articleDropdown,
             rxDropdown,
-            variantDropdown
+            virusDropdown
           }) => <div className={style['search-container']}>
             <div
              className={style['search-item']}
@@ -43,7 +43,7 @@ export default function SusceptibilityData() {
               <label className={style['search-label']}>
                 Variants / Mutations
               </label>
-              {variantDropdown}
+              {virusDropdown}
             </div>
           </div>}
         </SearchBox>

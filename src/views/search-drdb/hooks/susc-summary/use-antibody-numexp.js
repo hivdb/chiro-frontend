@@ -1,12 +1,11 @@
 import React from 'react';
 import {csvStringify} from 'sierra-frontend/dist/utils/csv';
 
-import LocationParams from './location-params';
+import LocationParams from '../location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useAntibodyNumExperimentLookup(
-  skip,
+export default function useAntibodyNumExp(
   abAggregateBy = 'antibody:indiv'
 ) {
   const aggregateBy = [];
@@ -26,34 +25,32 @@ export default function useAntibodyNumExperimentLookup(
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
-  const {
+  const [
     suscSummary,
-    isPending: isSuscSummaryPending
-  } = useSuscSummary({
+    isSuscSummaryPending
+  ] = useSuscSummary({
     aggregateBy: [abAggregateBy, ...aggregateBy],
     refName,
     varName,
     isoAggkey,
-    selectColumns: ['antibody_names', 'num_experiments'],
-    skip
+    selectColumns: ['antibody_names', 'num_experiments']
   });
-  const {
-    suscSummary: anySuscSummary,
-    isPending: isAnySuscSummaryPending
-  } = useSuscSummary({
+  const [
+    anySuscSummary,
+    isAnySuscSummaryPending
+  ] = useSuscSummary({
     aggregateBy: ['rx_type', ...aggregateBy],
     rxType: 'antibody',
     refName,
     varName,
     isoAggkey,
-    selectColumns: ['num_experiments'],
-    skip
+    selectColumns: ['num_experiments']
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;
 
   const lookup = React.useMemo(
     () => {
-      if (skip || isPending) {
+      if (isPending) {
         return {};
       }
       const lookup = {
@@ -64,7 +61,7 @@ export default function useAntibodyNumExperimentLookup(
       }
       return lookup;
     },
-    [skip, isPending, suscSummary, anySuscSummary]
+    [isPending, suscSummary, anySuscSummary]
   );
   return [lookup, isPending];
 }

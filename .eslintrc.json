@@ -84,6 +84,34 @@
     "space-infix-ops": [
       "warn"
     ],
+    "comma-dangle": [
+      "warn",
+      "never"
+    ],
+    "comma-style": [
+      "warn",
+      "last"
+    ],
+    "operator-linebreak": [
+      "warn",
+      "after"
+    ],
+    "camelcase": [
+      "warn",
+      {
+        "properties": "always",
+        "ignoreDestructuring": false,
+        "ignoreImports": false,
+        "ignoreGlobals": false
+      }
+    ],
+    "no-multiple-empty-lines": [
+      "warn",
+      {"max": 2, "maxEOF": 0}
+    ],
+    "no-trailing-spaces": [
+      "warn"
+    ],
     "array-bracket-newline": [
       "warn",
       "consistent"

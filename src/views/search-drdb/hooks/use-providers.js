@@ -8,6 +8,7 @@ import InfectedVariants from './infected-variants';
 import Variants from './variants';
 import Isolates from './isolates';
 import IsolateAggs from './isolate-aggs';
+import SuscSummary from './susc-summary';
 
 const providers = {
   locationParams: LocationParams.Provider,
@@ -17,7 +18,8 @@ const providers = {
   infectedVariants: InfectedVariants.Provider,
   variants: Variants.Provider,
   isolates: Isolates.Provider,
-  isolateAggs: IsolateAggs.Provider
+  isolateAggs: IsolateAggs.Provider,
+  suscSummary: SuscSummary.Provider
 };
 
 
@@ -30,7 +32,8 @@ const presetProviderNames = {
     'vaccines',
     'infectedVariants',
     'variants',
-    'isolateAggs'
+    'isolateAggs',
+    'suscSummary'
   ],
   all: [
     'locationParams',
@@ -40,7 +43,8 @@ const presetProviderNames = {
     'infectedVariants',
     'variants',
     'isolates', // isolates depends on variants
-    'isolateAggs'
+    'isolateAggs',
+    'suscSummary'
   ]
 };
 

@@ -1,8 +1,8 @@
-import LocationParams from './location-params';
+import LocationParams from '../location-params';
 import useSuscSummary from './use-susc-summary';
 
 
-export default function useRxTotalNumExperiment(skip) {
+export default function useAntibodyAll() {
   const {
     params: {
       refName,
@@ -10,7 +10,7 @@ export default function useRxTotalNumExperiment(skip) {
       isoAggkey
     }
   } = LocationParams.useMe();
-  const aggregateBy = [];
+  const aggregateBy = ['antibody'];
   if (refName) {
     aggregateBy.push('article');
   }
@@ -20,21 +20,19 @@ export default function useRxTotalNumExperiment(skip) {
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
-  const {
+  const [
     suscSummary,
     isPending
-  } = useSuscSummary({
+  ] = useSuscSummary({
     aggregateBy,
     refName,
     varName,
-    isoAggkey,
-    selectColumns: ['num_experiments'],
-    skip
+    isoAggkey
   });
-  if (skip || isPending) {
+  if (isPending) {
     return [null, true];
   }
   else {
-    return [suscSummary[0]?.numExperiments || 0, false];
+    return [suscSummary, false];
   }
 }
