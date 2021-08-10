@@ -55,7 +55,7 @@ class CellCultureMeasurementListInner extends React.Component {
         </Grid.Row>
       }
     </Grid>;
-    
+
   }
 
 

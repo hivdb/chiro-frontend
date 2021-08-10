@@ -54,7 +54,7 @@ function Home() {
     </section>
     <Subscribe />
   </>;
- 
+
 }
 
 export default Home;

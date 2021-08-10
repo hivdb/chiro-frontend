@@ -70,7 +70,7 @@ class CellsListInner extends React.Component {
         </Grid.Row>
       }
     </Grid>;
-    
+
   }
 
 

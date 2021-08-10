@@ -61,7 +61,7 @@ class AnimalModelListInner extends React.Component {
         </Grid.Row>
       }
     </Grid>;
-    
+
   }
 
 

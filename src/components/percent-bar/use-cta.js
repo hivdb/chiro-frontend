@@ -34,7 +34,7 @@ export default function useCTA(ctaProps) {
       }
       else if (to) {
         ctaElement = (
-          <Link 
+          <Link
            className={ctaClassName}
            to={to} onClick={onClick}>
             {title}
@@ -43,7 +43,7 @@ export default function useCTA(ctaProps) {
       }
       else if (onClick) {
         ctaElement = (
-          <button 
+          <button
            className={ctaClassName}
            onClick={onClick}>
             {title}

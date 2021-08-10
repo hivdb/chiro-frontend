@@ -88,4 +88,3 @@ RefDataLoader.propTypes = {
 RefDataLoader.defaultProps = {
   onLoad: () => null
 };
-

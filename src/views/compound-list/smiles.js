@@ -32,7 +32,7 @@ function SmilesCanvas({smiles}) {
 }
 
 SmilesCanvas.propTypes = {
-  smiles: PropTypes.string.isRequired,
+  smiles: PropTypes.string.isRequired
 };
 
 
@@ -72,4 +72,3 @@ Smiles.propTypes = {
   smiles: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired
 };
-

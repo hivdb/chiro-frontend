@@ -5,7 +5,7 @@ export function countSpikeMutations(mutations) {
   // count isolate (spike) mutations with a few exceptions
   let spikeMuts = mutations.filter(({gene}) => gene === 'S');
   let numMuts = spikeMuts.length;
-  
+
   spikeMuts = spikeMuts.filter(({position: pos, aminoAcid}) => !(
     pos === 614 && aminoAcid === 'G'
   ));

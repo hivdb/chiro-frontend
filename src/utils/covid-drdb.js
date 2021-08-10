@@ -11,7 +11,7 @@ const _loadBinary = memoize(async function _loadBinary(resPath) {
   if (resp.status === 403 || resp.status === 404) {
     throw new Error(`Resource not found: ${resPath}`);
   }
-  
+
   const payload = await resp.arrayBuffer();
   return {
     payload,

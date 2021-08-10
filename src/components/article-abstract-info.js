@@ -54,7 +54,7 @@ export default function ArticleAbstractInfo({nickname}) {
       </Message>
     </>
   );
-  
+
 }
 
 ArticleAbstractInfo.propTypes = {

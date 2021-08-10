@@ -65,7 +65,7 @@ class SearchBoxInner extends React.Component {
       title: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      category: PropTypes.string.isRequired,
+      category: PropTypes.string.isRequired
     }).isRequired).isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired

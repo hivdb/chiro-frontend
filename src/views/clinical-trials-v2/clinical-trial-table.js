@@ -98,14 +98,14 @@ function renderRecruitmentStatus(status, {attachedTextObjs}) {
   //   "Recruiting", "Suspended",
   //   "Terminated", "Completed"].includes(status) ? status : '-';
 
-  let stop_reason = '';
+  let stopReason = '';
   for (const one of attachedTextObjs) {
     if (one.type === 'stop_reason') {
-      stop_reason = one.content;
+      stopReason = one.content;
     }
   }
-  if (stop_reason) {
-    return <Popup content={stop_reason} trigger={<span>{status}</span>} />;
+  if (stopReason) {
+    return <Popup content={stopReason} trigger={<span>{status}</span>} />;
   } else {
     return status;
   }
@@ -179,8 +179,8 @@ const tableColumns = [
   new ColDef({
     name: 'articles',
     label: 'Publication',
-    render: renderArticle,
-  }),
+    render: renderArticle
+  })
 ];
 
 

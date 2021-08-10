@@ -38,17 +38,17 @@ export function groupTrials1(clinicalTrials, qCompoundTargetName) {
       continue;
     }
 
-    let used_target = [];
+    let usedTarget = [];
     for (let {target} of compoundObjs) {
       if (!target) {
         target = 'Uncertain';
       }
 
-      if (used_target.includes(target)) {
+      if (usedTarget.includes(target)) {
         continue;
       }
       theseTrials.push({...trial, target});
-      used_target.push(target);
+      usedTarget.push(target);
     }
 
     allTrials = allTrials.concat(theseTrials);
@@ -75,7 +75,7 @@ export function groupTrials2(clinicalTrials, qCompoundTargetName) {
   let allTrials = [];
   for (const {node: {compoundObjs, ...trial}} of clinicalTrials) {
     let theseTrials = [];
-    let used_target = [];
+    let usedTarget = [];
     for (let {target, primaryCompound, relatedCompounds} of compoundObjs) {
       if (!target) {
         continue;
@@ -95,14 +95,14 @@ export function groupTrials2(clinicalTrials, qCompoundTargetName) {
         oldTarget = target;
         target = "Hydroxychloroquine";
       }
-      if (used_target.includes(target)) {
+      if (usedTarget.includes(target)) {
         continue;
       } else {
         theseTrials.push({...trial, target, oldTarget});
-        used_target.push(target);
+        usedTarget.push(target);
       }
     }
-    if (used_target.length === 0) {
+    if (usedTarget.length === 0) {
       let target = 'Uncertain';
       theseTrials.push({...trial, target});
     }
@@ -141,8 +141,8 @@ function isDelayed(date) {
 export function markDelayed(clinicalTrials) {
   let result = [];
   for (let {node: {...trials}} of clinicalTrials) {
-    if (trials['recruitmentStatus'] === 'Pending'
-       && isDelayed(trials['startDate'])) {
+    if (trials['recruitmentStatus'] === 'Pending' &&
+       isDelayed(trials['startDate'])) {
       trials['recruitmentStatus'] = 'Delayed';
     }
     result.push({node: trials});

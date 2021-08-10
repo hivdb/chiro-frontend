@@ -7,7 +7,7 @@ import {clinicalExperimentsShape} from './prop-types';
 
 import {
   ColDef, reformExpData,
-  authorYearColDef, virusSpeciesDef,
+  authorYearColDef, virusSpeciesDef
 } from './table-helper';
 
 
@@ -83,7 +83,7 @@ export default class ClinicalExpTable extends React.Component {
        cacheKey={cacheKey}
        columnDefs={tableColumns}
        data={reformExpData(data, data => orderBy(
-         data, 
+         data,
          [r => r.studyTypeOrdinal, r => r.numSubjects],
          ['asc', 'desc']
        ))} />

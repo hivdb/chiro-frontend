@@ -48,7 +48,7 @@ class ClinicalTrialInner extends React.Component {
     super(...arguments);
     this.state = {
       figureCaption: '',
-      modal: null,
+      modal: null
     };
   }
 
@@ -57,7 +57,7 @@ class ClinicalTrialInner extends React.Component {
     this.setState({
       figureCaption: promise.figureCaption || '',
       figureACaption: promise.figureACaption || '',
-      figureBCaption: promise.figureBCaption || '',
+      figureBCaption: promise.figureBCaption || ''
     });
   }
 
@@ -219,14 +219,14 @@ class ClinicalTrialInner extends React.Component {
            onChange={this.handleExpSearchBoxChange}>
             {({
               compoundTargetDropdown,
-              compoundDropdown,
+              compoundDropdown
             }) => (
               <StatHeader>
                 {[
                   {
                     cells: [
                       {label: 'Target', value: compoundTargetDropdown},
-                      {label: 'Compound', value: compoundDropdown},
+                      {label: 'Compound', value: compoundDropdown}
                     ]
                   }
                 ]}

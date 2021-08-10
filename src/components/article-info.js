@@ -45,7 +45,7 @@ export default function ArticleInfo({
   pmid, pmcid, doi,
   title, journal, authors, year
 }) {
-    
+
   return <>
     {etInt(authors)}. “{normTitle(title)}.” <em>{journal}</em>, {year}.
     {doi.length > 0 ? <>

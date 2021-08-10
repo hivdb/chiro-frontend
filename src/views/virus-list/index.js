@@ -108,7 +108,7 @@ class VirusListInner extends React.Component {
         </Grid.Row>
       }
     </Grid>;
-    
+
   }
 
 

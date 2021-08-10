@@ -12,8 +12,8 @@ import {
 
 
 export function groupSmallSlices(
-  array, 
-  sizeKey, 
+  array,
+  sizeKey,
   groupItem,
   maxNumItems/*,
   maxScaledGroupPcnt = 0.35*/

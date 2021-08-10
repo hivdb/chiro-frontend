@@ -23,7 +23,7 @@ class StatisticsInner extends React.Component {
 
   static propTypes = {
     loading: PropTypes.bool.isRequired,
-    compoundTargets: PropTypes.object,
+    compoundTargets: PropTypes.object
   }
 
   static defaultProps = {
@@ -33,12 +33,12 @@ class StatisticsInner extends React.Component {
   render() {
     const {
       loading,
-      compoundTargets,
+      compoundTargets
     } = this.props;
     const {selectedTarget} = this.state;
     setTitle('Statistics');
     return <>{
-      loading? <Loader active inline="centered" /> :
+      loading ? <Loader active inline="centered" /> :
       <Grid stackable>
         <Grid.Row centered>
           <Grid.Column width={16}>
@@ -50,7 +50,7 @@ class StatisticsInner extends React.Component {
              changeTarget={this.handleChangeTarget} />
           </Grid.Column>
         </Grid.Row>
-        {selectedTarget?
+        {selectedTarget ?
           <Grid.Row centered>
             <Grid.Column width={16}>
               <Header as="h2" dividing id="compound-stat">
@@ -58,8 +58,8 @@ class StatisticsInner extends React.Component {
               </Header>
               <CompoundTable selectedTarget={selectedTarget}/>
             </Grid.Column>
-          </Grid.Row>
-          : <></>}
+          </Grid.Row> :
+          <></>}
       </Grid>
     }</>;
   }

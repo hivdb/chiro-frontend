@@ -12,7 +12,7 @@ class VirusTableInner extends React.Component {
 
   static propTypes = {
     loading: PropTypes.bool.isRequired,
-    viruses: PropTypes.object.isRequired,
+    viruses: PropTypes.object.isRequired
   }
 
   static defaultProps = {
@@ -22,7 +22,7 @@ class VirusTableInner extends React.Component {
   render() {
     const {
       loading,
-      viruses,
+      viruses
     } = this.props;
 
     return <>{
@@ -36,7 +36,7 @@ class VirusTableInner extends React.Component {
 class TargetTable extends React.Component {
 
   static propTypes = {
-    data: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired
   };
   render() {
     const {data} = this.props;
@@ -44,28 +44,28 @@ class TargetTable extends React.Component {
     const tableColumns = [
       new ColumnDef({
         name: 'name',
-        label: 'Virus',
+        label: 'Virus'
       }),
       new ColumnDef({
         name: 'Biochem',
-        label: 'Biochemistry',
+        label: 'Biochemistry'
       }),
       new ColumnDef({
         name: 'CellCulture',
-        label: 'Cell culture',
+        label: 'Cell culture'
       }),
       new ColumnDef({
         name: 'FusionAssay',
-        label: 'Fusion assay',
+        label: 'Fusion assay'
       }),
       new ColumnDef({
         name: 'Animal',
-        label: 'Animal model',
+        label: 'Animal model'
       }),
       new ColumnDef({
         name: 'Clinical',
-        label: 'Clinical study',
-      }),
+        label: 'Clinical study'
+      })
     ];
 
 
@@ -85,8 +85,8 @@ function reformExpData(expData) {
 
   let data = expData.edges.map(({node}) => {
     const experimentCounts = node.experimentCounts;
-    for (const exp_counts of experimentCounts) {
-      const {category, count} = exp_counts;
+    for (const expCounts of experimentCounts) {
+      const {category, count} = expCounts;
       node[category] = count;
     }
     return node;

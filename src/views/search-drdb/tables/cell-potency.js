@@ -43,7 +43,6 @@ export function formatPotency({
 }
 
 
-
 export default function CellPotency({
   potency,
   potencyUnit,

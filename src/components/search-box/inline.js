@@ -52,7 +52,7 @@ class SearchBoxInner extends React.Component {
     onChange: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
     dropdownProps: PropTypes.object.isRequired,
-    compoundListFilter: PropTypes.func,
+    compoundListFilter: PropTypes.func
   }
 
   static defaultProps = {
@@ -94,9 +94,9 @@ class SearchBoxInner extends React.Component {
   get articleOptions() {
     const {data, allowEmpty, placeholder, articlePlaceholder} = this.props;
     return data2Options(
-      data, 
+      data,
       ({category}) => category === 'articles',
-      allowEmpty, 
+      allowEmpty,
       articlePlaceholder || placeholder
     );
   }
@@ -107,9 +107,9 @@ class SearchBoxInner extends React.Component {
       compoundTargetPlaceholder
     } = this.props;
     return data2Options(
-      data, 
+      data,
       ({category}) => category === 'compoundTargets',
-      allowEmpty, 
+      allowEmpty,
       compoundTargetPlaceholder || placeholder
     );
   }
@@ -142,8 +142,8 @@ class SearchBoxInner extends React.Component {
       );
     }
     return data2Options(
-      data, 
-      filter, 
+      data,
+      filter,
       allowEmpty,
       compoundPlaceholder || placeholder
     );
@@ -162,9 +162,9 @@ class SearchBoxInner extends React.Component {
   get virusOptions() {
     const {data, allowEmpty, virusPlaceholder, placeholder} = this.props;
     return data2Options(
-      data, 
+      data,
       ({category}) => category === 'viruses',
-      allowEmpty, 
+      allowEmpty,
       virusPlaceholder || placeholder
     );
   }
@@ -175,9 +175,9 @@ class SearchBoxInner extends React.Component {
       clinicalTrialCategoryPlaceholder
     } = this.props;
     return data2Options(
-      data, 
+      data,
       ({category}) => category === 'clinicalTrialCategories',
-      allowEmpty, 
+      allowEmpty,
       clinicalTrialCategoryPlaceholder || placeholder
     );
   }

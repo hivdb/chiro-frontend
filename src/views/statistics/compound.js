@@ -15,7 +15,7 @@ import SimpleTable, {
 const tableColumns = [
   new ColumnDef({
     name: 'name',
-    label: 'Compound',
+    label: 'Compound'
   }),
   // new ColumnDef({
   //   name: 'target',
@@ -26,24 +26,24 @@ const tableColumns = [
   // }),
   new ColumnDef({
     name: 'Biochem',
-    label: 'Biochemistry',
+    label: 'Biochemistry'
   }),
   new ColumnDef({
     name: 'CellCulture',
-    label: 'Cell culture',
+    label: 'Cell culture'
   }),
   new ColumnDef({
     name: 'FusionAssay',
-    label: 'Fusion assay',
+    label: 'Fusion assay'
   }),
 
   new ColumnDef({
     name: 'Animal',
-    label: 'Animal model',
+    label: 'Animal model'
   }),
   new ColumnDef({
     name: 'Clinical',
-    label: 'Clinical study',
+    label: 'Clinical study'
   }),
   // new ColumnDef({
   //   name: 'target_sum_exp_num',
@@ -51,12 +51,12 @@ const tableColumns = [
   // }),
   new ColumnDef({
     name: 'expArticleCount',
-    label: 'References',
+    label: 'References'
   }),
   new ColumnDef({
     name: 'clinicalTrialCount',
-    label: 'Clinical trials',
-  }),
+    label: 'Clinical trials'
+  })
 ];
 
 function reformExpData(expData, selectedTarget) {
@@ -67,8 +67,8 @@ function reformExpData(expData, selectedTarget) {
     node = {...node};
     const experimentCounts = node.experimentCounts;
     let totalExpCount = 0;
-    for (const exp_counts of experimentCounts) {
-      const {category, count} = exp_counts;
+    for (const expCounts of experimentCounts) {
+      const {category, count} = expCounts;
       node[category] = count;
       totalExpCount += count;
     }
@@ -93,7 +93,7 @@ class CompoundTableInner extends React.Component {
     loading: PropTypes.bool.isRequired,
     compounds: PropTypes.object,
     selectedTarget: PropTypes.string,
-    cacheKey: PropTypes.string,
+    cacheKey: PropTypes.string
   }
 
   static defaultProps = {

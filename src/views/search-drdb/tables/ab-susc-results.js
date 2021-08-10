@@ -45,7 +45,7 @@ export default function AbSuscResults() {
       'isoName',
       'cumulativeCount',
       'potency',
-      'fold',
+      'fold'
     ],
     labels: {
       isoName: 'Mutation',
@@ -83,7 +83,7 @@ export default function AbSuscResults() {
       'isoName',
       'cumulativeCount',
       'potency',
-      'fold',
+      'fold'
     ],
     labels: {
       isoName: 'Variant',

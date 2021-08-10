@@ -42,7 +42,7 @@ class GeneSeqGenerator extends React.Component {
     this.state = {
       geneName: '',
       mutations: [],
-      AASeq: null,
+      AASeq: null
     };
   }
 
@@ -81,10 +81,10 @@ class GeneSeqGenerator extends React.Component {
   }
 
   get fastaHeader() {
-    const mutation_string = this.state.mutations.map(
+    const mutationString = this.state.mutations.map(
       (mut) => mut['display']
     ).join(',');
-    return `${this.state.geneName}_${mutation_string}`;
+    return `${this.state.geneName}_${mutationString}`;
   }
 
   handleSelectGeneName = (event, {value}) => {
@@ -197,8 +197,8 @@ class GeneSeqGenerator extends React.Component {
   }
 }
 
-function parseMutationList(mutation_list) {
-  let mutations = mutation_list.split(',').map((name) => {
+function parseMutationList(mutationList) {
+  let mutations = mutationList.split(',').map((name) => {
     name = name.trim();
     const match = parseMutation(name);
     if (!match) {

@@ -15,7 +15,7 @@ function reformExpData(expData, sort = true) {
   const data = expData.edges.map(({node}) => node);
   if (sort === true) {
     return orderBy(
-      data, 
+      data,
       [
         row => ((row.articles[0] || {}).year || 0),
         row => ((row.articles[0] || {}).nickname || [''])[0]
@@ -49,12 +49,12 @@ function readableNum(num) {
 
 
 function renderXX50(
-  num, 
-  cmp, 
-  unit, 
+  num,
+  cmp,
+  unit,
   inactive,
-  default_unit = '\xb5M',
-  none = '?', 
+  defaultUnit = '\xb5M',
+  none = '?',
   converters = {}
 ) {
   if (inactive) {
@@ -63,14 +63,14 @@ function renderXX50(
   if (num === null) {
     return none;
   }
-  if (`${unit}-to-${default_unit}` in converters) {
-    num = converters[`${unit}-to-${default_unit}`](num);
-    unit = default_unit;
+  if (`${unit}-to-${defaultUnit}` in converters) {
+    num = converters[`${unit}-to-${defaultUnit}`](num);
+    unit = defaultUnit;
   }
   num = readableNum(num);
   return <span className={style['nowrap']}>
     {cmp === '=' ? '' : cmp}{num}
-    {unit === default_unit ? '' : ` ${unit}`}
+    {unit === defaultUnit ? '' : ` ${unit}`}
   </span>;
 }
 
@@ -146,7 +146,7 @@ const nameAndDescColDef = (name, label, none = '?') => new ColumnDef({
        </span>} />
     );
   },
-  sort: data => sortBy(data, [`${name}.name`]),
+  sort: data => sortBy(data, [`${name}.name`])
 });
 
 const ColDef = ColumnDef;

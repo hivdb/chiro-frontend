@@ -43,7 +43,7 @@ const colors = [
   'pink',
   'brown',
   'grey',
-  'black',
+  'black'
 ];
 
 const rxTimePattern = /-?(\d+)\s*((?:d|h|minute-)pi)/;
@@ -67,7 +67,7 @@ const tableColumns = [
         unit = {
           'dpi': 'day',
           'hpi': 'hour',
-          'minute-pi': 'minute',
+          'minute-pi': 'minute'
         }[unit.toLocaleLowerCase()];
         return `${tt} (${num} ${unit})`;
       }
@@ -99,7 +99,7 @@ function resultColDefs(rows) {
     'virus shedding': <>Virus<br />shedding</>,
     'Lung Inflammation': <>Lung<br />Inflammation</>,
     'Infection': <>Infection</>,
-    'Seroconversion': <>Seroconversion</>,
+    'Seroconversion': <>Seroconversion</>
   };
 
   for (const key in displayResultNames) {

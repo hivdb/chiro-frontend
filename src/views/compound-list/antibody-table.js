@@ -40,7 +40,7 @@ function formatEC50({
   ec50cmp: cmp,
   ec50unit: unit,
   ec50inactive: inactive,
-  default_unit = 'ng/ml',
+  defaultUnit = 'ng/ml',
   none = null,
   converters = {'\xb5M-to-ng/ml': num => num * 150000}
 }) {
@@ -50,21 +50,21 @@ function formatEC50({
   if (num === null) {
     return none;
   }
-  if (`${unit}-to-${default_unit}` in converters) {
-    num = converters[`${unit}-to-${default_unit}`](num);
-    unit = default_unit;
+  if (`${unit}-to-${defaultUnit}` in converters) {
+    num = converters[`${unit}-to-${defaultUnit}`](num);
+    unit = defaultUnit;
   }
   num = readableNum(num);
   return (
     `${cmp === '=' ? '' : cmp}${num}` +
-    `${unit === default_unit ? '' : ` ${unit}`}`
+    `${unit === defaultUnit ? '' : ` ${unit}`}`
   );
 }
 
 
 function renderEC50Data(ec50Data) {
   const ec50Text = uniq(ec50Data.map(formatEC50)).filter(t => t);
-  
+
   return (
     <ul className={style.ec50data}>
       {ec50Text.map((val, idx) => <li key={idx}>{val}</li>)}
@@ -92,11 +92,11 @@ const columnDefs = [
   }),
   new ColumnDef({
     name: 'name',
-    label: 'Ab name',
+    label: 'Ab name'
   }),
   new ColumnDef({
     name: 'drugClassName',
-    label: 'Ab type',
+    label: 'Ab type'
   }),
   new ColumnDef({
     name: 'antibodyData.source', label: 'Ab source'
@@ -131,6 +131,7 @@ const columnDefs = [
           query: {
             target,
             compound: name,
+            /* eslint-disable-next-line camelcase */
             no_related_compounds: 'yes'
           }
         }}>
@@ -156,6 +157,7 @@ const columnDefs = [
           query: {
             target,
             compound: name,
+            /* eslint-disable-next-line camelcase */
             no_related_compounds: 'yes'
           }
         }}>
@@ -191,6 +193,7 @@ const columnDefs = [
           query: {
             target,
             compound: name,
+            /* eslint-disable-next-line camelcase */
             no_related_compounds: 'yes'
           }
         }}>results</Link>)
@@ -198,7 +201,6 @@ const columnDefs = [
     </>
   })
 ];
-
 
 
 export default function AntibodyTable({compounds}) {
@@ -223,10 +225,9 @@ export default function AntibodyTable({compounds}) {
        ]) || []} />
     </section>)}
   </>;
-  
+
 }
 
 AntibodyTable.propTypes = {
   compounds: PropTypes.array.isRequired
 };
-

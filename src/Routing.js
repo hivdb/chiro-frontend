@@ -121,7 +121,7 @@ const BrowserRouter = createBrowserRouter({
   ),
 
   renderError
-      
+
 });
 
 export default BrowserRouter;

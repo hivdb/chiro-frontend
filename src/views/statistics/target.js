@@ -14,8 +14,8 @@ function reformExpData(expData) {
   let data = expData.edges.map(({node}) => {
     node = {...node};
     const experimentCounts = node.experimentCounts;
-    for (const exp_counts of experimentCounts) {
-      const {category, count} = exp_counts;
+    for (const expCounts of experimentCounts) {
+      const {category, count} = expCounts;
       node[category] = count;
     }
 
@@ -63,32 +63,32 @@ export default function TargetTable({changeTarget, data}) {
       }),
       new ColumnDef({
         name: 'Biochem',
-        label: 'Biochemistry',
+        label: 'Biochemistry'
       }),
       new ColumnDef({
         name: 'CellCulture',
-        label: 'Cell culture',
+        label: 'Cell culture'
       }),
       new ColumnDef({
         name: 'FusionAssay',
-        label: 'Entry assay',
+        label: 'Entry assay'
       }),
       new ColumnDef({
         name: 'Pseudovirus',
-        label: 'Pseudovirus',
+        label: 'Pseudovirus'
       }),
       new ColumnDef({
         name: 'Animal',
-        label: 'Animal model',
+        label: 'Animal model'
       }),
       new ColumnDef({
         name: 'Clinical',
-        label: 'Clinical study',
+        label: 'Clinical study'
       }),
       new ColumnDef({
         name: 'expArticleCount',
-        label: 'References',
-      }),
+        label: 'References'
+      })
     ];
   }, [changeTarget]);
 

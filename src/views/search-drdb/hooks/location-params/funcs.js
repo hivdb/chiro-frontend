@@ -10,6 +10,7 @@ export function cleanQuery(query) {
   query = {...query};
   if (query.form_only) {
     query = {
+      /* eslint-disable-next-line camelcase */
       form_only: null
     };
   }
@@ -34,6 +35,7 @@ export function cleanQuery(query) {
     );
   if (Object.keys(query).length === 0) {
     // force form_only since loading all take too long
+    /* eslint-disable-next-line camelcase */
     query.form_only = null;
   }
 
@@ -41,10 +43,10 @@ export function cleanQuery(query) {
     .keys(query)
     .sort()
     .reduce(
-      (sorted, key) => { 
-        sorted[key] = query[key]; 
+      (sorted, key) => {
+        sorted[key] = query[key];
         return sorted;
-      }, 
+      },
       {}
     );
 
@@ -54,7 +56,7 @@ export function cleanQuery(query) {
 
 export function buildQuery(
   action,
-  value, 
+  value,
   baseQuery = {}
 ) {
   let query = {...baseQuery};

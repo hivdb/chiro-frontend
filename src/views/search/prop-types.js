@@ -66,7 +66,7 @@ const fusionAssayExperimentsShape = PropTypes.shape({
       effectorCellsName: PropTypes.string,
       ec50cm: PropTypes.string,
       ec50: PropTypes.number,
-      ec50unit: PropTypes.string,
+      ec50unit: PropTypes.string
     })
   }))
 });

@@ -122,7 +122,7 @@ function AntiviralPortal() {
        imagePrefix={imagePrefix} />
     ))}
   </article>;
- 
+
 }
 
 export default AntiviralPortal;

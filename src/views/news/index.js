@@ -96,7 +96,7 @@ class NewsInner extends React.Component {
         </Grid.Row>
       }
     </Grid>;
-    
+
   }
 
 

@@ -226,7 +226,7 @@ export default function useSuscResults({
   if (!skip && !isPending && !isIsolatePending) {
     suscResults = payload.map(sr => ({
       ...sr,
-      resistanceLevel: calcResistanceLevel(sr),
+      resistanceLevel: calcResistanceLevel(sr)
     }));
 
     suscResults.sort((srA, srB) => {

@@ -189,7 +189,7 @@ class SearchInner extends React.Component {
             compoundTargetDropdown,
             compoundDropdown,
             virusDropdown,
-            studyTypeDropdown,
+            studyTypeDropdown
           }) => (
             <StatHeader>
               {[
@@ -200,7 +200,7 @@ class SearchInner extends React.Component {
                     {label: 'Target', value: compoundTargetDropdown},
                     {label: 'Compound', value: compoundDropdown},
                     {label: 'Virus', value: virusDropdown},
-                    {label: 'Study type', value: studyTypeDropdown},
+                    {label: 'Study type', value: studyTypeDropdown}
                   ]
                 },
                 {
@@ -348,7 +348,7 @@ class SearchInner extends React.Component {
                       </ul>
                     </>}
                   </>
-                },
+                }
               ]}
             </StatHeader>
           )}

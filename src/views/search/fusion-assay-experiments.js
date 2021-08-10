@@ -9,7 +9,7 @@ import {
   compoundColDef, ColDef,
   reformExpData, authorYearColDef,
   virusSpeciesDef, nameAndDescColDef,
-  renderXX50,
+  renderXX50
 } from './table-helper';
 import style from './style.module.scss';
 
@@ -25,7 +25,7 @@ const tableColumns = [
      content="The method by which virus replication is quantified."
      trigger={<span className={style['with-info']}>
        Method<sup><Icon name="info circle" /></sup>
-     </span>} />,
+     </span>} />
   ),
   nameAndDescColDef('effectorCellsObj', 'Effector Cells', '-'),
   nameAndDescColDef('cellsObj', 'Target Cells'),
@@ -45,7 +45,7 @@ const tableColumns = [
       renderXX50(ec50, ec50cmp, ec50unit, ec50inactive)
     ),
     sort: data => sortBy(data, ['ec50unit', 'ec50', 'ec50cmp', 'ec50inactive'])
-  }),
+  })
 ];
 
 

@@ -76,7 +76,7 @@ export default class Home extends React.Component {
     imagePrefix,
     pageName,
     heroImage,
-    introHeader,
+    introHeader
   } = {}) => {
     setTitle(null);
     return (

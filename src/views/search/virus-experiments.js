@@ -71,7 +71,7 @@ const tableColumns = [
     sort: data => sortBy(data, [
       'drugTiming[0].lower',
       'drugTiming[0].upper'
-    ]),
+    ])
   }),
   nameAndDescColDef(
     'cellsObj',
@@ -84,7 +84,7 @@ const tableColumns = [
      </>}
      trigger={<span className={style['with-info']}>
        Cells<sup><Icon name="info circle" /></sup>
-     </span>} />,
+     </span>} />
   ),
   new ColDef({
     name: 'durationOfInfection.text',
@@ -105,7 +105,7 @@ const tableColumns = [
      content="The method by which virus replication is quantified."
      trigger={<span className={style['with-info']}>
        Method<sup><Icon name="info circle" /></sup>
-     </span>} />,
+     </span>} />
   ),
   new ColDef({
     name: 'ec50',
@@ -182,11 +182,11 @@ const tableColumnsMAb = [
     ),
     render: (ec50, {ec50cmp, ec50unit, ec50inactive}) => (
       renderXX50(
-        ec50, 
-        ec50cmp, 
-        ec50unit, 
-        ec50inactive, 
-        'ng/ml', 
+        ec50,
+        ec50cmp,
+        ec50unit,
+        ec50inactive,
+        'ng/ml',
         '-',
         {'\xb5M-to-ng/ml': num => num * 150000}
       )
