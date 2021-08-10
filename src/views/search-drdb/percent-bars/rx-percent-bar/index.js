@@ -39,7 +39,11 @@ export default function RxPercentBar() {
   } = InfectedVariants.useMe();
 
   const [vaccNumExpLookup, isVaccNumExpPending] = NumExpStats.useVacc();
-  const [abNumExpLookup, isAbNumExpPending] = NumExpStats.useAb(
+  const [
+    abNumExpLookup,
+    isAbNumExpPending,
+    orderedAbNames
+  ] = NumExpStats.useAb(
     /* abAggregateBy = */'antibody'
   );
   const [
@@ -99,6 +103,7 @@ export default function RxPercentBar() {
           infVariants,
           vaccNumExpLookup: filteredVaccNumExpLookup,
           abNumExpLookup: filteredAbNumExpLookup,
+          orderedAbNames,
           infVarNumExpLookup: filteredInfVarNumExpLookup
         });
       }
@@ -114,17 +119,20 @@ export default function RxPercentBar() {
       infVariants,
       vaccNumExpLookup,
       abNumExpLookup,
+      orderedAbNames,
       infVarNumExpLookup
     ]
   );
 
   return <>
-    <PercentBar>
+    <PercentBar scaleRatio={0.5}>
       {presentRx.map(
         ({
+          index,
+          indexGroup,
           pcnt,
           item
-        }, index) => (
+        }) => (
           <VariantRxItem
            key={item.name}
            styleType="rx"
@@ -132,6 +140,7 @@ export default function RxPercentBar() {
            {...{
              pcnt,
              item,
+             indexGroup,
              index
            }} />
         )

@@ -1,13 +1,16 @@
 @import '../../../styles/colors';
 @import '../../../styles/variables';
 
-@mixin percent-bar-item($color, $nth) {
+@mixin percent-bar-bg($color) {
 
   &::before, &::after {
     background-color: $color;
     filter: brightness(calc(var(--index) / 4 + .8));
   }
 
+}
+
+@mixin percent-bar-text($color, $nth) {
   & > &:global(__cta), & > &:global(__remove) {
     color: $color;
     filter: brightness(.6);
@@ -29,11 +32,29 @@
 }
 
 .percent-bar-item_variant {
-  @include percent-bar-item($main-color, 2);
+  @include percent-bar-bg($main-color);
+  @include percent-bar-text($main-color, 2);
 }
 
 .percent-bar-item_rx {
-  @include percent-bar-item(#d14204, 4);
+  & > &:global(__cta), & > &:global(__remove) {
+    color: white;
+    &:hover {
+      color: white;
+    }
+  }
+  &[data-index-group="0"] {
+    // TYPE_INFVAR
+    @include percent-bar-bg(#d14204);
+  }
+  &[data-index-group="1"] {
+    // TYPE_VACCINE
+    @include percent-bar-bg(#8f7c0e);
+  }
+  &[data-index-group="2"] {
+    // TYPE_MAB
+    @include percent-bar-bg(#56e862);
+  }
 }
 
 .percent-bar-item_variant, .percent-bar-item_rx {
@@ -60,7 +81,7 @@
     margin-bottom: .5rem;
     font-size: 1.2rem;
     font-family: "Merriweather","Georgia","Cambria","Times New Roman","Times",serif;
-    .title-extra {
+    .title-supplement {
       font-size: 1rem;
       display: inline-block;
       margin-left: .3rem;

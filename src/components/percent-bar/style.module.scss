@@ -20,7 +20,7 @@ ul.percent-bar {
     text-overflow: clip;
     // --available-pcnt: (.03 - var(--percent));
     // text-indent: calc(#{"max"}(0, var(--available-pcnt)) / var(--available-pcnt) * 200%);
-    width: calc(100% * var(--percent));
+    width: calc(100% * (var(--scale) / var(--total) + var(--percent) * (1 - var(--scale))));
     &:not(:first-child) {
       border-left: 2px solid white;
     }

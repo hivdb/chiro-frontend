@@ -2,6 +2,8 @@ import React from 'react';
 
 import {groupSmallSlices} from '../funcs';
 
+import style from '../style.module.scss';
+
 import SubItemIsolate from './subitem-isolate';
 
 import {
@@ -36,8 +38,8 @@ export default function prepareItems({
       acc[varName].push({
         name: isoName,
         type: TYPE_ISO,
-        display,
-        displayExtra: null,
+        shortDisplay: display,
+        fullDisplay: display,
         numExp: isoLookup[isoName]
       });
       return acc;
@@ -49,8 +51,12 @@ export default function prepareItems({
       .map(({varName, synonyms}) => ({
         name: varName,
         type: TYPE_VARIANT,
-        display: varName,
-        displayExtra: synonyms.join('; '),
+        shortDisplay: varName,
+        fullDisplay: <>
+          {varName} <span className={style['title-supplement']}>
+            ({synonyms.join('; ')})
+          </span>
+        </>,
         subItems: namedIsoLookup[varName] || [],
         numExp: varLookup[varName]
       })),
@@ -62,8 +68,8 @@ export default function prepareItems({
       .map(({isoAggkey, isoAggDisplay}) => ({
         name: isoAggkey,
         type: TYPE_ISOAGG,
-        display: isoAggDisplay,
-        displayExtra: null,
+        shortDisplay: isoAggDisplay,
+        fullDisplay: isoAggDisplay,
         numExp: isoAggLookup[isoAggkey]
       }))
   ];
@@ -79,7 +85,8 @@ export default function prepareItems({
   return groupSmallSlices(presentVariants, 'numExp', {
     name: 'Others',
     type: TYPE_OTHER,
-    display: 'Others',
+    shortDisplay: 'Others',
+    fullDisplay: 'Others',
     displayExtra: null
   }, 6);
 }

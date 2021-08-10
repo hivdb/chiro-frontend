@@ -7,19 +7,25 @@ import style from './style.module.scss';
 
 
 PercentBar.propTypes = {
+  scaleRatio: PropTypes.number,
   className: PropTypes.string,
   children: PropTypes.node.isRequired
 };
 
+PercentBar.defaultProps = {
+  scaleRatio: 0
+};
+
 PercentBar.Item = PercentBarItem;
 
-export default function PercentBar({className, children}) {
+export default function PercentBar({className, children, scaleRatio}) {
 
   return (
     <ul
      data-total={children.length}
      style={{
-       '--total': children.length
+       '--total': children.length,
+       '--scale': scaleRatio
      }}
      className={classNames(
        style['percent-bar'],

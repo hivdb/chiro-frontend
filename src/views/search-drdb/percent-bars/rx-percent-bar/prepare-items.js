@@ -1,6 +1,7 @@
 import uniq from 'lodash/uniq';
 import {csvStringify, csvParse} from 'sierra-frontend/dist/utils/csv';
 
+import style from '../style.module.scss';
 import {groupSmallSlices} from '../funcs';
 
 import {
@@ -18,6 +19,7 @@ export default function prepareItems({
   infVariants,
   vaccNumExpLookup,
   abNumExpLookup,
+  orderedAbNames,
   infVarNumExpLookup
 }) {
   const expAntibodies = uniq(
@@ -32,9 +34,13 @@ export default function prepareItems({
       .map(({varName, synonyms}) => ({
         name: varName,
         type: TYPE_INFVAR,
-        display: varName,
-        displayExtra: synonyms.join('; '),
-        displayAfterExtra: ' infection',
+        shortDisplay: <>{varName} infection</>,
+        fullDisplay: <>
+          Convalescent plasma from <strong>{varName}</strong>{' '}
+          <span className={style['title-supplement']}>
+            ({synonyms.join('; ')})
+          </span> infected person
+        </>,
         numExp: infVarNumExpLookup[varName]
       })),
     ...vaccines
@@ -42,14 +48,17 @@ export default function prepareItems({
       .map(({vaccineName}) => ({
         name: vaccineName,
         type: TYPE_VACCINE,
-        display: vaccineName,
+        shortDisplay: vaccineName,
+        fullDisplay: <>
+          <strong>{vaccineName}</strong> vaccinee plasma
+        </>,
         displayExtra: null,
         numExp: vaccNumExpLookup[vaccineName]
       })),
     ...(abNumExpLookup.__ANY > 0 ? [{
       name: csvStringify(expAntibodies),
       type: TYPE_MAB,
-      display: expAntibodies.length > 0 && expAntibodies.length < 5 ?
+      shortDisplay: expAntibodies.length > 0 && expAntibodies.length < 5 ?
         expAntibodies
           .map(
             abName => {
@@ -57,22 +66,25 @@ export default function prepareItems({
               return abbreviationName || abName;
             }
           )
-          .join('/') : 'Antibodies',
-      displayExtra: null,
-      subItems: Object.entries(abNumExpLookup)
-        .filter(([abNames]) => abNames !== '__ANY')
+          .join('/') : 'MAbs',
+      fullDisplay: expAntibodies.length > 0 && expAntibodies.length < 5 ?
+        expAntibodies
+          .join('/') : 'Monoclonal antibodies',
+      subItems: orderedAbNames
         .map(
-          ([abNames, numExp]) => {
-            const abObjs = csvParse(abNames, /* withHeader = */false)[0]
-              .filter(ab => ab in antibodyLookup)
+          abNamesArr => {
+            const abNamesText = csvStringify(abNamesArr);
+            const numExp = abNumExpLookup[abNamesText];
+            const abObjs = abNamesArr
               .map(ab => antibodyLookup[ab]);
             return {
-              name: abNames,
+              name: abNamesText,
               type: TYPE_MAB_INDIV,
-              display: abObjs
-                .map(
-                  ({abName, abbreviationName}) => abbreviationName || abName
-                )
+              shortDisplay: abObjs
+                .map(({abName, abbreviationName}) => abbreviationName || abName)
+                .join(' + '),
+              fullDisplay: abObjs
+                .map(({abName}) => abName)
                 .join(' + '),
               displayExtra: null,
               numExp
@@ -91,15 +103,28 @@ export default function prepareItems({
       return cmp;
     }
   );
-  const results = groupSmallSlices(presentVariants, 'numExp', {
-    name: 'Others',
+  const groupItems = {};
+  groupItems[TYPE_INFVAR] = {
+    name: 'Other infections',
     type: TYPE_OTHER,
-    display: 'Others',
-    displayExtra: null
-  }, 6);
-  const otherItem = results[results.length - 1];
-  if (otherItem && otherItem.item.type === TYPE_OTHER) {
-    otherItem.item.subItems.sort((r1, r2) => r1.type - r2.type);
-  }
-  return results.sort((r1, r2) => r1.item.type - r2.item.type);
+    shortDisplay: 'Other CPs',
+    fullDisplay: 'Convalescent plasma from other variant infected person'
+  };
+  groupItems[TYPE_VACCINE] = {
+    name: 'Other vaccines',
+    type: TYPE_OTHER,
+    shortDisplay: 'Other VPs',
+    fullDisplay: 'Other vaccinee plasma'
+  };
+  const maxNumItems = {};
+  maxNumItems[TYPE_INFVAR] = 3;
+  maxNumItems[TYPE_VACCINE] = 3;
+  maxNumItems[TYPE_MAB] = 1;
+  return groupSmallSlices(
+    presentVariants,
+    'numExp',
+    groupItems,
+    maxNumItems,
+    true
+  );
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link, useRouter} from 'found';
+import {useRouter} from 'found';
 import {useQuery} from '@apollo/client';
-import {TiDelete} from '@react-icons/all-files/ti/TiDelete';
 
+import InfoCard from '../info-card';
 import {buildLocationQuery} from '../hooks/location-params';
 
 import articleQuery from './search.gql';
@@ -31,14 +31,6 @@ function formatAuthors(authors) {
   else { // authors.length === 1
     return senior;
   }
-}
-
-
-export function normTitle(text) {
-  if (text) {
-    return text.trim().replace(/\.$/, '');
-  }
-  return text;
 }
 
 
@@ -77,22 +69,15 @@ export default function ArticleCard({refName}) {
   } = data?.article || {};
 
   return (
-    <section
-     data-loaded={!loading && !!data?.article}
-     className={style['article-card']}>
-      <div className={style['action']}>
-        <Link
-         className={style['remove']}
-         to={{
-           pathname: loc.pathname,
-           query: buildLocationQuery('article', undefined, loc.query)
-         }}><TiDelete/>
-        </Link>
-      </div>
-      <div className={style['journal-year']}>
-        {journal} ({year})
-      </div>
-      <div className={style['title']}>{normTitle(title)}</div>
+    <InfoCard
+     loaded={!loading && !!data?.article}
+     className={style['article-card']}
+     removeTo={{
+       pathname: loc.pathname,
+       query: buildLocationQuery('article', undefined, loc.query)
+     }}
+     tagline={<>{journal} ({year})</>}
+     title={title}>
       <div className={style['authors']}>{formatAuthors(authors)}</div>
       <ul className={style['extids']}>
         {doi.length > 0 ? <li className={style['extid']}>
@@ -116,7 +101,7 @@ export default function ArticleCard({refName}) {
            target="_blank">PMC{pmcid[0]}</a>
         </li> : null}
       </ul>
-    </section>
+    </InfoCard>
   );
 }
 

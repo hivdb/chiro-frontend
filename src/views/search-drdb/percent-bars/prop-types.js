@@ -4,9 +4,8 @@ import * as types from './types';
 
 const itemShape = PropTypes.shape({
   name: PropTypes.string.isRequired,
-  display: PropTypes.node.isRequired,
-  displayExtra: PropTypes.node,
-  displayAfterExtra: PropTypes.node,
+  shortDisplay: PropTypes.node.isRequired,
+  fullDisplay: PropTypes.node.isRequired,
   type: PropTypes.oneOf(Object.values(types)).isRequired,
   subItems: PropTypes.arrayOf(
     () => itemShape.isRequired

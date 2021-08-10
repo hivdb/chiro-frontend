@@ -1,3 +1,4 @@
+import uniq from 'lodash/uniq';
 import nestGet from 'lodash/get';
 import nestSet from 'lodash/set';
 import {buildLocationQuery} from '../hooks/location-params';
@@ -15,56 +16,89 @@ export function groupSmallSlices(
   array,
   sizeKey,
   groupItem,
-  maxNumItems/*,
-  maxScaledGroupPcnt = 0.35*/
+  maxNumItems,
+  mixTypes = false,
+  scale = 1
 ) {
-  const items = [...array].reverse();
-  let totalSize = items.reduce(
+  let totalSize = array.reduce(
     (acc, item) => acc + nestGet(item, sizeKey),
     0
   );
-  let remainItems = items.length;
-  let groupPcnt = .0;
-  let groupItemSize = 0;
-  const resultItems = [];
-  const groupOrigItems = [];
-  for (const item of items) {
-    const size = nestGet(item, sizeKey);
-    if (remainItems >= maxNumItems) {
-      groupPcnt += size / totalSize;
-      groupItemSize += size;
-      groupOrigItems.push(item);
+  let resultItems = [];
+  if (mixTypes) {
+    const knownTypes = uniq(array.map(({type}) => type)).sort();
+    const grouped = array.reduce(
+      (acc, item) => {
+        acc[item.type] = acc[item.type] || [];
+        acc[item.type].push(item);
+        return acc;
+      },
+      {}
+    );
+    for (const type of knownTypes) {
+      const myScale = scale * grouped[type].reduce(
+        (acc, item) => acc + nestGet(item, sizeKey),
+        0
+      ) / totalSize;
+      resultItems = [
+        ...resultItems,
+        ...groupSmallSlices(
+          grouped[type],
+          sizeKey,
+          groupItem[type],
+          maxNumItems[type],
+          false,
+          myScale
+        ).map(item => {
+          item.indexGroup = type;
+          return item;
+        })
+      ];
     }
-    else {
-      /*if (groupPcnt > maxScaledGroupPcnt) {
-        groupPcnt = maxScaledGroupPcnt;
-        const remainSize = totalSize - groupItemSize;
-        totalSize = (remainSize / (1 - groupPcnt)).toFixed();
-      }*/
-      resultItems.push({
-        pcnt: size / totalSize,
-        item
-      });
-    }
-    remainItems --;
   }
-  resultItems.reverse();
-  nestSet(groupItem, sizeKey, groupItemSize);
-  if (groupItemSize > 0) {
-    if (groupOrigItems.length > 1) {
-      resultItems.push({
-        pcnt: groupPcnt,
-        item: {
-          ...groupItem,
-          subItems: groupOrigItems.reverse()
-        }
-      });
+  else {
+    const items = [...array].reverse();
+    let remainItems = items.length;
+    let groupPcnt = .0;
+    let groupItemSize = 0;
+    const groupOrigItems = [];
+    for (const item of items) {
+      const size = nestGet(item, sizeKey);
+      if (remainItems >= maxNumItems) {
+        groupPcnt += size / totalSize;
+        groupItemSize += size;
+        groupOrigItems.push(item);
+      }
+      else {
+        resultItems.push({
+          pcnt: size / totalSize * scale,
+          item
+        });
+      }
+      remainItems --;
     }
-    else {
-      resultItems.push({
-        pcnt: groupPcnt,
-        item: groupOrigItems[0]
-      });
+    resultItems.reverse();
+    nestSet(groupItem, sizeKey, groupItemSize);
+    if (groupItemSize > 0) {
+      if (groupOrigItems.length > 1) {
+        resultItems.push({
+          pcnt: groupPcnt * scale,
+          item: {
+            ...groupItem,
+            subItems: groupOrigItems.reverse()
+          }
+        });
+      }
+      else {
+        resultItems.push({
+          pcnt: groupPcnt * scale,
+          item: groupOrigItems[0]
+        });
+      }
+    }
+    let index = 0;
+    for (const item of resultItems) {
+      item.index = index ++;
     }
   }
   return resultItems;

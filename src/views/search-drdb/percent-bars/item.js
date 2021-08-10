@@ -22,6 +22,10 @@ import {buildResetQuery, buildFilterQuery} from './funcs';
 
 VariantRxItem.propTypes = {
   styleType: PropTypes.oneOf(['variant', 'rx']).isRequired,
+  indexGroup: PropTypes.oneOfType([
+    PropTypes.number.isRequired,
+    PropTypes.string.isRequired
+  ]),
   index: PropTypes.number.isRequired,
   pcnt: PropTypes.number.isRequired,
   item: itemShape.isRequired,
@@ -31,7 +35,8 @@ VariantRxItem.propTypes = {
 export default function VariantRxItem({
   pcnt,
   item,
-  item: {name, display, displayAfterExtra, type, numExp},
+  item: {name, shortDisplay, type, numExp},
+  indexGroup,
   index,
   styleType,
   descComponent
@@ -57,6 +62,7 @@ export default function VariantRxItem({
   return (
     <PercentBar.Item
      fixedHoverDesc
+     indexGroup={indexGroup}
      index={index}
      isActive={isActive}
      to={type === TYPE_OTHER ? undefined : {
@@ -71,7 +77,7 @@ export default function VariantRxItem({
      } : null
       }
      className={style[`percent-bar-item_${styleType}`]}
-     title={<>{display}{displayAfterExtra} (n={numExp})</>}
+     title={<>{shortDisplay} (n={numExp.toLocaleString('en-US')})</>}
      percent={pcnt}>
       {React.createElement(descComponent, {
         item, className: style['percent-bar-desc']

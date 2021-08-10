@@ -48,6 +48,16 @@ export default function useAntibodyNumExp(
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;
 
+  const orderedAbNames = React.useMemo(
+    () => {
+      if (isPending) {
+        return [];
+      }
+      return suscSummary.map(({antibodyNames}) => antibodyNames);
+    },
+    [suscSummary, isPending]
+  );
+
   const lookup = React.useMemo(
     () => {
       if (isPending) {
@@ -63,5 +73,5 @@ export default function useAntibodyNumExp(
     },
     [isPending, suscSummary, anySuscSummary]
   );
-  return [lookup, isPending];
+  return [lookup, isPending, orderedAbNames];
 }

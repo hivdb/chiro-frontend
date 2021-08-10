@@ -27,9 +27,7 @@ export default function RxDesc({
   item
 }) {
   const {
-    display,
-    displayExtra,
-    displayAfterExtra,
+    fullDisplay,
     type,
     numExp,
     subItems
@@ -39,12 +37,10 @@ export default function RxDesc({
 
   const compactList = subItems && subItems.length > 30;
 
-  let infVars, vaccines, infVarsSum, vaccinesSum;
+  let infVars, vaccines;
   if (type === TYPE_OTHER) {
     infVars = subItems.filter(({type}) => type === TYPE_INFVAR);
     vaccines = subItems.filter(({type}) => type === TYPE_VACCINE);
-    infVarsSum = infVars.reduce((acc, {numExp}) => acc + numExp, 0);
-    vaccinesSum = vaccines.reduce((acc, {numExp}) => acc + numExp, 0);
   }
   const subItemsSum = subItems ?
     subItems.reduce((acc, {numExp}) => acc + numExp, 0) : 0;
@@ -52,13 +48,7 @@ export default function RxDesc({
   return (
     <div className={className}>
       <div className={style['title']}>
-        {display}
-        {displayExtra ? (
-          <div className={style['title-extra']}>
-            ({displayExtra})
-          </div>
-        ) : null}
-        {displayAfterExtra}
+        {fullDisplay}
         {type !== TYPE_OTHER ?
           <div className={style['title-action']}>
             [
@@ -77,17 +67,39 @@ export default function RxDesc({
       </div>
       <p>
         This category contains{' '}
-        <strong>{numExp}</strong> {pluralize('result', numExp)}
+        <strong>{numExp.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('experiment result', numExp)}
         {type === TYPE_MAB ? <>
           {' from '}
           <strong>
-            {pluralize('monoclonal antibody', subItems.length, true)}
+            {subItems.length.toLocaleString('en-US')}
+            {' '}
+            {pluralize('monoclonal antibody', subItems.length, false)}
           </strong>:
-        </> : '.'}
+        </> : null}
+        {type === TYPE_OTHER ? <>
+          {infVars.length > 0 ? <>
+            {' of convalescent plasma from '}
+            <strong>
+              {infVars.length.toLocaleString('en-US')}
+              {' '}
+              {pluralize('different variant', infVars.length, false)}
+            </strong> infected person:
+          </> : null}
+          {vaccines.length > 0 ? <>
+            {' of '}
+            <strong>
+              {vaccines.length.toLocaleString('en-US')}
+              {' '}
+              {pluralize('vaccinee plasma', vaccines.length, false)}
+            </strong>:
+          </> : null}
+        </> : null}
+        {type !== TYPE_MAB && type !== TYPE_OTHER ? '.' : null}
       </p>
       {type === TYPE_MAB && subItemsSum > 0 ? <>
         <ul data-compact={compactList}>
-          {subItems.map(({name, display, numExp}) => (
+          {subItems.map(({name, shortDisplay, numExp}) => (
             <li key={name}>
               <Link to={{
                 pathname: loc.pathname,
@@ -97,24 +109,16 @@ export default function RxDesc({
                   loc.query
                 )
               }}>
-                {display}
-              </Link> (n=<strong>{numExp}</strong>)
+                {shortDisplay}
+              </Link> (n=<strong>{numExp.toLocaleString('en-US')}</strong>)
             </li>
           ))}
         </ul>
       </> : null}
       {type === TYPE_OTHER ? <>
         {infVars.length > 0 ? <>
-          <p>
-            Of which, <strong>{infVarsSum}</strong>{' '}
-            {pluralize('is', infVarsSum)}
-            {' from '}
-            <strong>
-              {pluralize('infected variant', infVars.length, true)}
-            </strong>:
-          </p>
           <ul data-compact={compactList}>
-            {infVars.map(({name, display, displayAfterExtra, numExp}) => (
+            {infVars.map(({name, shortDisplay, numExp}) => (
               <li key={name}>
                 <Link to={{
                   pathname: loc.pathname,
@@ -124,23 +128,15 @@ export default function RxDesc({
                     loc.query
                   )
                 }}>
-                  {display}{displayAfterExtra}
-                </Link> (n=<strong>{numExp}</strong>)
+                  {shortDisplay}
+                </Link> (n=<strong>{numExp.toLocaleString('en-US')}</strong>)
               </li>
             ))}
           </ul>
         </> : null}
         {vaccines.length > 0 ? <>
-          <p>
-            Of which, <strong>{vaccinesSum}</strong>{' '}
-            {pluralize('is', vaccinesSum)}
-            {' from '}
-            <strong>
-              {pluralize('vaccine', vaccines.length, true)}
-            </strong>:
-          </p>
           <ul data-compact={compactList}>
-            {vaccines.map(({name, display, numExp}) => (
+            {vaccines.map(({name, shortDisplay, numExp}) => (
               <li key={name}>
                 <Link to={{
                   pathname: loc.pathname,
@@ -150,8 +146,8 @@ export default function RxDesc({
                     loc.query
                   )
                 }}>
-                  {display}
-                </Link> (n=<strong>{numExp}</strong>)
+                  {shortDisplay}
+                </Link> (n=<strong>{numExp.toLocaleString('en-US')}</strong>)
               </li>
             ))}
           </ul>

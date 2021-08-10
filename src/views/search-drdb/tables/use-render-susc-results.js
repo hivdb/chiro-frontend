@@ -36,7 +36,6 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
     [setHide, hide]
   );
 
-  let hideNote;
   const filtered = data.filter(
     d => d.ineffective === 'experimental' || d.ineffective === null
   );
@@ -45,29 +44,32 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   const hasNA = data.some(d => (
     d.controlPotency === null || d.potency === null
   ));
-  if (hide) {
-    data = filtered;
-    hideNote = (
-      removedLen > 0 ?
-        <div><em>
-          <strong>{pluralize('result', removedLen, true)}</strong>{' '}
-          {pluralize('has', removedLen)}{' '}
+  const headNote = <div>
+    {removedLen > 0 ? <>
+      <em>
+        Of the <strong>{data.length.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('experiment result', data.length, false)}{' '}
+        listed in the following table,{' '}
+        <strong>{removedLen.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('has', removedLen)}{' '}
+        {hide ? <>
           been hidden due to poor neutralizing
           activity against the control virus.
-        </em> (<a onClick={handleUnhide} href="#unhide">unhide</a>)
-        </div> : null
-    );
-  }
-  else {
-    hideNote = (
-      removedLen > 0 ?
-        <div><em>
-          <strong>{pluralize('result', removedLen, true)}</strong>{' '}
-          {pluralize('has', removedLen)}{' '}
-          poor neutralizing activity against the control virus.
-        </em> (<a onClick={handleUnhide} href="#hide">hide</a>)
-        </div> : null
-    );
+        </> : <>
+          poor neutralizing activity against
+          the control virus.
+        </>}
+      </em> (<a onClick={handleUnhide} href="#toggle-hide">
+        {hide ? 'unhide' : 'hide'}
+      </a>)
+    </> : <em>
+      The following table contains <strong>
+        {data.length.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('experiment result', data.length, false)}.
+    </em>}
+  </div>;
+  if (hide) {
+    data = filtered;
   }
 
   const tableJSX = (
@@ -79,7 +81,7 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   );
 
   return <>
-    {hideNote}
+    {headNote}
     {tableJSX}
     {hasNA || hasNN ? <p className={style.footnote}>
       {hasNA ? <>

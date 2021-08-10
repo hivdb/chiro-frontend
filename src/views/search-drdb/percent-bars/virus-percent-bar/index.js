@@ -95,7 +95,7 @@ export default function VirusPercentBar() {
   );
 
   return <>
-    <PercentBar>
+    <PercentBar scaleRatio={0.5}>
       {presentVariants.map(
         ({
           pcnt,

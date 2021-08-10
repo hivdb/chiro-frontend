@@ -28,6 +28,10 @@ PercentBarItem.propTypes = {
   }),
   className: PropTypes.string,
   title: PropTypes.node,
+  indexGroup: PropTypes.oneOfType([
+    PropTypes.string.isRequired,
+    PropTypes.number.isRequired
+  ]),
   index: PropTypes.number.isRequired,
   percent: PropTypes.number.isRequired,
   children: PropTypes.node.isRequired
@@ -45,6 +49,7 @@ export default function PercentBarItem({
   isActive,
   disableHoverDesc,
   fixedHoverDesc,
+  indexGroup,
   index,
   href,
   to,
@@ -83,6 +88,7 @@ export default function PercentBarItem({
        className
      )}
      style={{
+       '--index-group': indexGroup,
        '--index': index,
        '--percent': percent
      }}
@@ -93,6 +99,7 @@ export default function PercentBarItem({
      data-fixed-hover-desc={fixedHoverDesc}
      data-disable-hover-desc={disableHoverDesc}
      data-has-cta={hasCTA}
+     data-index-group={indexGroup}
      data-index={index}
      data-percent={percent}>
       {barText}

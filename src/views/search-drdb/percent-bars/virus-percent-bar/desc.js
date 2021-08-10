@@ -25,8 +25,8 @@ export default function VirusDesc({
   item
 }) {
   const {
-    display,
-    displayExtra,
+    shortDisplay,
+    fullDisplay,
     type,
     numExp,
     subItems
@@ -38,12 +38,7 @@ export default function VirusDesc({
   return (
     <div className={className}>
       <div className={style['title']}>
-        {display}
-        {displayExtra ? (
-          <div className={style['title-extra']}>
-            ({displayExtra})
-          </div>
-        ) : null}
+        {fullDisplay}
         {type !== TYPE_OTHER ?
           <div className={style['title-action']}>
             [
@@ -56,12 +51,17 @@ export default function VirusDesc({
       </div>
       <p>
         This category contains{' '}
-        <strong>{numExp}</strong> {pluralize('result', numExp)}
+        <strong>
+          {numExp.toLocaleString('en-US')}
+        </strong> {pluralize('experiment result', numExp)}
         {type === TYPE_VARIANT ? <>
           {' from '}
-          <strong>{pluralize('isolate', subItems.length, true)}</strong>
+          <strong>
+            {subItems.length.toLocaleString('en-US')}{' '}
+            {pluralize('isolate', subItems.length, false)}
+          </strong>
           {' '}which {pluralize('is', subItems.length)} identified as{' '}
-          <strong>{display}</strong> variant:
+          <strong>{shortDisplay}</strong> variant:
         </> : null}
         {type === TYPE_ISOAGG ? '.' : null}
         {type === TYPE_OTHER ? <>
@@ -71,16 +71,18 @@ export default function VirusDesc({
       </p>
       {type === TYPE_VARIANT || type === TYPE_OTHER ? (
         <ul data-compact={compactList}>
-          {subItems.map(({name, type, display, numExp}) => (
+          {subItems.map(({name, type, shortDisplay, numExp}) => (
             <li key={name}>
               {type === TYPE_VARIANT || type === TYPE_ISOAGG ? (
                 <Link to={{
                   pathname: loc.pathname,
                   query: buildFilterQuery(type, name, loc.query)
                 }}>
-                  {display}
+                  {shortDisplay}
                 </Link>
-              ) : display} (n=<strong>{numExp}</strong>)
+              ) : shortDisplay} (n=<strong>
+                {numExp.toLocaleString('en-US')}
+              </strong>)
             </li>
           ))}
         </ul>
