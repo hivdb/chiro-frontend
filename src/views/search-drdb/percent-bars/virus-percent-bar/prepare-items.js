@@ -63,7 +63,8 @@ export default function prepareItems({
     ...isolateAggs
       .filter(({isoAggkey, varName}) => (
         isoAggkey in isoAggLookup &&
-        varName === null
+        (varName === null ||
+         !(varName in varLookup))
       ))
       .map(({isoAggkey, isoAggDisplay}) => ({
         name: isoAggkey,
@@ -88,5 +89,5 @@ export default function prepareItems({
     shortDisplay: 'Others',
     fullDisplay: 'Others',
     displayExtra: null
-  }, 6);
+  }, 8);
 }

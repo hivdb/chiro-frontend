@@ -76,9 +76,14 @@ export default function RxPercentBar() {
           filteredVaccNumExpLookup = {};
           filteredAbNumExpLookup = {};
           filteredInfVarNumExpLookup = {};
-          if (filterByVaccine && vaccineName !== 'any') {
-            filteredVaccNumExpLookup[vaccineName] =
-              vaccNumExpLookup[vaccineName] || 0;
+          if (filterByVaccine) {
+            if (vaccineName === 'any') {
+              filteredVaccNumExpLookup = vaccNumExpLookup;
+            }
+            else {
+              filteredVaccNumExpLookup[vaccineName] =
+                vaccNumExpLookup[vaccineName] || 0;
+            }
           }
           else if (filterByAntibody) {
             if (abNames[0] === 'any') {
@@ -90,9 +95,14 @@ export default function RxPercentBar() {
                 abNumExpLookup[abNames] || 0;
             }
           }
-          else if (infectedVarName !== 'any') {
-            filteredInfVarNumExpLookup[infectedVarName] =
+          else if (infectedVarName) {
+            if (infectedVarName === 'any') {
+              filteredInfVarNumExpLookup = infVarNumExpLookup;
+            }
+            else {
+              filteredInfVarNumExpLookup[infectedVarName] =
               infVarNumExpLookup[infectedVarName] || 0;
+            }
           }
         }
 
@@ -125,7 +135,7 @@ export default function RxPercentBar() {
   );
 
   return <>
-    <PercentBar scaleRatio={0.5}>
+    <PercentBar scaleRatio={0.75}>
       {presentRx.map(
         ({
           index,

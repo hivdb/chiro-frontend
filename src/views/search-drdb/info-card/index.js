@@ -19,11 +19,11 @@ export function normTitle(text) {
 InfoCard.propTypes = {
   loaded: PropTypes.bool.isRequired,
   tagline: PropTypes.node,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   removeTo: PropTypes.oneOfType([
     PropTypes.object.isRequired,
     PropTypes.string.isRequired
-  ]).isRequired,
+  ]),
   className: PropTypes.string,
   children: PropTypes.node
 };
