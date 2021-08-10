@@ -53,9 +53,12 @@ export default function prepareItems({
         type: TYPE_VARIANT,
         shortDisplay: varName,
         fullDisplay: <>
-          {varName} <span className={style['title-supplement']}>
-            ({synonyms.join('; ')})
-          </span>
+          {varName}
+          {synonyms.length > 0 ? <>
+            {' '}<span className={style['title-supplement']}>
+              ({synonyms.join('; ')})
+            </span>
+          </> : null}
         </>,
         subItems: namedIsoLookup[varName] || [],
         numExp: varLookup[varName]

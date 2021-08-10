@@ -37,9 +37,12 @@ export default function prepareItems({
         shortDisplay: <>{varName} infection</>,
         fullDisplay: <>
           Convalescent plasma from <strong>{varName}</strong>{' '}
-          <span className={style['title-supplement']}>
-            ({synonyms.join('; ')})
-          </span> infected person
+          {synonyms.length > 0 ? <>
+            <span className={style['title-supplement']}>
+              ({synonyms.join('; ')})
+            </span>{' '}
+          </> : null}
+          infected person
         </>,
         numExp: infVarNumExpLookup[varName]
       })),
