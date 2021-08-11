@@ -19,7 +19,7 @@ import style from './style.module.scss';
 
 export default function SearchDRDBLayout() {
 
-  setTitle('Search susceptibility data');
+  setTitle('Search SARS-CoV-2 resistance database');
   /* loading || redirectIfNeeded(props); */
 
   const {
@@ -44,6 +44,13 @@ export default function SearchDRDBLayout() {
   );
 
   return <Grid stackable className={style['search']}>
+    <Grid.Row>
+      <Grid.Column width={16}>
+        <Header as ="h1" dividing className={style['header-title']}>
+          Search SARS-CoV-2 resistance database
+        </Header>
+      </Grid.Column>
+    </Grid.Row>
     <DRDBStatHeader />
     {displayAbTables ?
       <Grid.Row centered>

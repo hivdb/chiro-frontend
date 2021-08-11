@@ -25,7 +25,7 @@ export default function RxPercentBar() {
   const {
     vaccines,
     isPending: isVaccListPending
-  } = Vaccines.useMe();
+  } = Vaccines.useAll();
 
   const {
     antibodies,

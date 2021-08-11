@@ -1,0 +1,72 @@
+@import '../../../styles/colors';
+
+$placeholder-color: rgba(0, 0, 0, .15);
+
+.vaccine-card {
+
+  &[data-loaded="false"] > &:global(__title) {
+    &::before {
+      display: block;
+      width: 17%;
+    }
+    &::after {
+      display: none;
+    }
+  }
+
+  &[data-loaded="false"] {
+    
+    > .developer {
+      position: relative;
+      width: 100%;
+      &::before {
+        content: "\a0";
+        line-height: 1.1;
+        display: block;
+        background-color: $placeholder-color;
+        background-clip: content-box;
+        box-sizing: border-box;
+        width: 25%;
+      }
+    }
+
+    .vaccine-desc {
+      div {
+        background-color: $placeholder-color;
+        background-clip: content-box;
+        height: 1.5rem;
+        padding-bottom: .5rem;
+        &:nth-child(4) {
+          width: 38.2%;
+        }
+      }
+      ul > li {
+        position: relative;
+        &::before {
+          content: '\a0';
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 1.2rem;
+          background-color: $placeholder-color;
+          background-clip: content-box;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+
+  ul {
+    max-width: 50rem;
+    columns: 18rem 2;
+    padding-left: 0;
+    list-style-type: none;
+    > li {
+      line-height: 1.6;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+}

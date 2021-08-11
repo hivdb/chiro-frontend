@@ -1,12 +1,8 @@
 @import '../../../styles/colors';
-@import "~sierra-frontend/dist/styles/placeholder";
 
 $placeholder-color: rgba(0, 0, 0, .15);
 
 .article-card {
-
-  background-color: rgba(0, 0, 0, .05);
-  padding: 1rem;
 
   > ul.extids {
     margin-top: 1rem;

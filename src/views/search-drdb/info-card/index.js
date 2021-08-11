@@ -17,6 +17,10 @@ export function normTitle(text) {
 
 
 InfoCard.propTypes = {
+  titleAs: PropTypes.oneOfType([
+    PropTypes.func.isRequired,
+    PropTypes.string.isRequired
+  ]),
   loaded: PropTypes.bool.isRequired,
   tagline: PropTypes.node,
   title: PropTypes.string,
@@ -29,10 +33,16 @@ InfoCard.propTypes = {
 };
 
 
+InfoCard.defaultProps = {
+  titleAs: 'div'
+};
+
+
 export default function InfoCard({
   loaded,
   tagline,
   title,
+  titleAs,
   removeTo,
   className,
   children
@@ -66,10 +76,16 @@ export default function InfoCard({
         )}>
           {tagline}
         </div> : null}
-      <h1 className={classNames(
-        style['title'],
-        className ? `${className}__title` : null
-      )}>{normTitle(title)}</h1>
+      {React.createElement(
+        titleAs,
+        {
+          className: classNames(
+            style['title'],
+            className ? `${className}__title` : null
+          )
+        },
+        [normTitle(title)]
+      )}
       {children}
     </section>
   );

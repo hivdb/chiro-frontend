@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {useRouter} from 'found';
 import {useQuery} from '@apollo/client';
 
 import InfoCard from '../info-card';
-import {buildLocationQuery} from '../hooks/location-params';
+import LocationParams, {buildLocationQuery} from '../hooks/location-params';
 
 import articleQuery from './search.gql';
 import style from './style.module.scss';
@@ -34,7 +33,9 @@ function formatAuthors(authors) {
 }
 
 
-export default function ArticleCard({refName}) {
+export default function ArticleCard() {
+
+  const {params: {refName}} = LocationParams.useMe();
 
   let {
     loading,
@@ -70,6 +71,7 @@ export default function ArticleCard({refName}) {
 
   return (
     <InfoCard
+     titleAs="h2"
      loaded={!loading && !!data?.article}
      className={style['article-card']}
      removeTo={{
@@ -104,8 +106,3 @@ export default function ArticleCard({refName}) {
     </InfoCard>
   );
 }
-
-
-ArticleCard.propTypes = {
-  refName: PropTypes.string
-};
