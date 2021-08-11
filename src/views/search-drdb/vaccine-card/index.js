@@ -19,6 +19,7 @@ ${'- &nbsp;\n'.repeat(6)}
 
 
 export default function VaccineCard() {
+  const descRef = React.useRef();
   const {
     config,
     isPending: isConfigPending
@@ -33,18 +34,47 @@ export default function VaccineCard() {
     isPending
   } = Vaccines.useCurrent();
 
-  if (!isPending && !vaccine) {
-    return null;
-  }
+
+  const loaded = !isConfigPending && !isPending;
 
   const {
     vaccineName
   } = vaccine || {};
 
-  const loaded = !isConfigPending && !isPending;
   const message = loaded ?
     (config.messages || {})[`vaccine-desc_${vaccineName}`] :
     PLACEHOLDER_MESSAGE;
+
+  React.useEffect(
+    () => {
+      if (!descRef.current) {
+        return;
+      }
+      const allList = descRef.current.querySelectorAll('ul');
+      for (const list of allList) {
+        const parentWidth = list.parentElement.scrollWidth;
+        const childWidths = Array.from(list.children)
+          .map(child => child.scrollWidth);
+        const leftMaxWidth = Math.max(
+          ...childWidths.slice(0, Math.ceil(childWidths.length / 2))
+        );
+        const rightMaxWidth = Math.max(
+          ...childWidths.slice(Math.ceil(childWidths.length / 2))
+        );
+        let childRows = childWidths.length;
+        if (leftMaxWidth + rightMaxWidth < parentWidth * 0.8) {
+          childRows = childRows / 2;
+        }
+        list.style.setProperty('--child-rows', childRows);
+      }
+    },
+    [message]
+  );
+
+
+  if (!isPending && !vaccine) {
+    return null;
+  }
 
   return (
     <InfoCard
@@ -56,7 +86,7 @@ export default function VaccineCard() {
      loaded={loaded}
      titleAs={refName ? 'div' : 'h2'}
      title={vaccineName}>
-      <div className={style['vaccine-desc']}>
+      <div ref={descRef} className={style['vaccine-desc']}>
         <Markdown
          escapeHtml={false}>
           {message}

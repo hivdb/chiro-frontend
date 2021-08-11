@@ -55,10 +55,9 @@ export default function SearchDRDBStatHeader() {
                     <p>
                       Select a condition to start searching.
                     </p>
-                  </> : <>
-                    <ArticleCard />
-                    <VaccineCard />
-                  </>}
+                  </> : null}
+                  <ArticleCard />
+                  <VaccineCard />
                   <PercentBars />
                 </>
               }

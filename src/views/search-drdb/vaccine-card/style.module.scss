@@ -3,6 +3,7 @@
 $placeholder-color: rgba(0, 0, 0, .15);
 
 .vaccine-card {
+  $list-row-height: 1.8rem;
 
   &[data-loaded="false"] > &:global(__title) {
     &::before {
@@ -40,8 +41,12 @@ $placeholder-color: rgba(0, 0, 0, .15);
           width: 38.2%;
         }
       }
+      ul {
+        max-height: calc(#{$list-row-height} * 3.9);
+      }
       ul > li {
         position: relative;
+        width: 35%;
         &::before {
           content: '\a0';
           display: block;
@@ -57,12 +62,17 @@ $placeholder-color: rgba(0, 0, 0, .15);
   }
 
   ul {
-    max-width: 50rem;
-    columns: 18rem 2;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    flex-wrap: wrap;
     padding-left: 0;
     list-style-type: none;
+    max-height: calc(#{$list-row-height} * (var(--child-rows) + 0.9));
     > li {
-      line-height: 1.6;
+      margin-right: 4rem;
+      line-height: $list-row-height;
+      width: fit-content;
     }
     &:last-child {
       margin-bottom: 0;
