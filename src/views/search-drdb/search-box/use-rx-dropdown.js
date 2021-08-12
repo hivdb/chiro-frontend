@@ -48,7 +48,7 @@ export default function useRxDropdown() {
   const {
     antibodies,
     isPending: isAntibodiesPending
-  } = Antibodies.useMe();
+  } = Antibodies.useAll();
 
   const {
     vaccines,

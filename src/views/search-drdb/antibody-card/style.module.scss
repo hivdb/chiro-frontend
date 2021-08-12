@@ -2,7 +2,7 @@
 
 $placeholder-color: rgba(0, 0, 0, .15);
 
-.vaccine-card {
+.antibody-card {
   $list-row-height: 1.8rem;
 
   &[data-loaded="false"] > &:global(__title) {
@@ -15,9 +15,18 @@ $placeholder-color: rgba(0, 0, 0, .15);
     }
   }
 
+  &:global(__title) {
+    .title-supplement {
+      font-size: 1rem;
+      display: inline-block;
+      font-weight: 400;
+      opacity: .7;
+    }
+  }
+
   &[data-loaded="false"] {
     
-    .vaccine-desc {
+    .antibody-desc {
       div {
         background-color: $placeholder-color;
         background-clip: content-box;
@@ -49,22 +58,31 @@ $placeholder-color: rgba(0, 0, 0, .15);
 
   ul {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-content: flex-start;
     flex-wrap: wrap;
     padding-left: 0;
     list-style-type: none;
-    max-height: calc(#{$list-row-height} * (var(--child-rows) + 0.9));
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 1px dotted $dividing-line;
+    padding-top: 1rem;
     > li {
-      margin-right: 4rem;
       line-height: $list-row-height;
       width: fit-content;
+      flex-basis: 45%;
+      &.full-row {
+        flex-basis: 100%;
+      }
     }
     &:last-child {
       margin-bottom: 0;
     }
     @media only screen and (max-width: 900px) {
       max-height: max-content;
+    }
+    &:empty {
+      display: none;
     }
   }
 

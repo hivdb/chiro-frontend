@@ -8,14 +8,6 @@ import {TiDelete} from '@react-icons/all-files/ti/TiDelete';
 import style from './style.module.scss';
 
 
-export function normTitle(text) {
-  if (text) {
-    return text.trim().replace(/\.$/, '');
-  }
-  return text;
-}
-
-
 InfoCard.propTypes = {
   titleAs: PropTypes.oneOfType([
     PropTypes.func.isRequired,
@@ -23,7 +15,7 @@ InfoCard.propTypes = {
   ]),
   loaded: PropTypes.bool.isRequired,
   tagline: PropTypes.node,
-  title: PropTypes.string,
+  title: PropTypes.node,
   removeTo: PropTypes.oneOfType([
     PropTypes.object.isRequired,
     PropTypes.string.isRequired
@@ -84,7 +76,7 @@ export default function InfoCard({
             className ? `${className}__title` : null
           )
         },
-        [normTitle(title)]
+        title
       )}
       {children}
     </section>

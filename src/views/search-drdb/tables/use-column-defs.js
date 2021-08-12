@@ -187,7 +187,7 @@ export default function useColumnDefs({
   const {
     antibodyLookup,
     isPending: isAbLookupPending
-  } = Antibodies.useMe();
+  } = Antibodies.useAll();
   const {
     isolateLookup,
     isPending: isIsoLookupPending

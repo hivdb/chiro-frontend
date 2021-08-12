@@ -31,7 +31,7 @@ export default function RxPercentBar() {
     antibodies,
     antibodyLookup,
     isPending: isAbListPending
-  } = Antibodies.useMe();
+  } = Antibodies.useAll();
 
   const {
     infectedVariants: infVariants,

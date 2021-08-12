@@ -46,7 +46,7 @@ export function useCompareSuscResultsByAntibodies() {
   const {
     antibodyLookup,
     isPending
-  } = Antibodies.useMe();
+  } = Antibodies.useAll();
   return React.useCallback(
     (srA, srB) => {
       if (!isPending) {

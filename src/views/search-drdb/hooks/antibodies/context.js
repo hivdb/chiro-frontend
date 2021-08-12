@@ -1,100 +1,73 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import useQuery from '../use-query';
+import LocationParams from '../location-params';
+
+const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 const AntibodiesContext = React.createContext();
-
-function useJoinSynonyms({
-  antibodyLookup,
-  skip = false
-}) {
-  let isEmpty = skip;
-  let params;
-  let sql;
-  if (!skip && antibodyLookup) {
-    for (const ab of Object.values(antibodyLookup)) {
-      ab.synonyms = [];
-    }
-    const abNames = Object.keys(antibodyLookup);
-    isEmpty = abNames.length === 0;
-    const inClause = abNames.map((n, idx) => `$abName${idx}`).join(', ');
-    sql = `
-      SELECT ab_name, synonym
-      FROM antibody_synonyms
-      WHERE ab_name IN (${inClause})
-    `;
-    params = abNames.reduce(
-      (acc, name, idx) => {
-        acc[`$abName${idx}`] = name;
-        return acc;
-      },
-      {}
-    );
-  }
-  const {
-    payload: synonyms,
-    isPending
-  } = useQuery({
-    sql,
-    params,
-    skip: skip || isEmpty
-  });
-
-  if (!skip && !isEmpty && !isPending) {
-    for (const {abName, synonym} of synonyms) {
-      const ab = antibodyLookup[abName];
-      ab.synonyms.push(synonym);
-    }
-  }
-
-  return {isPending};
-}
-
-
-function usePrepareQuery() {
-  return React.useMemo(
-    () => ({
-      sql: `
-          SELECT
-            A.ab_name,
-            abbreviation_name,
-            availability,
-            priority,
-            visibility,
-            AT.class AS ab_class
-          FROM antibodies A
-          LEFT JOIN antibody_targets AT ON
-            A.ab_name=AT.ab_name AND AT.source='structure'
-          WHERE EXISTS (
-            SELECT 1 FROM susc_summary S
-            WHERE
-              S.aggregate_by = 'antibody:indiv' AND
-              A.ab_name = S.antibody_names
-          )
-          ORDER BY priority, A.ab_name
-        `
-    }),
-    []
-  );
-}
-
 
 AntibodiesProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
 
 function AntibodiesProvider({children}) {
-  const {sql} = usePrepareQuery();
+  const sql = `
+    SELECT
+      A.ab_name,
+      abbreviation_name,
+      availability,
+      priority,
+      visibility,
+      AT.class AS ab_class,
+      AT.target AS ab_target,
+      (
+        SELECT GROUP_CONCAT(SYN.synonym, $joinSep)
+        FROM antibody_synonyms SYN
+        WHERE
+          SYN.ab_name = A.ab_name
+        ORDER BY SYN.synonym
+      ) AS synonyms,
+      (
+        SELECT GROUP_CONCAT(CAST(EPT.position AS TEXT), $joinSep)
+        FROM antibody_epitopes EPT
+        WHERE
+          EPT.ab_name = A.ab_name
+        ORDER BY EPT.position
+      ) AS epitopes
+    FROM antibodies A
+    LEFT JOIN antibody_targets AT ON
+      A.ab_name=AT.ab_name AND AT.source='structure'
+    WHERE EXISTS (
+      SELECT 1 FROM susc_summary S
+      WHERE
+        S.aggregate_by = 'antibody:indiv' AND
+        A.ab_name = S.antibody_names
+    )
+    ORDER BY priority, A.ab_name
+  `;
+  const params = React.useMemo(
+    () => ({
+      $joinSep: LIST_JOIN_MAGIC_SEP
+    }),
+    []
+  );
   const {
     payload: antibodies,
     isPending
-  } = useQuery({sql});
+  } = useQuery({sql, params});
 
   const antibodyLookup = React.useMemo(
     () => isPending || !antibodies ? {} : antibodies.reduce(
       (acc, ab) => {
         acc[ab.abName] = ab;
         ab.visibility = ab.visibility === 1;
+        ab.synonyms = ab.synonyms ?
+          ab.synonyms.split(LIST_JOIN_MAGIC_SEP) : [];
+        ab.epitopes = ab.epitopes ?
+          ab.epitopes
+            .split(LIST_JOIN_MAGIC_SEP)
+            .map(pos => Number.parseInt(pos)) : [];
         return acc;
       },
       {}
@@ -102,15 +75,10 @@ function AntibodiesProvider({children}) {
     [isPending, antibodies]
   );
 
-  const {isPending: isSynonymPending} = useJoinSynonyms({
-    antibodyLookup,
-    skip: isPending
-  });
-
   const contextValue = {
     antibodies,
     antibodyLookup,
-    isPending: isPending || isSynonymPending
+    isPending
   };
 
   return <AntibodiesContext.Provider value={contextValue}>
@@ -122,9 +90,26 @@ function useAntibodies() {
   return React.useContext(AntibodiesContext);
 }
 
+function useCurrent() {
+  const {
+    params: {
+      abNames
+    }
+  } = LocationParams.useMe();
+  const {antibodyLookup, isPending} = React.useContext(AntibodiesContext);
+  let antibodies = [];
+  if (abNames && abNames.length > 0) {
+    antibodies = abNames
+      .map(abName => (antibodyLookup || {})[abName])
+      .filter(ab => ab);
+  }
+  return {antibodies, isPending};
+}
+
 const Antibodies = {
   Provider: AntibodiesProvider,
-  useMe: useAntibodies
+  useAll: useAntibodies,
+  useCurrent
 };
 
 export default Antibodies;

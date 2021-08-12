@@ -33,6 +33,14 @@ function formatAuthors(authors) {
 }
 
 
+function normTitle(text) {
+  if (text) {
+    return text.trim().replace(/\.$/, '');
+  }
+  return text;
+}
+
+
 export default function ArticleCard() {
 
   const {params: {refName}} = LocationParams.useMe();
@@ -79,7 +87,7 @@ export default function ArticleCard() {
        query: buildLocationQuery('article', undefined, loc.query)
      }}
      tagline={<>{journal} ({year})</>}
-     title={title}>
+     title={normTitle(title)}>
       <div className={style['authors']}>{formatAuthors(authors)}</div>
       <ul className={style['extids']}>
         {doi.length > 0 ? <li className={style['extid']}>

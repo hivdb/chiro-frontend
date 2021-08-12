@@ -25,7 +25,10 @@ export default function VaccineCard() {
     isPending: isConfigPending
   } = useConfig();
   const {
-    params: {refName}
+    params: {
+      refName,
+      vaccineName: paramVaccName
+    }
   } = LocationParams.useMe();
   const {match: {location: loc}} = useRouter();
 
@@ -34,11 +37,11 @@ export default function VaccineCard() {
     isPending
   } = Vaccines.useCurrent();
 
-
   const loaded = !isConfigPending && !isPending;
 
   const {
-    vaccineName
+    vaccineName,
+    vaccineType
   } = vaccine || {};
 
   const message = loaded ?
@@ -72,7 +75,7 @@ export default function VaccineCard() {
   );
 
 
-  if (!isPending && !vaccine) {
+  if (!(isPending && paramVaccName) && !vaccine) {
     return null;
   }
 
@@ -84,6 +87,7 @@ export default function VaccineCard() {
      }}
      className={style['vaccine-card']}
      loaded={loaded}
+     tagline={vaccineType ? `${vaccineType} vaccine` : null}
      titleAs={refName ? 'div' : 'h2'}
      title={vaccineName}>
       <div ref={descRef} className={style['vaccine-desc']}>

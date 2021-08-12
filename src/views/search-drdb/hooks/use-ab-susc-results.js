@@ -94,7 +94,7 @@ export default function useAntibodySuscResults() {
   const {
     antibodyLookup,
     isPending: isAbLookupPending
-  } = Antibodies.useMe();
+  } = Antibodies.useAll();
 
   const addCompareSuscResults = useCompareSuscResultsByAntibodies(
     antibodyLookup
