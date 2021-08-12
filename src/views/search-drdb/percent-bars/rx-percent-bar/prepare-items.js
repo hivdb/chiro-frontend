@@ -14,6 +14,7 @@ import {
 
 
 export default function prepareItems({
+  paramAbNames,
   vaccines,
   antibodyLookup,
   infVariants,
@@ -22,11 +23,22 @@ export default function prepareItems({
   orderedAbNames,
   infVarNumExpLookup
 }) {
-  const expAntibodies = uniq(
-    Object.keys(abNumExpLookup)
-      .filter(ab => ab !== '__ANY')
-      .reduce((acc, abNames) => [...acc, ...csvParse(abNames, false)[0]], [])
-  );
+  let expAntibodies;
+
+  if (
+    paramAbNames &&
+    paramAbNames.length > 0 &&
+    !paramAbNames.includes('any')
+  ) {
+    expAntibodies = paramAbNames;
+  }
+  else {
+    expAntibodies = uniq(
+      Object.keys(abNumExpLookup)
+        .filter(ab => ab !== '__ANY')
+        .reduce((acc, abNames) => [...acc, ...csvParse(abNames, false)[0]], [])
+    );
+  }
 
   const presentVariants = [
     ...infVariants

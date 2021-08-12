@@ -1,4 +1,5 @@
 import React from 'react';
+import {csvStringify} from 'sierra-frontend/dist/utils/csv';
 
 import Vaccines from '../../hooks/vaccines';
 import Antibodies from '../../hooks/antibodies';
@@ -68,6 +69,7 @@ export default function RxPercentBar() {
       else {
         let filteredVaccNumExpLookup = vaccNumExpLookup,
           filteredAbNumExpLookup = abNumExpLookup,
+          filteredOrderedAbNames = orderedAbNames,
           filteredInfVarNumExpLookup = infVarNumExpLookup;
         const filterByVaccine = vaccineName;
         const filterByAntibody = (abNames && abNames.length > 0);
@@ -75,6 +77,7 @@ export default function RxPercentBar() {
         if (filterByVaccine || filterByAntibody || filterByInfVar) {
           filteredVaccNumExpLookup = {};
           filteredAbNumExpLookup = {};
+          filteredOrderedAbNames = [];
           filteredInfVarNumExpLookup = {};
           if (filterByVaccine) {
             if (vaccineName === 'any') {
@@ -88,11 +91,22 @@ export default function RxPercentBar() {
           else if (filterByAntibody) {
             if (abNames[0] === 'any') {
               filteredAbNumExpLookup = abNumExpLookup;
+              filteredOrderedAbNames = orderedAbNames;
             }
             else {
-              filteredAbNumExpLookup.__ANY =
-              filteredAbNumExpLookup[abNames] =
-                abNumExpLookup[abNames] || 0;
+              filteredOrderedAbNames = orderedAbNames.filter(
+                myAbNames => abNames.every(
+                  abName => myAbNames.includes(abName)
+                )
+              );
+              let total = 0;
+              for (const abNamesArr of filteredOrderedAbNames) {
+                const abNamesText = csvStringify(abNamesArr);
+                const num = abNumExpLookup[abNamesText] || 0;
+                filteredAbNumExpLookup[abNamesText] = num;
+                total += num;
+              }
+              filteredAbNumExpLookup.__ANY = total;
             }
           }
           else if (infectedVarName) {
@@ -111,9 +125,10 @@ export default function RxPercentBar() {
           antibodies,
           antibodyLookup,
           infVariants,
+          paramAbNames: abNames,
           vaccNumExpLookup: filteredVaccNumExpLookup,
           abNumExpLookup: filteredAbNumExpLookup,
-          orderedAbNames,
+          orderedAbNames: filteredOrderedAbNames,
           infVarNumExpLookup: filteredInfVarNumExpLookup
         });
       }
