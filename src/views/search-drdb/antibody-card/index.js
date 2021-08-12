@@ -93,6 +93,8 @@ export default function AntibodyCard() {
           availability,
           synonyms,
           abTarget,
+          abClass,
+          matureMonth,
           epitopes
         }) => (
           <ul key={abName}>
@@ -115,6 +117,10 @@ export default function AntibodyCard() {
             {abClass ?
               <li>
                 <strong>MAb Class</strong>: {abClass}
+              </li> : null}
+            {matureMonth ?
+              <li>
+                <strong>Mature month</strong>: {matureMonth}
               </li> : null}
             {epitopes.length > 0 ?
               <li className={style['full-row']}>

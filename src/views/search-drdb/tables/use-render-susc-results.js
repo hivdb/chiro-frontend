@@ -1,4 +1,5 @@
 import React from 'react';
+import uniq from 'lodash/uniq';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import {Header} from 'semantic-ui-react';
@@ -44,11 +45,14 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   const hasNA = data.some(d => (
     d.controlPotency === null || d.potency === null
   ));
+  const numArticles = uniq(data.map(({refName}) => refName)).length;
   const headNote = <div>
     {removedLen > 0 ? <>
       <em>
         Of the <strong>{data.length.toLocaleString('en-US')}</strong>{' '}
         {pluralize('experiment result', data.length, false)}{' '}
+        from <strong>{numArticles.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('study', numArticles, false)}{' '}
         listed in the following table,{' '}
         <strong>{removedLen.toLocaleString('en-US')}</strong>{' '}
         {pluralize('has', removedLen)}{' '}
@@ -65,7 +69,9 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
     </> : <em>
       The following table contains <strong>
         {data.length.toLocaleString('en-US')}</strong>{' '}
-      {pluralize('experiment result', data.length, false)}.
+      {pluralize('experiment result', data.length, false)}{' '}
+      from <strong>{numArticles.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('study', numArticles, false)}.
     </em>}
   </div>;
   if (hide) {

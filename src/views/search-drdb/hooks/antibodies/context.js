@@ -19,6 +19,7 @@ function AntibodiesProvider({children}) {
       availability,
       priority,
       visibility,
+      mature_month,
       AT.class AS ab_class,
       AT.target AS ab_target,
       (
