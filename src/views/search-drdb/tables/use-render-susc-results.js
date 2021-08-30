@@ -1,5 +1,4 @@
 import React from 'react';
-import uniq from 'lodash/uniq';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import {Header} from 'semantic-ui-react';
@@ -9,6 +8,7 @@ import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
 
 import Isolates from '../hooks/isolates';
+import {useStatSuscResults} from '../hooks';
 
 import style from './style.module.scss';
 
@@ -40,22 +40,21 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   const filtered = data.filter(
     d => d.ineffective === 'experimental' || d.ineffective === null
   );
-  const removedLen = data.length - filtered.length;
+  const {numExps, numArticles, numNoNatExps} = useStatSuscResults(data);
   const hasNN = !hide && filtered.length > 0;
   const hasNA = data.some(d => (
     d.controlPotency === null || d.potency === null
   ));
-  const numArticles = uniq(data.map(({refName}) => refName)).length;
   const headNote = <div>
-    {removedLen > 0 ? <>
+    {numNoNatExps > 0 ? <>
       <em>
-        Of the <strong>{data.length.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('experiment result', data.length, false)}{' '}
+        Of the <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('experiment result', numExps, false)}{' '}
         from <strong>{numArticles.toLocaleString('en-US')}</strong>{' '}
         {pluralize('study', numArticles, false)}{' '}
         listed in the following table,{' '}
-        <strong>{removedLen.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('has', removedLen)}{' '}
+        <strong>{numNoNatExps.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('has', numNoNatExps)}{' '}
         {hide ? <>
           been hidden due to poor neutralizing
           activity against the control virus.
@@ -68,8 +67,8 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
       </a>)
     </> : <em>
       The following table contains <strong>
-        {data.length.toLocaleString('en-US')}</strong>{' '}
-      {pluralize('experiment result', data.length, false)}{' '}
+        {numExps.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('experiment result', numExps, false)}{' '}
       from <strong>{numArticles.toLocaleString('en-US')}</strong>{' '}
       {pluralize('study', numArticles, false)}.
     </em>}
@@ -79,7 +78,7 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   }
 
   const tableJSX = (
-    data.length > 0 ?
+    numExps > 0 ?
       <SimpleTable
        {...props}
        cacheKey={`${cacheKey}__${hide}`}

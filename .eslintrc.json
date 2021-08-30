@@ -153,6 +153,10 @@
       "warn",
       {"allowRequiredDefaults": true}
     ],
-    "react/no-unused-prop-types": "warn"
+    "react/no-unused-prop-types": "warn",
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {"enableDangerousAutofixThisMayCauseInfiniteLoops": true}
+    ]
   }
 }

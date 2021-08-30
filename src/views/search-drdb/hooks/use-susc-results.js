@@ -220,36 +220,49 @@ export default function useSuscResults({
 
   const compareByIsolates = useCompareSuscResultsByIsolate(isolateLookup);
 
-  let suscResults;
-  let suscResultLookup = {};
+  const [suscResults, suscResultLookup] = React.useMemo(
+    () => {
+      let suscResults;
+      let suscResultLookup = {};
 
-  if (!skip && !isPending && !isIsolatePending) {
-    suscResults = payload.map(sr => ({
-      ...sr,
-      resistanceLevel: calcResistanceLevel(sr)
-    }));
+      if (!skip && !isPending && !isIsolatePending) {
+        suscResults = payload.map(sr => ({
+          ...sr,
+          resistanceLevel: calcResistanceLevel(sr)
+        }));
 
-    suscResults.sort((srA, srB) => {
-      let cmp = addCompareSuscResults(srA, srB);
-      if (cmp) { return cmp; }
+        suscResults.sort((srA, srB) => {
+          let cmp = addCompareSuscResults(srA, srB);
+          if (cmp) { return cmp; }
 
-      cmp = compareByIsolates(srA, srB);
-      if (cmp) { return cmp; }
+          cmp = compareByIsolates(srA, srB);
+          if (cmp) { return cmp; }
 
-      const assayA = srA.assayName !== 'authentic virus';
-      const assayB = srB.assayName !== 'authentic virus';
-      return assayA - assayB;
-    });
+          const assayA = srA.assayName !== 'authentic virus';
+          const assayB = srB.assayName !== 'authentic virus';
+          return assayA - assayB;
+        });
 
-    suscResultLookup = suscResults.reduce(
-      (acc, sr) => {
-        const key = getSuscResultUniqKey(sr);
-        acc[key] = sr;
-        return acc;
-      },
-      {}
-    );
-  }
+        suscResultLookup = suscResults.reduce(
+          (acc, sr) => {
+            const key = getSuscResultUniqKey(sr);
+            acc[key] = sr;
+            return acc;
+          },
+          {}
+        );
+      }
+      return [suscResults, suscResultLookup];
+    },
+    [
+      addCompareSuscResults,
+      compareByIsolates,
+      isIsolatePending,
+      isPending,
+      payload,
+      skip
+    ]
+  );
 
   return {
     suscResults,
