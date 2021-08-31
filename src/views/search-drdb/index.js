@@ -6,13 +6,13 @@ import {useProviders} from './hooks';
 import SearchDRDBLayout from './layout';
 
 
-export default function SearchDRDB(props) {
+export default function SearchDRDB() {
   useCleanQuery();
 
   const ComboProvider = useProviders('all');
 
   return <ComboProvider>
-    <SearchDRDBLayout {...props} />
+    <SearchDRDBLayout />
     <GitHubCorner
      title="Download this database from GitHub"
      href="https://github.com/hivdb/covid-drdb-payload/releases" />

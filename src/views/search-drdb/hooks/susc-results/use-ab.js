@@ -1,10 +1,13 @@
 import React from 'react';
-import Antibodies from './antibodies';
-import LocationParams from './location-params';
+import PropTypes from 'prop-types';
+import Antibodies from '../antibodies';
+import LocationParams from '../location-params';
 import useSuscResults from './use-susc-results';
-import {useCompareSuscResultsByAntibodies} from './use-compare-susc-results';
+import {useCompareSuscResultsByAntibodies} from './use-compare';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
+
+const AbSuscResultsContext = React.createContext();
 
 
 function usePrepareQuery({abNames, skip}) {
@@ -72,8 +75,12 @@ function usePrepareQuery({abNames, skip}) {
   );
 }
 
+AbSuscResultsProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
-export default function useAntibodySuscResults() {
+
+export function AbSuscResultsProvider({children}) {
   const {
     params: {
       formOnly,
@@ -115,15 +122,34 @@ export default function useAntibodySuscResults() {
     skip: skip || isAbLookupPending
   });
 
-  if (!skip && !isAbLookupPending && !isPending && suscResults) {
-    for (const suscResult of suscResults) {
-      suscResult.abNames = suscResult.abNames.split(LIST_JOIN_MAGIC_SEP);
-    }
-  }
+  const cleanedSuscResults = React.useMemo(
+    () => {
+      if (!skip && !isAbLookupPending && !isPending && suscResults) {
+        return suscResults.map(
+          suscResult => {
+            const cleanedSuscResult = {...suscResult};
+            cleanedSuscResult.abNames =
+              suscResult.abNames.split(LIST_JOIN_MAGIC_SEP);
+            return cleanedSuscResult;
+          }
+        );
+      }
+      return [];
+    },
+    [isAbLookupPending, isPending, skip, suscResults]
+  );
 
-  return {
-    suscResults,
+  const contextValue = {
+    suscResults: cleanedSuscResults,
     suscResultLookup,
     isPending: isPending || isAbLookupPending
   };
+
+  return <AbSuscResultsContext.Provider value={contextValue}>
+    {children}
+  </AbSuscResultsContext.Provider>;
+}
+
+export default function useAbSuscResults() {
+  return React.useContext(AbSuscResultsContext);
 }

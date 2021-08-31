@@ -9,6 +9,7 @@ import Variants from './variants';
 import Isolates from './isolates';
 import IsolateAggs from './isolate-aggs';
 import SuscSummary from './susc-summary';
+import SuscResults from './susc-results';
 
 const providers = {
   locationParams: LocationParams.Provider,
@@ -19,7 +20,8 @@ const providers = {
   variants: Variants.Provider,
   isolates: Isolates.Provider,
   isolateAggs: IsolateAggs.Provider,
-  suscSummary: SuscSummary.Provider
+  suscSummary: SuscSummary.Provider,
+  suscResults: SuscResults.Provider
 };
 
 
@@ -44,15 +46,20 @@ const presetProviderNames = {
     'variants',
     'isolates', // isolates depends on variants
     'isolateAggs',
-    'suscSummary'
+    'suscSummary',
+    'suscResults'
   ]
 };
 
 
 export default function useProviders(preset) {
-  const providerNames = [
-    ...presetProviderNames[preset]
-  ].reverse();
+  const providerNames = React.useMemo(
+    () => [
+      ...presetProviderNames[preset]
+    ].reverse(),
+    [preset]
+  );
+
 
   return React.useCallback(
     ({children}) => {

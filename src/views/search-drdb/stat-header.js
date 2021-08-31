@@ -9,6 +9,7 @@ import PercentBars from './percent-bars';
 import LocationParams from './hooks/location-params';
 
 import SearchBox from './search-box';
+import TableOfContent from './table-of-content';
 
 import style from './style.module.scss';
 
@@ -61,6 +62,7 @@ export default function SearchDRDBStatHeader() {
                   <VaccineCard />
                   <AntibodyCard />
                   <PercentBars />
+                  {formOnly ? null : <TableOfContent />}
                 </>
               }
             ]}

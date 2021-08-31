@@ -1,6 +1,10 @@
 import React from 'react';
-import LocationParams from './location-params';
+import PropTypes from 'prop-types';
+import LocationParams from '../location-params';
 import useSuscResults from './use-susc-results';
+
+
+const CPSuscResultsContext = React.createContext();
 
 
 function usePrepareQuery({infectedVarName, skip}) {
@@ -43,7 +47,12 @@ function usePrepareQuery({infectedVarName, skip}) {
 }
 
 
-export default function useConvPlasmaSuscResults() {
+CPSuscResultsProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
+
+export function CPSuscResultsProvider({children}) {
   const {
     params: {
       formOnly,
@@ -61,11 +70,7 @@ export default function useConvPlasmaSuscResults() {
     where,
     params
   } = usePrepareQuery({infectedVarName, skip});
-  const {
-    suscResults,
-    suscResultLookup,
-    isPending
-  } = useSuscResults({
+  const contextValue = useSuscResults({
     refName,
     isoAggkey,
     varName,
@@ -76,5 +81,12 @@ export default function useConvPlasmaSuscResults() {
     skip
   });
 
-  return {suscResults, suscResultLookup, isPending};
+  return <CPSuscResultsContext.Provider value={contextValue}>
+    {children}
+  </CPSuscResultsContext.Provider>;
+}
+
+
+export default function useCPSuscResults() {
+  return React.useContext(CPSuscResultsContext);
 }

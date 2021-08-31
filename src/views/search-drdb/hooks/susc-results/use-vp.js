@@ -1,6 +1,9 @@
 import React from 'react';
-import LocationParams from './location-params';
+import PropTypes from 'prop-types';
+import LocationParams from '../location-params';
 import useSuscResults from './use-susc-results';
+
+const VPSuscResultsContext = React.createContext();
 
 
 function usePrepareQuery({vaccineName, skip}) {
@@ -35,7 +38,12 @@ function usePrepareQuery({vaccineName, skip}) {
 }
 
 
-export default function useVaccPlasmaSuscResults() {
+VPSuscResultsProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
+
+export function VPSuscResultsProvider({children}) {
   const {
     params: {
       formOnly,
@@ -69,5 +77,14 @@ export default function useVaccPlasmaSuscResults() {
     skip
   });
 
-  return {suscResults, suscResultLookup, isPending};
+  const contextValue = {suscResults, suscResultLookup, isPending};
+
+  return <VPSuscResultsContext.Provider value={contextValue}>
+    {children}
+  </VPSuscResultsContext.Provider>;
+}
+
+
+export default function useVPSuscResults() {
+  return React.useContext(VPSuscResultsContext);
 }

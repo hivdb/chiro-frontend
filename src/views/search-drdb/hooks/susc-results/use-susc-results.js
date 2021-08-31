@@ -1,8 +1,8 @@
 import React from 'react';
 
-import useQuery from './use-query';
-import Isolates from './isolates';
-import {useCompareSuscResultsByIsolate} from './use-compare-susc-results';
+import useQuery from '../use-query';
+import Isolates from '../isolates';
+import {useCompareSuscResultsByIsolate} from './use-compare';
 
 
 export function getSuscResultUniqKey(suscResult) {
@@ -191,13 +191,30 @@ export default function useSuscResults({
   refName,
   isoAggkey,
   varName = null,
-  addColumns = [],
-  joinClause = [],
-  where: addWhere = [],
-  params: addParams = {},
-  addCompareSuscResults = () => 0,
-  skip = false
+  skip = false,
+  ...options
 }) {
+  const addColumns = React.useMemo(
+    () => options.addColumns || [],
+    [options.addColumns]
+  );
+  const joinClause = React.useMemo(
+    () => options.joinClause || [],
+    [options.joinClause]
+  );
+  const addWhere = React.useMemo(
+    () => options.where || [],
+    [options.where]
+  );
+  const addParams = React.useMemo(
+    () => options.params || [],
+    [options.params]
+  );
+  const addCompareSuscResults = React.useMemo(
+    () => options.addCompareSuscResults || (() => 0),
+    [options.addCompareSuscResults]
+  );
+
   const {sql, params} = usePrepareQuery({
     skip,
     refName,

@@ -7,16 +7,9 @@ import {H3, H4} from 'sierra-frontend/dist/components/heading-tags';
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
 
-import Isolates from '../hooks/isolates';
-import {useStatSuscResults} from '../hooks';
+import {useStatSuscResults, useSeparateSuscResults} from '../hooks';
 
 import style from './style.module.scss';
-
-
-const type2Section = {
-  'individual-mutation': 'indivMut',
-  'mutation-combination': 'comboMuts'
-};
 
 
 SimpleTableWrapper.propTypes = {
@@ -101,7 +94,6 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
   </>;
 }
 
-
 export default function useRenderSuscResults({
   id,
   loaded,
@@ -114,43 +106,14 @@ export default function useRenderSuscResults({
   comboMutsAggFoldColumnDefs
 }) {
 
-  const {
-    isolateLookup,
-    isPending: isIsoLookupPending
-  } = Isolates.useMe();
-
-  const isPending = !loaded || isIsoLookupPending;
-
-  const suscResultsBySection = React.useMemo(
-    () => {
-      if (isPending) {
-        return;
-      }
-      return suscResults.reduce(
-        (acc, sr) => {
-          const {type} = isolateLookup[sr.isoName];
-          const section = type2Section[type];
-          if (sr.cumulativeCount > 1) {
-            acc[section].aggFold.push(sr);
-          }
-          else {
-            acc[section].indivFold.push(sr);
-          }
-          return acc;
-        },
-        {
-          indivMut: {indivFold: [], aggFold: []},
-          comboMuts: {indivFold: [], aggFold: []}
-        }
-      );
-    },
-    [isPending, suscResults, isolateLookup]
-  );
-
+  const suscResultsBySection = useSeparateSuscResults({
+    suscResults,
+    skip: !loaded
+  });
 
   const element = React.useMemo(
     () => {
-      if (!isPending) {
+      if (loaded) {
         const numSections = (
           Object.entries(suscResultsBySection)
             .filter(
@@ -253,15 +216,15 @@ export default function useRenderSuscResults({
       }
     },
     [
+      loaded,
+      suscResultsBySection,
       id,
-      isPending,
-      hideNN,
       cacheKey,
+      hideNN,
       indivMutIndivFoldColumnDefs,
       indivMutAggFoldColumnDefs,
       comboMutsIndivFoldColumnDefs,
-      comboMutsAggFoldColumnDefs,
-      suscResultsBySection
+      comboMutsAggFoldColumnDefs
     ]
   );
   return element;

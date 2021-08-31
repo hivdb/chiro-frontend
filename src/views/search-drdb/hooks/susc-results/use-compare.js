@@ -1,6 +1,6 @@
 import React from 'react';
-import {compareIsolates} from './isolates';
-import Antibodies, {compareAntibodyLists} from './antibodies';
+import {compareIsolates} from '../isolates';
+import Antibodies, {compareAntibodyLists} from '../antibodies';
 
 
 export function useCompareSuscResultsByIsolate(isolateLookup) {

@@ -6,24 +6,20 @@ import {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
   useCompareSuscResultsByInfectedIsolate
-} from './use-compare-susc-results';
-import useAbSuscResults from './use-ab-susc-results';
-import useCPSuscResults from './use-cp-susc-results';
-import useVPSuscResults from './use-vp-susc-results';
+} from './susc-results/use-compare';
 import useCPCount from './use-cp-count';
 import useStatSuscResults from './use-stat-susc-results';
+import useSeparateSuscResults from './use-separate-susc-results';
 
 export {
   useConfig,
   useProviders,
-  useAbSuscResults,
-  useCPSuscResults,
-  useVPSuscResults,
   useStatSuscResults,
   useLookup,
   useCPCount,
   useCompareSuscResultsByAntibodies,
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
-  useCompareSuscResultsByInfectedIsolate
+  useCompareSuscResultsByInfectedIsolate,
+  useSeparateSuscResults
 };

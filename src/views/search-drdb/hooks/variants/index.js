@@ -34,16 +34,22 @@ function VariantsProvider({children}) {
     isPending
   } = useQuery({sql});
 
-  let variants;
-  if (payload) {
-    variants = payload.map(
-      ({varName, synonyms, suscResultCount}) => ({
-        varName,
-        synonyms: synonyms ? synonyms.split(LIST_JOIN_UNIQ) : [],
-        suscResultCount
-      })
-    );
-  }
+  const variants = React.useMemo(
+    () => {
+      let variants;
+      if (payload) {
+        variants = payload.map(
+          ({varName, synonyms, suscResultCount}) => ({
+            varName,
+            synonyms: synonyms ? synonyms.split(LIST_JOIN_UNIQ) : [],
+            suscResultCount
+          })
+        );
+      }
+      return variants;
+    },
+    [payload]
+  );
 
   const contextValue = {
     variants,

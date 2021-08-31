@@ -6,6 +6,13 @@ export default function useStatSuscResults(suscResults) {
 
   return React.useMemo(
     () => {
+      if (!suscResults || suscResults.length === 0) {
+        return {
+          numExps: 0,
+          numArticles: 0,
+          numNoNatExps: 0
+        };
+      }
       const numExps = suscResults.reduce(
         (acc, {cumulativeCount}) => acc + cumulativeCount,
         0
