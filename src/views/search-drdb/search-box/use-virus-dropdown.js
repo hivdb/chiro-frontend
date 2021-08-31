@@ -4,7 +4,7 @@ import {Dropdown} from 'semantic-ui-react';
 import {NumExpStats} from '../hooks/susc-summary';
 import LocationParams from '../hooks/location-params';
 import Variants from '../hooks/variants';
-import IsolateAggs from '../hooks/isolate-aggs';
+import IsolateAggs, {compareIsolateAggs} from '../hooks/isolate-aggs';
 
 import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
@@ -104,7 +104,7 @@ export default function useVirusDropdown() {
             })
           )
           .filter(({numExp}) => numExp > 0)
-          .sort((a, b) => b.numExp - a.numExp);
+          .sort(compareIsolateAggs);
 
         return [
           ...(formOnly ? [{

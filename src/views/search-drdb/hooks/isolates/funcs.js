@@ -72,6 +72,8 @@ export function compareIsolates(isolateA, isolateB) {
 
 export function compareMutations(mutationsA, mutationsB) {
   let cmp;
+  mutationsA = mutationsA || [];
+  mutationsB = mutationsB || [];
   for (const [idx, mutA] of mutationsA.entries()) {
     const mutB = mutationsB[idx];
     if (!mutB) {
