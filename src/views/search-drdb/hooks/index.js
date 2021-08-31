@@ -10,6 +10,7 @@ import {
 import useCPCount from './use-cp-count';
 import useStatSuscResults from './use-stat-susc-results';
 import useSeparateSuscResults from './use-separate-susc-results';
+import useLastUpdate from './use-last-update';
 
 export {
   useConfig,
@@ -21,5 +22,6 @@ export {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
   useCompareSuscResultsByInfectedIsolate,
-  useSeparateSuscResults
+  useSeparateSuscResults,
+  useLastUpdate
 };

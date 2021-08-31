@@ -1,5 +1,22 @@
 @import "../../styles/dropdown";
 
+:global(.ui.dividing.header .sub.header) {
+  .last-update {
+    float: right;
+  }
+  .contribute-options {
+    vertical-align: middle;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .bullet {
+    padding-left: .2rem;
+    padding-right: .2rem;
+    position: relative;
+    top: 2px;
+  }
+}
+
 .header-content {
   font-style: italic;
   text-align: center;

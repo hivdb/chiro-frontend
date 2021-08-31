@@ -12,6 +12,7 @@ import CPSuscResults from './tables/cp-susc-results';
 
 import AbSuscSummary from './summary/ab-susc-summary';
 
+import {useLastUpdate} from './hooks';
 import LocationParams from './hooks/location-params';
 
 import style from './style.module.scss';
@@ -26,6 +27,7 @@ export default function SearchDRDBLayout() {
     params: {formOnly},
     filterFlag
   } = LocationParams.useMe();
+  const lastUpdate = useLastUpdate();
 
   const displayAbTables = (
     !formOnly &&
@@ -48,6 +50,20 @@ export default function SearchDRDBLayout() {
       <Grid.Column width={16}>
         <Header as ="h1" dividing className={style['header-title']}>
           Search SARS-CoV-2 resistance database
+          <Header.Subheader>
+            <span className={style['contribute-options']}>
+              <a href="https://git.io/JEQMz" target="_blank" rel="noreferrer">
+                Suggest new study
+              </a>
+              <span className={style['bullet']}> ⦁ </span>
+              <a href="https://git.io/JEQM8" target="_blank" rel="noreferrer">
+                report error
+              </a>
+            </span>
+            <span className={style['last-update']}>
+              Last updated at {new Date(lastUpdate).toLocaleString('en-US')}
+            </span>
+          </Header.Subheader>
         </Header>
       </Grid.Column>
     </Grid.Row>
