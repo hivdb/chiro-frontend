@@ -21,7 +21,7 @@ export default function useRxTotalNumExp() {
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
-  if (isoAggkey) {
+  if (genePos) {
     aggregateBy.push('position');
   }
   const [
