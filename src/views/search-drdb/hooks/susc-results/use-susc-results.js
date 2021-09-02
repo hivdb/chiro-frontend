@@ -87,6 +87,7 @@ function usePrepareQuery({
   skip,
   refName,
   isoAggkey,
+  genePos,
   varName,
   addColumns,
   joinClause,
@@ -134,6 +135,17 @@ function usePrepareQuery({
           `);
           params.$varName = varName;
         }
+        else if (genePos) {
+          myJoinClause.push(`
+            JOIN isolate_pairs pair ON
+              S.control_iso_name = pair.control_iso_name AND
+              S.iso_name = pair.iso_name
+          `);
+          where.push(`
+            pair.iso_aggkey LIKE $genePos
+          `);
+          params.$genePos = `${genePos}_`;
+        }
       }
 
       const combinedWhere = [...where, ...addWhere];
@@ -174,14 +186,15 @@ function usePrepareQuery({
       return {sql, params: combinedParams};
     },
     [
+      addColumns,
       skip,
+      addWhere,
+      addParams,
+      joinClause,
       refName,
       isoAggkey,
       varName,
-      addColumns,
-      joinClause,
-      addWhere,
-      addParams
+      genePos
     ]
   );
 }
@@ -190,6 +203,7 @@ function usePrepareQuery({
 export default function useSuscResults({
   refName,
   isoAggkey,
+  genePos,
   varName = null,
   skip = false,
   ...options
@@ -219,6 +233,7 @@ export default function useSuscResults({
     skip,
     refName,
     isoAggkey,
+    genePos,
     varName,
     addColumns,
     joinClause,

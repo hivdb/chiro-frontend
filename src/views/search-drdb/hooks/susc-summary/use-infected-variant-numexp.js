@@ -10,7 +10,8 @@ export default function useInfectedVariantNumExp() {
     params: {
       refName,
       varName,
-      isoAggkey
+      isoAggkey,
+      genePos
     }
   } = LocationParams.useMe();
 
@@ -23,6 +24,9 @@ export default function useInfectedVariantNumExp() {
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
+  if (genePos) {
+    aggregateBy.push('position');
+  }
   const [
     suscSummary,
     isSuscSummaryPending
@@ -31,6 +35,7 @@ export default function useInfectedVariantNumExp() {
     refName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['infected_var_name', 'num_experiments']
   });
   const [
@@ -42,6 +47,7 @@ export default function useInfectedVariantNumExp() {
     refName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['num_experiments']
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;

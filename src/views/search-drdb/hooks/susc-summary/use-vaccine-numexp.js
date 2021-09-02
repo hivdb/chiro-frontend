@@ -10,7 +10,8 @@ export default function useVaccineNumExp() {
     params: {
       refName,
       varName,
-      isoAggkey
+      isoAggkey,
+      genePos
     }
   } = LocationParams.useMe();
   if (refName) {
@@ -22,6 +23,9 @@ export default function useVaccineNumExp() {
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
+  if (genePos) {
+    aggregateBy.push('position');
+  }
   const [
     suscSummary,
     isSuscSummaryPending
@@ -30,6 +34,7 @@ export default function useVaccineNumExp() {
     refName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['vaccine_name', 'num_experiments']
   });
   const [
@@ -41,6 +46,7 @@ export default function useVaccineNumExp() {
     refName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['num_experiments']
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;

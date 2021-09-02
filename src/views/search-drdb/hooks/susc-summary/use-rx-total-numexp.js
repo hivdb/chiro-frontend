@@ -7,7 +7,8 @@ export default function useRxTotalNumExp() {
     params: {
       refName,
       varName,
-      isoAggkey
+      isoAggkey,
+      genePos
     }
   } = LocationParams.useMe();
   const aggregateBy = [];
@@ -20,6 +21,9 @@ export default function useRxTotalNumExp() {
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
+  if (isoAggkey) {
+    aggregateBy.push('position');
+  }
   const [
     suscSummary,
     isPending
@@ -28,6 +32,7 @@ export default function useRxTotalNumExp() {
     refName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['num_experiments']
   });
   if (isPending) {

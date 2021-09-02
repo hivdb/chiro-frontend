@@ -12,7 +12,8 @@ export default function useArticleNumExp() {
       vaccineName,
       infectedVarName,
       varName,
-      isoAggkey
+      isoAggkey,
+      genePos
     }
   } = LocationParams.useMe();
   const aggregateBy = [];
@@ -56,6 +57,9 @@ export default function useArticleNumExp() {
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
+  if (genePos) {
+    aggregateBy.push('position');
+  }
   const [
     suscSummary,
     isSuscSummaryPending
@@ -67,6 +71,7 @@ export default function useArticleNumExp() {
     infectedVarName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['ref_name', 'num_experiments']
   });
   const [
@@ -80,6 +85,7 @@ export default function useArticleNumExp() {
     infectedVarName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['num_experiments']
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;

@@ -22,6 +22,7 @@ function LocationParamsProvider({children}) {
         mutations: isoAggkey = '',
         antibodies: antibodyText = '',
         variant: varName = null,
+        position: genePos = null,
         cp: infectedVarName = '',
         vaccine: vaccineName = null
       } = {}
@@ -57,7 +58,8 @@ function LocationParamsProvider({children}) {
           abNames,
           varName,
           vaccineName,
-          infectedVarName
+          infectedVarName,
+          genePos
         },
         filterFlag: {
           article: !!refName,
@@ -65,7 +67,8 @@ function LocationParamsProvider({children}) {
           antibody: !!(abNames && abNames.length > 0),
           variant: !!varName,
           vaccine: !!vaccineName,
-          infectedVariant: !!infectedVarName
+          infectedVariant: !!infectedVarName,
+          genePos: !!genePos
         },
         onChange
       };
@@ -78,6 +81,7 @@ function LocationParamsProvider({children}) {
       varName,
       vaccineName,
       infectedVarName,
+      genePos,
       onChange
     ]
   );

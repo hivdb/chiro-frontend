@@ -19,7 +19,19 @@ export function cleanQuery(query) {
     delete query.mutations;
   }
 
+  if (!query.position || query.position.trim().length === 0) {
+    delete query.position;
+  }
+
   if (query.mutations !== undefined && query.variant !== undefined) {
+    delete query.variant;
+  }
+
+  if (query.mutations !== undefined && query.position !== undefined) {
+    delete query.position;
+  }
+
+  if (query.position !== undefined && query.variant !== undefined) {
     delete query.variant;
   }
 
@@ -83,9 +95,11 @@ export function buildQuery(
   }
   else if (action === 'variant') {
     delete query.mutations;
+    delete query.position;
   }
   else if (action === 'mutations') {
     delete query.variant;
+    delete query.position;
   }
 
   return cleanQuery(query);

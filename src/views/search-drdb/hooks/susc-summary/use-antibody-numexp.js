@@ -13,7 +13,8 @@ export default function useAntibodyNumExp(
     params: {
       refName,
       varName,
-      isoAggkey
+      isoAggkey,
+      genePos
     }
   } = LocationParams.useMe();
   if (refName) {
@@ -25,6 +26,9 @@ export default function useAntibodyNumExp(
   if (isoAggkey) {
     aggregateBy.push('isolate_agg');
   }
+  if (genePos) {
+    aggregateBy.push('position');
+  }
   const [
     suscSummary,
     isSuscSummaryPending
@@ -33,6 +37,7 @@ export default function useAntibodyNumExp(
     refName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['antibody_names', 'num_experiments']
   });
   const [
@@ -44,6 +49,7 @@ export default function useAntibodyNumExp(
     refName,
     varName,
     isoAggkey,
+    genePos,
     selectColumns: ['num_experiments']
   });
   const isPending = isSuscSummaryPending || isAnySuscSummaryPending;

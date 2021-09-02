@@ -22,6 +22,7 @@ export default function useVirusDropdown() {
     params: {
       varName: paramVarName,
       isoAggkey: paramIsoAggKey,
+      genePos: paramGenePos,
       formOnly
     },
     onChange
@@ -87,6 +88,11 @@ export default function useVirusDropdown() {
             key: paramIsoAggKey,
             text: paramIsoAggKey,
             value: paramIsoAggKey
+          }] : []),
+          ...(paramGenePos ? [{
+            key: paramGenePos,
+            text: paramGenePos,
+            value: paramGenePos
           }] : [])
         ];
       }
@@ -109,15 +115,30 @@ export default function useVirusDropdown() {
             )
           )
           .map(
-            ({isoAggkey, isoAggDisplay, mutations}) => ({
+            ({isoAggkey, isoAggDisplay, mutations, isoType}) => ({
               isoAggkey,
               isoAggDisplay,
+              isoType,
+              gene: mutations[0]?.gene,
               position: mutations[0]?.position,
+              aa: mutations[0]?.aminoAcid,
               numExp: isoAggNumExpLookup[isoAggkey] || 0
             })
           )
           .filter(({numExp}) => numExp > 0)
           .sort(compareIsolateAggs);
+
+        const positionMutCount = displayIsolateAggs
+          .filter(({isoType, aa}) => (
+            isoType === 'indiv-mut' &&
+            aa !== 'del'
+          ))
+          .reduce((acc, {gene, position}) => {
+            const key = `${gene}:${position}`;
+            acc[key] = acc[key] || 0;
+            acc[key] ++;
+            return acc;
+          }, {});
 
         return [
           ...(formOnly ? [{
@@ -163,16 +184,15 @@ export default function useVirusDropdown() {
             },
             ...[
               ...positions
+                .filter(({posKey}) => positionMutCount[posKey] > 1)
                 .map(
                   ({posKey, gene, position, refAminoAcid}) => ({
                     key: posKey,
-                    text: (
-                      `${
-                        gene === 'S' ? '' : `${gene}:`
-                      }${refAminoAcid}${position} - any`
-                    ),
+                    text: `${
+                      gene === 'S' ? '' : `${gene}:`
+                    }${refAminoAcid}${position} - any`,
                     value: posKey,
-                    type: 'positions',
+                    type: 'position',
                     position,
                     description: pluralize(
                       'result',
@@ -199,13 +219,14 @@ export default function useVirusDropdown() {
     },
     [
       isPending,
-      variants,
-      isolateAggs,
-      positions,
       paramVarName,
       paramIsoAggKey,
+      paramGenePos,
+      variants,
+      isolateAggs,
       formOnly,
       varTotalNumExp,
+      positions,
       varNumExpLookup,
       isoAggNumExpLookup,
       posNumExpLookup
@@ -244,7 +265,12 @@ export default function useVirusDropdown() {
        placeholder={EMPTY_TEXT}
        options={variantOptions}
        onChange={handleChange}
-       value={paramVarName || paramIsoAggKey || defaultValue} />
+       value={
+         paramVarName ||
+           paramIsoAggKey ||
+           paramGenePos ||
+           defaultValue
+        } />
     </div>
   );
 }

@@ -59,6 +59,7 @@ export function CPSuscResultsProvider({children}) {
       refName,
       isoAggkey,
       varName,
+      genePos,
       infectedVarName
     },
     filterFlag
@@ -74,6 +75,7 @@ export function CPSuscResultsProvider({children}) {
     refName,
     isoAggkey,
     varName,
+    genePos,
     addColumns,
     joinClause,
     where,

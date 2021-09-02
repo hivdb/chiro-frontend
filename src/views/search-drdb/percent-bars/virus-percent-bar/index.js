@@ -19,7 +19,8 @@ export default function VirusPercentBar() {
   const {
     params: {
       varName,
-      isoAggkey
+      isoAggkey,
+      genePos
     }
   } = LocationParams.useMe();
 
@@ -60,14 +61,23 @@ export default function VirusPercentBar() {
         let filteredVarLookup = varLookup;
         let filteredIsoAggLookup = isoAggLookup;
 
-        if (varName && varName !== 'any') {
+        if (varName) {
           filteredVarLookup = {};
           filteredVarLookup[varName] = varLookup[varName];
           filteredIsoAggLookup = {};
         }
-        else if (isoAggkey && isoAggkey !== 'any') {
+        else if (isoAggkey) {
           filteredIsoAggLookup = {};
           filteredIsoAggLookup[isoAggkey] = isoAggLookup[isoAggkey];
+          filteredVarLookup = {};
+        }
+        else if (genePos) {
+          filteredIsoAggLookup = {};
+          for (const isoAggkey in isoAggLookup) {
+            if (isoAggkey.slice(0, isoAggkey.length - 1) === genePos) {
+              filteredIsoAggLookup[isoAggkey] = isoAggLookup[isoAggkey];
+            }
+          }
           filteredVarLookup = {};
         }
 
@@ -84,6 +94,7 @@ export default function VirusPercentBar() {
     [
       varName,
       isoAggkey,
+      genePos,
       isPending,
       variants,
       isolateAggs,

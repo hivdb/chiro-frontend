@@ -23,6 +23,7 @@ export function useSuscSummaryNoCache({
   isoName,
   varName,
   isoAggkey,
+  genePos,
   selectColumns = null
 } = {}, skip = false) {
   let aggKey, where, params, orderBy, sql;
@@ -53,6 +54,7 @@ export function useSuscSummaryNoCache({
     prepareAggFilter('isoName', isoName, ...commonArgs);
     prepareAggFilter('varName', varName, ...commonArgs);
     prepareAggFilter('isoAggkey', isoAggkey, ...commonArgs);
+    prepareAggFilter('position', genePos, ...commonArgs);
 
     if (where.length === 0) {
       where.push('TRUE');

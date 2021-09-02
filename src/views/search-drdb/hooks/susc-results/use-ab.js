@@ -87,6 +87,7 @@ export function AbSuscResultsProvider({children}) {
       refName,
       isoAggkey,
       varName,
+      genePos,
       abNames
     },
     filterFlag
@@ -114,6 +115,7 @@ export function AbSuscResultsProvider({children}) {
   } = useSuscResults({
     refName,
     isoAggkey,
+    genePos,
     varName,
     addColumns,
     where,

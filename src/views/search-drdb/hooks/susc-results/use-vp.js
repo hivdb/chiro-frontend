@@ -50,6 +50,7 @@ export function VPSuscResultsProvider({children}) {
       refName,
       isoAggkey,
       varName,
+      genePos,
       vaccineName
     },
     filterFlag
@@ -70,6 +71,7 @@ export function VPSuscResultsProvider({children}) {
     refName,
     isoAggkey,
     varName,
+    genePos,
     addColumns,
     joinClause,
     where,

@@ -85,8 +85,12 @@ export function compareMutations(mutationsA, mutationsB) {
     if (cmp) { return cmp; }
 
     // 3. sort by AA
-    cmp = mutA.aminoAcid.localeCompare(mutB.aminoAcid);
-    if (cmp) { return cmp; }
+    if (mutA.aminoAcid < mutB.aminoAcid) {
+      return -1;
+    }
+    else if (mutA.aminoAcid > mutB.aminoAcid) {
+      return 1;
+    }
   }
   // shorter first, isolateA is shorter than isolateB
   return mutationsA.length - mutationsB.length;
