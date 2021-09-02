@@ -9,6 +9,7 @@ import useIsolateNumExp from './use-isolate-numexp';
 import useVariantNumExp from './use-variant-numexp';
 import useRxTotalNumExp from './use-rx-total-numexp';
 import useVirusTotalNumExp from './use-virus-total-numexp';
+import usePositionNumExp from './use-position-numexp';
 
 const NumExpStats = {
   useRxTotal: useRxTotalNumExp,
@@ -19,7 +20,8 @@ const NumExpStats = {
   useVacc: useVaccineNumExp,
   useIsoAgg: useIsoAggNumExp,
   useVar: useVariantNumExp,
-  useIso: useIsolateNumExp
+  useIso: useIsolateNumExp,
+  usePos: usePositionNumExp
 };
 
 const SuscSummary = {

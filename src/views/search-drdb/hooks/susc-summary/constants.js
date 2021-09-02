@@ -8,6 +8,7 @@ const AGG_OPTIONS = [
   'variant',
   'isolate_agg',
   'isolate',
+  'position',
   'vaccine_dosage',
   'potency_type',
   'potency_unit'
@@ -22,6 +23,7 @@ const AGG_OPTION_BY_VALUE_NAME = {
   controlIsoName: ['control_isolate'],
   controlVarName: ['control_variant'],
   isoName: ['isolate'],
+  position: ['position'],
   varName: ['variant'],
   isoAggkey: ['isolate_agg']
 };
@@ -48,6 +50,7 @@ const DEFAULT_SELECT_COLUMNS = [
   'iso_name',
   'iso_aggkey',
   'iso_agg_display',
+  'position',
   'potency_type',
   'potency_unit',
   'num_subjects',

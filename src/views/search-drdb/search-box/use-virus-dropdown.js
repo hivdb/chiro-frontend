@@ -5,6 +5,7 @@ import {NumExpStats} from '../hooks/susc-summary';
 import LocationParams from '../hooks/location-params';
 import Variants from '../hooks/variants';
 import IsolateAggs, {compareIsolateAggs} from '../hooks/isolate-aggs';
+import Positions from '../hooks/positions';
 
 import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
@@ -36,6 +37,11 @@ export default function useVirusDropdown() {
     isPending: isIsoAggsPending
   } = IsolateAggs.useMe();
 
+  const {
+    positions,
+    isPending: isPositionsPending
+  } = Positions.useMe();
+
   const [
     varTotalNumExp,
     isVarTotalNumExpPending
@@ -48,13 +54,19 @@ export default function useVirusDropdown() {
     isoAggNumExpLookup,
     isIsoAggNumExpLookupPending
   ] = NumExpStats.useIsoAgg();
+  const [
+    posNumExpLookup,
+    isPosNumExpLookupPending
+  ] = NumExpStats.usePos();
 
   const isPending = (
     isVarsPending ||
     isIsoAggsPending ||
+    isPositionsPending ||
     isVarTotalNumExpPending ||
     isVarNumExpLookupPending ||
-    isIsoAggNumExpLookupPending
+    isIsoAggNumExpLookupPending ||
+    isPosNumExpLookupPending
   );
 
   const variantOptions = React.useMemo(
@@ -97,9 +109,10 @@ export default function useVirusDropdown() {
             )
           )
           .map(
-            ({isoAggkey, isoAggDisplay}) => ({
+            ({isoAggkey, isoAggDisplay, mutations}) => ({
               isoAggkey,
               isoAggDisplay,
+              position: mutations[0]?.position,
               numExp: isoAggNumExpLookup[isoAggkey] || 0
             })
           )
@@ -148,16 +161,38 @@ export default function useVirusDropdown() {
               as: FragmentWithoutWarning,
               children: <Dropdown.Divider />
             },
-            ...displayIsolateAggs
-              .map(
-                ({isoAggkey, isoAggDisplay, numExp}) => ({
-                  key: isoAggkey,
-                  text: isoAggDisplay,
-                  value: isoAggkey,
-                  type: 'mutations',
-                  description: pluralize('result', numExp, true)
-                })
-              )
+            ...[
+              ...positions
+                .map(
+                  ({posKey, gene, position, refAminoAcid}) => ({
+                    key: posKey,
+                    text: (
+                      `${
+                        gene === 'S' ? '' : `${gene}:`
+                      }${refAminoAcid}${position} - any`
+                    ),
+                    value: posKey,
+                    type: 'positions',
+                    position,
+                    description: pluralize(
+                      'result',
+                      posNumExpLookup[posKey],
+                      true
+                    )
+                  })
+                ),
+              ...displayIsolateAggs
+                .map(
+                  ({isoAggkey, isoAggDisplay, position, numExp}) => ({
+                    key: isoAggkey,
+                    text: isoAggDisplay,
+                    value: isoAggkey,
+                    type: 'mutations',
+                    position,
+                    description: pluralize('result', numExp, true)
+                  })
+                )
+            ].sort((a, b) => a.position - b.position)
           ] : [])
         ];
       }
@@ -166,12 +201,14 @@ export default function useVirusDropdown() {
       isPending,
       variants,
       isolateAggs,
+      positions,
       paramVarName,
       paramIsoAggKey,
       formOnly,
       varTotalNumExp,
       varNumExpLookup,
-      isoAggNumExpLookup
+      isoAggNumExpLookup,
+      posNumExpLookup
     ]
   );
 
