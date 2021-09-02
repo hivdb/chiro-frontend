@@ -101,6 +101,10 @@ export function buildQuery(
     delete query.variant;
     delete query.position;
   }
+  else if (action === 'position') {
+    delete query.variant;
+    delete query.mutations;
+  }
 
   return cleanQuery(query);
 }

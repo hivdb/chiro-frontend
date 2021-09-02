@@ -184,7 +184,10 @@ export default function useVirusDropdown() {
             },
             ...[
               ...positions
-                .filter(({posKey}) => positionMutCount[posKey] > 1)
+                .filter(({posKey}) => (
+                  posKey === paramGenePos ||
+                  positionMutCount[posKey] > 1
+                ))
                 .map(
                   ({posKey, gene, position, refAminoAcid}) => ({
                     key: posKey,
