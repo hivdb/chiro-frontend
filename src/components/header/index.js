@@ -6,123 +6,130 @@ import makeClassNames from 'classnames';
 import SiteBrand from '../site-brand';
 import style from './style.module.scss';
 
+NavItem.propTypes = {
+  to: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  currentPathName: PropTypes.string,
+  checkIsCurrent: PropTypes.func,
+  highlighted: PropTypes.bool.isRequired
+};
 
-class NavItem extends React.Component {
+NavItem.defaultProps = {
+  highlighted: false
+};
 
-  static propTypes = {
-    to: PropTypes.string,
-    children: PropTypes.node.isRequired,
-    currentPathName: PropTypes.string,
-    highlighted: PropTypes.bool.isRequired
+
+function NavItem(props) {
+  const {
+    to,
+    checkIsCurrent,
+    currentPathName, children, highlighted
+  } = props;
+
+  const isCurrent = React.useMemo(
+    () => {
+      let isCurrent = false;
+      if (checkIsCurrent && currentPathName) {
+        isCurrent = checkIsCurrent(currentPathName);
+      }
+      else if (to && currentPathName) {
+        isCurrent = (
+          to.split(/[?#]/)[0].replace(/\/+$/, '') ===
+          currentPathName.replace(/\/+$/, '')
+        );
+      }
+      return isCurrent;
+    },
+    [checkIsCurrent, currentPathName, to]
+  );
+
+  const classNames = [style['nav-item']];
+  if (isCurrent) {
+    classNames.push(style['current']);
   }
-
-  static defaultProps = {
-    highlighted: false
+  if (highlighted) {
+    classNames.push(style['highlight']);
   }
-
-  get isCurrent() {
-    let {to, currentPathName} = this.props;
-    let isCurrent = false;
-    if (to && currentPathName) {
-      to = to.split(/[?#]/)[0].replace(/\/+$/, '');
-      isCurrent = (
-        to === currentPathName.replace(/\/+$/, '')
-      );
-    }
-    return isCurrent;
-  }
-
-  render() {
-    const {to, children, highlighted} = this.props;
-    const {isCurrent} = this;
-    const classNames = [style['nav-item']];
-    if (isCurrent) {
-      classNames.push(style['current']);
-    }
-    if (highlighted) {
-      classNames.push(style['highlight']);
-    }
-    return <li className={makeClassNames(classNames)}>
-      {to ? <Link to={to}>{children}</Link> : children}
-    </li>;
-  }
+  return <li className={makeClassNames(classNames)}>
+    {to ? <Link to={to}>{children}</Link> : children}
+  </li>;
 
 }
 
 
-export default class Header extends React.Component {
+Header.propTypes = {
+  currentPathName: PropTypes.string.isRequired
+};
 
-  static propTypes = {
-    currentPathName: PropTypes.string.isRequired
-  }
 
-  constructor() {
-    super(...arguments);
+export default function Header({currentPathName}) {
 
-    this.state = {
-      showMenu: false
-    };
-  }
+  const [showMenu, setShowMenu] = React.useState(false);
 
-  toggleMenu = (e) => {
-    e && e.preventDefault() && e.stopPropagation();
-    this.setState({
-      showMenu: !this.state.showMenu
-    });
-  }
+  const toggleMenu = React.useCallback(
+    evt => {
+      evt && evt.preventDefault() && evt.stopPropagation();
+      setShowMenu(!showMenu);
+    },
+    [showMenu, setShowMenu]
+  );
 
-  render() {
-    const {showMenu} = this.state;
-    const {currentPathName} = this.props;
-    const navItemProps = {currentPathName};
-    return (
-      <header className={style['chiro-header']}>
-        <SiteBrand responsive />
-        <nav className={style['nav-container']}>
-          <a
-           onTouchStart={this.toggleMenu}
-           onTouchEnd={e => e.preventDefault()}
-           onClick={this.toggleMenu}
-           className={style['menu-toggle']}
-           href="#menu-toggle">
-            |||
-          </a>
-          <ul className={makeClassNames(
-            style['nav'],
-            showMenu ? style['show'] : null
-          )}>
-            <NavItem to="/" {...navItemProps}>Home</NavItem>
-            <NavItem to="/search/?form_only" {...navItemProps}>
-              Search
-            </NavItem>
-            <NavItem to="/sierra/sars2/" {...navItemProps}>
-              Analysis Program
-            </NavItem>
-            <NavItem to="/compound-list/" {...navItemProps}>
-              Drugs
-            </NavItem>
-            <NavItem to="/clinical-trials/" {...navItemProps}>
-              Trials
-            </NavItem>
-            <NavItem {...navItemProps}>
-              <a
-               href="https://www.mdpi.com/1999-4915/12/9/1006"
-               target="_blank" rel="noopener noreferrer">
-                Citation
-              </a>
-            </NavItem>
-            <NavItem highlighted>
-              <a
-               href="https://makeagift.stanford.edu/goto/covid19antiviral"
-               target="_blank" rel="noopener noreferrer"
-               className={style.donation}>
-                Support CoVDB
-              </a>
-            </NavItem>
-          </ul>
-        </nav>
-      </header>
-    );
-  }
+  const checkIsSierraCurrent = React.useCallback(
+    curPath => /^\/sierra\/sars2/.test(curPath),
+    []
+  );
+
+  const navItemProps = {currentPathName};
+  return (
+    <header className={style['chiro-header']}>
+      <SiteBrand responsive />
+      <nav className={style['nav-container']}>
+        <a
+         onTouchStart={toggleMenu}
+         onTouchEnd={e => e.preventDefault()}
+         onClick={toggleMenu}
+         className={style['menu-toggle']}
+         href="#menu-toggle">
+          |||
+        </a>
+        <ul className={makeClassNames(
+          style['nav'],
+          showMenu ? style['show'] : null
+        )}>
+          <NavItem to="/" {...navItemProps}>Home</NavItem>
+          <NavItem to="/page/susceptibility-data/" {...navItemProps}>
+            Resistance
+          </NavItem>
+          <NavItem
+           to="/sierra/sars2/"
+           checkIsCurrent={checkIsSierraCurrent}
+           {...navItemProps}>
+            Analysis Program
+          </NavItem>
+          <NavItem to="/antiviral-portal/" {...navItemProps}>
+            Drugs
+          </NavItem>
+          <NavItem to="/clinical-trials/" {...navItemProps}>
+            Trials
+          </NavItem>
+          <NavItem {...navItemProps}>
+            <a
+             href="https://www.mdpi.com/1999-4915/12/9/1006"
+             target="_blank" rel="noopener noreferrer">
+              Citation
+            </a>
+          </NavItem>
+          <NavItem highlighted>
+            <a
+             href="https://makeagift.stanford.edu/goto/covid19antiviral"
+             target="_blank" rel="noopener noreferrer"
+             className={style.donation}>
+              Support CoVDB
+            </a>
+          </NavItem>
+        </ul>
+      </nav>
+    </header>
+  );
 
 }
