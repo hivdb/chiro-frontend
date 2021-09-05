@@ -9,6 +9,7 @@ import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
 
 import {useStatSuscResults, useSeparateSuscResults} from '../hooks';
 
+import PivotTable from './pivot-table';
 import style from './style.module.scss';
 
 
@@ -125,7 +126,7 @@ export default function useRenderSuscResults({
         );
         const indivMutIndivFoldTable = (
           suscResultsBySection.indivMut.indivFold.length > 0 ?
-            <SimpleTableWrapper
+            <PivotTable
              cacheKey={`${id}_indiv-mut_indiv-fold_${cacheKey}`}
              hideNN={hideNN}
              columnDefs={indivMutIndivFoldColumnDefs}
@@ -141,7 +142,7 @@ export default function useRenderSuscResults({
         );
         const comboMutsIndivFoldTable = (
           suscResultsBySection.comboMuts.indivFold.length > 0 ?
-            <SimpleTableWrapper
+            <PivotTable
              cacheKey={`${id}_combo-muts_indiv-fold_${cacheKey}`}
              hideNN={hideNN}
              columnDefs={comboMutsIndivFoldColumnDefs}

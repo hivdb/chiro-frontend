@@ -11,6 +11,18 @@ import SuscSummaryContext from './context';
 import {DEFAULT_SELECT_COLUMNS} from './constants';
 
 
+function splitCount(data) {
+  let [value, count] = data.split(':', 2);
+  if (!count) {
+    count = 1;
+  }
+  return {
+    value: Number.parseFloat(value),
+    count: Number.parseInt(count)
+  };
+}
+
+
 export function useSuscSummaryNoCache({
   aggregateBy,
   rxType,
@@ -107,11 +119,11 @@ export function useSuscSummaryNoCache({
             ...others,
             allStudies: allStudies && csvSplit(allStudies),
             allControlPotency: allControlPotency &&
-              csvSplit(allControlPotency).map(Number.parseFloat),
+              csvSplit(allControlPotency).map(splitCount),
             allPotency: allPotency &&
-              csvSplit(allPotency).map(Number.parseFloat),
+              csvSplit(allPotency).map(splitCount),
             allFold: allFold &&
-              csvSplit(allFold).map(Number.parseFloat)
+              csvSplit(allFold).map(splitCount)
           };
         }
       );

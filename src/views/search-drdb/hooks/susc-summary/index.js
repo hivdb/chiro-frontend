@@ -1,5 +1,5 @@
 import {SuscSummaryProvider} from './context';
-import useAntibodySuscSummary from './use-antibody-susc-summary';
+import useGroupByRx from './use-group-by-rx';
 import useAntibodyNumExp from './use-antibody-numexp';
 import useArticleNumExp from './use-article-numexp';
 import useInfectedVariantNumExp from './use-infected-variant-numexp';
@@ -26,7 +26,7 @@ const NumExpStats = {
 
 const SuscSummary = {
   Provider: SuscSummaryProvider,
-  useAb: useAntibodySuscSummary
+  useRx: useGroupByRx
 };
 
 export {NumExpStats};
