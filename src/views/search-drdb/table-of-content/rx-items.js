@@ -14,7 +14,7 @@ import style from './style.module.scss';
 RxItems.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.node.isRequired,
-  suscResults: PropTypes.array.isRequired,
+  suscResults: PropTypes.array,
   loaded: PropTypes.bool.isRequired
 };
 
@@ -22,31 +22,42 @@ RxItems.propTypes = {
 export default function RxItems({id, title, suscResults, loaded}) {
   const suscResultsBySection = useSeparateSuscResults({
     suscResults: suscResults || [],
+    aggFormDimension: false,
+    skip: !loaded
+  });
+  const suscResultsByMutTypeAndAggForm = useSeparateSuscResults({
+    suscResults: suscResults || [],
+    aggFormDimension: true,
     skip: !loaded
   });
 
   const stats = {
     indivMut: {
+      ...useStatSuscResults(
+        suscResultsBySection?.indivMut || []
+      ),
       indivFold: useStatSuscResults(
-        suscResultsBySection?.indivMut.indivFold || []
+        suscResultsByMutTypeAndAggForm?.indivMut.indivFold || []
       ),
       aggFold: useStatSuscResults(
-        suscResultsBySection?.indivMut.aggFold || []
+        suscResultsByMutTypeAndAggForm?.indivMut.aggFold || []
       )
     },
     comboMuts: {
+      ...useStatSuscResults(
+        suscResultsBySection?.comboMuts || []
+      ),
       indivFold: useStatSuscResults(
-        suscResultsBySection?.comboMuts.indivFold || []
+        suscResultsByMutTypeAndAggForm?.comboMuts.indivFold || []
       ),
       aggFold: useStatSuscResults(
-        suscResultsBySection?.comboMuts.aggFold || []
+        suscResultsByMutTypeAndAggForm?.comboMuts.aggFold || []
       )
     }
   };
 
   const onlyOne = Object.values(stats)
-    .some(mutStats => Object.values(mutStats)
-      .every(({numExps}) => numExps === 0));
+    .every(({numExps}) => numExps === 0);
 
   return <>
     {[
@@ -57,28 +68,34 @@ export default function RxItems({id, title, suscResults, loaded}) {
         const mutStats = stats[mutType];
         const kebab = kebabCase(mutType);
         return <React.Fragment key={mutType}>
-          {mutStats.indivFold.numExps > 0 ?
+          {mutStats.numExps > 0 ?
             <li>
               <a
                className={style.title}
                href={`#${id}${
                  onlyOne ? '' : `_${kebab}`
                }`}>{title} - {subtitle}:</a>{' '}
-              {pluralize('result', mutStats.indivFold.numExps, true)},{' '}
-              {pluralize('study', mutStats.indivFold.numArticles, true)}
-            </li> : null
-          }
-          {mutStats.aggFold.numExps > 0 ?
-            <li>
-              <a
-               className={style.title}
-               href={`#${id}${
-                 onlyOne && mutStats.indivFold.numExps === 0 ? '' : `_${kebab}`
-               }${
-                 mutStats.indivFold.numExps > 0 ? '_agg-fold' : ''
-               }`}>{title} - {subtitle} - aggregate form:</a>{' '}
-              {pluralize('result', mutStats.aggFold.numExps, true)},{' '}
-              {pluralize('study', mutStats.aggFold.numArticles, true)}
+              {pluralize('result', mutStats.numExps, true)},{' '}
+              {pluralize('study', mutStats.numArticles, true)}
+              {mutStats.indivFold.numExps + mutStats.aggFold.numExps > 0 ?
+                <ul>
+                  {mutStats.indivFold.numExps > 0 ?
+                    <li>
+                      <span className={style.title}>Individual form{': '}</span>
+                      {' '}
+                      {pluralize('result', mutStats.indivFold.numExps, true)}
+                      {', '}
+                      {pluralize('study', mutStats.indivFold.numArticles, true)}
+                    </li> : null}
+                  {mutStats.aggFold.numExps > 0 ?
+                    <li>
+                      <span className={style.title}>Aggregate form{': '}</span>
+                      {' '}
+                      {pluralize('result', mutStats.aggFold.numExps, true)}
+                      {', '}
+                      {pluralize('study', mutStats.aggFold.numArticles, true)}
+                    </li> : null}
+                </ul> : null}
             </li> : null
           }
         </React.Fragment>;

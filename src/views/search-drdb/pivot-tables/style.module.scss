@@ -1,3 +1,40 @@
+@import '../../../styles/colors';
+
 p.footnote:last-child {
   margin-bottom: 2rem;
+}
+
+.data-availability {
+  position: relative;
+  font-size: 1.3rem;
+  &[data-has-multiple="true"] {
+    color: rgba(0, 0, 0, .7);
+  }
+  &[data-has-multiple="false"] {
+    color: rgba(0, 0, 0, .3);
+  }
+  .yes {
+    color: #3ca832;
+  }
+  .no {
+    color: #c72222;
+  }
+  .desc {
+    right: 80%;
+    top: -9.8px;
+    color: black;
+    font-size: 1rem;
+    position: absolute;
+    white-space: nowrap;
+    z-index: 1000;
+    background-color: white;
+    border: 1pix solid $dividing-line;
+    border-radius: .2rem;
+    box-shadow: 1px 1px 2px 1px rgba(0,0,0,.3);
+    padding: 9.8px;
+    display: none;
+  }
+  &:hover .desc {
+    display: block;
+  }
 }

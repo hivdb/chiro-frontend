@@ -1,4 +1,5 @@
 import React from 'react';
+import uniq from 'lodash/uniq';
 import sortBy from 'lodash/sortBy';
 import {ColumnDef} from '../../../components/pivot-table';
 
@@ -10,6 +11,8 @@ import CellIsolate from './cell-isolate';
 import CellReference from './cell-reference';
 import CellAntibodies from './cell-antibodies';
 import CellRLevel from './cell-resistance-level';
+import CellCumulativeCount from './cell-cumulative-count';
+import CellDataAvailability from './cell-data-availability';
 import {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
@@ -143,8 +146,9 @@ function buildColDefs({
          }}
          enablePotency
          ineffective={
-           ineffective === 'control' ||
-           ineffective === 'both'
+           ineffective.every(ie =>
+             ie === 'control' ||
+             ie === 'both')
          } />
       ),
       sort: rows => [...rows].sort(compareByControlIsolate)
@@ -168,12 +172,18 @@ function buildColDefs({
         potencyUnit,
         potencyType,
         rxType,
+        ineffective,
         ...row
       }) => (
         <CellPotency
          potencyUnit={potencyUnit}
          potencyType={potencyType}
          rxType={rxType}
+         ineffective={
+           ineffective.every(ie =>
+             ie === 'experimental' ||
+             ie === 'both')
+         }
          stdev={aggPotencySD(potency, row)}
          potency={potency} />
       ),
@@ -188,18 +198,39 @@ function buildColDefs({
     section: new ColumnDef({
       name: 'section',
       label: labels.section,
-      render: section => <CellSection {...{section}} />
+      render: section => <CellSection {...{section}} />,
+      aggFunc: section => (
+        section instanceof Array ?
+          uniq(section)
+            .sort()
+            .join('; ') : section
+      )
     }),
     cumulativeCount: new ColumnDef({
       name: 'cumulativeCount',
       label: labels.cumulativeCount || '# Samples',
+      render: (num, row) => (
+        <CellCumulativeCount
+         num={num}
+         numNN={Array.from(row.ineffective.entries())
+           .filter(([, ie]) => ie === 'control' || ie === 'both')
+           .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)} />
+      ),
       aggFunc: n => n.reduce((acc, nn) => acc + nn, 0)
     }),
     fold: new ColumnDef({
       name: 'fold',
       label: labels.fold,
       render: (fold, row) => (
-        <CellFold fold={fold} stdev={aggFoldSD(fold, row)} />
+        <CellFold
+         fold={fold}
+         displayNN={
+           row.cumulativeCount.reduce((acc, n) => acc + n, 0) ===
+           Array.from(row.ineffective.entries())
+             .filter(([, ie]) => ie === 'control' || ie === 'both')
+             .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)
+         }
+         stdev={aggFoldSD(fold, row)} />
       ),
       aggFunc: aggFold,
       sort: rows => sortBy(
@@ -240,6 +271,17 @@ function buildColDefs({
       name: 'resistanceLevel',
       label: labels.resistanceLevel,
       render: resistanceLevel => <CellRLevel rLevel={resistanceLevel} />
+    }),
+    dataAvailability: new ColumnDef({
+      name: 'dataAvailability',
+      label: labels.dataAvailability,
+      render: (_, {cumulativeCount}) => (
+        <CellDataAvailability hasMultiple={cumulativeCount.length > 1} />
+      ),
+      sort: rows => sortBy(
+        rows,
+        [({cumulativeCount}) => cumulativeCount.length > 1]
+      )
     })
   };
   return columns.map(name => lookup[name]).filter(cd => cd);

@@ -18,7 +18,8 @@ PivotTableWrapper.propTypes = {
   groupBy: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ),
-  hideNN: PropTypes.bool
+  hideNN: PropTypes.bool,
+  footnoteMean: PropTypes.bool
 };
 
 
@@ -27,6 +28,7 @@ function PivotTableWrapper({
   data,
   groupBy,
   hideNN = false,
+  footnoteMean = false,
   ...props
 }) {
   const [hide, setHide] = React.useState(hideNN);
@@ -43,7 +45,7 @@ function PivotTableWrapper({
     d => d.ineffective === 'experimental' || d.ineffective === null
   );
   const {numExps, numArticles, numNoNatExps} = useStatSuscResults(data);
-  const hasNN = !hide && filtered.length > 0;
+  const hasNN = !hide && numNoNatExps > 0;
   const hasNA = data.some(d => (
     d.controlPotency === null || d.potency === null
   ));
@@ -99,6 +101,13 @@ function PivotTableWrapper({
       {hasNN ? <>
         <strong><em>N.N.</em></strong>: control virus not neutralized
       </> : null}
+      {(hasNA || hasNN) && footnoteMean ? '; ' : null}
+      {footnoteMean ? <>
+        <strong>GeoMean</strong>: geometric mean{'; '}
+        <strong>GSD</strong>: geometric standard deviation{'; '}
+        <strong>Mean</strong>: arithmetic mean{'; '}
+        <strong>SD</strong>: arithmetic standard deviation
+      </> : null}
       .
     </p> : null}
   </>;
@@ -109,6 +118,7 @@ export default function useRenderSuscResults({
   loaded,
   cacheKey,
   hideNN = false,
+  footnoteMean = false,
   suscResults,
   indivMutColumnDefs,
   indivMutGroupBy,
@@ -137,6 +147,7 @@ export default function useRenderSuscResults({
              hideNN={hideNN}
              columnDefs={indivMutColumnDefs}
              groupBy={indivMutGroupBy}
+             footnoteMean={footnoteMean}
              data={suscResultsBySection.indivMut} /> : null
         );
         const comboMutsTable = (
@@ -146,6 +157,7 @@ export default function useRenderSuscResults({
              hideNN={hideNN}
              columnDefs={comboMutsColumnDefs}
              groupBy={comboMutsGroupBy}
+             footnoteMean={footnoteMean}
              data={suscResultsBySection.comboMuts} /> : null
         );
         if (numSections === 2) {
@@ -187,7 +199,8 @@ export default function useRenderSuscResults({
       indivMutColumnDefs,
       indivMutGroupBy,
       comboMutsColumnDefs,
-      comboMutsGroupBy
+      comboMutsGroupBy,
+      footnoteMean
     ]
   );
   return element;

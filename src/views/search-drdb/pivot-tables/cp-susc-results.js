@@ -16,7 +16,8 @@ const INDIV_MUT_COLUMNS = [
   'isoName',
   'cumulativeCount',
   'potency',
-  'fold'
+  'fold',
+  'dataAvailability'
 ];
 
 const INDIV_MUT_LABELS = {
@@ -42,7 +43,6 @@ const INDIV_MUT_LABELS = {
 const INDIV_MUT_GROUP_BY = [
   'refName',
   'assayName',
-  'section',
   'infectedIsoName',
   'timing',
   // 'severity',
@@ -64,7 +64,8 @@ const COMBO_MUTS_COLUMNS = [
   'isoName',
   'cumulativeCount',
   'potency',
-  'fold'
+  'fold',
+  'dataAvailability'
 ];
 
 const COMBO_MUTS_LABELS = {
@@ -90,7 +91,6 @@ const COMBO_MUTS_LABELS = {
 const COMBO_MUTS_GROUP_BY = [
   'refName',
   'assayName',
-  'section',
   'infectedIsoName',
   'timing',
   // 'severity',
@@ -131,6 +131,7 @@ export default function CPSuscResults() {
     indivMutColumnDefs,
     indivMutGroupBy: INDIV_MUT_GROUP_BY,
     comboMutsColumnDefs,
-    comboMutsGroupBy: COMBO_MUTS_GROUP_BY
+    comboMutsGroupBy: COMBO_MUTS_GROUP_BY,
+    footnoteMean: true
   });
 }

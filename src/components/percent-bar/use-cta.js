@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import style from './style.module.scss';
 
-
+/** Call-to-action button **/
 export default function useCTA(ctaProps) {
   const {
     to,
