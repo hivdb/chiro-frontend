@@ -8,6 +8,7 @@ const type2Section = {
 
 export default function useSeparateSuscResults({
   suscResults,
+  aggFormDimension,
   skip
 }) {
   const {
@@ -20,24 +21,40 @@ export default function useSeparateSuscResults({
       if (skip || isPending) {
         return;
       }
-      return suscResults.reduce(
-        (acc, sr) => {
-          const {type} = isolateLookup[sr.isoName];
-          const section = type2Section[type];
-          if (sr.cumulativeCount > 1) {
-            acc[section].aggFold.push(sr);
+      if (aggFormDimension) {
+        return suscResults.reduce(
+          (acc, sr) => {
+            const {type} = isolateLookup[sr.isoName];
+            const section = type2Section[type];
+            if (sr.cumulativeCount > 1) {
+              acc[section].aggFold.push(sr);
+            }
+            else {
+              acc[section].indivFold.push(sr);
+            }
+            return acc;
+          },
+          {
+            indivMut: {indivFold: [], aggFold: []},
+            comboMuts: {indivFold: [], aggFold: []}
           }
-          else {
-            acc[section].indivFold.push(sr);
+        );
+      }
+      else {
+        return suscResults.reduce(
+          (acc, sr) => {
+            const {type} = isolateLookup[sr.isoName];
+            const section = type2Section[type];
+            acc[section].push(sr);
+            return acc;
+          },
+          {
+            indivMut: [],
+            comboMuts: []
           }
-          return acc;
-        },
-        {
-          indivMut: {indivFold: [], aggFold: []},
-          comboMuts: {indivFold: [], aggFold: []}
-        }
-      );
+        );
+      }
     },
-    [skip, isPending, suscResults, isolateLookup]
+    [skip, isPending, aggFormDimension, suscResults, isolateLookup]
   );
 }

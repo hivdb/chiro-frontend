@@ -2,24 +2,33 @@ import React from 'react';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import {Header} from 'semantic-ui-react';
-import {H3, H4} from 'sierra-frontend/dist/components/heading-tags';
+import {H3} from 'sierra-frontend/dist/components/heading-tags';
 
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
 
 import {useStatSuscResults, useSeparateSuscResults} from '../hooks';
 
+import PivotTable from '../../../components/pivot-table';
 import style from './style.module.scss';
 
 
-SimpleTableWrapper.propTypes = {
+PivotTableWrapper.propTypes = {
   cacheKey: PropTypes.string.isRequired,
   data: PropTypes.array,
+  groupBy: PropTypes.arrayOf(
+    PropTypes.string.isRequired
+  ),
   hideNN: PropTypes.bool
 };
 
 
-function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
+function PivotTableWrapper({
+  cacheKey,
+  data,
+  groupBy,
+  hideNN = false,
+  ...props
+}) {
   const [hide, setHide] = React.useState(hideNN);
 
   const handleUnhide = React.useCallback(
@@ -72,8 +81,9 @@ function SimpleTableWrapper({cacheKey, data, hideNN = false, ...props}) {
 
   const tableJSX = (
     numExps > 0 ?
-      <SimpleTable
+      <PivotTable
        {...props}
+       groupBy={groupBy}
        cacheKey={`${cacheKey}__${hide}`}
        data={data} /> : null
   );
@@ -100,111 +110,64 @@ export default function useRenderSuscResults({
   cacheKey,
   hideNN = false,
   suscResults,
-  indivMutIndivFoldColumnDefs,
-  indivMutAggFoldColumnDefs,
-  comboMutsIndivFoldColumnDefs,
-  comboMutsAggFoldColumnDefs
+  indivMutColumnDefs,
+  indivMutGroupBy,
+  comboMutsColumnDefs,
+  comboMutsGroupBy
 }) {
 
   const suscResultsBySection = useSeparateSuscResults({
     suscResults,
-    skip: !loaded
+    skip: !loaded,
+    aggFormDimension: false
   });
 
   const element = React.useMemo(
     () => {
       if (loaded) {
         const numSections = (
-          Object.entries(suscResultsBySection)
-            .filter(
-              ([, {indivFold, aggFold}]) => (
-                indivFold.length + aggFold.length > 0
-              )
-            )
+          Object.values(suscResultsBySection)
+            .filter(({length = 0}) => length > 0)
             .length
         );
-        const indivMutIndivFoldTable = (
-          suscResultsBySection.indivMut.indivFold.length > 0 ?
-            <SimpleTableWrapper
-             cacheKey={`${id}_indiv-mut_indiv-fold_${cacheKey}`}
+        const indivMutTable = (
+          suscResultsBySection.indivMut.length > 0 ?
+            <PivotTableWrapper
+             cacheKey={`${id}_indiv-mut_${cacheKey}`}
              hideNN={hideNN}
-             columnDefs={indivMutIndivFoldColumnDefs}
-             data={suscResultsBySection.indivMut.indivFold} /> : null
+             columnDefs={indivMutColumnDefs}
+             groupBy={indivMutGroupBy}
+             data={suscResultsBySection.indivMut} /> : null
         );
-        const indivMutAggFoldTable = (
-          suscResultsBySection.indivMut.aggFold.length > 0 ?
-            <SimpleTableWrapper
-             cacheKey={`${id}_indiv-mut_agg-fold_${cacheKey}`}
+        const comboMutsTable = (
+          suscResultsBySection.comboMuts.length > 0 ?
+            <PivotTableWrapper
+             cacheKey={`${id}_combo-muts_${cacheKey}`}
              hideNN={hideNN}
-             columnDefs={indivMutAggFoldColumnDefs}
-             data={suscResultsBySection.indivMut.aggFold} /> : null
-        );
-        const comboMutsIndivFoldTable = (
-          suscResultsBySection.comboMuts.indivFold.length > 0 ?
-            <SimpleTableWrapper
-             cacheKey={`${id}_combo-muts_indiv-fold_${cacheKey}`}
-             hideNN={hideNN}
-             columnDefs={comboMutsIndivFoldColumnDefs}
-             data={suscResultsBySection.comboMuts.indivFold} /> : null
-        );
-        const comboMutsAggFoldTable = (
-          suscResultsBySection.comboMuts.aggFold.length > 0 ?
-            <SimpleTableWrapper
-             cacheKey={`${id}_combo-muts_agg-fold_${cacheKey}`}
-             hideNN={hideNN}
-             columnDefs={comboMutsAggFoldColumnDefs}
-             data={suscResultsBySection.comboMuts.aggFold} /> : null
+             columnDefs={comboMutsColumnDefs}
+             groupBy={comboMutsGroupBy}
+             data={suscResultsBySection.comboMuts} /> : null
         );
         if (numSections === 2) {
           return <>
             <section>
               <Header as={H3} id={`${id}_indiv-mut`}>
                 Individual mutation
-                {indivMutIndivFoldTable ?
-                  null : ' - data published only in aggregate form'}
               </Header>
-              {indivMutIndivFoldTable}
-              {indivMutIndivFoldTable && indivMutAggFoldTable ? <>
-                <Header as={H4} id={`${id}_indiv-mut_agg-fold`}>
-                  Individual mutation -
-                  data published only in aggregate form
-                </Header>
-              </> : null}
-              {indivMutAggFoldTable}
+              {indivMutTable}
             </section>
             <section>
               <Header as={H3} id={`${id}_combo-muts`}>
                 Variant / mutation combination
-                {comboMutsIndivFoldTable ?
-                  null : ' - data published only in aggregate form'}
               </Header>
-              {comboMutsIndivFoldTable}
-              {comboMutsIndivFoldTable && comboMutsAggFoldTable ? <>
-                <Header as={H4} id={`${id}_combo-muts_agg-fold`}>
-                  Variant / mutation combination -
-                  data published only in aggregate form
-                </Header>
-              </> : null}
-              {comboMutsAggFoldTable}
+              {comboMutsTable}
             </section>
           </>;
         }
         else if (numSections === 1) {
           return <>
-            {indivMutIndivFoldTable}
-            {indivMutAggFoldTable ? <>
-              <Header as={H3} id={`${id}_indiv-mut_agg-fold`}>
-                Data published only in aggregate form
-              </Header>
-              {indivMutAggFoldTable}
-            </> : null}
-            {comboMutsIndivFoldTable}
-            {comboMutsAggFoldTable ? <>
-              <Header as={H3} id={`${id}_combo-muts_agg-fold`}>
-                Data published only in aggregate form
-              </Header>
-              {comboMutsAggFoldTable}
-            </> : null}
+            {indivMutTable}
+            {comboMutsTable}
           </>;
         }
         else {
@@ -221,10 +184,10 @@ export default function useRenderSuscResults({
       id,
       cacheKey,
       hideNN,
-      indivMutIndivFoldColumnDefs,
-      indivMutAggFoldColumnDefs,
-      comboMutsIndivFoldColumnDefs,
-      comboMutsAggFoldColumnDefs
+      indivMutColumnDefs,
+      indivMutGroupBy,
+      comboMutsColumnDefs,
+      comboMutsGroupBy
     ]
   );
   return element;
