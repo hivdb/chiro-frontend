@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import useConfig from '../use-config';
 import LocationParams from '../location-params';
 import useSuscResults from './use-susc-results';
 
@@ -7,6 +8,7 @@ const VPSuscResultsContext = React.createContext();
 
 
 function usePrepareQuery({vaccineName, skip}) {
+  const {config, isPending} = useConfig();
   return React.useMemo(
     () => {
       const addColumns = [];
@@ -14,10 +16,34 @@ function usePrepareQuery({vaccineName, skip}) {
       const where = [];
       const params = {};
 
-      if (!skip) {
+      if (!skip && !isPending) {
         addColumns.push("'vacc-plasma' AS rx_type");
         addColumns.push('vaccine_name');
         addColumns.push('timing');
+        const betweens = config.monthRanges
+          .map(({name, between: [begin, end]}, idx) => {
+            let cond;
+            if (begin === null || begin === undefined) {
+              cond = `timing <= $end${idx}`;
+              params[`$end${idx}`] = end;
+            }
+            else if (end === null || end === undefined) {
+              cond = `timing >= $begin${idx}`;
+              params[`$begin${idx}`] = begin;
+            }
+            else {
+              cond = `timing BETWEEN $begin${idx} AND $end${idx}`;
+              params[`$begin${idx}`] = begin;
+              params[`$end${idx}`] = end;
+            }
+            params[`$name${idx}`] = name;
+            return `WHEN ${cond} THEN $name${idx}`;
+          });
+        addColumns.push(`
+          CASE ${betweens.join(' ')}
+          ELSE NULL
+          END AS timing_range
+        `);
         addColumns.push('dosage');
 
         joinClause.push(`
@@ -33,7 +59,7 @@ function usePrepareQuery({vaccineName, skip}) {
       }
       return {addColumns, joinClause, where, params};
     },
-    [skip, vaccineName]
+    [isPending, config, skip, vaccineName]
   );
 }
 

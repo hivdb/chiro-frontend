@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import useConfig from '../use-config';
 import LocationParams from '../location-params';
 import useSuscResults from './use-susc-results';
 
@@ -8,6 +9,7 @@ const CPSuscResultsContext = React.createContext();
 
 
 function usePrepareQuery({infectedVarName, skip}) {
+  const {config, isPending} = useConfig();
   return React.useMemo(
     () => {
       const addColumns = [];
@@ -15,10 +17,34 @@ function usePrepareQuery({infectedVarName, skip}) {
       const joinClause = [];
       const params = {};
 
-      if (!skip) {
+      if (!skip && !isPending) {
         addColumns.push("'conv-plasma' AS rx_type");
         addColumns.push('RXCP.infected_iso_name');
         addColumns.push('RXCP.timing');
+        const betweens = config.monthRanges
+          .map(({name, between: [begin, end]}, idx) => {
+            let cond;
+            if (begin === null || begin === undefined) {
+              cond = `RxCP.timing <= $end${idx}`;
+              params[`$end${idx}`] = end;
+            }
+            else if (end === null || end === undefined) {
+              cond = `RxCP.timing >= $begin${idx}`;
+              params[`$begin${idx}`] = begin;
+            }
+            else {
+              cond = `RxCP.timing BETWEEN $begin${idx} AND $end${idx}`;
+              params[`$begin${idx}`] = begin;
+              params[`$end${idx}`] = end;
+            }
+            params[`$name${idx}`] = name;
+            return `WHEN ${cond} THEN $name${idx}`;
+          });
+        addColumns.push(`
+          CASE ${betweens.join(' ')}
+          ELSE NULL
+          END AS timing_range
+        `);
         addColumns.push('RXCP.severity');
 
         if (infectedVarName && infectedVarName !== 'any') {
@@ -41,7 +67,7 @@ function usePrepareQuery({infectedVarName, skip}) {
       }
       return {addColumns, where, joinClause, params};
     },
-    [skip, infectedVarName]
+    [skip, isPending, config, infectedVarName]
   );
 
 }

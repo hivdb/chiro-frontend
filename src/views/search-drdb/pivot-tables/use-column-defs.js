@@ -97,6 +97,10 @@ function aggFoldSD(avgFold, {fold, cumulativeCount: n}) {
   }
 }
 
+function aggDataAvailability(_, {cumulativeCount}) {
+  return cumulativeCount.length > 1 || cumulativeCount[0] === 1;
+}
+
 
 function buildColDefs({
   articleLookup,
@@ -206,6 +210,17 @@ function buildColDefs({
             .join('; ') : section
       )
     }),
+    numStudies: new ColumnDef({
+      name: 'numStudies',
+      label: labels.numStudies || '# Publications',
+      aggFunc: (_, {refName}) => (
+        refName instanceof Array ? uniq(refName).length : 1
+      ),
+      sort: rows => sortBy(
+        rows,
+        ({refName}) => refName instanceof Array ? uniq(refName).length : 1
+      )
+    }),
     cumulativeCount: new ColumnDef({
       name: 'cumulativeCount',
       label: labels.cumulativeCount || '# Samples',
@@ -259,6 +274,10 @@ function buildColDefs({
       name: 'timing',
       label: labels.timing
     }),
+    timingRange: new ColumnDef({
+      name: 'timingRange',
+      label: labels.timingRange
+    }),
     dosage: new ColumnDef({
       name: 'dosage',
       label: labels.dosage
@@ -275,12 +294,16 @@ function buildColDefs({
     dataAvailability: new ColumnDef({
       name: 'dataAvailability',
       label: labels.dataAvailability,
-      render: (_, {cumulativeCount}) => (
-        <CellDataAvailability hasMultiple={cumulativeCount.length > 1} />
+      render: hasMultiple => (
+        <CellDataAvailability hasMultiple={hasMultiple} />
       ),
+      aggFunc: aggDataAvailability,
       sort: rows => sortBy(
         rows,
-        [({cumulativeCount}) => cumulativeCount.length > 1]
+        ({cumulativeCount}) => aggDataAvailability(
+          undefined,
+          {cumulativeCount}
+        )
       )
     })
   };

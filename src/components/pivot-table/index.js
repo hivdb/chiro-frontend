@@ -9,7 +9,7 @@ import {
 import ColumnDef from './column-def';
 import useAggregateData from './use-aggregate-data';
 
-export {ColumnDef};
+export {ColumnDef, useAggregateData};
 
 
 PivotTable.propTypes = {

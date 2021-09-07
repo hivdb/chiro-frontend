@@ -11,9 +11,10 @@ const INDIV_MUT_COLUMNS = [
   'section',
   'vaccineName',
   'dosage',
-  'timing',
+  'timingRange',
   'controlIsoName',
   'isoName',
+  'numStudies',
   'cumulativeCount',
   'potency',
   'fold',
@@ -23,7 +24,7 @@ const INDIV_MUT_COLUMNS = [
 const INDIV_MUT_LABELS = {
   isoName: 'Mutation',
   dosage: '# Shots',
-  timing: 'Months',
+  timingRange: 'Months',
   potency: <>
     NT50 Dilution{' '}
     <span className={style['nowrap']}>
@@ -46,7 +47,7 @@ const INDIV_MUT_GROUP_BY = [
   'assayName',
   'vaccineName',
   'dosage',
-  'timing',
+  'timingRange',
   'controlIsoName',
   'isoName',
   'potencyType',
@@ -60,9 +61,10 @@ const COMBO_MUTS_COLUMNS = [
   'section',
   'vaccineName',
   'dosage',
-  'timing',
+  'timingRange',
   'controlIsoName',
   'isoName',
+  'numStudies',
   'cumulativeCount',
   'potency',
   'fold',
@@ -72,7 +74,7 @@ const COMBO_MUTS_COLUMNS = [
 const COMBO_MUTS_LABELS = {
   isoName: 'Variant',
   dosage: '# Shots',
-  timing: 'Months',
+  timingRange: 'Months',
   potency: <>
     NT50 Dilution{' '}
     <span className={style['nowrap']}>
@@ -95,7 +97,7 @@ const COMBO_MUTS_GROUP_BY = [
   'assayName',
   'vaccineName',
   'dosage',
-  'timing',
+  'timingRange',
   'controlIsoName',
   'isoName',
   'potencyType',

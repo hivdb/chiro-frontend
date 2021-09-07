@@ -55,14 +55,11 @@ export default function GroupByOptions({
       const newOptMap = {...groupByOptionMap};
       newOptMap[name] = checked;
       setGroupByOptionMap(newOptMap);
-      setTimeout(
-        () => onChange(
-          Object
-            .entries(newOptMap)
-            .filter(([, keep]) => keep)
-            .map(([name]) => name)
-        ),
-        0
+      onChange && onChange(
+        Object
+          .entries(newOptMap)
+          .filter(([, keep]) => keep)
+          .map(([name]) => name)
       );
     },
     [groupByOptionMap, onChange]

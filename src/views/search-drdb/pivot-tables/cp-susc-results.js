@@ -10,10 +10,11 @@ const INDIV_MUT_COLUMNS = [
   'assayName',
   'section',
   'infectedIsoName',
-  'timing',
+  'timingRange',
   // 'severity',
   'controlIsoName',
   'isoName',
+  'numStudies',
   'cumulativeCount',
   'potency',
   'fold',
@@ -22,7 +23,7 @@ const INDIV_MUT_COLUMNS = [
 
 const INDIV_MUT_LABELS = {
   isoName: 'Mutation',
-  timing: 'Months',
+  timingRange: 'Months',
   potency: <>
     NT50 Dilution{' '}
     <span className={style['nowrap']}>
@@ -44,7 +45,7 @@ const INDIV_MUT_GROUP_BY = [
   'refName',
   'assayName',
   'infectedIsoName',
-  'timing',
+  'timingRange',
   // 'severity',
   'controlIsoName',
   'isoName',
@@ -58,10 +59,11 @@ const COMBO_MUTS_COLUMNS = [
   'assayName',
   'section',
   'infectedIsoName',
-  'timing',
+  'timingRange',
   // 'severity',
   'controlIsoName',
   'isoName',
+  'numStudies',
   'cumulativeCount',
   'potency',
   'fold',
@@ -70,7 +72,7 @@ const COMBO_MUTS_COLUMNS = [
 
 const COMBO_MUTS_LABELS = {
   isoName: 'Variant',
-  timing: 'Months',
+  timingRange: 'Months',
   potency: <>
     NT50 Dilution{' '}
     <span className={style['nowrap']}>
@@ -92,7 +94,7 @@ const COMBO_MUTS_GROUP_BY = [
   'refName',
   'assayName',
   'infectedIsoName',
-  'timing',
+  'timingRange',
   // 'severity',
   'controlIsoName',
   'isoName',
