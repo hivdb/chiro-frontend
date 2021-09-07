@@ -3,34 +3,46 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import {Header} from 'semantic-ui-react';
 import {H3} from 'sierra-frontend/dist/components/heading-tags';
+import {
+  columnDefShape
+} from 'sierra-frontend/dist/components/simple-table/prop-types';
 
 import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
 
 import {useStatSuscResults, useSeparateSuscResults} from '../hooks';
 
 import PivotTable from '../../../components/pivot-table';
+
+import GroupByOptions from './group-by-options';
 import style from './style.module.scss';
 
 
 PivotTableWrapper.propTypes = {
+  id: PropTypes.string.isRequired,
   cacheKey: PropTypes.string.isRequired,
   data: PropTypes.array,
   groupBy: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ),
   hideNN: PropTypes.bool,
-  footnoteMean: PropTypes.bool
+  footnoteMean: PropTypes.bool,
+  columnDefs: PropTypes.arrayOf(
+    columnDefShape.isRequired
+  ).isRequired
 };
 
 
 function PivotTableWrapper({
+  id,
   cacheKey,
   data,
   groupBy,
   hideNN = false,
   footnoteMean = false,
+  columnDefs,
   ...props
 }) {
+  const [curGroupBy, setCurGroupBy] = React.useState(groupBy);
   const [hide, setHide] = React.useState(hideNN);
 
   const handleUnhide = React.useCallback(
@@ -80,20 +92,34 @@ function PivotTableWrapper({
   if (hide) {
     data = filtered;
   }
+  const filteredColumnDefs = React.useMemo(
+    () => {
+      const removeCols = groupBy.filter(name => !curGroupBy.includes(name));
+      return columnDefs.filter(({name}) => !removeCols.includes(name));
+    },
+    [columnDefs, curGroupBy, groupBy]
+  );
 
   const tableJSX = (
     numExps > 0 ?
       <PivotTable
        {...props}
-       groupBy={groupBy}
-       cacheKey={`${cacheKey}__${hide}`}
+       columnDefs={filteredColumnDefs}
+       groupBy={curGroupBy}
+       cacheKey={`${cacheKey}__${hide}__${JSON.stringify(curGroupBy)}`}
        data={data} /> : null
   );
 
   return <>
+    <GroupByOptions
+     idPrefix={id}
+     onChange={setCurGroupBy}
+     allColumnDefs={columnDefs}
+     allGroupByOptions={groupBy}
+     defaultGroupByOptions={groupBy} />
     {headNote}
     {tableJSX}
-    {hasNA || hasNN ? <p className={style.footnote}>
+    {hasNA || hasNN || footnoteMean ? <p className={style.footnote}>
       {hasNA ? <>
         <strong><em>N.A.</em></strong>: data point not available
       </> : null}
@@ -143,6 +169,7 @@ export default function useRenderSuscResults({
         const indivMutTable = (
           suscResultsBySection.indivMut.length > 0 ?
             <PivotTableWrapper
+             id={`${id}_indiv-mut`}
              cacheKey={`${id}_indiv-mut_${cacheKey}`}
              hideNN={hideNN}
              columnDefs={indivMutColumnDefs}
@@ -153,6 +180,7 @@ export default function useRenderSuscResults({
         const comboMutsTable = (
           suscResultsBySection.comboMuts.length > 0 ?
             <PivotTableWrapper
+             id={`${id}_combo-muts`}
              cacheKey={`${id}_combo-muts_${cacheKey}`}
              hideNN={hideNN}
              columnDefs={comboMutsColumnDefs}

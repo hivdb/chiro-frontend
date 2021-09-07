@@ -116,7 +116,7 @@ function buildColDefs({
       render: refName => (
         <CellReference
          refName={refName}
-         displayName={articleLookup[refName].displayName} />
+         displayName={articleLookup[refName]?.displayName} />
       )
     }),
     assayName: new ColumnDef({
