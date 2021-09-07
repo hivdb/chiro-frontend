@@ -47,6 +47,9 @@ ul.toc, ul.toc > li > ul {
 }
 ul.toc {
   > li {
+    &:not(:last-of-type) {
+      padding-bottom: .5rem;
+    }
     > a.title {
       width: $title-width;
       font-weight: 600;

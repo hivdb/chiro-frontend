@@ -75,25 +75,41 @@ export default function RxItems({id, title, suscResults, loaded}) {
                href={`#${id}${
                  onlyOne ? '' : `_${kebab}`
                }`}>{title} - {subtitle}:</a>{' '}
-              {pluralize('result', mutStats.numExps, true)},{' '}
-              {pluralize('study', mutStats.numArticles, true)}
+              {mutStats.numExps.toLocaleString('en-US')}{' '}
+              {pluralize('result', mutStats.numExps, false)},{' '}
+              {mutStats.numArticles.toLocaleString('en-US')}{' '}
+              {pluralize('study', mutStats.numArticles, false)}
               {mutStats.indivFold.numExps + mutStats.aggFold.numExps > 0 ?
                 <ul>
                   {mutStats.indivFold.numExps > 0 ?
                     <li>
                       <span className={style.title}>Individual form{': '}</span>
                       {' '}
-                      {pluralize('result', mutStats.indivFold.numExps, true)}
+                      {mutStats.indivFold.numExps.toLocaleString('en-US')}{' '}
+                      {pluralize('result', mutStats.indivFold.numExps, false)}
                       {', '}
-                      {pluralize('study', mutStats.indivFold.numArticles, true)}
+                      {mutStats.indivFold.numArticles.toLocaleString('en-US')}
+                      {' '}
+                      {pluralize(
+                        'study',
+                        mutStats.indivFold.numArticles,
+                        false
+                      )}
                     </li> : null}
                   {mutStats.aggFold.numExps > 0 ?
                     <li>
                       <span className={style.title}>Aggregate form{': '}</span>
                       {' '}
-                      {pluralize('result', mutStats.aggFold.numExps, true)}
+                      {mutStats.aggFold.numExps.toLocaleString('en-US')}{' '}
+                      {pluralize('result', mutStats.aggFold.numExps, false)}
                       {', '}
-                      {pluralize('study', mutStats.aggFold.numArticles, true)}
+                      {mutStats.aggFold.numArticles.toLocaleString('en-US')}
+                      {' '}
+                      {pluralize(
+                        'study',
+                        mutStats.aggFold.numArticles,
+                        false
+                      )}
                     </li> : null}
                 </ul> : null}
             </li> : null
