@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import {
   columnDefShape
 } from 'sierra-frontend/dist/components/simple-table/prop-types';
+import createPersistedState from 'use-persisted-state/src';
 
 import Checkbox from './checkbox';
+
+import style from './style.module.scss';
 
 
 GroupByOptions.propTypes = {
@@ -45,10 +48,25 @@ export default function GroupByOptions({
     ),
     [allColumnDefs, allGroupByOptions]
   );
+  const useGroupByOptionMap = createPersistedState(idPrefix);
   const [
     groupByOptionMap,
     setGroupByOptionMap
-  ] = React.useState(defaultGroupByOptionMap);
+  ] = useGroupByOptionMap(defaultGroupByOptionMap);
+
+  React.useEffect(
+    () => {
+      if (groupByOptionMap !== defaultGroupByOptionMap) {
+        onChange && onChange(
+          Object
+            .entries(groupByOptionMap)
+            .filter(([, keep]) => keep)
+            .map(([name]) => name)
+        );
+      }
+    },
+    [groupByOptionMap, defaultGroupByOptionMap, onChange]
+  );
 
   const handleChange = React.useCallback(
     (name, checked) => {
@@ -62,18 +80,27 @@ export default function GroupByOptions({
           .map(([name]) => name)
       );
     },
-    [groupByOptionMap, onChange]
+    [groupByOptionMap, onChange, setGroupByOptionMap]
   );
 
-  return <ul>
-    {columnDefs.map(
-      colDef => <li key={colDef.name}>
-        <Checkbox
-         idPrefix={idPrefix}
-         columnDef={colDef}
-         checked={groupByOptionMap[colDef.name]}
-         onChange={handleChange} />
-      </li>
-    )}
-  </ul>;
+  return <div className={style['group-by-options_container']}>
+    <label className={style['group-by-options_label']}>
+      Table dimensions:
+    </label>
+    <ul className={style['group-by-options']}>
+      {columnDefs.map(
+        colDef => (
+          <li
+           key={colDef.name}
+           data-checked={groupByOptionMap[colDef.name]}>
+            <Checkbox
+             idPrefix={idPrefix}
+             columnDef={colDef}
+             checked={groupByOptionMap[colDef.name]}
+             onChange={handleChange} />
+          </li>
+        )
+      )}
+    </ul>
+  </div>;
 }

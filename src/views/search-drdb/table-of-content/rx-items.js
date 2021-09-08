@@ -78,7 +78,7 @@ export default function RxItems({id, title, suscResults, loaded}) {
               {mutStats.numExps.toLocaleString('en-US')}{' '}
               {pluralize('result', mutStats.numExps, false)},{' '}
               {mutStats.numArticles.toLocaleString('en-US')}{' '}
-              {pluralize('study', mutStats.numArticles, false)}
+              {pluralize('publication', mutStats.numArticles, false)}
               {mutStats.indivFold.numExps + mutStats.aggFold.numExps > 0 ?
                 <ul>
                   {mutStats.indivFold.numExps > 0 ?
@@ -91,7 +91,7 @@ export default function RxItems({id, title, suscResults, loaded}) {
                       {mutStats.indivFold.numArticles.toLocaleString('en-US')}
                       {' '}
                       {pluralize(
-                        'study',
+                        'publication',
                         mutStats.indivFold.numArticles,
                         false
                       )}
@@ -106,7 +106,7 @@ export default function RxItems({id, title, suscResults, loaded}) {
                       {mutStats.aggFold.numArticles.toLocaleString('en-US')}
                       {' '}
                       {pluralize(
-                        'study',
+                        'publication',
                         mutStats.aggFold.numArticles,
                         false
                       )}

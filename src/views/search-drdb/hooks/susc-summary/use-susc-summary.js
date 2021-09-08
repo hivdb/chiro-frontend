@@ -86,7 +86,7 @@ export function useSuscSummaryNoCache({
       ${selectColumns.join(',')}
     FROM susc_summary
     WHERE
-      aggregate_by = $aggKey AND
+      aggregate_by${aggKey === '' ? ' IS NULL' : ' = $aggKey'} AND
       ${where.join(' AND ')}
     ${orderBySQL}
   `;

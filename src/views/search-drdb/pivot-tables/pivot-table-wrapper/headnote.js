@@ -37,8 +37,11 @@ export default function HeadNote({
         had titers against the control virus below the experimental detection
         threshold{hideNN ? ' and are not shown' : null}.
       </> : null}
-    </em> (<a onClick={onToggleHideNN} href="#toggle-hide">
-      {hideNN ? 'unhide' : 'hide'}
-    </a>)
+    </em>
+    {numNoNatExps > 0 ? <>
+      (<a onClick={onToggleHideNN} href="#toggle-hide">
+        {hideNN ? 'unhide' : 'hide'}
+      </a>)
+    </> : null}
   </div>;
 }
