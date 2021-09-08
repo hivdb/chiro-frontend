@@ -36,7 +36,15 @@ export function comparePotency(potA, potB) {
   if (potA.potencyUnit !== potB.potencyUnit) {
     return (potA.potencyUnit || '').localeCompare(potB.potencyUnit || '');
   }
-  return aggPotency(potA.potency, potA) - aggPotency(potB.potency, potB);
+  const potAnum = aggPotency(potA.potency, potA);
+  const potBnum = aggPotency(potB.potency, potB);
+  if (potAnum === null || potAnum === undefined) {
+    return 1;
+  }
+  else if (potBnum === null || potBnum === undefined) {
+    return -1;
+  }
+  return potAnum - potBnum;
 }
 
 
@@ -103,6 +111,11 @@ function aggFoldSD(avgFold, {fold, cumulativeCount: n}) {
 
 function aggDataAvailability(_, {cumulativeCount}) {
   return cumulativeCount.length > 1 || cumulativeCount[0] === 1;
+}
+
+
+function aggSum(nums) {
+  return nums.reduce((acc, n) => acc + n, 0);
 }
 
 
@@ -296,7 +309,12 @@ function buildColDefs({
            .filter(([, ie]) => ie === 'control' || ie === 'both')
            .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)} />
       ),
-      aggFunc: n => n.reduce((acc, nn) => acc + nn, 0)
+      aggFunc: aggSum,
+      sort: rows => rows.sort(
+        ({cumulativeCount: numsA}, {cumulativeCount: numsB}) => {
+          return aggSum(numsA) - aggSum(numsB);
+        }
+      )
     }),
     fold: new ColumnDef({
       name: 'fold',
@@ -306,7 +324,7 @@ function buildColDefs({
          fold={fold}
          fbResistanceLevel={uniq(row.fbResistanceLevel || []).sort()}
          displayNN={
-           row.cumulativeCount.reduce((acc, n) => acc + n, 0) ===
+           aggSum(row.cumulativeCount) ===
            Array.from(row.ineffective.entries())
              .filter(([, ie]) => ie === 'control' || ie === 'both')
              .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)
