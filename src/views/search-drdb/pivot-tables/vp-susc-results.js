@@ -12,8 +12,8 @@ const INDIV_MUT_COLUMNS = [
   'vaccineName',
   'dosage',
   'timingRange',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
   'numStudies',
   'cumulativeCount',
   'potency',
@@ -22,7 +22,7 @@ const INDIV_MUT_COLUMNS = [
 ];
 
 const INDIV_MUT_LABELS = {
-  isoName: 'Mutation',
+  isoAggkey: 'Mutation',
   dosage: '# Shots',
   timingRange: 'Months',
   potency: <>
@@ -48,8 +48,9 @@ const INDIV_MUT_GROUP_BY = [
   'vaccineName',
   'dosage',
   'timingRange',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
   'potencyType',
   'potencyUnit',
   'rxType'
@@ -62,8 +63,8 @@ const COMBO_MUTS_COLUMNS = [
   'vaccineName',
   'dosage',
   'timingRange',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
   'numStudies',
   'cumulativeCount',
   'potency',
@@ -72,7 +73,7 @@ const COMBO_MUTS_COLUMNS = [
 ];
 
 const COMBO_MUTS_LABELS = {
-  isoName: 'Variant',
+  isoAggkey: 'Variant',
   dosage: '# Shots',
   timingRange: 'Months',
   potency: <>
@@ -98,8 +99,9 @@ const COMBO_MUTS_GROUP_BY = [
   'vaccineName',
   'dosage',
   'timingRange',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
   'potencyType',
   'potencyUnit',
   'rxType'

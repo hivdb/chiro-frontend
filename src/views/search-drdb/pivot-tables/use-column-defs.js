@@ -8,6 +8,8 @@ import CellAssay from './cell-assay';
 import CellPotency from './cell-potency';
 import CellSection from './cell-section';
 import CellIsolate from './cell-isolate';
+import CellVariant from './cell-variant';
+import CellIsolateAgg from './cell-isolate-agg';
 import CellReference from './cell-reference';
 import CellAntibodies from './cell-antibodies';
 import CellRLevel from './cell-resistance-level';
@@ -23,6 +25,8 @@ import {
 import Articles from '../hooks/articles';
 import Antibodies from '../hooks/antibodies';
 import Isolates from '../hooks/isolates';
+import IsolateAggs, {compareIsolateAggs} from '../hooks/isolate-aggs';
+import Variants from '../hooks/variants';
 
 
 export function comparePotency(potA, potB) {
@@ -105,6 +109,8 @@ function aggDataAvailability(_, {cumulativeCount}) {
 function buildColDefs({
   articleLookup,
   isolateLookup,
+  isolateAggLookup,
+  variantLookup,
   antibodyLookup,
   compareByAntibodies,
   compareByIsolate,
@@ -157,6 +163,32 @@ function buildColDefs({
       ),
       sort: rows => [...rows].sort(compareByControlIsolate)
     }),
+    controlVarName: new ColumnDef({
+      name: 'controlVarName',
+      label: labels.controlVarName || 'Control',
+      render: (varName, {
+        controlPotency,
+        potencyType,
+        potencyUnit,
+        ineffective,
+        cumulativeCount
+      }) => (
+        <CellVariant
+         {...{
+           varName,
+           potency: aggPotency(controlPotency, {cumulativeCount}),
+           potencyType,
+           potencyUnit,
+           variantLookup
+         }}
+         enablePotency
+         ineffective={
+           ineffective.every(ie =>
+             ie === 'control' ||
+             ie === 'both')
+         } />
+      )
+    }),
     isoName: new ColumnDef({
       name: 'isoName',
       label: labels.isoName || 'Variant',
@@ -167,6 +199,39 @@ function buildColDefs({
         }} />
       ),
       sort: rows => [...rows].sort(compareByIsolate)
+    }),
+    isoAggkey: new ColumnDef({
+      name: 'isoAggkey',
+      label: labels.isoAggkey || 'Variant',
+      render: (isoAggkey, {varName, numMutations}) => (
+        <CellIsolateAgg {...{
+          isoAggkey,
+          numMutations,
+          varNames: uniq(varName)
+            .filter(v => v !== null)
+            .sort(),
+          isolateAggLookup,
+          variantLookup
+        }} />
+      ),
+      sort: rows => [...rows].sort(
+        (
+          {varName: varNamesA, isoAggkey: keyA},
+          {varName: varNamesB, isoAggkey: keyB}
+        ) => {
+          varNamesA = uniq(varNamesA || []).sort();
+          varNamesB = uniq(varNamesB || []).sort();
+          if (varNamesA < varNamesB) {
+            return -1;
+          }
+          else if (varNamesA > varNamesB) {
+            return 1;
+          }
+          const isoAggA = isolateAggLookup[keyA];
+          const isoAggB = isolateAggLookup[keyB];
+          return compareIsolateAggs(isoAggA, isoAggB);
+        }
+      )
     }),
     potency: new ColumnDef({
       name: 'potency',
@@ -239,6 +304,7 @@ function buildColDefs({
       render: (fold, row) => (
         <CellFold
          fold={fold}
+         fbResistanceLevel={uniq(row.fbResistanceLevel || []).sort()}
          displayNN={
            row.cumulativeCount.reduce((acc, n) => acc + n, 0) ===
            Array.from(row.ineffective.entries())
@@ -327,6 +393,14 @@ export default function useColumnDefs({
     isolateLookup,
     isPending: isIsoLookupPending
   } = Isolates.useMe();
+  const {
+    isolateAggLookup,
+    isPending: isIsoAggLookupPending
+  } = IsolateAggs.useMe();
+  const {
+    variantLookup,
+    isPending: isVarLookupPending
+  } = Variants.useMe();
 
   const compareByAntibodies = (
     useCompareSuscResultsByAntibodies(antibodyLookup)
@@ -342,7 +416,11 @@ export default function useColumnDefs({
   );
 
   const isPending = (
-    isRefLookupPending || isAbLookupPending || isIsoLookupPending
+    isRefLookupPending ||
+    isAbLookupPending ||
+    isIsoLookupPending ||
+    isIsoAggLookupPending ||
+    isVarLookupPending
   );
 
   return React.useMemo(
@@ -350,6 +428,8 @@ export default function useColumnDefs({
       articleLookup,
       antibodyLookup,
       isolateLookup,
+      isolateAggLookup,
+      variantLookup,
       compareByAntibodies,
       compareByIsolate,
       compareByControlIsolate,
@@ -362,6 +442,8 @@ export default function useColumnDefs({
       articleLookup,
       antibodyLookup,
       isolateLookup,
+      isolateAggLookup,
+      variantLookup,
       compareByAntibodies,
       compareByIsolate,
       compareByControlIsolate,

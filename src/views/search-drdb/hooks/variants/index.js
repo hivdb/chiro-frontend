@@ -50,9 +50,20 @@ function VariantsProvider({children}) {
     },
     [payload]
   );
+  const variantLookup = React.useMemo(
+    () => variants && variants.reduce(
+      (acc, variant) => {
+        acc[variant.varName] = variant;
+        return acc;
+      },
+      {}
+    ),
+    [variants]
+  );
 
   const contextValue = {
     variants,
+    variantLookup,
     isPending
   };
 

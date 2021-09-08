@@ -9,14 +9,16 @@ const INDIV_MUT_COLUMNS = [
   'assayName',
   'section',
   'abNames',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
+  'numStudies',
+  'cumulativeCount',
   'potency',
   'fold'
 ];
 
 const INDIV_MUT_LABELS = {
-  isoName: 'Mutation',
+  isoAggkey: 'Mutation',
   potency: 'IC50 (ng/ml)',
   fold: 'Fold Reduction'
 };
@@ -24,10 +26,10 @@ const INDIV_MUT_LABELS = {
 const INDIV_MUT_GROUP_BY = [
   'refName',
   'assayName',
-  'section',
   'abNames',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
   'potencyType',
   'potencyUnit',
   'rxType'
@@ -37,16 +39,18 @@ const COMBO_MUTS_COLUMNS = [
   'refName',
   'assayName',
   'section',
-  'controlIsoName',
+  'controlVarName',
   'abNames',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
+  'numStudies',
+  'cumulativeCount',
   'potency',
   'fold'
 ];
 
 const COMBO_MUTS_LABELS = {
-  isoName: 'Variant',
+  isoAggkey: 'Variant',
   potency: 'IC50 (ng/ml)',
   fold: 'Fold Reduction'
 };
@@ -54,11 +58,11 @@ const COMBO_MUTS_LABELS = {
 const COMBO_MUTS_GROUP_BY = [
   'refName',
   'assayName',
-  'section',
-  'controlIsoName',
+  'controlVarName',
   'abNames',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
   'potencyType',
   'potencyUnit',
   'rxType'

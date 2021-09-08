@@ -4,13 +4,14 @@ import style from '../style.module.scss';
 
 
 CellFold.propTypes = {
+  fbResistanceLevel: PropTypes.array.isRequired,
   fold: PropTypes.number,
   stdev: PropTypes.number,
   displayNN: PropTypes.bool
 };
 
 
-export default function CellFold({fold, stdev, displayNN}) {
+export default function CellFold({fold, fbResistanceLevel, stdev, displayNN}) {
   let foldCmp = '=';
   let foldValue = fold;
   if (foldValue && foldValue > 100) {
@@ -19,7 +20,10 @@ export default function CellFold({fold, stdev, displayNN}) {
   }
   return <>
     {displayNN ? <em>N.N.</em> :
-      (foldValue === null ? '?' : <>
+      (foldValue === undefined || foldValue === null ? (
+        fbResistanceLevel.length > 0 ?
+          fbResistanceLevel.join(' / ') : '?'
+      ) : <>
         {foldCmp === "=" ? "" : foldCmp}
         {foldValue.toFixed(1)}
         {stdev && stdev > 1e-5 ? (

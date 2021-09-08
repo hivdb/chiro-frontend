@@ -100,7 +100,15 @@ function usePrepareQuery({
         addColumns.length > 0 ?
           `, ${addColumns.join(', ')}` : ''
       );
-      const myJoinClause = [];
+      const myJoinClause = [
+        `LEFT JOIN isolates ctliso ON
+          S.control_iso_name = ctliso.iso_name`,
+        `LEFT JOIN isolates expiso ON
+          S.iso_name = expiso.iso_name`,
+        `JOIN isolate_pairs pair ON
+          S.control_iso_name = pair.control_iso_name AND
+          S.iso_name = pair.iso_name`
+      ];
       const where = [];
       const params = {};
 
@@ -113,11 +121,6 @@ function usePrepareQuery({
         }
 
         if (isoAggkey) {
-          myJoinClause.push(`
-            JOIN isolate_pairs pair ON
-              S.control_iso_name = pair.control_iso_name AND
-              S.iso_name = pair.iso_name
-          `);
           where.push(`
             pair.iso_aggkey = $isoAggkey
           `);
@@ -136,11 +139,6 @@ function usePrepareQuery({
           params.$varName = varName;
         }
         else if (genePos) {
-          myJoinClause.push(`
-            JOIN isolate_pairs pair ON
-              S.control_iso_name = pair.control_iso_name AND
-              S.iso_name = pair.iso_name
-          `);
           where.push(`
             pair.iso_aggkey LIKE $genePos
           `);
@@ -162,7 +160,11 @@ function usePrepareQuery({
           S.ref_name,
           S.rx_name,
           S.control_iso_name,
+          ctliso.var_name AS control_var_name,
           S.iso_name,
+          expiso.var_name AS var_name,
+          pair.iso_aggkey,
+          pair.num_mutations,
           S.section,
           S.potency_type,
           S.control_potency,
