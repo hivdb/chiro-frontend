@@ -1,17 +1,20 @@
 import React from 'react';
+import uniq from 'lodash/uniq';
 import sortBy from 'lodash/sortBy';
-import {
-  ColumnDef
-} from 'sierra-frontend/dist/components/simple-table';
+import {ColumnDef} from '../../../components/pivot-table';
 
 import CellFold from './cell-fold';
 import CellAssay from './cell-assay';
 import CellPotency from './cell-potency';
 import CellSection from './cell-section';
 import CellIsolate from './cell-isolate';
+import CellVariant from './cell-variant';
+import CellIsolateAgg from './cell-isolate-agg';
 import CellReference from './cell-reference';
 import CellAntibodies from './cell-antibodies';
 import CellRLevel from './cell-resistance-level';
+import CellCumulativeCount from './cell-cumulative-count';
+import CellDataAvailability from './cell-data-availability';
 import {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
@@ -22,6 +25,8 @@ import {
 import Articles from '../hooks/articles';
 import Antibodies from '../hooks/antibodies';
 import Isolates from '../hooks/isolates';
+import IsolateAggs, {compareIsolateAggs} from '../hooks/isolate-aggs';
+import Variants from '../hooks/variants';
 
 
 export function comparePotency(potA, potB) {
@@ -31,13 +36,94 @@ export function comparePotency(potA, potB) {
   if (potA.potencyUnit !== potB.potencyUnit) {
     return (potA.potencyUnit || '').localeCompare(potB.potencyUnit || '');
   }
-  return potA.potency - potB.potency;
+  const potAnum = aggPotency(potA.potency, potA);
+  const potBnum = aggPotency(potB.potency, potB);
+  if (potAnum === null || potAnum === undefined) {
+    return 1;
+  }
+  else if (potBnum === null || potBnum === undefined) {
+    return -1;
+  }
+  return potAnum - potBnum;
+}
+
+
+function aggPotency(pot, {cumulativeCount: n}) {
+  let total = 0;
+  let sumN = 0;
+  // geomean for potency
+  for (let i = 0; i < pot.length; i ++) {
+    if (pot[i] !== undefined && pot[i] !== null) {
+      total += Math.log(pot[i]) * n[i];
+      sumN += n[i];
+    }
+  }
+  if (sumN) {
+    return Math.exp(total / sumN);
+  }
+}
+
+
+function aggPotencySD(avgPot, {potency: pot, cumulativeCount: n}) {
+  let total = 0;
+  let sumN = 0;
+  // geostdev for potency
+  const logAvgPot = Math.log(avgPot);
+  for (let i = 0; i < pot.length; i ++) {
+    if (pot[i] !== undefined && pot[i] !== null) {
+      total += (Math.log(pot[i]) - logAvgPot) ** 2 * n[i];
+      sumN += n[i];
+    }
+  }
+  if (sumN) {
+    return Math.exp(Math.sqrt(total / sumN));
+  }
+}
+
+function aggFold(fold, {cumulativeCount: n}) {
+  let total = 0;
+  let sumN = 0;
+  // artmean for fold
+  for (let i = 0; i < fold.length; i ++) {
+    if (fold[i] !== undefined && fold[i] !== null) {
+      total += fold[i] * n[i];
+      sumN += n[i];
+    }
+  }
+  if (sumN) {
+    return total / sumN;
+  }
+}
+
+function aggFoldSD(avgFold, {fold, cumulativeCount: n}) {
+  let total = 0;
+  let sumN = 0;
+  for (let i = 0; i < fold.length; i ++) {
+    if (fold[i] !== undefined && fold[i] !== null) {
+      total += (fold[i] - avgFold) ** 2 * n[i];
+      sumN += n[i];
+    }
+  }
+  if (sumN) {
+    return Math.sqrt(total / sumN);
+  }
+}
+
+function aggDataAvailability(_, {cumulativeCount}) {
+  return cumulativeCount.length > 1 || cumulativeCount[0] === 1;
+}
+
+
+function aggSum(nums) {
+  return nums.reduce((acc, n) => acc + n, 0);
 }
 
 
 function buildColDefs({
   articleLookup,
   isolateLookup,
+  isolateAggLookup,
+  variantLookup,
   antibodyLookup,
   compareByAntibodies,
   compareByIsolate,
@@ -53,7 +139,7 @@ function buildColDefs({
       render: refName => (
         <CellReference
          refName={refName}
-         displayName={articleLookup[refName].displayName} />
+         displayName={articleLookup[refName]?.displayName} />
       )
     }),
     assayName: new ColumnDef({
@@ -70,23 +156,51 @@ function buildColDefs({
         controlPotency,
         potencyType,
         potencyUnit,
-        ineffective
+        ineffective,
+        cumulativeCount
       }) => (
         <CellIsolate
          {...{
            isoName,
-           potency: controlPotency,
+           potency: aggPotency(controlPotency, {cumulativeCount}),
            potencyType,
            potencyUnit,
            isolateLookup
          }}
          enablePotency
          ineffective={
-           ineffective === 'control' ||
-           ineffective === 'both'
+           ineffective.every(ie =>
+             ie === 'control' ||
+             ie === 'both')
          } />
       ),
       sort: rows => [...rows].sort(compareByControlIsolate)
+    }),
+    controlVarName: new ColumnDef({
+      name: 'controlVarName',
+      label: labels.controlVarName || 'Control',
+      render: (varName, {
+        controlPotency,
+        potencyType,
+        potencyUnit,
+        ineffective,
+        cumulativeCount
+      }) => (
+        <CellVariant
+         {...{
+           varName,
+           potency: aggPotency(controlPotency, {cumulativeCount}),
+           potencyType,
+           potencyUnit,
+           variantLookup
+         }}
+         enablePotency
+         ineffective={
+           ineffective.every(ie =>
+             ie === 'control' ||
+             ie === 'both')
+         } />
+      )
     }),
     isoName: new ColumnDef({
       name: 'isoName',
@@ -99,20 +213,61 @@ function buildColDefs({
       ),
       sort: rows => [...rows].sort(compareByIsolate)
     }),
+    isoAggkey: new ColumnDef({
+      name: 'isoAggkey',
+      label: labels.isoAggkey || 'Variant',
+      render: (isoAggkey, {varName, numMutations}) => (
+        <CellIsolateAgg {...{
+          isoAggkey,
+          numMutations,
+          varNames: uniq(varName)
+            .filter(v => v !== null)
+            .sort(),
+          isolateAggLookup,
+          variantLookup
+        }} />
+      ),
+      sort: rows => [...rows].sort(
+        (
+          {varName: varNamesA, isoAggkey: keyA},
+          {varName: varNamesB, isoAggkey: keyB}
+        ) => {
+          varNamesA = uniq(varNamesA || []).sort();
+          varNamesB = uniq(varNamesB || []).sort();
+          if (varNamesA < varNamesB) {
+            return -1;
+          }
+          else if (varNamesA > varNamesB) {
+            return 1;
+          }
+          const isoAggA = isolateAggLookup[keyA];
+          const isoAggB = isolateAggLookup[keyB];
+          return compareIsolateAggs(isoAggA, isoAggB);
+        }
+      )
+    }),
     potency: new ColumnDef({
       name: 'potency',
       label: labels.potency || 'Potency',
-      render: (potency, {rxType, potencyType, potencyUnit, ineffective}) => (
-        <CellPotency {...{
-          potency,
-          potencyType,
-          potencyUnit,
-          rxType,
-          ineffective: (
-            ineffective === 'experimental' ||
-            ineffective === 'both'
-          )
-        }} />
+      aggFunc: aggPotency,
+      render: (potency, {
+        potencyUnit,
+        potencyType,
+        rxType,
+        ineffective,
+        ...row
+      }) => (
+        <CellPotency
+         potencyUnit={potencyUnit}
+         potencyType={potencyType}
+         rxType={rxType}
+         ineffective={
+           ineffective.every(ie =>
+             ie === 'experimental' ||
+             ie === 'both')
+         }
+         stdev={aggPotencySD(potency, row)}
+         potency={potency} />
       ),
       sort: rows => [...rows].sort(comparePotency)
     }),
@@ -125,21 +280,66 @@ function buildColDefs({
     section: new ColumnDef({
       name: 'section',
       label: labels.section,
-      render: section => <CellSection {...{section}} />
+      render: section => <CellSection {...{section}} />,
+      aggFunc: section => (
+        section instanceof Array ?
+          uniq(section)
+            .sort()
+            .join('; ') : section
+      )
+    }),
+    numStudies: new ColumnDef({
+      name: 'numStudies',
+      label: labels.numStudies || '# Publications',
+      aggFunc: (_, {refName}) => (
+        refName instanceof Array ? uniq(refName).length : 1
+      ),
+      sort: rows => sortBy(
+        rows,
+        ({refName}) => refName instanceof Array ? uniq(refName).length : 1
+      )
     }),
     cumulativeCount: new ColumnDef({
       name: 'cumulativeCount',
-      label: labels.cumulativeCount || '# Samples'
+      label: labels.cumulativeCount || '# Samples',
+      render: (num, row) => (
+        <CellCumulativeCount
+         num={num}
+         numNN={Array.from(row.ineffective.entries())
+           .filter(([, ie]) => ie === 'control' || ie === 'both')
+           .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)} />
+      ),
+      aggFunc: aggSum,
+      sort: rows => rows.sort(
+        ({cumulativeCount: numsA}, {cumulativeCount: numsB}) => {
+          return aggSum(numsA) - aggSum(numsB);
+        }
+      )
     }),
     fold: new ColumnDef({
       name: 'fold',
       label: labels.fold,
-      render: (fold, row) => <CellFold {...row} />,
+      render: (fold, row) => (
+        <CellFold
+         fold={fold}
+         fbResistanceLevel={uniq(row.fbResistanceLevel || []).sort()}
+         displayNN={
+           aggSum(row.cumulativeCount) ===
+           Array.from(row.ineffective.entries())
+             .filter(([, ie]) => ie === 'control' || ie === 'both')
+             .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)
+         }
+         stdev={aggFoldSD(fold, row)} />
+      ),
+      aggFunc: aggFold,
       sort: rows => sortBy(
         rows,
-        [({ineffective}) => (
-          ineffective !== null && ineffective !== 'experimental'
-        ), 'fold']
+        [
+          ({ineffective}) => (
+            ineffective !== null && ineffective !== 'experimental'
+          ),
+          ({fold, cumulativeCount}) => aggFold(fold, {cumulativeCount})
+        ]
       )
     }),
     vaccineName: new ColumnDef({
@@ -158,6 +358,10 @@ function buildColDefs({
       name: 'timing',
       label: labels.timing
     }),
+    timingRange: new ColumnDef({
+      name: 'timingRange',
+      label: labels.timingRange
+    }),
     dosage: new ColumnDef({
       name: 'dosage',
       label: labels.dosage
@@ -170,6 +374,21 @@ function buildColDefs({
       name: 'resistanceLevel',
       label: labels.resistanceLevel,
       render: resistanceLevel => <CellRLevel rLevel={resistanceLevel} />
+    }),
+    dataAvailability: new ColumnDef({
+      name: 'dataAvailability',
+      label: labels.dataAvailability,
+      render: hasMultiple => (
+        <CellDataAvailability hasMultiple={hasMultiple} />
+      ),
+      aggFunc: aggDataAvailability,
+      sort: rows => sortBy(
+        rows,
+        ({cumulativeCount}) => aggDataAvailability(
+          undefined,
+          {cumulativeCount}
+        )
+      )
     })
   };
   return columns.map(name => lookup[name]).filter(cd => cd);
@@ -192,6 +411,14 @@ export default function useColumnDefs({
     isolateLookup,
     isPending: isIsoLookupPending
   } = Isolates.useMe();
+  const {
+    isolateAggLookup,
+    isPending: isIsoAggLookupPending
+  } = IsolateAggs.useMe();
+  const {
+    variantLookup,
+    isPending: isVarLookupPending
+  } = Variants.useMe();
 
   const compareByAntibodies = (
     useCompareSuscResultsByAntibodies(antibodyLookup)
@@ -207,7 +434,11 @@ export default function useColumnDefs({
   );
 
   const isPending = (
-    isRefLookupPending || isAbLookupPending || isIsoLookupPending
+    isRefLookupPending ||
+    isAbLookupPending ||
+    isIsoLookupPending ||
+    isIsoAggLookupPending ||
+    isVarLookupPending
   );
 
   return React.useMemo(
@@ -215,6 +446,8 @@ export default function useColumnDefs({
       articleLookup,
       antibodyLookup,
       isolateLookup,
+      isolateAggLookup,
+      variantLookup,
       compareByAntibodies,
       compareByIsolate,
       compareByControlIsolate,
@@ -227,6 +460,8 @@ export default function useColumnDefs({
       articleLookup,
       antibodyLookup,
       isolateLookup,
+      isolateAggLookup,
+      variantLookup,
       compareByAntibodies,
       compareByIsolate,
       compareByControlIsolate,

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import shortenMutList from '../shorten-mutlist';
 
 import {formatPotency} from './cell-potency';
@@ -59,7 +60,7 @@ export default function CellIsolate({
   if (enablePotency && potency !== null && potency !== undefined) {
     return <>
       {isolateDisplay}
-      <div className={style['supplement-info']}>
+      <div className={classNames(style['supplement-info'], style['small'])}>
         {potencyType}{': '}
         {formatPotency({
           potency,

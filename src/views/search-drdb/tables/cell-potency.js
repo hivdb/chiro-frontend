@@ -1,9 +1,10 @@
 import React from 'react';
+import style from '../style.module.scss';
 
 
 export function formatPotency({
   potency, ineffective, potencyType,
-  potencyUnit, forceShowUnit
+  potencyUnit, forceShowUnit, stdev
 }) {
   let prefix, number, suffix;
   const isICxx = /^IC\d+$/.test(potencyType);
@@ -39,7 +40,17 @@ export function formatPotency({
     suffix = '';
   }
 
-  return `${prefix}${number}${suffix}`;
+  return <>
+    {prefix}{number}
+    {stdev && Math.abs(1 - stdev) > 1e-5 ? (
+      <span className={style['supplement-info']}>
+        <span className={style['mul-div-sign']}>
+          ×÷
+        </span>{stdev.toFixed(1)}
+      </span>
+    ) : null}
+    {suffix}
+  </>;
 }
 
 
@@ -48,7 +59,8 @@ export default function CellPotency({
   potencyUnit,
   potencyType,
   rxType,
-  ineffective
+  ineffective,
+  stdev
 }) {
   if (potency !== undefined && potency !== null) {
     let displayPotType = true;
@@ -60,7 +72,7 @@ export default function CellPotency({
     }
     return <>
       {displayPotType ? `${potencyType}: ` : null}
-      {formatPotency({potency, ineffective, potencyType, potencyUnit})}
+      {formatPotency({potency, ineffective, potencyType, potencyUnit, stdev})}
     </>;
   }
   else {

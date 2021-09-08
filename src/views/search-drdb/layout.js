@@ -6,9 +6,9 @@ import BackToTop from '../../components/back-to-top';
 import setTitle from '../../utils/set-title';
 
 import DRDBStatHeader from './stat-header';
-import AbSuscResults from './pivot-tables/ab-susc-results';
-import VPSuscResults from './pivot-tables/vp-susc-results';
-import CPSuscResults from './pivot-tables/cp-susc-results';
+import AbSuscResults from './tables/ab-susc-results';
+import VPSuscResults from './tables/vp-susc-results';
+import CPSuscResults from './tables/cp-susc-results';
 
 import AbSuscSummary from './summary/ab-susc-summary';
 

@@ -3,88 +3,107 @@ import useRenderSuscResults from './use-render-susc-results';
 
 import SuscResults from '../hooks/susc-results';
 import LocationParams from '../hooks/location-params';
+import style from '../style.module.scss';
 
-const INDIV_MUT_INDIV_FOLD_COLUMNS = [
+const INDIV_MUT_COLUMNS = [
   'refName',
   'assayName',
   'section',
   'infectedIsoName',
-  'timing',
+  'timingRange',
   // 'severity',
-  'controlIsoName',
-  'isoName',
-  'potency',
-  'fold'
-];
-
-const INDIV_MUT_INDIV_FOLD_LABELS = {
-  isoName: 'Mutation',
-  timing: 'Months',
-  potency: 'NT50 (Dilution)',
-  fold: 'Fold Reduction'
-};
-
-const INDIV_MUT_AGG_FOLD_COLUMNS = [
-  'refName',
-  'assayName',
-  'section',
-  'infectedIsoName',
-  'timing',
-  // 'severity',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
+  'numStudies',
   'cumulativeCount',
   'potency',
-  'fold'
+  'fold',
+  'dataAvailability'
 ];
 
-const INDIV_MUT_AGG_FOLD_LABELS = {
-  isoName: 'Mutation',
-  timing: 'Months',
-  potency: 'Mean/Median NT50 (Dilution)',
-  fold: 'Mean/Median Fold Reduction'
+const INDIV_MUT_LABELS = {
+  isoAggkey: 'Mutation',
+  timingRange: 'Months',
+  potency: <>
+    NT50 Dilution{' '}
+    <span className={style['nowrap']}>
+      (GeoMean
+      <span className={style['mul-div-sign']}>
+        ×÷
+      </span>GSD)
+    </span>
+  </>,
+  fold: <>
+    Fold Reduction{' '}
+    <span className={style['nowrap']}>
+      (Mean±SD)
+    </span>
+  </>
 };
 
-const COMBO_MUTS_INDIV_FOLD_COLUMNS = [
+const INDIV_MUT_GROUP_BY = [
+  'refName',
+  'assayName',
+  'infectedIsoName',
+  'timingRange',
+  // 'severity',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
+  'potencyType',
+  'potencyUnit',
+  'rxType'
+];
+
+const COMBO_MUTS_COLUMNS = [
   'refName',
   'assayName',
   'section',
   'infectedIsoName',
-  'timing',
+  'timingRange',
   // 'severity',
-  'controlIsoName',
-  'isoName',
-  'potency',
-  'fold'
-];
-
-const COMBO_MUTS_INDIV_FOLD_LABELS = {
-  isoName: 'Variant',
-  timing: 'Months',
-  potency: 'NT50 (Dilution)',
-  fold: 'Fold Reduction'
-};
-
-const COMBO_MUTS_AGG_FOLD_COLUMNS = [
-  'refName',
-  'assayName',
-  'section',
-  'infectedIsoName',
-  'timing',
-  // 'severity',
-  'controlIsoName',
-  'isoName',
+  'controlVarName',
+  'isoAggkey',
+  'numStudies',
   'cumulativeCount',
   'potency',
-  'fold'
+  'fold',
+  'dataAvailability'
 ];
 
-const COMBO_MUTS_AGG_FOLD_LABELS = {
-  isoName: 'Variant',
-  timing: 'Months',
-  potency: 'Mean/Median NT50 (Dilution)',
-  fold: 'Mean/Median Fold Reduction'
+const COMBO_MUTS_LABELS = {
+  isoAggkey: 'Variant',
+  timingRange: 'Months',
+  potency: <>
+    NT50 Dilution{' '}
+    <span className={style['nowrap']}>
+      (GeoMean
+      <span className={style['mul-div-sign']}>
+        ×÷
+      </span>GSD)
+    </span>
+  </>,
+  fold: <>
+    Fold Reduction{' '}
+    <span className={style['nowrap']}>
+      (Mean±SD)
+    </span>
+  </>
 };
+
+const COMBO_MUTS_GROUP_BY = [
+  'refName',
+  'assayName',
+  'infectedIsoName',
+  'timingRange',
+  // 'severity',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
+  'potencyType',
+  'potencyUnit',
+  'rxType'
+];
 
 
 export default function CPSuscResults() {
@@ -98,24 +117,14 @@ export default function CPSuscResults() {
 
   const {suscResults, isPending} = SuscResults.useCP();
 
-  const indivMutIndivFoldColumnDefs = useColumnDefs({
-    columns: INDIV_MUT_INDIV_FOLD_COLUMNS,
-    labels: INDIV_MUT_INDIV_FOLD_LABELS
+  const indivMutColumnDefs = useColumnDefs({
+    columns: INDIV_MUT_COLUMNS,
+    labels: INDIV_MUT_LABELS
   });
 
-  const indivMutAggFoldColumnDefs = useColumnDefs({
-    columns: INDIV_MUT_AGG_FOLD_COLUMNS,
-    labels: INDIV_MUT_AGG_FOLD_LABELS
-  });
-
-  const comboMutsIndivFoldColumnDefs = useColumnDefs({
-    columns: COMBO_MUTS_INDIV_FOLD_COLUMNS,
-    labels: COMBO_MUTS_INDIV_FOLD_LABELS
-  });
-
-  const comboMutsAggFoldColumnDefs = useColumnDefs({
-    columns: COMBO_MUTS_AGG_FOLD_COLUMNS,
-    labels: COMBO_MUTS_AGG_FOLD_LABELS
+  const comboMutsColumnDefs = useColumnDefs({
+    columns: COMBO_MUTS_COLUMNS,
+    labels: COMBO_MUTS_LABELS
   });
 
   return useRenderSuscResults({
@@ -123,9 +132,10 @@ export default function CPSuscResults() {
     id: 'cp-susc-results',
     cacheKey,
     suscResults,
-    indivMutIndivFoldColumnDefs,
-    indivMutAggFoldColumnDefs,
-    comboMutsIndivFoldColumnDefs,
-    comboMutsAggFoldColumnDefs
+    indivMutColumnDefs,
+    indivMutGroupBy: INDIV_MUT_GROUP_BY,
+    comboMutsColumnDefs,
+    comboMutsGroupBy: COMBO_MUTS_GROUP_BY,
+    footnoteMean: true
   });
 }
