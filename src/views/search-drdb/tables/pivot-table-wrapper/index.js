@@ -67,13 +67,16 @@ export default function PivotTableWrapper({
 
   const setLoading = React.useCallback(
     callback => {
-      pivotTableCtlRef.current.dataset.loading = '';
-      setTimeout(() => {
-        callback();
+      const target = pivotTableCtlRef.current;
+      if (target) {
+        target.dataset.loading = '';
         setTimeout(() => {
-          delete pivotTableCtlRef.current.dataset.loading;
+          callback();
+          setTimeout(() => {
+            delete target.dataset.loading;
+          }, 0);
         }, 0);
-      }, 0);
+      }
     },
     []
   );

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
 import {aggPotency, aggGeoMeanWeighted} from './agg-funcs';
@@ -142,10 +141,7 @@ function CellPotency({
           potencyUnit,
           potencySD
         })}
-        {hasMultiple ? <span className={classNames(
-          style['potency-type-count'],
-          style['supplement-info']
-        )}>
+        {hasMultiple ? <span className={style['supplement-info']}>
           {' '}(n={cumulativeCount && cumulativeCount.toLocaleString('en-US')})
         </span> : null}
       </li>;
