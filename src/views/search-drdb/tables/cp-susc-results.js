@@ -51,8 +51,6 @@ const INDIV_MUT_GROUP_BY = [
   'controlVarName',
   'isoAggkey',
   'numMutations',
-  'potencyType',
-  'potencyUnit',
   'rxType'
 ];
 
@@ -101,8 +99,6 @@ const COMBO_MUTS_GROUP_BY = [
   'controlVarName',
   'isoAggkey',
   'numMutations',
-  'potencyType',
-  'potencyUnit',
   'rxType'
 ];
 

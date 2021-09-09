@@ -39,7 +39,7 @@ export default function HeadNote({
       </> : null}
     </em>
     {numNoNatExps > 0 ? <>
-      (<a onClick={onToggleHideNN} href="#toggle-hide">
+      {' '}(<a onClick={onToggleHideNN} href="#toggle-hide">
         {hideNN ? 'unhide' : 'hide'}
       </a>)
     </> : null}

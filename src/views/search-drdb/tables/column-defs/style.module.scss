@@ -40,6 +40,25 @@
   }
 }
 
+ul.potency {
+  text-align: left;
+  list-style-type: none;
+  margin: 0 auto;
+  padding-left: 0;
+  display: inline-block;
+  > li {
+    list-style-type: none;
+    .potency-type {
+      display: inline-block;
+      margin-right: .3em;
+    }
+    .potency-type-count {
+      float: right;
+      margin-left: 1em;
+    }
+  }
+}
+
 .data-availability {
   @include tooltip(".desc");
   font-size: 1.3rem;

@@ -23,7 +23,7 @@ function exportCellCumulativeCount({num, numNN}) {
 
 function CellCumulativeCount({num, numNN}) {
   return <>
-    {num}
+    {num && num.toLocaleString('en-US')}
     {numNN > 0 ? <>
       <br />
       <span className={classNames(
@@ -45,7 +45,7 @@ export default function useCumulativeCount({labels, skip, columns}) {
       }
       return new ColumnDef({
         name: 'cumulativeCount',
-        label: labels.cumulativeCount || '# Samples',
+        label: labels.cumulativeCount || '# Results',
         render: (num, row) => (
           <CellCumulativeCount
            num={num}

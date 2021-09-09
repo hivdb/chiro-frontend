@@ -10,8 +10,6 @@ import AbSuscResults from './tables/ab-susc-results';
 import VPSuscResults from './tables/vp-susc-results';
 import CPSuscResults from './tables/cp-susc-results';
 
-import AbSuscSummary from './summary/ab-susc-summary';
-
 import {useLastUpdate} from './hooks';
 import LocationParams from './hooks/location-params';
 
@@ -74,7 +72,6 @@ export default function SearchDRDBLayout() {
           <Header as={H2} id="mab-susc-results">
             MAb Susceptibility Data
           </Header>
-          <AbSuscSummary />
           <AbSuscResults />
         </Grid.Column>
       </Grid.Row> : null}

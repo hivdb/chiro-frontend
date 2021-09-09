@@ -33,6 +33,24 @@ PivotTableWrapper.propTypes = {
 };
 
 
+function cleanGroupBy(groupBy) {
+  groupBy = [...groupBy];
+  if (
+    groupBy.includes('isoAggkey') &&
+    !groupBy.includes('numMutations')
+  ) {
+    groupBy.push('numMutations');
+  }
+  else if (
+    !groupBy.includes('isoAggkey') &&
+    groupBy.includes('numMutations')
+  ) {
+    groupBy = groupBy.filter(key => key !== 'numMutations');
+  }
+  return groupBy.sort();
+}
+
+
 export default function PivotTableWrapper({
   id,
   cacheKey,
@@ -106,9 +124,14 @@ export default function PivotTableWrapper({
     [data, hide]
   );
 
+  const cleanedGroupBy = React.useMemo(
+    () => cleanGroupBy(curGroupBy),
+    [curGroupBy]
+  );
+
   const aggData = useAggregateData({
     data: tableData,
-    groupBy: curGroupBy,
+    groupBy: cleanedGroupBy,
     columnDefs: filteredColumnDefs
   });
   const numRows = aggData.length;
@@ -134,7 +157,7 @@ export default function PivotTableWrapper({
          {...props}
          className={style['pivot-table']}
          columnDefs={filteredColumnDefs}
-         cacheKey={`${cacheKey}__${hide}__${JSON.stringify(curGroupBy)}`}
+         cacheKey={`${cacheKey}__${hide}__${JSON.stringify(cleanedGroupBy)}`}
          data={aggData} />
       </div> : null}
     <FootNote hasNA={hasNA} hasNN={hasNN} footnoteMean={footnoteMean} />

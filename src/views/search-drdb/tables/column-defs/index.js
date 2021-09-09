@@ -61,7 +61,8 @@ function getColDefLookup({
       label: labels.numStudies || '# Publications',
       decorator: (_, {refName}) => (
         refName instanceof Array ? uniq(refName).length : 1
-      )
+      ),
+      render: n => n && n.toLocaleString('en-US')
     }),
     vaccineName: new ColumnDef({
       name: 'vaccineName',

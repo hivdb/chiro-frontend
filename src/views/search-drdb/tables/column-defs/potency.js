@@ -1,19 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
-import {aggPotency, aggPotencySD} from './agg-funcs';
+import {aggPotency, aggGeoMeanWeighted} from './agg-funcs';
 import style from './style.module.scss';
 
 
 export function comparePotency(potA, potB) {
-  if (potA.potencyType !== potB.potencyType) {
-    return potA.potencyType.localeCompare(potB.potencyType);
-  }
-  if (potA.potencyUnit !== potB.potencyUnit) {
-    return (potA.potencyUnit || '').localeCompare(potB.potencyUnit || '');
-  }
-  const potAnum = aggPotency(potA.potency, potA);
-  const potBnum = aggPotency(potB.potency, potB);
+  const potAnum = aggGeoMeanWeighted(potA.potency, potA.cumulativeCount);
+  const potBnum = aggGeoMeanWeighted(potB.potency, potB.cumulativeCount);
   if (potAnum === null || potAnum === undefined) {
     return 1;
   }
@@ -39,7 +35,7 @@ export function getPotencyCmp({potencyType, ineffective, equal = '='}) {
 
 export function formatPotency({
   potency, ineffective, potencyType,
-  potencyUnit, forceShowUnit, stdev
+  potencyUnit, forceShowUnit, potencySD
 }) {
   let number, suffix;
   const isICxx = /^IC\d+$/.test(potencyType);
@@ -66,11 +62,11 @@ export function formatPotency({
 
   return <>
     {prefix}{number}
-    {stdev && Math.abs(1 - stdev) > 1e-5 ? (
+    {potencySD && Math.abs(1 - potencySD) > 1e-5 ? (
       <span className={style['supplement-info']}>
         <span className={style['mul-div-sign']}>
           ×÷
-        </span>{stdev.toFixed(1)}
+        </span>{potencySD.toFixed(1)}
       </span>
     ) : null}
     {suffix}
@@ -79,51 +75,83 @@ export function formatPotency({
 
 
 function exportCellPotency({
-  potency,
-  potencyUnit,
-  potencyType,
-  ineffective,
-  stdev
+  potencyArray
 }) {
-  if (potency === undefined || potency === null) {
-    return {GeoMean: 'N.A.'};
-  }
-  else {
-    return {
-      Type: potencyType,
-      Cmp: getPotencyCmp({potencyType, ineffective}),
-      GeoMean: potency && potency.toFixed(1),
-      Unit: potencyUnit,
-      GSD: stdev && stdev.toFixed(1)
-    };
+  if (potencyArray.length > 0) {
+    const result = {};
+    for (const {
+      potencyType,
+      potency,
+      potencyUnit,
+      potencySD,
+      ineffective
+    } of potencyArray) {
+      result[`${potencyType} Cmp`] = getPotencyCmp({potencyType, ineffective});
+      result[`${potencyType} GeoMean`] = potency && potency.toFixed(1);
+      result[`${potencyType} Unit`] = potencyUnit;
+      result[`${potencyType} GSD`] = potencySD && potencySD.toFixed(1);
+    }
+    return result;
   }
 }
 
 
+CellPotency.propTypes = {
+  rxType: PropTypes.string.isRequired,
+  potencyArray: PropTypes.arrayOf(
+    PropTypes.shape({
+      potency: PropTypes.number.isRequired,
+      potencyType: PropTypes.string.isRequired,
+      ineffective: PropTypes.bool.isRequired,
+      potencyUnit: PropTypes.string,
+      potencySD: PropTypes.number.isRequired,
+      cumulativeCount: PropTypes.number.isRequired
+    }).isRequired
+  ).isRequired
+};
+
 function CellPotency({
-  potency,
-  potencyUnit,
-  potencyType,
   rxType,
-  ineffective,
-  stdev
+  potencyArray
 }) {
-  if (potency !== undefined && potency !== null) {
-    let displayPotType = true;
-    if (/^(conv|vacc)-plasma$/.test(rxType) && potencyType === 'NT50') {
-      displayPotType = false;
-    }
-    else if (rxType === 'antibody' && potencyType === 'IC50') {
-      displayPotType = false;
-    }
-    return <>
-      {displayPotType ? `${potencyType}: ` : null}
-      {formatPotency({potency, ineffective, potencyType, potencyUnit, stdev})}
-    </>;
-  }
-  else {
-    return <em>N.A.</em>;
-  }
+  const hasMultiple = potencyArray.length > 1;
+  return <ul className={style['potency']}>
+    {potencyArray.map(({
+      potency,
+      potencyType,
+      ineffective,
+      potencyUnit,
+      potencySD,
+      cumulativeCount
+    }) => {
+      let displayPotType = true;
+      if (!hasMultiple) {
+        if (/^(conv|vacc)-plasma$/.test(rxType) && potencyType === 'NT50') {
+          displayPotType = false;
+        }
+        else if (rxType === 'antibody' && potencyType === 'IC50') {
+          displayPotType = false;
+        }
+      }
+      return <li key={`${potencyType}$$${potencyUnit}`}>
+        {displayPotType ? `${potencyType}: ` : null}
+        {formatPotency({
+          potency,
+          potencyType,
+          ineffective,
+          potencyUnit,
+          potencySD
+        })}
+        {hasMultiple ? <span className={classNames(
+          style['potency-type-count'],
+          style['supplement-info']
+        )}>
+          {' '}(n={cumulativeCount && cumulativeCount.toLocaleString('en-US')})
+        </span> : null}
+      </li>;
+    })}
+    {potencyArray.length === 0 ? <li><em>N.A.</em></li> : null}
+  </ul>;
 }
 
 export default function usePotency({labels}) {
@@ -133,39 +161,14 @@ export default function usePotency({labels}) {
       label: labels.potency || 'Potency',
       exportLabel: 'Potency',
       decorator: aggPotency,
-      render: (potency, {
-        potencyUnit,
-        potencyType,
-        rxType,
-        ineffective,
-        ...row
+      render: (potencyArray, {
+        rxType
       }) => (
         <CellPotency
-         potencyUnit={potencyUnit}
-         potencyType={potencyType}
          rxType={rxType}
-         ineffective={
-           ineffective.every(ie =>
-             ie === 'experimental' ||
-             ie === 'both')
-         }
-         stdev={aggPotencySD(potency, row)}
-         potency={potency} />
+         potencyArray={potencyArray} />
       ),
-      exportCell: (potency, {
-        potencyUnit,
-        potencyType,
-        ineffective,
-        ...row
-      }) => exportCellPotency({
-        potencyUnit,
-        potencyType,
-        ineffective: ineffective.every(ie =>
-          ie === 'experimental' ||
-          ie === 'both'),
-        stdev: aggPotencySD(potency, row),
-        potency
-      }),
+      exportCell: potencyArray => exportCellPotency({potencyArray}),
       sort: rows => [...rows].sort(comparePotency)
     }),
     [labels.potency]

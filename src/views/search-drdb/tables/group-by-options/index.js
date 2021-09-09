@@ -9,6 +9,8 @@ import Checkbox from './checkbox';
 
 import style from './style.module.scss';
 
+const STATE_VERSION = 2;
+
 
 GroupByOptions.propTypes = {
   idPrefix: PropTypes.string.isRequired,
@@ -48,7 +50,9 @@ export default function GroupByOptions({
     ),
     [allColumnDefs, allGroupByOptions]
   );
-  const useGroupByOptionMap = createPersistedState(idPrefix);
+  const useGroupByOptionMap = createPersistedState(
+    `${idPrefix}v${STATE_VERSION}`
+  );
   const [
     groupByOptionMap,
     setGroupByOptionMap

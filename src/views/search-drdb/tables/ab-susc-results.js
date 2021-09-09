@@ -30,8 +30,6 @@ const INDIV_MUT_GROUP_BY = [
   'controlVarName',
   'isoAggkey',
   'numMutations',
-  'potencyType',
-  'potencyUnit',
   'rxType'
 ];
 
@@ -39,7 +37,6 @@ const COMBO_MUTS_COLUMNS = [
   'refName',
   'assayName',
   'section',
-  'controlVarName',
   'abNames',
   'controlVarName',
   'isoAggkey',
@@ -58,13 +55,10 @@ const COMBO_MUTS_LABELS = {
 const COMBO_MUTS_GROUP_BY = [
   'refName',
   'assayName',
-  'controlVarName',
   'abNames',
   'controlVarName',
   'isoAggkey',
   'numMutations',
-  'potencyType',
-  'potencyUnit',
   'rxType'
 ];
 

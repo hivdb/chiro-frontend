@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
-import {aggPotency, aggPotencySD} from './agg-funcs';
+import {aggControlPotency} from './agg-funcs';
 import {getPotencyCmp, formatPotency} from './potency';
 import style from './style.module.scss';
 
@@ -26,25 +26,10 @@ function getDisplay({
 }
 
 
-CellVariant.propTypes = {
-  varName: PropTypes.string,
-  potency: PropTypes.number,
-  potencyUnit: PropTypes.string,
-  potencyType: PropTypes.string,
-  enablePotency: PropTypes.bool,
-  ineffective: PropTypes.bool,
-  variantLookup: PropTypes.object
-};
-
-
 function exportCellVariant({
   varName,
-  potency,
-  potencyUnit,
-  potencyType,
-  stdev,
+  potencyArray,
   enablePotency,
-  ineffective,
   variantLookup
 }) {
   const result = {
@@ -54,25 +39,43 @@ function exportCellVariant({
     })
   };
   if (enablePotency) {
-    result['Potency Type'] = potencyType;
-    result['Potency Cmp'] = getPotencyCmp({potencyType, ineffective});
-    result['Potency GeoMean'] = potency && potency.toFixed(1);
-    result['Potency Unit'] = potencyUnit;
-    result['Potency GSD'] = stdev && stdev.toFixed(1);
-    return result;
+    for (const {
+      potencyType,
+      potency,
+      potencyUnit,
+      potencySD,
+      ineffective
+    } of potencyArray) {
+      result[`${potencyType} Cmp`] = getPotencyCmp({potencyType, ineffective});
+      result[`${potencyType} GeoMean`] = potency && potency.toFixed(1);
+      result[`${potencyType} Unit`] = potencyUnit;
+      result[`${potencyType} GSD`] = potencySD && potencySD.toFixed(1);
+    }
   }
-  else {
-    return result.Variant;
-  }
+  return result;
 }
+
+
+CellVariant.propTypes = {
+  varName: PropTypes.string,
+  potencyArray: PropTypes.arrayOf(
+    PropTypes.shape({
+      potency: PropTypes.number.isRequired,
+      potencyType: PropTypes.string.isRequired,
+      ineffective: PropTypes.bool.isRequired,
+      potencyUnit: PropTypes.string,
+      potencySD: PropTypes.number.isRequired
+    }).isRequired
+  ).isRequired,
+  enablePotency: PropTypes.bool,
+  variantLookup: PropTypes.object
+};
+
 
 function CellVariant({
   varName,
-  potency,
-  potencyUnit,
-  potencyType,
+  potencyArray,
   enablePotency,
-  ineffective,
   variantLookup
 }) {
   const isolateDisplay = getDisplay({
@@ -80,17 +83,26 @@ function CellVariant({
     variantLookup
   });
   return (
-    enablePotency && potency !== null && potency !== undefined ? <>
+    enablePotency && potencyArray.length > 0 ? <>
       {isolateDisplay}
       <div className={classNames(style['supplement-info'], style['small'])}>
-        {potencyType}{': '}
-        {formatPotency({
-          potency,
-          potencyType,
-          ineffective,
-          potencyUnit,
-          forceShowUnit: true
-        })}
+        <ul className={style.potency}>
+          {potencyArray.map(({
+            potency,
+            potencyType,
+            ineffective,
+            potencyUnit
+          }) => <li key={`${potencyType}$$${potencyUnit}`}>
+            {potencyType}{': '}
+            {formatPotency({
+              potency,
+              potencyType,
+              ineffective,
+              potencyUnit,
+              forceShowUnit: true
+            })}
+          </li>)}
+        </ul>
       </div>
     </> : isolateDisplay
   );
@@ -105,53 +117,22 @@ export function useControlVarName({labels, variantLookup, columns, skip}) {
       return new ColumnDef({
         name: 'controlVarName',
         label: labels.controlVarName || 'Control',
-        render: (varName, {
-          controlPotency,
-          potencyType,
-          potencyUnit,
-          ineffective,
-          cumulativeCount
-        }) => (
+        render: (varName, row) => (
           <CellVariant
            {...{
              varName,
-             potency: aggPotency(controlPotency, {cumulativeCount}),
-             potencyType,
-             potencyUnit,
+             potencyArray: aggControlPotency(null, row),
              variantLookup
            }}
-           enablePotency
-           ineffective={
-             ineffective.every(ie =>
-               ie === 'control' ||
-               ie === 'both')
-           } />
+           enablePotency />
         ),
-        exportCell: (varName, {
-          controlPotency,
-          potencyType,
-          potencyUnit,
-          ineffective,
-          cumulativeCount
-        }) => {
-          const avgPot = aggPotency(controlPotency, {cumulativeCount});
-          return exportCellVariant(
-            {
-              varName,
-              potency: avgPot,
-              stdev: aggPotencySD(avgPot, {
-                potency: controlPotency,
-                cumulativeCount
-              }),
-              potencyType,
-              potencyUnit,
-              variantLookup,
-              enablePotency: true,
-              ineffective: ineffective.every(ie =>
-                ie === 'control' ||
-              ie === 'both')
-            }
-          );
+        exportCell: (varName, row) => {
+          return exportCellVariant({
+            varName,
+            potencyArray: aggControlPotency(null, row),
+            variantLookup,
+            enablePotency: true
+          });
         }
       });
     },

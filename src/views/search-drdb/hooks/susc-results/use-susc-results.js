@@ -169,7 +169,11 @@ function usePrepareQuery({
           S.potency_type,
           S.control_potency,
           S.potency,
-          S.potency_unit,
+          CASE
+            WHEN S.potency_unit IS NOT NULL THEN S.potency_unit
+            WHEN S.potency_type LIKE 'IC%' THEN 'ng/ml'
+            ELSE NULL
+          END potency_unit,
           S.fold_cmp,
           S.fold,
           S.resistance_level as fb_resistance_level,
