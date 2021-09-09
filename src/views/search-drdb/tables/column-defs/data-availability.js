@@ -35,7 +35,7 @@ function CellDataAvailability({hasMultiple}) {
       <div className={style.desc}>
         {hasMultiple ?
           'Individual data points available' :
-          'Data published in only aggregate form'}
+          'Data published only in aggregate form'}
       </div>
     </div>
   );

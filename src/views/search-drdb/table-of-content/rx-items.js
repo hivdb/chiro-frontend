@@ -83,7 +83,9 @@ export default function RxItems({id, title, suscResults, loaded}) {
                 <ul>
                   {mutStats.indivFold.numExps > 0 ?
                     <li>
-                      <span className={style.title}>Individual form{': '}</span>
+                      <span className={style.title}>
+                        Individual sample data are available{': '}
+                      </span>
                       {' '}
                       {mutStats.indivFold.numExps.toLocaleString('en-US')}{' '}
                       {pluralize('result', mutStats.indivFold.numExps, false)}
@@ -98,7 +100,9 @@ export default function RxItems({id, title, suscResults, loaded}) {
                     </li> : null}
                   {mutStats.aggFold.numExps > 0 ?
                     <li>
-                      <span className={style.title}>Aggregate form{': '}</span>
+                      <span className={style.title}>
+                        Only aggregate sample data are available{': '}
+                      </span>
                       {' '}
                       {mutStats.aggFold.numExps.toLocaleString('en-US')}{' '}
                       {pluralize('result', mutStats.aggFold.numExps, false)}

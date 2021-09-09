@@ -14,7 +14,8 @@ const INDIV_MUT_COLUMNS = [
   'numStudies',
   'cumulativeCount',
   'potency',
-  'fold'
+  'fold',
+  'dataAvailability'
 ];
 
 const INDIV_MUT_LABELS = {
@@ -43,7 +44,8 @@ const COMBO_MUTS_COLUMNS = [
   'numStudies',
   'cumulativeCount',
   'potency',
-  'fold'
+  'fold',
+  'dataAvailability'
 ];
 
 const COMBO_MUTS_LABELS = {
