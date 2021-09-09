@@ -22,13 +22,11 @@ import {
 import Articles from '../../hooks/articles';
 import Antibodies from '../../hooks/antibodies';
 import Isolates from '../../hooks/isolates';
-import IsolateAggs, {compareIsolateAggs} from '../../hooks/isolate-aggs';
+import IsolateAggs from '../../hooks/isolate-aggs';
 import Variants from '../../hooks/variants';
 
 
 function getColDefLookup({
-  isolateAggLookup,
-  variantLookup,
   antibodyLookup,
   compareByAntibodies,
   labels = {}

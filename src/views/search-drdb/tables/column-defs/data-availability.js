@@ -44,7 +44,7 @@ function CellDataAvailability({hasMultiple}) {
 export default function useDataAvailability({labels, skip, columns}) {
   return React.useMemo(
     () => {
-      if (skip || !columns.includes('data-availability')) {
+      if (skip || !columns.includes('dataAvailability')) {
         return null;
       }
       return new ColumnDef({
