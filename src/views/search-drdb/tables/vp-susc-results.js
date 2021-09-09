@@ -1,4 +1,4 @@
-import useColumnDefs from './use-column-defs';
+import useColumnDefs from './column-defs';
 import useRenderSuscResults from './use-render-susc-results';
 
 import SuscResults from '../hooks/susc-results';

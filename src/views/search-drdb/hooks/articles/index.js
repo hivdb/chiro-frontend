@@ -13,6 +13,8 @@ function ArticlesProvider({children}) {
   const sql = `
     SELECT
       R.ref_name,
+      doi,
+      url,
       first_author,
       year
     FROM articles R

@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import shortenMutList from '../shorten-mutlist';
+import shortenMutList from '../../shorten-mutlist';
+import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
-import {formatPotency} from './cell-potency';
-import style from '../style.module.scss';
+import {formatPotency} from './potency';
+import style from './style.module.scss';
 
 
 function useIsolateDisplay({isoName, isolateLookup}) {
@@ -47,7 +48,7 @@ function useIsolateDisplay({isoName, isolateLookup}) {
 }
 
 
-export default function CellIsolate({
+function CellIsolate({
   isoName,
   potency,
   potencyUnit,
@@ -86,3 +87,35 @@ CellIsolate.propTypes = {
   ineffective: PropTypes.bool,
   isolateLookup: PropTypes.object
 };
+
+
+export function useInfectedIsoName({
+  labels,
+  columns,
+  isolateLookup,
+  compareByInfectedIsolate,
+  skip
+}) {
+  return React.useMemo(
+    () => {
+      if (skip || !columns.includes('infectedIsoName')) {
+        return null;
+      }
+      return new ColumnDef({
+        name: 'infectedIsoName',
+        label: labels.infectedIsoName || 'Infection (CP)',
+        render: isoName => (
+          <CellIsolate {...{isoName, isolateLookup}} />
+        ),
+        sort: rows => [...rows].sort(compareByInfectedIsolate)
+      });
+    },
+    [
+      columns,
+      compareByInfectedIsolate,
+      isolateLookup,
+      labels.infectedIsoName,
+      skip
+    ]
+  );
+}
