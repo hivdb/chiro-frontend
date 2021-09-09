@@ -1,5 +1,6 @@
 import useColumnDefs from './column-defs';
 import useRenderSuscResults from './use-render-susc-results';
+import colDefStyle from './column-defs/style.module.scss';
 
 import SuscResults from '../hooks/susc-results';
 import LocationParams from '../hooks/location-params';
@@ -28,7 +29,7 @@ const INDIV_MUT_LABELS = {
     NT50 Dilution{' '}
     <span className={style['nowrap']}>
       (GeoMean
-      <span className={style['mul-div-sign']}>
+      <span className={colDefStyle['mul-div-sign']}>
         ×÷
       </span>GSD)
     </span>

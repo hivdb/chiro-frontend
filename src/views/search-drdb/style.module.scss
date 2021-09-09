@@ -29,33 +29,6 @@
   color: rgba(0, 0, 0, .4);
 }
 
-.mul-div-sign {
-  position: relative;
-  display: inline-block;
-  width: .5em;
-  height: 1.2em;
-  vertical-align: middle;
-  text-indent: 200%;
-  overflow: hidden;
-  &::before, &::after {
-    position: absolute;
-    display: block;
-    width: .5em;
-    text-indent: 0;
-    text-align: center;
-    left: 0;
-  }
-  &::before {
-    content: '×';
-    top: -.25em;
-  }
-  &::after {
-    content: '÷';
-    left: -.03em;
-    top: .25em;
-  }
-}
-
 .nowrap {
   white-space: nowrap;
 }
