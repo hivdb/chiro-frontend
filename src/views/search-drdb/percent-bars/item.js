@@ -77,7 +77,7 @@ export default function VariantRxItem({
      } : null
       }
      className={style[`percent-bar-item_${styleType}`]}
-     title={<>{shortDisplay} (n={numExp.toLocaleString('en-US')})</>}
+     title={<>{shortDisplay} (n={numExp && numExp.toLocaleString('en-US')})</>}
      percent={pcnt}>
       {React.createElement(descComponent, {
         item, className: style['percent-bar-desc']

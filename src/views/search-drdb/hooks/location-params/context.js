@@ -28,23 +28,21 @@ function LocationParamsProvider({children}) {
       } = {}
     }
   } = match;
-  const queryRef = React.useRef(loc.query);
 
   const onChange = React.useCallback(
     (action, value, clearAction = false) => {
       const query = buildQuery(
         action,
         value,
-        clearAction ? {} : queryRef.current
+        clearAction ? {} : loc.query
       );
-      queryRef.current = query;
 
       router.push({
         pathname: '/search-drdb/',
         query
       });
     },
-    [router]
+    [router, loc.query]
   );
 
   const contextValue = React.useMemo(
