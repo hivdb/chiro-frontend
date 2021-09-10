@@ -16,22 +16,25 @@ function InfectedVariantsProvider({children}) {
 
   const sql = `
     SELECT
-      var_name,
+      infected_var_name AS var_name,
       (
         SELECT GROUP_CONCAT(synonym, "${LIST_JOIN_UNIQ}")
         FROM variant_synonyms VS
         WHERE V.var_name=VS.var_name
         ORDER BY LENGTH(synonym)
       ) AS synonyms
-    FROM variants V
-    WHERE
-      EXISTS (
-        SELECT 1 FROM susc_summary S
-        WHERE
-          S.aggregate_by = 'infected_variant' AND
-          S.infected_var_name = V.var_name
-      )
-    ORDER BY var_name
+    FROM (
+      SELECT DISTINCT infected_var_name FROM susc_summary
+      WHERE
+        aggregate_by = 'infected_variant' AND
+        infected_var_name IS NOT NULL
+    ) S
+    LEFT JOIN variants V ON
+      S.infected_var_name = V.var_name
+    ORDER BY CASE
+      WHEN infected_var_name = 'Wild Type' THEN '_WT'
+      ELSE infected_var_name
+    END
   `;
 
   const {

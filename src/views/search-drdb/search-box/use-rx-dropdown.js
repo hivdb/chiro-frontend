@@ -1,6 +1,7 @@
 import React from 'react';
 import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
+import capitalize from 'lodash/capitalize';
 import escapeRegExp from 'lodash/escapeRegExp';
 
 import Antibodies from '../hooks/antibodies';
@@ -102,7 +103,7 @@ export default function useRxDropdown() {
           },
           ...(paramInfectedVarName && paramInfectedVarName !== 'any' ? [{
             key: paramInfectedVarName,
-            text: paramInfectedVarName,
+            text: `${capitalize(paramInfectedVarName)} infection`,
             value: paramInfectedVarName,
             type: CP
           }] : []),
@@ -177,7 +178,8 @@ export default function useRxDropdown() {
                   key: varName,
                   text: `${
                     synonyms.length > 0 ?
-                      `${varName} (${synonyms[0]})` : varName
+                      `${capitalize(varName)} (${synonyms[0]})` :
+                      capitalize(varName)
                   } infection`,
                   value: varName,
                   type: CP,

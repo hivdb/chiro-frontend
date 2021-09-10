@@ -1,4 +1,5 @@
 import uniq from 'lodash/uniq';
+import capitalize from 'lodash/capitalize';
 import {csvStringify, csvParse} from 'sierra-frontend/dist/utils/csv';
 
 import style from '../style.module.scss';
@@ -46,7 +47,7 @@ export default function prepareItems({
       .map(({varName, synonyms}) => ({
         name: varName,
         type: TYPE_INFVAR,
-        shortDisplay: <>{varName} infection</>,
+        shortDisplay: <>{capitalize(varName)} infection</>,
         fullDisplay: <>
           Convalescent plasma from <strong>{varName}</strong>{' '}
           {synonyms.length > 0 ? <>

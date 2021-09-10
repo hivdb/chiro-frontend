@@ -12,8 +12,11 @@ function getDisplay({
   varName,
   variantLookup
 }) {
-  if (!(varName in variantLookup)) {
+  if (!varName) {
     return '?';
+  }
+  if (!(varName in variantLookup)) {
+    return varName;
   }
   const synonyms = variantLookup[varName]?.synonyms;
 
@@ -78,13 +81,13 @@ function CellVariant({
   enablePotency,
   variantLookup
 }) {
-  const isolateDisplay = getDisplay({
+  const varDisplay = getDisplay({
     varName,
     variantLookup
   });
   return (
     enablePotency && potencyArray.length > 0 ? <>
-      {isolateDisplay}
+      {varDisplay}
       <div className={classNames(style['supplement-info'], style['small'])}>
         <ul className={style.potency}>
           {potencyArray.map(({
@@ -104,9 +107,38 @@ function CellVariant({
           </li>)}
         </ul>
       </div>
-    </> : isolateDisplay
+    </> : varDisplay
   );
 }
+
+export function useInfectedVarName({labels, variantLookup, columns, skip}) {
+  return React.useMemo(
+    () => {
+      if (skip || !columns.includes('infectedVarName')) {
+        return null;
+      }
+      return new ColumnDef({
+        name: 'infectedVarName',
+        label: labels.infectedVarName || 'Infection (CP)',
+        render: (varName) => (
+          <CellVariant
+           {...{
+             varName,
+             variantLookup
+           }} />
+        ),
+        exportCell: (varName) => {
+          return exportCellVariant({
+            varName,
+            variantLookup
+          });
+        }
+      });
+    },
+    [columns, labels.infectedVarName, skip, variantLookup]
+  );
+}
+
 
 export function useControlVarName({labels, variantLookup, columns, skip}) {
   return React.useMemo(

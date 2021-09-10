@@ -6,8 +6,10 @@ import useFold from './fold';
 import CellAssay from './cell-assay';
 import usePotency from './potency';
 import CellSection from './cell-section';
-import {useInfectedIsoName} from './isolate';
-import {useControlVarName} from './variant';
+import {
+  useInfectedVarName,
+  useControlVarName
+} from './variant';
 import useIsoAggkey from './isolate-agg';
 import useRefName from './reference';
 import CellAntibodies from './cell-antibodies';
@@ -150,7 +152,7 @@ export default function useColumnDefs({
 
   const refName = useRefName(commonArgs);
   const controlVarName = useControlVarName(commonArgs);
-  const infectedIsoName = useInfectedIsoName(commonArgs);
+  const infectedVarName = useInfectedVarName(commonArgs);
   const isoAggkey = useIsoAggkey(commonArgs);
   const cumulativeCount = useCumulativeCount(commonArgs);
   const potency = usePotency(commonArgs);
@@ -161,7 +163,7 @@ export default function useColumnDefs({
     () => ({
       refName,
       controlVarName,
-      infectedIsoName,
+      infectedVarName,
       isoAggkey,
       cumulativeCount,
       potency,
@@ -171,7 +173,7 @@ export default function useColumnDefs({
     [
       refName,
       controlVarName,
-      infectedIsoName,
+      infectedVarName,
       isoAggkey,
       cumulativeCount,
       potency,
