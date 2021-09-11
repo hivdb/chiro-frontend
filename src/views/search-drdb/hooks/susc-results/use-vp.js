@@ -18,6 +18,7 @@ function usePrepareQuery({vaccineName, skip}) {
 
       if (!skip && !isPending) {
         addColumns.push("'vacc-plasma' AS rx_type");
+        addColumns.push("subject_species");
         addColumns.push('vaccine_name');
         addColumns.push('timing');
         const betweens = config.monthRanges
@@ -50,6 +51,9 @@ function usePrepareQuery({vaccineName, skip}) {
           JOIN rx_vacc_plasma RXVP ON
             S.ref_name = RXVP.ref_name AND
             S.rx_name = RXVP.rx_name
+          LEFT JOIN subjects SUB ON
+            RXVP.ref_name = SUB.ref_name AND
+            RXVP.subject_name = SUB.subject_name
         `);
 
         if (vaccineName && vaccineName !== 'any') {

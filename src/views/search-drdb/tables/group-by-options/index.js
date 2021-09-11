@@ -96,11 +96,11 @@ export default function GroupByOptions({
         colDef => (
           <li
            key={colDef.name}
-           data-checked={groupByOptionMap[colDef.name]}>
+           data-checked={!!groupByOptionMap[colDef.name]}>
             <Checkbox
              idPrefix={idPrefix}
              columnDef={colDef}
-             checked={groupByOptionMap[colDef.name]}
+             checked={!!groupByOptionMap[colDef.name]}
              onChange={handleChange} />
           </li>
         )

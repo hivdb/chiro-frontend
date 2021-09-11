@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import union from 'lodash/union';
+import difference from 'lodash/difference';
+import intersection from 'lodash/intersection';
 import {
   columnDefShape
 } from 'sierra-frontend/dist/components/simple-table/prop-types';
@@ -24,7 +27,10 @@ PivotTableWrapper.propTypes = {
   data: PropTypes.array,
   groupBy: PropTypes.arrayOf(
     PropTypes.string.isRequired
-  ),
+  ).isRequired,
+  defaultGroupBy: PropTypes.arrayOf(
+    PropTypes.string.isRequired
+  ).isRequired,
   hideNN: PropTypes.bool,
   footnoteMean: PropTypes.bool,
   columnDefs: PropTypes.arrayOf(
@@ -33,21 +39,37 @@ PivotTableWrapper.propTypes = {
 };
 
 
-function cleanGroupBy(groupBy) {
-  groupBy = [...groupBy];
-  if (
-    groupBy.includes('isoAggkey') &&
-    !groupBy.includes('numMutations')
-  ) {
-    groupBy.push('numMutations');
-  }
-  else if (
-    !groupBy.includes('isoAggkey') &&
-    groupBy.includes('numMutations')
-  ) {
-    groupBy = groupBy.filter(key => key !== 'numMutations');
-  }
-  return groupBy.sort();
+function useCleanGroupBy(curGroupBy, validOptions) {
+  return React.useMemo(
+    () => {
+      let groupBy = intersection(curGroupBy, validOptions);
+      if (groupBy.includes('isoAggkey')) {
+        groupBy = union(groupBy, ['numMutations']);
+      }
+      else {
+        groupBy = difference(groupBy, ['numMutations']);
+      }
+      return groupBy.sort();
+    },
+    [curGroupBy, validOptions]
+  );
+}
+
+
+function useCleanColumnDefs(columnDefs, curGroupBy, validOptions) {
+  return React.useMemo(
+    () => {
+      const removeCols = difference(validOptions, curGroupBy);
+      if (removeCols.includes('refName')) {
+        removeCols.push('section');
+      }
+      else {
+        removeCols.push('numStudies');
+      }
+      return columnDefs.filter(({name}) => !removeCols.includes(name));
+    },
+    [columnDefs, curGroupBy, validOptions]
+  );
 }
 
 
@@ -56,13 +78,14 @@ export default function PivotTableWrapper({
   cacheKey,
   data,
   groupBy,
+  defaultGroupBy,
   hideNN = false,
   footnoteMean = false,
   columnDefs,
   ...props
 }) {
   const pivotTableCtlRef = React.useRef();
-  const [curGroupBy, setCurGroupBy] = React.useState(groupBy);
+  const [curGroupBy, setCurGroupBy] = React.useState(defaultGroupBy);
   const [hide, setHide] = React.useState(hideNN);
 
   const setLoading = React.useCallback(
@@ -104,20 +127,6 @@ export default function PivotTableWrapper({
     d.controlPotency === null || d.potency === null
   ));
 
-  const filteredColumnDefs = React.useMemo(
-    () => {
-      const removeCols = groupBy.filter(name => !curGroupBy.includes(name));
-      if (removeCols.includes('refName')) {
-        removeCols.push('section');
-      }
-      else {
-        removeCols.push('numStudies');
-      }
-      return columnDefs.filter(({name}) => !removeCols.includes(name));
-    },
-    [columnDefs, curGroupBy, groupBy]
-  );
-
   const tableData = React.useMemo(
     () => (
       hide ? data.filter(
@@ -126,16 +135,13 @@ export default function PivotTableWrapper({
     ),
     [data, hide]
   );
-
-  const cleanedGroupBy = React.useMemo(
-    () => cleanGroupBy(curGroupBy),
-    [curGroupBy]
-  );
+  const cleanedGroupBy = useCleanGroupBy(curGroupBy, groupBy);
+  const cleanedColumnDefs = useCleanColumnDefs(columnDefs, curGroupBy, groupBy);
 
   const aggData = useAggregateData({
     data: tableData,
     groupBy: cleanedGroupBy,
-    columnDefs: filteredColumnDefs
+    columnDefs: cleanedColumnDefs
   });
   const numRows = aggData.length;
 
@@ -145,7 +151,7 @@ export default function PivotTableWrapper({
      onChange={handleChangeGroupBy}
      allColumnDefs={columnDefs}
      allGroupByOptions={groupBy}
-     defaultGroupByOptions={groupBy} />
+     defaultGroupByOptions={defaultGroupBy} />
     <HeadNote
      numRows={numRows}
      numExps={numExps}
@@ -159,7 +165,7 @@ export default function PivotTableWrapper({
         <SimpleTable
          {...props}
          className={style['pivot-table']}
-         columnDefs={filteredColumnDefs}
+         columnDefs={cleanedColumnDefs}
          cacheKey={`${cacheKey}__${hide}__${JSON.stringify(cleanedGroupBy)}`}
          data={aggData} />
       </div> : null}

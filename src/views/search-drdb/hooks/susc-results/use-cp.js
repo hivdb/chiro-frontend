@@ -19,6 +19,7 @@ function usePrepareQuery({infectedVarName, skip}) {
 
       if (!skip && !isPending) {
         addColumns.push("'conv-plasma' AS rx_type");
+        addColumns.push("subject_species");
         addColumns.push('RXCP.infected_iso_name');
         addColumns.push(`
           CASE
@@ -82,6 +83,9 @@ function usePrepareQuery({infectedVarName, skip}) {
           JOIN rx_conv_plasma RXCP ON
             S.ref_name = RXCP.ref_name AND
             S.rx_name = RXCP.rx_name
+          LEFT JOIN subjects SUB ON
+            RXCP.ref_name = SUB.ref_name AND
+            RXCP.subject_name = SUB.subject_name
           LEFT JOIN isolates INFECTED_ISO ON
             INFECTED_ISO.iso_name = RXCP.infected_iso_name
           LEFT JOIN variants INFECTED_VAR ON

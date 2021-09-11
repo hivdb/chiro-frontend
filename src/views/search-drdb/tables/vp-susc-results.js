@@ -13,6 +13,7 @@ const INDIV_MUT_COLUMNS = [
   'vaccineName',
   'dosage',
   'timingRange',
+  'subjectSpecies',
   'controlVarName',
   'isoAggkey',
   'numStudies',
@@ -49,6 +50,19 @@ const INDIV_MUT_GROUP_BY = [
   'vaccineName',
   'dosage',
   'timingRange',
+  'subjectSpecies',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
+  'rxType'
+];
+
+const INDIV_MUT_DEFAULT_GROUP_BY = [
+  'refName',
+  'assayName',
+  'vaccineName',
+  'dosage',
+  'timingRange',
   'controlVarName',
   'isoAggkey',
   'numMutations',
@@ -62,6 +76,7 @@ const COMBO_MUTS_COLUMNS = [
   'vaccineName',
   'dosage',
   'timingRange',
+  'subjectSpecies',
   'controlVarName',
   'isoAggkey',
   'numStudies',
@@ -93,6 +108,19 @@ const COMBO_MUTS_LABELS = {
 };
 
 const COMBO_MUTS_GROUP_BY = [
+  'refName',
+  'assayName',
+  'vaccineName',
+  'dosage',
+  'timingRange',
+  'subjectSpecies',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
+  'rxType'
+];
+
+const COMBO_MUTS_DEFAULT_GROUP_BY = [
   'refName',
   'assayName',
   'vaccineName',
@@ -133,8 +161,10 @@ export default function VPSuscResults() {
     suscResults,
     indivMutColumnDefs,
     indivMutGroupBy: INDIV_MUT_GROUP_BY,
+    indivMutDefaultGroupBy: INDIV_MUT_DEFAULT_GROUP_BY,
     comboMutsColumnDefs,
     comboMutsGroupBy: COMBO_MUTS_GROUP_BY,
+    comboMutsDefaultGroupBy: COMBO_MUTS_DEFAULT_GROUP_BY,
     footnoteMean: true
   });
 }

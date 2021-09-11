@@ -25,21 +25,26 @@ CellReference.propTypes = {
 };
 
 
-export default function useRefName({labels, articleLookup}) {
+export default function useRefName({labels, articleLookup, skip, columns}) {
   return React.useMemo(
-    () => new ColumnDef({
-      name: 'refName',
-      label: labels.refName || 'Reference',
-      render: refName => (
-        <CellReference
-         refName={refName}
-         displayName={articleLookup[refName]?.displayName} />
-      ),
-      exportCell: refName => ({
-        '': refName,
-        DOI: articleLookup[refName]?.doi || articleLookup[refName]?.url
-      })
-    }),
-    [articleLookup, labels.refName]
+    () => {
+      if (skip || !columns.includes('refName')) {
+        return null;
+      }
+      return new ColumnDef({
+        name: 'refName',
+        label: labels.refName || 'Reference',
+        render: refName => (
+          <CellReference
+           refName={refName}
+           displayName={articleLookup[refName]?.displayName} />
+        ),
+        exportCell: refName => ({
+          '': refName,
+          DOI: articleLookup[refName]?.doi || articleLookup[refName]?.url
+        })
+      });
+    },
+    [articleLookup, columns, labels.refName, skip]
   );
 }

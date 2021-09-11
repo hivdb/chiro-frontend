@@ -69,7 +69,7 @@ CellVariant.propTypes = {
       potencyUnit: PropTypes.string,
       potencySD: PropTypes.number.isRequired
     }).isRequired
-  ).isRequired,
+  ),
   enablePotency: PropTypes.bool,
   variantLookup: PropTypes.object
 };

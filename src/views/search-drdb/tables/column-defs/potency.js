@@ -150,23 +150,28 @@ function CellPotency({
   </ul>;
 }
 
-export default function usePotency({labels}) {
+export default function usePotency({labels, columns, skip}) {
   return React.useMemo(
-    () => new ColumnDef({
-      name: 'potency',
-      label: labels.potency || 'Potency',
-      exportLabel: 'Potency',
-      decorator: aggPotency,
-      render: (potencyArray, {
-        rxType
-      }) => (
-        <CellPotency
-         rxType={rxType}
-         potencyArray={potencyArray} />
-      ),
-      exportCell: potencyArray => exportCellPotency({potencyArray}),
-      sort: rows => [...rows].sort(comparePotency)
-    }),
-    [labels.potency]
+    () => {
+      if (skip || !columns.includes('potency')) {
+        return null;
+      }
+      return new ColumnDef({
+        name: 'potency',
+        label: labels.potency || 'Potency',
+        exportLabel: 'Potency',
+        decorator: aggPotency,
+        render: (potencyArray, {
+          rxType
+        }) => (
+          <CellPotency
+           rxType={rxType}
+           potencyArray={potencyArray} />
+        ),
+        exportCell: potencyArray => exportCellPotency({potencyArray}),
+        sort: rows => [...rows].sort(comparePotency)
+      });
+    },
+    [columns, labels.potency, skip]
   );
 }

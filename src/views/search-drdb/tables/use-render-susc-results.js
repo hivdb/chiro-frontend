@@ -18,8 +18,10 @@ export default function useRenderSuscResults({
   suscResults,
   indivMutColumnDefs,
   indivMutGroupBy,
+  indivMutDefaultGroupBy,
   comboMutsColumnDefs,
-  comboMutsGroupBy
+  comboMutsGroupBy,
+  comboMutsDefaultGroupBy
 }) {
 
   const suscResultsBySection = useSeparateSuscResults({
@@ -44,6 +46,7 @@ export default function useRenderSuscResults({
              hideNN={hideNN}
              columnDefs={indivMutColumnDefs}
              groupBy={indivMutGroupBy}
+             defaultGroupBy={indivMutDefaultGroupBy}
              footnoteMean={footnoteMean}
              data={suscResultsBySection.indivMut} /> : null
         );
@@ -55,6 +58,7 @@ export default function useRenderSuscResults({
              hideNN={hideNN}
              columnDefs={comboMutsColumnDefs}
              groupBy={comboMutsGroupBy}
+             defaultGroupBy={comboMutsDefaultGroupBy}
              footnoteMean={footnoteMean}
              data={suscResultsBySection.comboMuts} /> : null
         );
@@ -96,8 +100,10 @@ export default function useRenderSuscResults({
       hideNN,
       indivMutColumnDefs,
       indivMutGroupBy,
+      indivMutDefaultGroupBy,
       comboMutsColumnDefs,
       comboMutsGroupBy,
+      comboMutsDefaultGroupBy,
       footnoteMean
     ]
   );

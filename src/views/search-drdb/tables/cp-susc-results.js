@@ -12,6 +12,7 @@ const INDIV_MUT_COLUMNS = [
   'section',
   'infectedVarName',
   'timingRange',
+  'subjectSpecies',
   // 'severity',
   'controlVarName',
   'isoAggkey',
@@ -47,7 +48,18 @@ const INDIV_MUT_GROUP_BY = [
   'assayName',
   'infectedVarName',
   'timingRange',
-  // 'severity',
+  'subjectSpecies',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
+  'rxType'
+];
+
+const INDIV_MUT_DEFAULT_GROUP_BY = [
+  'refName',
+  'assayName',
+  'infectedVarName',
+  'timingRange',
   'controlVarName',
   'isoAggkey',
   'numMutations',
@@ -60,6 +72,7 @@ const COMBO_MUTS_COLUMNS = [
   'section',
   'infectedVarName',
   'timingRange',
+  'subjectSpecies',
   // 'severity',
   'controlVarName',
   'isoAggkey',
@@ -95,7 +108,19 @@ const COMBO_MUTS_GROUP_BY = [
   'assayName',
   'infectedVarName',
   'timingRange',
+  'subjectSpecies',
   // 'severity',
+  'controlVarName',
+  'isoAggkey',
+  'numMutations',
+  'rxType'
+];
+
+const COMBO_MUTS_DEFAULT_GROUP_BY = [
+  'refName',
+  'assayName',
+  'infectedVarName',
+  'timingRange',
   'controlVarName',
   'isoAggkey',
   'numMutations',
@@ -131,8 +156,10 @@ export default function CPSuscResults() {
     suscResults,
     indivMutColumnDefs,
     indivMutGroupBy: INDIV_MUT_GROUP_BY,
+    indivMutDefaultGroupBy: INDIV_MUT_DEFAULT_GROUP_BY,
     comboMutsColumnDefs,
     comboMutsGroupBy: COMBO_MUTS_GROUP_BY,
+    comboMutsDefaultGroupBy: COMBO_MUTS_DEFAULT_GROUP_BY,
     footnoteMean: true
   });
 }

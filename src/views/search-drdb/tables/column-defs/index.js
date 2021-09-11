@@ -1,21 +1,5 @@
 import React from 'react';
-import uniq from 'lodash/uniq';
-import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
-import useFold from './fold';
-import CellAssay from './cell-assay';
-import usePotency from './potency';
-import CellSection from './cell-section';
-import {
-  useInfectedVarName,
-  useControlVarName
-} from './variant';
-import useIsoAggkey from './isolate-agg';
-import useRefName from './reference';
-import CellAntibodies from './cell-antibodies';
-import CellRLevel from './cell-resistance-level';
-import useCumulativeCount from './cumulative-count';
-import useDataAvailability from './data-availability';
 import {
   useCompareSuscResultsByInfectedIsolate,
   useCompareSuscResultsByAntibodies
@@ -27,74 +11,17 @@ import Isolates from '../../hooks/isolates';
 import IsolateAggs from '../../hooks/isolate-aggs';
 import Variants from '../../hooks/variants';
 
-
-function getColDefLookup({
-  antibodyLookup,
-  compareByAntibodies,
-  labels = {}
-}) {
-  const lookup = {
-    assayName: new ColumnDef({
-      name: 'assayName',
-      label: labels.assayName || 'Assay',
-      render: assayName => (
-        <CellAssay assayName={assayName} />
-      )
-    }),
-    abNames: new ColumnDef({
-      name: 'abNames',
-      label: labels.abNames || 'Antibodies',
-      render: abNames => <CellAntibodies {...{abNames, antibodyLookup}} />,
-      sort: rows => [...rows].sort(compareByAntibodies)
-    }),
-    section: new ColumnDef({
-      name: 'section',
-      label: labels.section,
-      render: section => <CellSection {...{section}} />,
-      decorator: section => (
-        section instanceof Array ?
-          uniq(section)
-            .sort()
-            .join('; ') : section
-      )
-    }),
-    numStudies: new ColumnDef({
-      name: 'numStudies',
-      label: labels.numStudies || '# Publications',
-      decorator: (_, {refName}) => (
-        refName instanceof Array ? uniq(refName).length : 1
-      ),
-      render: n => n && n.toLocaleString('en-US')
-    }),
-    vaccineName: new ColumnDef({
-      name: 'vaccineName',
-      label: labels.vaccineName || 'Vaccine'
-    }),
-    timing: new ColumnDef({
-      name: 'timing',
-      label: labels.timing
-    }),
-    timingRange: new ColumnDef({
-      name: 'timingRange',
-      label: labels.timingRange,
-      exportCell: cellData => `${cellData}m`
-    }),
-    dosage: new ColumnDef({
-      name: 'dosage',
-      label: labels.dosage
-    }),
-    severity: new ColumnDef({
-      name: 'severity',
-      label: labels.severity
-    }),
-    resistanceLevel: new ColumnDef({
-      name: 'resistanceLevel',
-      label: labels.resistanceLevel,
-      render: resistanceLevel => <CellRLevel rLevel={resistanceLevel} />
-    })
-  };
-  return lookup;
-}
+import useFold from './fold';
+import usePotency from './potency';
+import {
+  useInfectedVarName,
+  useControlVarName
+} from './variant';
+import useIsoAggkey from './isolate-agg';
+import useRefName from './reference';
+import useCumulativeCount from './cumulative-count';
+import useDataAvailability from './data-availability';
+import useSmallColumns from './small-columns';
 
 
 export default function useColumnDefs({
@@ -158,59 +85,41 @@ export default function useColumnDefs({
   const potency = usePotency(commonArgs);
   const fold = useFold(commonArgs);
   const dataAvailability = useDataAvailability(commonArgs);
-
-  const lookup = React.useMemo(
-    () => ({
-      refName,
-      controlVarName,
-      infectedVarName,
-      isoAggkey,
-      cumulativeCount,
-      potency,
-      fold,
-      dataAvailability
-    }),
-    [
-      refName,
-      controlVarName,
-      infectedVarName,
-      isoAggkey,
-      cumulativeCount,
-      potency,
-      fold,
-      dataAvailability
-    ]
-  );
+  const smallColumns = useSmallColumns(commonArgs);
 
   return React.useMemo(
     () => {
       if (skip) {
         return [];
       }
-      const oldLookup = getColDefLookup({
-        antibodyLookup,
-        isolateLookup,
-        isolateAggLookup,
-        variantLookup,
-        compareByAntibodies,
-        compareByInfectedIsolate,
-        labels
-      });
+      const lookup = {
+        refName,
+        controlVarName,
+        infectedVarName,
+        isoAggkey,
+        cumulativeCount,
+        potency,
+        fold,
+        dataAvailability,
+        ...smallColumns
+      };
+
       return columns.map(
-        name => lookup[name] || oldLookup[name]
+        name => lookup[name]
       ).filter(cd => cd);
     },
     [
-      skip,
-      antibodyLookup,
-      isolateLookup,
-      isolateAggLookup,
-      variantLookup,
-      compareByAntibodies,
-      compareByInfectedIsolate,
       columns,
-      labels,
-      lookup
+      controlVarName,
+      cumulativeCount,
+      dataAvailability,
+      fold,
+      infectedVarName,
+      isoAggkey,
+      potency,
+      refName,
+      skip,
+      smallColumns
     ]
   );
 }

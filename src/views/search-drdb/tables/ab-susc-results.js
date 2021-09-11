@@ -94,7 +94,9 @@ export default function AbSuscResults() {
     suscResults,
     indivMutColumnDefs,
     indivMutGroupBy: INDIV_MUT_GROUP_BY,
+    indivMutDefaultGroupBy: INDIV_MUT_GROUP_BY, // currently same as GROUP_BY
     comboMutsColumnDefs,
-    comboMutsGroupBy: COMBO_MUTS_GROUP_BY
+    comboMutsGroupBy: COMBO_MUTS_GROUP_BY,
+    comboMutsDefaultGroupBy: COMBO_MUTS_GROUP_BY // currently same as GROUP_BY
   });
 }
