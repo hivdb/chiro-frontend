@@ -18,7 +18,14 @@ function usePrepareQuery({vaccineName, skip}) {
 
       if (!skip && !isPending) {
         addColumns.push("'vacc-plasma' AS rx_type");
-        addColumns.push("subject_species");
+        addColumns.push('subject_species');
+        addColumns.push('infected_iso_name');
+        addColumns.push(`
+          CASE
+            WHEN INFECTED_VAR.as_wildtype IS TRUE THEN 'Wild Type'
+            ELSE INFECTED_VAR.var_name
+          END AS infected_var_name
+        `);
         addColumns.push('vaccine_name');
         addColumns.push('timing');
         const betweens = config.monthRanges
@@ -54,6 +61,10 @@ function usePrepareQuery({vaccineName, skip}) {
           LEFT JOIN subjects SUB ON
             RXVP.ref_name = SUB.ref_name AND
             RXVP.subject_name = SUB.subject_name
+          LEFT JOIN isolates INFECTED_ISO ON
+            INFECTED_ISO.iso_name = RXVP.infected_iso_name
+          LEFT JOIN variants INFECTED_VAR ON
+            INFECTED_ISO.var_name = INFECTED_VAR.var_name
         `);
 
         if (vaccineName && vaccineName !== 'any') {

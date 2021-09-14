@@ -10,6 +10,7 @@ const INDIV_MUT_COLUMNS = [
   'refName',
   'assayName',
   'section',
+  'infectedVarName',
   'vaccineName',
   'dosage',
   'timingRange',
@@ -25,6 +26,7 @@ const INDIV_MUT_COLUMNS = [
 
 const INDIV_MUT_LABELS = {
   isoAggkey: 'Mutation',
+  infectedVarName: 'Pre-vaccine Infection',
   dosage: '# Shots',
   timingRange: 'Months',
   potency: <>
@@ -47,6 +49,7 @@ const INDIV_MUT_LABELS = {
 const INDIV_MUT_GROUP_BY = [
   'refName',
   'assayName',
+  'infectedVarName',
   'vaccineName',
   'dosage',
   'timingRange',
@@ -60,6 +63,7 @@ const INDIV_MUT_GROUP_BY = [
 const INDIV_MUT_DEFAULT_GROUP_BY = [
   'refName',
   'assayName',
+  'infectedVarName',
   'vaccineName',
   'dosage',
   'timingRange',
@@ -73,6 +77,7 @@ const COMBO_MUTS_COLUMNS = [
   'refName',
   'assayName',
   'section',
+  'infectedVarName',
   'vaccineName',
   'dosage',
   'timingRange',
@@ -88,6 +93,7 @@ const COMBO_MUTS_COLUMNS = [
 
 const COMBO_MUTS_LABELS = {
   isoAggkey: 'Variant',
+  infectedVarName: 'Pre-vaccine Infection',
   dosage: '# Shots',
   timingRange: 'Months',
   potency: <>
@@ -110,6 +116,7 @@ const COMBO_MUTS_LABELS = {
 const COMBO_MUTS_GROUP_BY = [
   'refName',
   'assayName',
+  'infectedVarName',
   'vaccineName',
   'dosage',
   'timingRange',
@@ -123,6 +130,7 @@ const COMBO_MUTS_GROUP_BY = [
 const COMBO_MUTS_DEFAULT_GROUP_BY = [
   'refName',
   'assayName',
+  'infectedVarName',
   'vaccineName',
   'dosage',
   'timingRange',

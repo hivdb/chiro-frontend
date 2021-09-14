@@ -1,19 +1,22 @@
 import React from 'react';
+import uniq from 'lodash/uniq';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
 import {aggControlPotency} from './agg-funcs';
 import {getPotencyCmp, formatPotency} from './potency';
+import {getIsolateDisplay} from './isolate';
 import style from './style.module.scss';
 
 
 function getDisplay({
   varName,
-  variantLookup
+  variantLookup,
+  missing
 }) {
   if (!varName) {
-    return '?';
+    return missing;
   }
   if (!(varName in variantLookup)) {
     return varName;
@@ -33,12 +36,14 @@ function exportCellVariant({
   varName,
   potencyArray,
   enablePotency,
-  variantLookup
+  variantLookup,
+  varNameMissing = '?'
 }) {
   const result = {
     '': getDisplay({
       varName,
-      variantLookup
+      variantLookup,
+      missing: varNameMissing
     })
   };
   if (enablePotency) {
@@ -71,7 +76,8 @@ CellVariant.propTypes = {
     }).isRequired
   ),
   enablePotency: PropTypes.bool,
-  variantLookup: PropTypes.object
+  variantLookup: PropTypes.object,
+  varNameMissing: PropTypes.string
 };
 
 
@@ -79,11 +85,13 @@ function CellVariant({
   varName,
   potencyArray,
   enablePotency,
-  variantLookup
+  variantLookup,
+  varNameMissing = '?'
 }) {
   const varDisplay = getDisplay({
     varName,
-    variantLookup
+    variantLookup,
+    missing: varNameMissing
   });
   return (
     enablePotency && potencyArray.length > 0 ? <>
@@ -120,17 +128,19 @@ export function useInfectedVarName({labels, variantLookup, columns, skip}) {
       return new ColumnDef({
         name: 'infectedVarName',
         label: labels.infectedVarName || 'Infection (CP)',
-        render: (varName) => (
+        render: (varName, {rxType}) => (
           <CellVariant
            {...{
              varName,
-             variantLookup
+             variantLookup,
+             varNameMissing: rxType === 'conv-plasma' ? '?' : 'None'
            }} />
         ),
-        exportCell: (varName) => {
+        exportCell: (varName, {rxType}) => {
           return exportCellVariant({
             varName,
-            variantLookup
+            variantLookup,
+            varNameMissing: rxType === 'conv-plasma' ? '?' : 'None'
           });
         }
       });
@@ -140,7 +150,13 @@ export function useInfectedVarName({labels, variantLookup, columns, skip}) {
 }
 
 
-export function useControlVarName({labels, variantLookup, columns, skip}) {
+export function useControlVarName({
+  labels,
+  isolateLookup,
+  variantLookup,
+  columns,
+  skip
+}) {
   return React.useMemo(
     () => {
       if (skip || !columns.includes('controlVarName')) {
@@ -154,7 +170,16 @@ export function useControlVarName({labels, variantLookup, columns, skip}) {
            {...{
              varName,
              potencyArray: aggControlPotency(null, row),
-             variantLookup
+             variantLookup,
+             varNameMissing: varName ? '?' : (uniq(row.controlIsoName)
+               .sort()
+               .map(
+                 isoName => getIsolateDisplay({
+                   isoName,
+                   isolateLookup
+                 })
+               )
+               .join(' / ') || '?')
            }}
            enablePotency />
         ),
@@ -163,11 +188,20 @@ export function useControlVarName({labels, variantLookup, columns, skip}) {
             varName,
             potencyArray: aggControlPotency(null, row),
             variantLookup,
-            enablePotency: true
+            enablePotency: true,
+            varNameMissing: varName ? '?' : (uniq(row.controlIsoName)
+              .sort()
+              .map(
+                isoName => getIsolateDisplay({
+                  isoName,
+                  isolateLookup
+                })
+              )
+              .join(' / ') || '?')
           });
         }
       });
     },
-    [columns, labels.controlVarName, skip, variantLookup]
+    [columns, isolateLookup, labels.controlVarName, skip, variantLookup]
   );
 }

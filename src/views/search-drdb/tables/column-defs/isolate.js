@@ -8,7 +8,7 @@ import {formatPotency} from './potency';
 import style from './style.module.scss';
 
 
-function useIsolateDisplay({isoName, isolateLookup}) {
+export function getIsolateDisplay({isoName, isolateLookup}) {
   if (!(isoName in isolateLookup)) {
     return '?';
   }
@@ -36,9 +36,7 @@ function useIsolateDisplay({isoName, isolateLookup}) {
   else {
     const shortenMuts = shortenMutList(mutations);
     if (expandable && shortenMuts.length > 0) {
-      return <>
-        {shortenMuts.join(' + ')}
-      </>;
+      return shortenMuts.join(' + ');
     }
     else {
       // not expandable or no mutations; fallback to varName
@@ -57,7 +55,7 @@ function CellIsolate({
   ineffective,
   isolateLookup
 }) {
-  const isolateDisplay = useIsolateDisplay({isoName, isolateLookup});
+  const isolateDisplay = getIsolateDisplay({isoName, isolateLookup});
   if (enablePotency && potency !== null && potency !== undefined) {
     return <>
       {isolateDisplay}
