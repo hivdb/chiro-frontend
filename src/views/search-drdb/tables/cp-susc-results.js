@@ -29,16 +29,16 @@ const INDIV_MUT_LABELS = {
   potency: <>
     NT50 Dilution{' '}
     <span className={style['nowrap']}>
-      (GeoMean
+      GeoMean
       <span className={colDefStyle['mul-div-sign']}>
         ×÷
-      </span>GSD)
+      </span>GSD
     </span>
   </>,
   fold: <>
     Fold Reduction{' '}
     <span className={style['nowrap']}>
-      (Mean±SD)
+      Median (IQR)
     </span>
   </>
 };
@@ -89,16 +89,16 @@ const COMBO_MUTS_LABELS = {
   potency: <>
     NT50 Dilution{' '}
     <span className={style['nowrap']}>
-      (GeoMean
+      GeoMean
       <span className={style['mul-div-sign']}>
         ×÷
-      </span>GSD)
+      </span>GSD
     </span>
   </>,
   fold: <>
     Fold Reduction{' '}
     <span className={style['nowrap']}>
-      (Mean±SD)
+      Median (IQR)
     </span>
   </>
 };

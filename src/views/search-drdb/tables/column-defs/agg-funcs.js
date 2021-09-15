@@ -31,6 +31,52 @@ export function aggFoldSD(avgFold, {fold, cumulativeCount: n}) {
   }
 }
 
+
+function zip(array, ...others) {
+  return array.map(
+    (item, idx) => [
+      item,
+      ...others.map(other => other[idx])
+    ]
+  );
+}
+
+
+export function aggWeightedPercentile(values, weights, percentiles) {
+  const totalWeight = aggSum(weights) - 1;
+  const pcntWeights = percentiles.map(pcnt => totalWeight * pcnt);
+  const sorted = zip(values, weights)
+    .filter(([v, w]) => !isNaN(v) && !isNaN(w) && w !== 0)
+    .sort(([v1], [v2]) => v1 - v2);
+  return pcntWeights.map(
+    pcntWeight => {
+      let prevValue;
+      let prevCumWeight, cumWeight = 0;
+      for (const [value, weight] of sorted) {
+        if (cumWeight < pcntWeight) {
+          prevValue = value;
+        }
+        else if (prevValue === undefined) {
+          return value;
+        }
+        else {
+          // linear interpolation
+          const weightDiff = cumWeight - prevCumWeight;
+          const valueDiff = value - prevValue;
+          return valueDiff * (
+            pcntWeight - prevCumWeight
+          ) / weightDiff + prevValue;
+        }
+        prevCumWeight = cumWeight;
+        prevValue = value;
+        cumWeight += weight;
+      }
+      return prevValue;
+    }
+  );
+}
+
+
 function groupPotencyByTypeAndUnit({
   potency,
   potencyType,

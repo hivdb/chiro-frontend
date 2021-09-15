@@ -26,11 +26,11 @@ export default function useSeparateSuscResults({
           (acc, sr) => {
             const {type} = isolateLookup[sr.isoName];
             const section = type2Section[type];
-            if (sr.cumulativeCount > 1) {
-              acc[section].aggFold.push(sr);
+            if (sr.cumulativeCount === 1) {
+              acc[section].indivFold.push(sr);
             }
             else {
-              acc[section].indivFold.push(sr);
+              acc[section].aggFold.push(sr);
             }
             return acc;
           },

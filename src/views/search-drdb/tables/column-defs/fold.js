@@ -5,7 +5,7 @@ import sortBy from 'lodash/sortBy';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
 import {comparePotency} from './potency';
-import {aggSum, aggFold, aggFoldSD} from './agg-funcs';
+import {aggWeightedPercentile, aggSum} from './agg-funcs';
 import style from './style.module.scss';
 
 export {comparePotency};
@@ -14,12 +14,14 @@ export {comparePotency};
 CellFold.propTypes = {
   fbResistanceLevel: PropTypes.array.isRequired,
   fold: PropTypes.number,
-  stdev: PropTypes.number,
+  p25: PropTypes.number,
+  p75: PropTypes.number,
+  displayIQR: PropTypes.bool,
   displayNN: PropTypes.bool
 };
 
 
-function CellFold({fold, fbResistanceLevel, stdev, displayNN}) {
+function CellFold({fold, fbResistanceLevel, p25, p75, displayIQR, displayNN}) {
   let foldCmp = '=';
   let foldValue = fold;
   if (foldValue && foldValue > 100) {
@@ -34,17 +36,20 @@ function CellFold({fold, fbResistanceLevel, stdev, displayNN}) {
       ) : <>
         {foldCmp === "=" ? "" : foldCmp}
         {foldValue.toFixed(1)}
-        {stdev && stdev > 1e-5 ? (
+        {displayIQR ? <>
+          {' '}
           <span className={style['supplement-info']}>
-            ±{stdev < 1 ? stdev.toPrecision(1) : stdev.toFixed(1)}
+            ({p25.toFixed(1)}-{p75.toFixed(1)})
           </span>
-        ) : null}
+        </> : null}
       </>)}
   </>;
 }
 
 
-function exportCellFold({fold, fbResistanceLevel, stdev, displayNN}) {
+function exportCellFold(
+  {fold, fbResistanceLevel, p25, p75, displayIQR, displayNN}
+) {
   let foldCmp = '=';
   let foldValue = fold;
   if (foldValue && foldValue > 100) {
@@ -67,10 +72,9 @@ function exportCellFold({fold, fbResistanceLevel, stdev, displayNN}) {
   }
   return {
     Cmp: foldCmp,
-    Mean: foldValue,
-    SD: stdev && stdev > 1e-5 ? (
-      stdev < 1 ? stdev.toPrecision(1) : stdev.toFixed(1)
-    ) : null
+    Median: foldValue,
+    IQR25: displayIQR ? p25.toFixed(1) : null,
+    IQR75: displayIQR ? p75.toFixed(1) : null
   };
 }
 
@@ -91,35 +95,50 @@ export default function useFold({
         exportLabel: 'Fold Reduction',
         render: (fold, row) => (
           <CellFold
-           fold={fold}
+           fold={fold.median}
            fbResistanceLevel={uniq(row.fbResistanceLevel || []).sort()}
            displayNN={
-           aggSum(row.cumulativeCount) ===
-           Array.from(row.ineffective.entries())
-             .filter(([, ie]) => ie === 'control' || ie === 'both')
-             .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)
-         }
-           stdev={aggFoldSD(fold, row)} />
+             aggSum(row.cumulativeCount) ===
+             Array.from(row.ineffective.entries())
+               .filter(([, ie]) => ie === 'control' || ie === 'both')
+               .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)
+           }
+           displayIQR={row.cumulativeCount.length > 1}
+           p25={fold.p25}
+           p75={fold.p75} />
         ),
-        exportCell: (fold, row) => exportCellFold({
-          fold,
+        exportCell: ({median, p25, p75}, row) => exportCellFold({
+          fold: median,
           fbResistanceLevel: uniq(row.fbResistanceLevel || []).sort(),
           displayNN: (
-            aggSum(row.cumulativeCount) ===
-           Array.from(row.ineffective.entries())
-             .filter(([, ie]) => ie === 'control' || ie === 'both')
-             .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)
+            aggSum(row.cumulativeCount) === Array
+              .from(row.ineffective.entries())
+              .filter(([, ie]) => ie === 'control' || ie === 'both')
+              .reduce((acc, [idx]) => row.cumulativeCount[idx] + acc, 0)
           ),
-          stdev: aggFoldSD(fold, row)
+          displayIQR: row.cumulativeCount.length > 1,
+          p25,
+          p75
         }),
-        decorator: aggFold,
+        decorator: (fold, {cumulativeCount}) => {
+          const [median, p25, p75] = aggWeightedPercentile(
+            fold,
+            cumulativeCount,
+            [0.5, 0.25, 0.75]
+          );
+          return {median, p25, p75};
+        },
         sort: rows => sortBy(
           rows,
           [
             ({ineffective}) => (
               ineffective !== null && ineffective !== 'experimental'
             ),
-            ({fold, cumulativeCount}) => aggFold(fold, {cumulativeCount})
+            ({fold, cumulativeCount}) => aggWeightedPercentile(
+              fold,
+              cumulativeCount,
+              [0.5]
+            )[0]
           ]
         )
       });
