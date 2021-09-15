@@ -90,7 +90,7 @@ const COMBO_MUTS_LABELS = {
     NT50 Dilution{' '}
     <span className={style['nowrap']}>
       GeoMean
-      <span className={style['mul-div-sign']}>
+      <span className={colDefStyle['mul-div-sign']}>
         ×÷
       </span>GSD
     </span>
