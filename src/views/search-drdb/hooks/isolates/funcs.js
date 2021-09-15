@@ -35,11 +35,11 @@ export function countSpikeMutations(mutations) {
 
 
 export function classifyIsolate({numMuts}) {
-  if (numMuts > 1) {
-    return 'mutation-combination';
+  if (numMuts === 1) {
+    return 'individual-mutation';
   }
   else {
-    return 'individual-mutation';
+    return 'mutation-combination';
   }
 }
 
