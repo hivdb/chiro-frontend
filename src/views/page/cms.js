@@ -21,6 +21,7 @@ class CMSPage extends React.Component {
     pageName: PropTypes.string.isRequired,
     pageTitle: PropTypes.string.isRequired,
     introHeader: PropTypes.string,
+    subIntroHeader: PropTypes.string,
     githubLink: PropTypes.string,
     githubTitle: PropTypes.string,
     toc: PropTypes.bool,
@@ -101,6 +102,7 @@ class CMSPage extends React.Component {
       pageName,
       pageTitle,
       introHeader,
+      subIntroHeader,
       toc,
       tocFloat,
       hideLastModified,
@@ -144,19 +146,25 @@ class CMSPage extends React.Component {
               <Markdown inline>{introHeader}</Markdown>
             </Banner.Title>
             <Banner.Subtitle>
+              {subIntroHeader ? <div className={style['sub-intro-header']}>
+                <Markdown inline>{subIntroHeader}</Markdown>
+              </div> : null}
               {hideLastModified ? null :
-              <span className={style['last-update']}>
+              <div className={style['last-update']}>
                 Last updated on {lastMod}
-              </span>}
+              </div>}
             </Banner.Subtitle>
           </Banner> :
           <Header as="h1" dividing>
             <Markdown inline>{introHeader}</Markdown>
             <Header.Subheader>
+              {subIntroHeader ? <div className={style['sub-intro-header']}>
+                <Markdown inline>{subIntroHeader}</Markdown>
+              </div> : null}
               {hideLastModified ? null :
-              <span className={style['last-update']}>
+              <div className={style['last-update']}>
                 Last updated on {lastMod}
-              </span>}
+              </div>}
             </Header.Subheader>
           </Header>}
         {children}
