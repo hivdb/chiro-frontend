@@ -13,7 +13,7 @@ export default function useRenderSuscResults({
   id,
   loaded,
   cacheKey,
-  hideNN = false,
+  hideNN = true,
   footnoteMean = false,
   suscResults,
   indivMutColumnDefs,

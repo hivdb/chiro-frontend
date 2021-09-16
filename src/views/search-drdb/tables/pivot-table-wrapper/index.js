@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import union from 'lodash/union';
 import difference from 'lodash/difference';
 import intersection from 'lodash/intersection';
+import createPersistedState from 'use-persisted-state/src';
+
 import {
   columnDefShape
 } from 'sierra-frontend/dist/components/simple-table/prop-types';
@@ -79,14 +81,21 @@ export default function PivotTableWrapper({
   data,
   groupBy,
   defaultGroupBy,
-  hideNN = false,
+  hideNN = true,
   footnoteMean = false,
   columnDefs,
   ...props
 }) {
   const pivotTableCtlRef = React.useRef();
   const [curGroupBy, setCurGroupBy] = React.useState(defaultGroupBy);
-  const [hide, setHide] = React.useState(hideNN);
+
+  const useHideState = createPersistedState(
+    `${id}__hideState`
+  );
+  const [
+    hide,
+    setHide
+  ] = useHideState(hideNN);
 
   const setLoading = React.useCallback(
     callback => {
@@ -118,7 +127,7 @@ export default function PivotTableWrapper({
         () => setHide(!hide)
       );
     },
-    [setLoading, hide]
+    [setLoading, setHide, hide]
   );
 
   const {numExps, numArticles, numNoNatExps} = useStatSuscResults(data);

@@ -9,7 +9,7 @@ import Checkbox from './checkbox';
 
 import style from './style.module.scss';
 
-const STATE_VERSION = 3;
+const STATE_VERSION = 1;
 
 
 GroupByOptions.propTypes = {
@@ -51,7 +51,7 @@ export default function GroupByOptions({
     [allColumnDefs, allGroupByOptions]
   );
   const useGroupByOptionMap = createPersistedState(
-    `${idPrefix}v${STATE_VERSION}`
+    `${idPrefix}__dimensions__v${STATE_VERSION}`
   );
   const [
     groupByOptionMap,

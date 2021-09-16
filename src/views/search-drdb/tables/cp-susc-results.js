@@ -160,6 +160,7 @@ export default function CPSuscResults() {
     comboMutsColumnDefs,
     comboMutsGroupBy: COMBO_MUTS_GROUP_BY,
     comboMutsDefaultGroupBy: COMBO_MUTS_DEFAULT_GROUP_BY,
+    hideNN: true,
     footnoteMean: true
   });
 }
