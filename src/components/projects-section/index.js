@@ -3,8 +3,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {Link} from 'found';
+import Markdown from 'sierra-frontend/dist/components/markdown';
 import {H2} from 'sierra-frontend/dist/components/heading-tags';
 import style from './style.module.scss';
+
+
+function trimTags(text) {
+  return text.replace(/<[^>]+>/g, '').trim();
+}
 
 
 export function Projects({className, projects = [], imagePrefix}) {
@@ -19,26 +25,36 @@ export function Projects({className, projects = [], imagePrefix}) {
              className={style['image-trimmer']}
              rel="noopener noreferrer"
              href={link} target="_blank">
-              <img src={`${imagePrefix}${image}`} alt={title} />
+              <img src={`${imagePrefix}${image}`} alt={trimTags(title)} />
             </a>
             <a
              className={style['project-title']}
              rel="noopener noreferrer"
-             href={link} target="_blank">{title}</a>
+             href={link} target="_blank">
+              <Markdown inline escapeHtml={false}>
+                {title}
+              </Markdown>
+            </a>
           </> : <>
             <Link
              className={style['image-trimmer']}
              to={link}>
-              <img src={`${imagePrefix}${image}`} alt={title} />
+              <img src={`${imagePrefix}${image}`} alt={trimTags(title)} />
             </Link>
             <Link
              className={style['project-title']}
              to={link}>
-              {title}
+              <Markdown inline escapeHtml={false}>
+                {title}
+              </Markdown>
             </Link>
           </>
         }
-        <div className={style['project-desc']}>{description}</div>
+        <div className={style['project-desc']}>
+          <Markdown inline escapeHtml={false}>
+            {description}
+          </Markdown>
+        </div>
       </li>
     ))}
   </ul>;
