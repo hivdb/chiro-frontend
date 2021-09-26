@@ -99,19 +99,23 @@ export default function useVirusDropdown() {
       else {
         const displayVariants = variants
           .map(
-            ({varName, synonyms}) => ({
+            ({varName, synonyms, asWildtype}) => ({
               varName,
               synonyms,
+              asWildtype,
               numExp: varNumExpLookup[varName] || 0
             })
           )
-          .filter(({numExp}) => numExp > 0)
+          .filter(({varName, asWildtype, numExp}) => (
+            varName === paramVarName || (!asWildtype && numExp > 0)
+          ))
           .sort((a, b) => b.numExp - a.numExp);
 
         const displayIsolateAggs = isolateAggs
           .filter(
             ({varName, isoType}) => (
-              varName === null || isoType === 'indiv-mut'
+              varName === null ||
+              isoType === 'indiv-mut'
             )
           )
           .map(
@@ -125,7 +129,10 @@ export default function useVirusDropdown() {
               numExp: isoAggNumExpLookup[isoAggkey] || 0
             })
           )
-          .filter(({numExp}) => numExp > 0)
+          .filter(({isoAggkey, numExp}) => (
+            isoAggkey === paramIsoAggKey ||
+            numExp > 0
+          ))
           .sort(compareIsolateAggs);
 
         const positionMutCount = displayIsolateAggs

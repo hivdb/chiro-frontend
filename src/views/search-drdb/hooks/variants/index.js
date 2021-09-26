@@ -16,17 +16,18 @@ function VariantsProvider({children}) {
 
   const sql = `
     SELECT
-      var_name,
+      V.var_name,
       (
         SELECT GROUP_CONCAT(synonym, "${LIST_JOIN_UNIQ}")
         FROM variant_synonyms VS
         WHERE V.var_name=VS.var_name
         ORDER BY LENGTH(synonym)
       ) AS synonyms,
-      count AS susc_result_count
-    FROM variant_stats V
-    WHERE stat_group='susc_results'
-    ORDER BY count DESC
+      as_wildtype
+    FROM variants V JOIN susc_summary SS ON
+      SS.aggregate_by = 'variant' AND
+      V.var_name = SS.var_name
+    ORDER BY SS.num_experiments DESC
   `;
 
   const {
@@ -39,10 +40,10 @@ function VariantsProvider({children}) {
       let variants;
       if (payload) {
         variants = payload.map(
-          ({varName, synonyms, suscResultCount}) => ({
+          ({varName, asWildtype, synonyms}) => ({
             varName,
             synonyms: synonyms ? synonyms.split(LIST_JOIN_UNIQ) : [],
-            suscResultCount
+            asWildtype
           })
         );
       }
