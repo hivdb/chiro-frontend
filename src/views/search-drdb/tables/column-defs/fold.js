@@ -28,6 +28,10 @@ function CellFold({fold, fbResistanceLevel, p25, p75, displayIQR, displayNN}) {
     foldValue = 100;
     foldCmp = '>';
   }
+  else if (!isNaN(foldValue) && foldValue < 0.1) {
+    foldValue = 0.1;
+    foldCmp = '<';
+  }
   return <>
     {displayNN ? <em>N.N.</em> :
       (foldValue === undefined || foldValue === null ? (
@@ -55,6 +59,10 @@ function exportCellFold(
   if (foldValue && foldValue > 100) {
     foldValue = 100;
     foldCmp = '>';
+  }
+  else if (!isNaN(foldValue) && foldValue < 0.1) {
+    foldValue = 0.1;
+    foldCmp = '<';
   }
   if (displayNN) {
     foldValue = 'N.N.';
