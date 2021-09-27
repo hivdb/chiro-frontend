@@ -5,7 +5,7 @@ import {
 } from 'sierra-frontend/dist/components/simple-table/prop-types';
 import createPersistedState from 'use-persisted-state/src';
 
-import Checkbox from './checkbox';
+import Checkbox, {CheckAllBox} from './checkbox';
 
 import style from './style.module.scss';
 
@@ -87,6 +87,28 @@ export default function GroupByOptions({
     [groupByOptionMap, onChange, setGroupByOptionMap]
   );
 
+  const handleCheckAll = React.useCallback(
+    shouldCheckAll => {
+      const options = shouldCheckAll ? columnDefs.map(({name}) => name) : [];
+      setGroupByOptionMap(options.reduce(
+        (acc, name) => {
+          acc[name] = true;
+          return acc;
+        },
+        {}
+      ));
+      onChange && onChange(options);
+    },
+    [columnDefs, setGroupByOptionMap, onChange]
+  );
+
+  const allChecked = React.useMemo(
+    () => (
+      columnDefs.every(({name}) => groupByOptionMap[name])
+    ),
+    [groupByOptionMap, columnDefs]
+  );
+
   return <div className={style['group-by-options_container']}>
     <label className={style['group-by-options_label']}>
       Table dimensions:
@@ -105,6 +127,12 @@ export default function GroupByOptions({
           </li>
         )
       )}
+      <li data-checked={allChecked}>
+        <CheckAllBox
+         idPrefix={idPrefix}
+         checked={allChecked}
+         onChange={handleCheckAll} />
+      </li>
     </ul>
   </div>;
 }

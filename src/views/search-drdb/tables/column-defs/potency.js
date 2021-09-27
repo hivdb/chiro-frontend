@@ -165,7 +165,7 @@ export default function usePotency({labels, columns, skip}) {
           rxType
         }) => (
           <CellPotency
-           rxType={rxType}
+           rxType={rxType instanceof Array ? rxType[0] : rxType}
            potencyArray={potencyArray} />
         ),
         exportCell: potencyArray => exportCellPotency({potencyArray}),
