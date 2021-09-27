@@ -1,4 +1,3 @@
-import useColumnDefs from './column-defs';
 import useRenderSuscResults from './use-render-susc-results';
 import colDefStyle from './column-defs/style.module.scss';
 
@@ -6,139 +5,154 @@ import SuscResults from '../hooks/susc-results';
 import LocationParams from '../hooks/location-params';
 import style from '../style.module.scss';
 
-const INDIV_MUT_COLUMNS = [
-  'refName',
-  'assayName',
-  'section',
-  'infectedVarName',
-  'vaccineName',
-  'dosage',
-  'timingRange',
-  'subjectSpecies',
-  'controlVarName',
-  'isoAggkey',
-  'numStudies',
-  'cumulativeCount',
-  'potency',
-  'fold',
-  'dataAvailability'
-];
-
-const INDIV_MUT_LABELS = {
-  isoAggkey: 'Mutation',
-  infectedVarName: 'Pre-vaccine Infection',
-  dosage: '# Shots',
-  timingRange: 'Months',
-  potency: <>
-    NT50 Dilution{' '}
-    <span className={style['nowrap']}>
-      GeoMean
-      <span className={colDefStyle['mul-div-sign']}>
-        ×÷
-      </span>GSD
-    </span>
-  </>,
-  fold: <>
-    Fold Reduction{' '}
-    <span className={style['nowrap']}>
-      Median (IQR)
-    </span>
-  </>
+const allTableConfig = {
+  indivMut: {
+    columns: [
+      'refName',
+      'assayName',
+      'section',
+      'infectedVarName',
+      'vaccineName',
+      'dosage',
+      'timingRange',
+      'subjectSpecies',
+      'controlVarName',
+      'isoAggkey',
+      'numStudies',
+      'cumulativeCount',
+      'potency',
+      'fold',
+      'dataAvailability'
+    ],
+    labels: {
+      isoAggkey: 'Mutation',
+      infectedVarName: 'Pre-vaccine Infection',
+      dosage: '# Shots',
+      timingRange: 'Months',
+      potency: <>
+        NT50 Dilution{' '}
+        <span className={style['nowrap']}>
+          GeoMean
+          <span className={colDefStyle['mul-div-sign']}>
+            ×÷
+          </span>GSD
+        </span>
+      </>,
+      fold: <>
+        Fold Reduction{' '}
+        <span className={style['nowrap']}>
+          Median (IQR)
+        </span>
+      </>
+    },
+    rawDataLabels: {
+      isoAggkey: 'Mutation',
+      infectedVarName: 'Pre-vaccine Infection',
+      dosage: '# Shots',
+      timingRange: 'Months',
+      potency: 'NT50 Dilution',
+      fold: 'Fold Reduction'
+    },
+    groupBy: [
+      'refName',
+      'assayName',
+      'infectedVarName',
+      'vaccineName',
+      'dosage',
+      'timingRange',
+      'subjectSpecies',
+      'controlVarName',
+      'isoAggkey',
+      'numMutations',
+      'rxType'
+    ],
+    defaultGroupBy: [
+      'refName',
+      'assayName',
+      'infectedVarName',
+      'vaccineName',
+      'dosage',
+      'timingRange',
+      'controlVarName',
+      'isoAggkey',
+      'numMutations',
+      'rxType'
+    ]
+  },
+  comboMuts: {
+    columns: [
+      'refName',
+      'assayName',
+      'section',
+      'infectedVarName',
+      'vaccineName',
+      'dosage',
+      'timingRange',
+      'subjectSpecies',
+      'controlVarName',
+      'isoAggkey',
+      'numStudies',
+      'cumulativeCount',
+      'potency',
+      'fold',
+      'dataAvailability'
+    ],
+    labels: {
+      isoAggkey: 'Variant',
+      infectedVarName: 'Pre-vaccine Infection',
+      dosage: '# Shots',
+      timingRange: 'Months',
+      potency: <>
+        NT50 Dilution{' '}
+        <span className={style['nowrap']}>
+          GeoMean
+          <span className={colDefStyle['mul-div-sign']}>
+            ×÷
+          </span>GSD
+        </span>
+      </>,
+      fold: <>
+        Fold Reduction{' '}
+        <span className={style['nowrap']}>
+          Median (IQR)
+        </span>
+      </>
+    },
+    rawDataLabels: {
+      isoAggkey: 'Variant',
+      infectedVarName: 'Pre-vaccine Infection',
+      dosage: '# Shots',
+      timingRange: 'Months',
+      potency: 'NT50 Dilution',
+      fold: 'Fold Reduction'
+    },
+    groupBy: [
+      'refName',
+      'assayName',
+      'infectedVarName',
+      'vaccineName',
+      'dosage',
+      'timingRange',
+      'subjectSpecies',
+      'controlVarName',
+      'isoAggkey',
+      'numMutations',
+      'rxType'
+    ],
+    defaultGroupBy: [
+      'refName',
+      'assayName',
+      'infectedVarName',
+      'vaccineName',
+      'dosage',
+      'timingRange',
+      'controlVarName',
+      'isoAggkey',
+      'numMutations',
+      'rxType'
+    ]
+  }
 };
-
-const INDIV_MUT_GROUP_BY = [
-  'refName',
-  'assayName',
-  'infectedVarName',
-  'vaccineName',
-  'dosage',
-  'timingRange',
-  'subjectSpecies',
-  'controlVarName',
-  'isoAggkey',
-  'numMutations',
-  'rxType'
-];
-
-const INDIV_MUT_DEFAULT_GROUP_BY = [
-  'refName',
-  'assayName',
-  'infectedVarName',
-  'vaccineName',
-  'dosage',
-  'timingRange',
-  'controlVarName',
-  'isoAggkey',
-  'numMutations',
-  'rxType'
-];
-
-const COMBO_MUTS_COLUMNS = [
-  'refName',
-  'assayName',
-  'section',
-  'infectedVarName',
-  'vaccineName',
-  'dosage',
-  'timingRange',
-  'subjectSpecies',
-  'controlVarName',
-  'isoAggkey',
-  'numStudies',
-  'cumulativeCount',
-  'potency',
-  'fold',
-  'dataAvailability'
-];
-
-const COMBO_MUTS_LABELS = {
-  isoAggkey: 'Variant',
-  infectedVarName: 'Pre-vaccine Infection',
-  dosage: '# Shots',
-  timingRange: 'Months',
-  potency: <>
-    NT50 Dilution{' '}
-    <span className={style['nowrap']}>
-      GeoMean
-      <span className={colDefStyle['mul-div-sign']}>
-        ×÷
-      </span>GSD
-    </span>
-  </>,
-  fold: <>
-    Fold Reduction{' '}
-    <span className={style['nowrap']}>
-      Median (IQR)
-    </span>
-  </>
-};
-
-const COMBO_MUTS_GROUP_BY = [
-  'refName',
-  'assayName',
-  'infectedVarName',
-  'vaccineName',
-  'dosage',
-  'timingRange',
-  'subjectSpecies',
-  'controlVarName',
-  'isoAggkey',
-  'numMutations',
-  'rxType'
-];
-
-const COMBO_MUTS_DEFAULT_GROUP_BY = [
-  'refName',
-  'assayName',
-  'infectedVarName',
-  'vaccineName',
-  'dosage',
-  'timingRange',
-  'controlVarName',
-  'isoAggkey',
-  'numMutations',
-  'rxType'
-];
 
 
 export default function VPSuscResults() {
@@ -152,27 +166,12 @@ export default function VPSuscResults() {
   const cacheKey = JSON.stringify({refName, isoAggkey, vaccineName});
   const {suscResults, isPending} = SuscResults.useVP();
 
-  const indivMutColumnDefs = useColumnDefs({
-    columns: INDIV_MUT_COLUMNS,
-    labels: INDIV_MUT_LABELS
-  });
-
-  const comboMutsColumnDefs = useColumnDefs({
-    columns: COMBO_MUTS_COLUMNS,
-    labels: COMBO_MUTS_LABELS
-  });
-
   return useRenderSuscResults({
     loaded: !isPending,
     id: 'vp-susc-results',
     cacheKey,
     suscResults,
-    indivMutColumnDefs,
-    indivMutGroupBy: INDIV_MUT_GROUP_BY,
-    indivMutDefaultGroupBy: INDIV_MUT_DEFAULT_GROUP_BY,
-    comboMutsColumnDefs,
-    comboMutsGroupBy: COMBO_MUTS_GROUP_BY,
-    comboMutsDefaultGroupBy: COMBO_MUTS_DEFAULT_GROUP_BY,
+    allTableConfig,
     hideNN: true,
     footnoteMean: true
   });

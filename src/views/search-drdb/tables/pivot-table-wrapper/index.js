@@ -5,39 +5,47 @@ import difference from 'lodash/difference';
 import intersection from 'lodash/intersection';
 import createPersistedState from 'use-persisted-state/src';
 
-import {
-  columnDefShape
-} from 'sierra-frontend/dist/components/simple-table/prop-types';
 import InlineLoader
   from 'sierra-frontend/dist/components/inline-loader';
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+
 
 import {useAggregateData} from '../../../../components/pivot-table';
 
 import {useStatSuscResults} from '../../hooks';
 import GroupByOptions from '../group-by-options';
 
+import useColumnDefs from '../column-defs';
+import ModalContext from './modal-context';
+import RawSuscResults from './raw-susc-results';
 import HeadNote from './headnote';
 import FootNote from './footnote';
 
 import style from './style.module.scss';
+
+export {ModalContext};
 
 
 PivotTableWrapper.propTypes = {
   id: PropTypes.string.isRequired,
   cacheKey: PropTypes.string.isRequired,
   data: PropTypes.array,
-  groupBy: PropTypes.arrayOf(
-    PropTypes.string.isRequired
-  ).isRequired,
-  defaultGroupBy: PropTypes.arrayOf(
-    PropTypes.string.isRequired
-  ).isRequired,
   hideNN: PropTypes.bool,
   footnoteMean: PropTypes.bool,
-  columnDefs: PropTypes.arrayOf(
-    columnDefShape.isRequired
-  ).isRequired
+  tableConfig: PropTypes.shape({
+    columns: PropTypes.arrayOf(
+      PropTypes.string.isRequired
+    ).isRequired,
+    labels: PropTypes.objectOf(
+      PropTypes.node.isRequired
+    ).isRequired,
+    groupBy: PropTypes.arrayOf(
+      PropTypes.string.isRequired
+    ).isRequired,
+    defaultGroupBy: PropTypes.arrayOf(
+      PropTypes.string.isRequired
+    )
+  }).isRequired
 };
 
 
@@ -79,15 +87,22 @@ export default function PivotTableWrapper({
   id,
   cacheKey,
   data,
-  groupBy,
-  defaultGroupBy,
+  tableConfig,
+  tableConfig: {
+    columns,
+    labels,
+    groupBy,
+    defaultGroupBy
+  },
   hideNN = true,
   footnoteMean = false,
-  columnDefs,
   ...props
 }) {
   const pivotTableCtlRef = React.useRef();
-  const [curGroupBy, setCurGroupBy] = React.useState(defaultGroupBy);
+  const [modalData, setModalData] = React.useState(null);
+  const [curGroupBy, setCurGroupBy] = React.useState(defaultGroupBy || groupBy);
+
+  const columnDefs = useColumnDefs({columns, labels});
 
   const useHideState = createPersistedState(
     `${id}__hideState`
@@ -97,6 +112,7 @@ export default function PivotTableWrapper({
     setHide
   ] = useHideState(hideNN);
 
+  const handleModalClose = React.useCallback(() => setModalData(null), []);
   const setLoading = React.useCallback(
     callback => {
       const target = pivotTableCtlRef.current;
@@ -160,7 +176,7 @@ export default function PivotTableWrapper({
      onChange={handleChangeGroupBy}
      allColumnDefs={columnDefs}
      allGroupByOptions={groupBy}
-     defaultGroupByOptions={defaultGroupBy} />
+     defaultGroupByOptions={defaultGroupBy || groupBy} />
     <HeadNote
      numRows={numRows}
      numExps={numExps}
@@ -171,12 +187,20 @@ export default function PivotTableWrapper({
     {numExps > 0 ?
       <div ref={pivotTableCtlRef} className={style['pivot-table-control']}>
         <InlineLoader className={style['loader']} />
-        <SimpleTable
-         {...props}
-         className={style['pivot-table']}
-         columnDefs={cleanedColumnDefs}
-         cacheKey={`${cacheKey}__${hide}__${JSON.stringify(cleanedGroupBy)}`}
-         data={aggData} />
+        <ModalContext.Provider value={{setData: setModalData}}>
+          <SimpleTable
+           {...props}
+           className={style['pivot-table']}
+           columnDefs={cleanedColumnDefs}
+           cacheKey={`${cacheKey}__${hide}__${JSON.stringify(cleanedGroupBy)}`}
+           data={aggData} />
+          {modalData === null ? null : (
+            <RawSuscResults
+             data={modalData}
+             tableConfig={tableConfig}
+             onClose={handleModalClose} />
+          )}
+        </ModalContext.Provider>
       </div> : null}
     <FootNote hasNA={hasNA} hasNN={hasNN} footnoteMean={footnoteMean} />
   </>;

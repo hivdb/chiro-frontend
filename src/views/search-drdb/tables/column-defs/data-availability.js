@@ -6,27 +6,29 @@ import {AiOutlineTable} from '@react-icons/all-files/ai/AiOutlineTable';
 import {AiOutlineCheck} from '@react-icons/all-files/ai/AiOutlineCheck';
 import {AiOutlineClose} from '@react-icons/all-files/ai/AiOutlineClose';
 
+import {ModalContext} from '../pivot-table-wrapper';
+
 import {aggDataAvailability} from './agg-funcs';
 import style from './style.module.scss';
 
 
+function exportCellDataAvailability(hasMultiple) {
+  return hasMultiple ? '✓' : '';
+}
+
 CellDataAvailability.propTypes = {
+  data: PropTypes.object,
   hasMultiple: PropTypes.bool.isRequired
 };
 
-function exportCellDataAvailability(hasMultiple) {
-  if (hasMultiple) {
-    return '✓';
-  }
-  else {
-    return '';
-  }
-}
+function CellDataAvailability({hasMultiple, data}) {
+  const {setData} = React.useContext(ModalContext);
+  const handleClick = React.useCallback(() => setData(data), [data, setData]);
 
-function CellDataAvailability({hasMultiple}) {
   return (
     <div
      className={style['data-availability']}
+     onClick={hasMultiple ? handleClick : undefined}
      data-has-multiple={hasMultiple}>
       <AiOutlineTable />
       {hasMultiple ?
@@ -50,8 +52,8 @@ export default function useDataAvailability({labels, skip, columns}) {
       return new ColumnDef({
         name: 'dataAvailability',
         label: labels.dataAvailability,
-        render: hasMultiple => (
-          <CellDataAvailability hasMultiple={hasMultiple} />
+        render: (hasMultiple, data) => (
+          <CellDataAvailability hasMultiple={hasMultiple} data={data} />
         ),
         exportCell: exportCellDataAvailability,
         decorator: aggDataAvailability

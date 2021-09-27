@@ -60,6 +60,9 @@ ul.potency {
   font-size: 1.3rem;
   &[data-has-multiple="true"] {
     color: rgba(0, 0, 0, .7);
+    &:hover {
+      cursor: pointer;
+    }
   }
   &[data-has-multiple="false"] {
     color: rgba(0, 0, 0, .3);
