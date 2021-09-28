@@ -31,3 +31,7 @@ p.footnote:last-child {
     }
   }
 }
+
+.raw-data-table:global(__scroll) {
+  --desktop-max-height: max-content;
+}
