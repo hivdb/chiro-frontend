@@ -15,7 +15,10 @@ function ungroupData(data, groups) {
   const scalarCols = {};
   const groupedCols = {};
   for (const [key, val] of Object.entries(data)) {
-    if (val instanceof Array) {
+    if (
+      val instanceof Array &&
+      (key !== 'abNames' || val[0] instanceof Array)
+    ) {
       numRows = val.length;
       groupedCols[key] = val;
     }
