@@ -17,7 +17,7 @@ const VARIANT_STATUS = [
   },
   {
     name: 'VBM',
-    label: 'Variant Being Monitored'
+    label: 'Variant under Monitoring'
   },
   {
     name: 'VUI',
