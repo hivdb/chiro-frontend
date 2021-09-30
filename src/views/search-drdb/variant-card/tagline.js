@@ -18,6 +18,10 @@ const VARIANT_STATUS = [
   {
     name: 'VBM',
     label: 'Variant Being Monitored'
+  },
+  {
+    name: 'VUI',
+    label: 'Variants under Investigation'
   }
 ];
 
