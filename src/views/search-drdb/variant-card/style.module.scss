@@ -1,0 +1,129 @@
+@import '../../../styles/colors';
+
+$placeholder-color: rgba(0, 0, 0, .15);
+
+.variant-card {
+  $list-row-height: 1.8rem;
+
+  .variant-status-refs {
+    font-size: 0.75rem;
+  }
+
+  .variant-synonym {
+    font-size: 1rem;
+    color: rgba(0,0,0,.4);
+    &::before {
+      content: '(';
+    }
+    &::after {
+      content: ')';
+    }
+  }
+
+  &[data-loaded="false"] > &:global(__title) {
+    &::before {
+      display: block;
+      width: 17%;
+    }
+    &::after {
+      display: none;
+    }
+  }
+
+  &:global(__title) {
+    .title-supplement {
+      font-size: 1rem;
+      display: inline-block;
+      font-weight: 400;
+      opacity: .7;
+    }
+  }
+
+  &[data-loaded="false"] {
+    
+    .variant-desc {
+      div {
+        background-color: $placeholder-color;
+        background-clip: content-box;
+        height: 1.5rem;
+        padding-bottom: .5rem;
+        &:nth-child(4) {
+          width: 38.2%;
+        }
+      }
+      ul {
+        max-height: calc(#{$list-row-height} * 3.9);
+      }
+      ul > li {
+        position: relative;
+        width: 35%;
+        &::before {
+          content: '\a0';
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 1.2rem;
+          background-color: $placeholder-color;
+          background-clip: content-box;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    padding-left: 0;
+    list-style-type: none;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 1px dotted $dividing-line;
+    padding-top: 1rem;
+    > li {
+      vertical-align: middle;
+      line-height: $list-row-height;
+      width: fit-content;
+      flex-basis: 45%;
+      &.full-row {
+        flex-basis: 100%;
+      }
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+    @media only screen and (max-width: 900px) {
+      max-height: max-content;
+    }
+    &:empty {
+      display: none;
+    }
+    &.variant-synonyms, &.variant-consensus {
+      display: inline;
+      border-top: none;
+      padding-top: 0;
+      padding-left: 0;
+      > li {
+        display: inline-block;
+        vertical-align: middle;
+        > span.bullet {
+          $bullet-size: 4px;
+          vertical-align: middle;
+          display: inline-block;
+          margin-left: .5rem;
+          margin-right: .5rem;
+          text-indent: 150%;
+          overflow: hidden;
+          border-radius: $bullet-size;
+          height: $bullet-size;
+          width: $bullet-size;
+          background-color: rgba(0,0,0,.5);
+        }
+      }
+    }
+
+  }
+
+}

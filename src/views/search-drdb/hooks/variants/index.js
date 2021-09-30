@@ -12,6 +12,51 @@ VariantsProvider.propTypes = {
 };
 
 
+function useOne(varName) {
+  const {variantLookup, isPending} = React.useContext(VariantsContext);
+  const variant = (variantLookup || {})[varName];
+  const sqlStatus = `
+    SELECT ref_name, status FROM variant_status
+    WHERE var_name = $varName
+    ORDER BY ref_name
+  `;
+  const {
+    payload: status,
+    isPending: isStatusPending
+  } = useQuery({sql: sqlStatus, params: {$varName: varName}});
+
+  const sqlCons = `
+    SELECT
+    C.gene,
+    R.amino_acid ref_amino_acid,
+    C.position,
+    C.amino_acid
+    FROM variant_consensus C, ref_amino_acid R
+    WHERE
+      C.var_name = $varName AND
+      C.gene = R.gene AND
+      C.position = R.position
+    ORDER BY C.gene, C.position, C.amino_acid
+  `;
+  const {
+    payload: consensus,
+    isPending: isConsPending
+  } = useQuery({sql: sqlCons, params: {$varName: varName}});
+
+  return React.useMemo(
+    () => ({
+      variant: variant ? {
+        ...variant,
+        status,
+        consensus
+      } : undefined,
+      isPending: isPending || isStatusPending || isConsPending
+    }),
+    [consensus, isConsPending, isPending, isStatusPending, status, variant]
+  );
+}
+
+
 function VariantsProvider({children}) {
 
   const sql = `
@@ -23,7 +68,8 @@ function VariantsProvider({children}) {
         WHERE V.var_name=VS.var_name
         ORDER BY LENGTH(synonym)
       ) AS synonyms,
-      as_wildtype
+      as_wildtype,
+      consensus_availability
     FROM variants V JOIN susc_summary SS ON
       SS.aggregate_by = 'variant' AND
       V.var_name = SS.var_name
@@ -43,7 +89,7 @@ function VariantsProvider({children}) {
           ({varName, asWildtype, synonyms}) => ({
             varName,
             synonyms: synonyms ? synonyms.split(LIST_JOIN_UNIQ) : [],
-            asWildtype
+            asWildtype: !!asWildtype
           })
         );
       }
@@ -80,7 +126,8 @@ function useVariants() {
 
 const Variants = {
   Provider: VariantsProvider,
-  useMe: useVariants
+  useMe: useVariants,
+  useOne
 };
 
 export default Variants;

@@ -5,6 +5,7 @@ import StatHeader from '../../components/stat-header';
 import ArticleCard from './article-card';
 import VaccineCard from './vaccine-card';
 import AntibodyCard from './antibody-card';
+import VariantCard from './variant-card';
 import PercentBars from './percent-bars';
 import LocationParams from './hooks/location-params';
 
@@ -61,6 +62,7 @@ export default function SearchDRDBStatHeader() {
                   <ArticleCard />
                   <VaccineCard />
                   <AntibodyCard />
+                  <VariantCard />
                   <PercentBars />
                   {formOnly ? null : <TableOfContent />}
                 </>

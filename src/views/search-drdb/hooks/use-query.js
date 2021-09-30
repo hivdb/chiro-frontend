@@ -91,6 +91,9 @@ const execSQL = memoize(
 
 
 export default function useQuery({sql, params, skip = false, camel = true}) {
+  if (!skip && !sql) {
+    throw new Error('Required parameter "sql" is empty');
+  }
   const {config, isPending} = useConfig();
   const {drdbVersion} = config || {};
   const [res, setRes] = React.useState(null);

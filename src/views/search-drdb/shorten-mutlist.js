@@ -1,7 +1,13 @@
 import {consecutiveGroupsBy} from 'sierra-frontend/dist/utils/array-groups';
 
-export default function shortenMutationList(mutations) {
-  mutations = mutations.filter(({gene}) => gene === 'S');
+export default function shortenMutationList(
+  mutations,
+  asObject = false,
+  spikeOnly = true
+) {
+  if (spikeOnly) {
+    mutations = mutations.filter(({gene}) => gene === 'S');
+  }
   const merged = [];
   const groups = consecutiveGroupsBy(
     mutations,
@@ -13,13 +19,12 @@ export default function shortenMutationList(mutations) {
     )
   );
   for (const group of groups) {
+    let text;
+    const [{gene, position, aminoAcid, refAminoAcid}] = group;
     if (group.length === 1) {
-      const [{position, aminoAcid, refAminoAcid}] = group;
-      merged.push(
-        aminoAcid === 'del' ?
-          `Δ${position}` :
-          `${refAminoAcid}${position}${aminoAcid}`
-      );
+      text = aminoAcid === 'del' ?
+        `Δ${position}` :
+        `${refAminoAcid}${position}${aminoAcid}`;
     }
     else {
       const leftest = group[0];
@@ -27,11 +32,19 @@ export default function shortenMutationList(mutations) {
       const {position: posStart} = leftest;
       const {position: posEnd} = rightest;
       if (posEnd - posStart === 1) {
-        merged.push(`Δ${posStart}/${posEnd}`);
+        text = `Δ${posStart}/${posEnd}`;
       }
       else {
-        merged.push(`Δ${posStart}-${posEnd}`);
+        text = `Δ${posStart}-${posEnd}`;
       }
+    }
+    if (asObject) {
+      merged.push({
+        gene, position, text
+      });
+    }
+    else {
+      merged.push(text);
     }
   }
   return merged;

@@ -18,10 +18,14 @@ function ArticlesProvider({children}) {
       first_author,
       year
     FROM articles R
-    WHERE EXISTS (
-      SELECT 1 FROM susc_summary S
-      WHERE R.ref_name = S.ref_name
-    )
+    WHERE
+      EXISTS (
+        SELECT 1 FROM susc_summary S
+        WHERE R.ref_name = S.ref_name
+      ) OR EXISTS (
+        SELECT 1 FROM variant_status VS
+        WHERE R.ref_name = VS.ref_name
+      )
     ORDER BY R.ref_name
   `;
 
