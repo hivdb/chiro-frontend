@@ -9,15 +9,10 @@ $placeholder-color: rgba(0, 0, 0, .15);
     font-size: 0.75rem;
   }
 
-  .variant-synonym {
-    font-size: 1rem;
-    color: rgba(0,0,0,.4);
-    &::before {
-      content: '(';
-    }
-    &::after {
-      content: ')';
-    }
+  .variant-consensus-ref {
+    margin-left: .5rem;
+    font-size: .9rem;
+    opacity: .9;
   }
 
   &[data-loaded="false"] > &:global(__title) {

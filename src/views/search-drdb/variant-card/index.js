@@ -105,8 +105,8 @@ export default function VariantCard() {
   const varNameWithSynonyms = <>
     {varName}{' '}
     {synonyms.length > 0 ?
-      <span className={style['variant-synonym']}>
-        {synonyms[0]}
+      <span className={style['title-supplement']}>
+        ({synonyms[0]})
       </span> : null}
   </>;
 
@@ -149,10 +149,23 @@ export default function VariantCard() {
                   {mut}
                 </li>)}
               </ul>
+              <span className={style['variant-consensus-ref']}>
+                {' [source: '}
+                <a
+                 href="https://outbreak.info"
+                 target="_blank"
+                 rel="noreferrer">
+                  outbreak.info
+                </a>]
+              </span>
             </li> : null}
-          {attrList.map((text, idx) => <li key={idx}>
-            <Markdown inline escapeHtml={false}>{text}</Markdown>
-          </li>)}
+          {attrList.map((text, idx) => (
+            <li
+             key={idx}
+             className={style['full-row']}>
+              <Markdown inline escapeHtml={false}>{text}</Markdown>
+            </li>
+          ))}
         </ul> : null}
       </div>
     </InfoCard>
