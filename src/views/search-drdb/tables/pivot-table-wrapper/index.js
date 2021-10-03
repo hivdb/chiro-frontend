@@ -31,6 +31,7 @@ PivotTableWrapper.propTypes = {
   cacheKey: PropTypes.string.isRequired,
   data: PropTypes.array,
   hideNN: PropTypes.bool,
+  hideNon50: PropTypes.bool,
   footnoteMean: PropTypes.bool,
   tableConfig: PropTypes.shape({
     columns: PropTypes.arrayOf(
@@ -94,7 +95,8 @@ export default function PivotTableWrapper({
     groupBy,
     defaultGroupBy
   },
-  hideNN = true,
+  hideNN: defaultHideNN = true,
+  hideNon50: defaultHideNon50 = true,
   footnoteMean = false,
   ...props
 }) {
@@ -104,13 +106,21 @@ export default function PivotTableWrapper({
 
   const columnDefs = useColumnDefs({columns, labels});
 
-  const useHideState = createPersistedState(
-    `${id}__hideState`
+  const useHideNNState = createPersistedState(
+    `${id}__hideNNState`
   );
   const [
-    hide,
-    setHide
-  ] = useHideState(hideNN);
+    hideNN,
+    setHideNN
+  ] = useHideNNState(defaultHideNN);
+
+  const useHideNon50State = createPersistedState(
+    `${id}__hideNon50State`
+  );
+  const [
+    hideNon50,
+    setHideNon50
+  ] = useHideNon50State(defaultHideNon50);
 
   const handleModalClose = React.useCallback(() => setModalData(null), []);
   const setLoading = React.useCallback(
@@ -140,25 +150,48 @@ export default function PivotTableWrapper({
     evt => {
       evt.preventDefault();
       setLoading(
-        () => setHide(!hide)
+        () => setHideNN(!hideNN)
       );
     },
-    [setLoading, setHide, hide]
+    [setLoading, setHideNN, hideNN]
   );
 
-  const {numExps, numArticles, numNoNatExps} = useStatSuscResults(data);
-  const hasNN = !hide && numNoNatExps > 0;
+  const handleToggleHideNon50 = React.useCallback(
+    evt => {
+      evt.preventDefault();
+      setLoading(
+        () => setHideNon50(!hideNon50)
+      );
+    },
+    [setLoading, setHideNon50, hideNon50]
+  );
+
+  const {
+    numExps,
+    numArticles,
+    numNoNatExps,
+    numNon50Exps
+  } = useStatSuscResults(data);
+  const hasNN = !hideNN && numNoNatExps > 0;
   const hasNA = data.some(d => (
     d.controlPotency === null || d.potency === null
   ));
 
+  const mainPotencyType = (
+    data.some(({rxType}) => rxType === 'antibody') ? 'IC50' : 'NT50'
+  );
+
   const tableData = React.useMemo(
-    () => (
-      hide ? data.filter(
-        d => d.ineffective === 'experimental' || d.ineffective === null
-      ) : data
-    ),
-    [data, hide]
+    () => data
+      .filter(
+        d => (
+          !hideNN ||
+          d.ineffective === 'experimental' ||
+          d.ineffective === null
+        )
+      )
+      .filter(d => !hideNon50 || d.potencyType === mainPotencyType),
+    [data, hideNN, hideNon50, mainPotencyType]
   );
   const cleanedGroupBy = useCleanGroupBy(curGroupBy, groupBy);
   const cleanedColumnDefs = useCleanColumnDefs(columnDefs, curGroupBy, groupBy);
@@ -182,8 +215,12 @@ export default function PivotTableWrapper({
      numExps={numExps}
      numArticles={numArticles}
      numNoNatExps={numNoNatExps}
-     hideNN={hide}
-     onToggleHideNN={handleToggleHideNN} />
+     numNon50Exps={numNon50Exps}
+     hideNN={hideNN}
+     hideNon50={hideNon50}
+     mainPotencyType={mainPotencyType}
+     onToggleHideNN={handleToggleHideNN}
+     onToggleHideNon50={handleToggleHideNon50} />
     {numExps > 0 ?
       <div ref={pivotTableCtlRef} className={style['pivot-table-control']}>
         <InlineLoader className={style['loader']} />
@@ -192,7 +229,9 @@ export default function PivotTableWrapper({
            {...props}
            className={style['pivot-table']}
            columnDefs={cleanedColumnDefs}
-           cacheKey={`${cacheKey}__${hide}__${JSON.stringify(cleanedGroupBy)}`}
+           cacheKey={`${cacheKey}__${hideNN}__${hideNon50}__${
+             JSON.stringify(cleanedGroupBy)
+           }`}
            data={aggData} />
           {modalData === null ? null : (
             <RawSuscResults

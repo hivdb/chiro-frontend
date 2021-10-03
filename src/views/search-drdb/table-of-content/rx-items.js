@@ -22,12 +22,12 @@ RxItems.propTypes = {
 export default function RxItems({id, title, suscResults, loaded}) {
   const suscResultsBySection = useSeparateSuscResults({
     suscResults: suscResults || [],
-    aggFormDimension: false,
+    dimensions: ['isoType'],
     skip: !loaded
   });
-  const suscResultsByMutTypeAndAggForm = useSeparateSuscResults({
+  const suscResultsByIsoTypeAndAggForm = useSeparateSuscResults({
     suscResults: suscResults || [],
-    aggFormDimension: true,
+    dimensions: ['isoType', 'aggForm'],
     skip: !loaded
   });
 
@@ -37,10 +37,10 @@ export default function RxItems({id, title, suscResults, loaded}) {
         suscResultsBySection?.indivMut || []
       ),
       indivFold: useStatSuscResults(
-        suscResultsByMutTypeAndAggForm?.indivMut.indivFold || []
+        suscResultsByIsoTypeAndAggForm?.indivMut?.indivFold || []
       ),
       aggFold: useStatSuscResults(
-        suscResultsByMutTypeAndAggForm?.indivMut.aggFold || []
+        suscResultsByIsoTypeAndAggForm?.indivMut?.aggFold || []
       )
     },
     comboMuts: {
@@ -48,10 +48,10 @@ export default function RxItems({id, title, suscResults, loaded}) {
         suscResultsBySection?.comboMuts || []
       ),
       indivFold: useStatSuscResults(
-        suscResultsByMutTypeAndAggForm?.comboMuts.indivFold || []
+        suscResultsByIsoTypeAndAggForm?.comboMuts?.indivFold || []
       ),
       aggFold: useStatSuscResults(
-        suscResultsByMutTypeAndAggForm?.comboMuts.aggFold || []
+        suscResultsByIsoTypeAndAggForm?.comboMuts?.aggFold || []
       )
     }
   };

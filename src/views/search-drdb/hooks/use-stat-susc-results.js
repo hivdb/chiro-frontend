@@ -10,7 +10,8 @@ export default function useStatSuscResults(suscResults) {
         return {
           numExps: 0,
           numArticles: 0,
-          numNoNatExps: 0
+          numNoNatExps: 0,
+          numNon50Exps: 0
         };
       }
       const numExps = suscResults.reduce(
@@ -29,7 +30,16 @@ export default function useStatSuscResults(suscResults) {
         ),
         0
       );
-      return {numExps, numArticles, numNoNatExps};
+      const numNon50Exps = suscResults.reduce(
+        (acc, {rxType, potencyType, cumulativeCount}) => (
+          acc + (
+            potencyType === (rxType === 'antibody' ? 'IC50' : 'NT50') ?
+              0 : cumulativeCount
+          )
+        ),
+        0
+      );
+      return {numExps, numArticles, numNoNatExps, numNon50Exps};
     },
     [suscResults]
   );

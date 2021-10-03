@@ -1,14 +1,36 @@
 import React from 'react';
 import Isolates from './isolates';
 
-const type2Section = {
+const isoTypes = {
   'individual-mutation': 'indivMut',
   'mutation-combination': 'comboMuts'
 };
 
+
+function multiGroupBy(inputArray, keyGetters) {
+  // multi-dimentional group by
+  const [keyGetter, ...remainKeyGetters] = keyGetters;
+  const results = inputArray.reduce(
+    (acc, one) => {
+      const key = keyGetter(one);
+      acc[key] = acc[key] || [];
+      acc[key].push(one);
+      return acc;
+    },
+    {}
+  );
+  if (remainKeyGetters.length > 0) {
+    for (const key in results) {
+      results[key] = multiGroupBy(results[key], remainKeyGetters);
+    }
+  }
+  return results;
+}
+
+
 export default function useSeparateSuscResults({
   suscResults,
-  aggFormDimension,
+  dimensions,
   skip
 }) {
   const {
@@ -16,45 +38,33 @@ export default function useSeparateSuscResults({
     isPending
   } = Isolates.useMe();
 
+  const keyGetterLookup = React.useMemo(
+    () => ({
+      isoType: sr => isoTypes[isolateLookup[sr.isoName].type],
+      aggForm: sr => sr.cumulativeCount > 1 ? 'aggFold' : 'indivFold',
+      potencyType: ({rxType, potencyType}) => {
+        if (rxType === 'antibody' && potencyType === 'IC50') {
+          return 'main';
+        }
+        else if (potencyType === 'NT50') {
+          return 'main';
+        }
+        else {
+          return potencyType;
+        }
+      }
+    }),
+    [isolateLookup]
+  );
+
   return React.useMemo(
     () => {
       if (skip || isPending) {
         return;
       }
-      if (aggFormDimension) {
-        return suscResults.reduce(
-          (acc, sr) => {
-            const {type} = isolateLookup[sr.isoName];
-            const section = type2Section[type];
-            if (sr.cumulativeCount > 1) {
-              acc[section].aggFold.push(sr);
-            }
-            else {
-              acc[section].indivFold.push(sr);
-            }
-            return acc;
-          },
-          {
-            indivMut: {indivFold: [], aggFold: []},
-            comboMuts: {indivFold: [], aggFold: []}
-          }
-        );
-      }
-      else {
-        return suscResults.reduce(
-          (acc, sr) => {
-            const {type} = isolateLookup[sr.isoName];
-            const section = type2Section[type];
-            acc[section].push(sr);
-            return acc;
-          },
-          {
-            indivMut: [],
-            comboMuts: []
-          }
-        );
-      }
+      const keyGetters = dimensions.map(d => keyGetterLookup[d]);
+      return multiGroupBy(suscResults, keyGetters);
     },
-    [skip, isPending, aggFormDimension, suscResults, isolateLookup]
+    [skip, isPending, dimensions, suscResults, keyGetterLookup]
   );
 }

@@ -173,6 +173,7 @@ export default function VPSuscResults() {
     suscResults,
     allTableConfig,
     hideNN: true,
+    hideNon50: true,
     footnoteMean: true
   });
 }

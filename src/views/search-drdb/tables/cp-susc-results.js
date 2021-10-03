@@ -156,6 +156,7 @@ export default function CPSuscResults() {
     suscResults,
     allTableConfig,
     hideNN: true,
+    hideNon50: true,
     footnoteMean: true
   });
 }

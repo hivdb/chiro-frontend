@@ -82,6 +82,7 @@ export default function AbSuscResults() {
     id: 'mab-susc-results',
     cacheKey,
     hideNN: true,
+    hideNon50: true,
     suscResults,
     allTableConfig
   });

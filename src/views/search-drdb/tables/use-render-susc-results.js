@@ -14,6 +14,7 @@ export default function useRenderSuscResults({
   loaded,
   cacheKey,
   hideNN = true,
+  hideNon50 = true,
   footnoteMean = false,
   suscResults,
   allTableConfig
@@ -22,7 +23,7 @@ export default function useRenderSuscResults({
   const suscResultsBySection = useSeparateSuscResults({
     suscResults,
     skip: !loaded,
-    aggFormDimension: false
+    dimensions: ['isoType']
   });
 
   const element = React.useMemo(
@@ -34,21 +35,23 @@ export default function useRenderSuscResults({
             .length
         );
         const indivMutTable = (
-          suscResultsBySection.indivMut.length > 0 ?
+          suscResultsBySection.indivMut?.length > 0 ?
             <PivotTableWrapper
              id={`${id}_indiv-mut`}
              cacheKey={`${id}_indiv-mut_${cacheKey}`}
              hideNN={hideNN}
+             hideNon50={hideNon50}
              tableConfig={allTableConfig.indivMut}
              footnoteMean={footnoteMean}
              data={suscResultsBySection.indivMut} /> : null
         );
         const comboMutsTable = (
-          suscResultsBySection.comboMuts.length > 0 ?
+          suscResultsBySection.comboMuts?.length > 0 ?
             <PivotTableWrapper
              id={`${id}_combo-muts`}
              cacheKey={`${id}_combo-muts_${cacheKey}`}
              hideNN={hideNN}
+             hideNon50={hideNon50}
              tableConfig={allTableConfig.comboMuts}
              footnoteMean={footnoteMean}
              data={suscResultsBySection.comboMuts} /> : null
@@ -89,6 +92,7 @@ export default function useRenderSuscResults({
       id,
       cacheKey,
       hideNN,
+      hideNon50,
       allTableConfig,
       footnoteMean
     ]

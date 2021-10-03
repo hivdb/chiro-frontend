@@ -8,8 +8,12 @@ HeadNote.propTypes = {
   numExps: PropTypes.number.isRequired,
   numArticles: PropTypes.number.isRequired,
   numNoNatExps: PropTypes.number.isRequired,
+  numNon50Exps: PropTypes.number.isRequired,
+  mainPotencyType: PropTypes.string.isRequired,
   hideNN: PropTypes.bool,
-  onToggleHideNN: PropTypes.func
+  onToggleHideNN: PropTypes.func,
+  hideNon50: PropTypes.bool,
+  onToggleHideNon50: PropTypes.func
 };
 
 
@@ -18,8 +22,12 @@ export default function HeadNote({
   numExps,
   numArticles,
   numNoNatExps,
-  hideNN = false,
-  onToggleHideNN
+  numNon50Exps,
+  mainPotencyType,
+  hideNN = true,
+  onToggleHideNN,
+  hideNon50 = true,
+  onToggleHideNon50
 }) {
   return <div>
     <em>
@@ -30,17 +38,30 @@ export default function HeadNote({
       ({pluralize('row', numRows, false)}){'; '}
       <strong>{numArticles.toLocaleString('en-US')}</strong>{' '}
       {pluralize('publications', numArticles, false)}.
-      {numNoNatExps > 0 ? <>
-        <br />
-        <strong>{numNoNatExps.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('results', numNoNatExps, false)}{' '}
-        had titers against the control virus below the experimental detection
-        threshold{hideNN ? ' and are not shown' : null}.
-      </> : null}
     </em>
     {numNoNatExps > 0 ? <>
-      {' '}(<a onClick={onToggleHideNN} href="#toggle-hide">
+      <br />
+      <em>
+        <strong>{numNoNatExps.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('results', numNoNatExps, false)} had{' '}
+        {pluralize('titers', numNoNatExps, false)} against the control virus
+        below the experimental detection threshold
+        {hideNN ? ' and are not shown' : null}.
+      </em>
+      {' '}(<a onClick={onToggleHideNN} href="#toggle-hideNN">
         {hideNN ? 'unhide' : 'hide'}
+      </a>)
+    </> : null}
+    {numNon50Exps > 0 ? <>
+      <br />
+      <em>
+        <strong>{numNon50Exps.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('results', numNon50Exps, false)}{' '}
+        had non-{mainPotencyType} results
+        {hideNon50 ? ' and are not shown' : null}.
+      </em>
+      {' '}(<a onClick={onToggleHideNon50} href="#toggle-hideNon50">
+        {hideNon50 ? 'unhide' : 'hide'}
       </a>)
     </> : null}
   </div>;
