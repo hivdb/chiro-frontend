@@ -18,6 +18,7 @@ import {
   useControlVarName
 } from './variant';
 import useIsoAggkey from './isolate-agg';
+import useVarNameOrIsoAggkey from './variant-or-isolate-agg';
 import useRefName from './reference';
 import useCumulativeCount from './cumulative-count';
 import useDataAvailability from './data-availability';
@@ -81,6 +82,7 @@ export default function useColumnDefs({
   const controlVarName = useControlVarName(commonArgs);
   const infectedVarName = useInfectedVarName(commonArgs);
   const isoAggkey = useIsoAggkey(commonArgs);
+  const varNameOrIsoAggkey = useVarNameOrIsoAggkey(commonArgs);
   const cumulativeCount = useCumulativeCount(commonArgs);
   const potency = usePotency(commonArgs);
   const fold = useFold(commonArgs);
@@ -97,6 +99,7 @@ export default function useColumnDefs({
         controlVarName,
         infectedVarName,
         isoAggkey,
+        varNameOrIsoAggkey,
         cumulativeCount,
         potency,
         fold,
@@ -116,6 +119,7 @@ export default function useColumnDefs({
       fold,
       infectedVarName,
       isoAggkey,
+      varNameOrIsoAggkey,
       potency,
       refName,
       skip,

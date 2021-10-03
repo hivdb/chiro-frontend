@@ -9,7 +9,7 @@ import Checkbox, {CheckAllBox} from './checkbox';
 
 import style from './style.module.scss';
 
-const STATE_VERSION = 1;
+const STATE_VERSION = 2;
 
 
 GroupByOptions.propTypes = {

@@ -80,7 +80,7 @@ const allTableConfig = {
       'subjectSpecies',
       // 'severity',
       'controlVarName',
-      'isoAggkey',
+      'varNameOrIsoAggkey',
       'numStudies',
       'cumulativeCount',
       'potency',
@@ -88,7 +88,7 @@ const allTableConfig = {
       'dataAvailability'
     ],
     labels: {
-      isoAggkey: 'Variant',
+      varNameOrIsoAggkey: 'Variant',
       timingRange: 'Months',
       potency: <>
         NT50 Dilution{' '}
@@ -107,7 +107,7 @@ const allTableConfig = {
       </>
     },
     rawDataLabels: {
-      isoAggkey: 'Variant',
+      varNameOrIsoAggkey: 'Variant',
       timingRange: 'Months',
       potency: 'NT50 Dilution',
       fold: 'Fold Reduction'
@@ -120,8 +120,7 @@ const allTableConfig = {
       'subjectSpecies',
       // 'severity',
       'controlVarName',
-      'isoAggkey',
-      'numMutations',
+      'varNameOrIsoAggkey',
       'rxType'
     ],
     defaultGroupBy: [
@@ -130,8 +129,7 @@ const allTableConfig = {
       'infectedVarName',
       'timingRange',
       'controlVarName',
-      'isoAggkey',
-      'numMutations',
+      'varNameOrIsoAggkey',
       'rxType'
     ]
   }
@@ -142,10 +140,11 @@ export default function CPSuscResults() {
   const {
     params: {
       refName,
+      varName,
       isoAggkey
     }
   } = LocationParams.useMe();
-  const cacheKey = JSON.stringify({refName, isoAggkey});
+  const cacheKey = JSON.stringify({refName, varName, isoAggkey});
 
   const {suscResults, isPending} = SuscResults.useCP();
 

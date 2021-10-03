@@ -90,7 +90,7 @@ const allTableConfig = {
       'timingRange',
       'subjectSpecies',
       'controlVarName',
-      'isoAggkey',
+      'varNameOrIsoAggkey',
       'numStudies',
       'cumulativeCount',
       'potency',
@@ -98,7 +98,7 @@ const allTableConfig = {
       'dataAvailability'
     ],
     labels: {
-      isoAggkey: 'Variant',
+      varNameOrIsoAggkey: 'Variant',
       infectedVarName: 'Pre-vaccine Infection',
       dosage: '# Shots',
       timingRange: 'Months',
@@ -119,7 +119,7 @@ const allTableConfig = {
       </>
     },
     rawDataLabels: {
-      isoAggkey: 'Variant',
+      varNameOrIsoAggkey: 'Variant',
       infectedVarName: 'Pre-vaccine Infection',
       dosage: '# Shots',
       timingRange: 'Months',
@@ -135,8 +135,7 @@ const allTableConfig = {
       'timingRange',
       'subjectSpecies',
       'controlVarName',
-      'isoAggkey',
-      'numMutations',
+      'varNameOrIsoAggkey',
       'rxType'
     ],
     defaultGroupBy: [
@@ -147,8 +146,7 @@ const allTableConfig = {
       'dosage',
       'timingRange',
       'controlVarName',
-      'isoAggkey',
-      'numMutations',
+      'varNameOrIsoAggkey',
       'rxType'
     ]
   }
@@ -159,11 +157,12 @@ export default function VPSuscResults() {
   const {
     params: {
       refName,
+      varName,
       isoAggkey,
       vaccineName
     }
   } = LocationParams.useMe();
-  const cacheKey = JSON.stringify({refName, isoAggkey, vaccineName});
+  const cacheKey = JSON.stringify({refName, varName, isoAggkey, vaccineName});
   const {suscResults, isPending} = SuscResults.useVP();
 
   return useRenderSuscResults({

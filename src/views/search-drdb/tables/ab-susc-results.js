@@ -40,7 +40,7 @@ const allTableConfig = {
       'section',
       'abNames',
       'controlVarName',
-      'isoAggkey',
+      'varNameOrIsoAggkey',
       'numStudies',
       'cumulativeCount',
       'potency',
@@ -48,7 +48,7 @@ const allTableConfig = {
       'dataAvailability'
     ],
     labels: {
-      isoAggkey: 'Variant',
+      varNameOrIsoAggkey: 'Variant',
       potency: 'IC50 (ng/ml)',
       fold: 'Fold Reduction'
     },
@@ -57,8 +57,7 @@ const allTableConfig = {
       'assayName',
       'abNames',
       'controlVarName',
-      'isoAggkey',
-      'numMutations',
+      'varNameOrIsoAggkey',
       'rxType'
     ]
   }
@@ -69,11 +68,12 @@ export default function AbSuscResults() {
   const {
     params: {
       refName,
+      varName,
       isoAggkey,
       abNames
     }
   } = LocationParams.useMe();
-  const cacheKey = JSON.stringify({refName, isoAggkey, abNames});
+  const cacheKey = JSON.stringify({refName, varName, isoAggkey, abNames});
 
   const {suscResults, isPending} = SuscResults.useAb();
 

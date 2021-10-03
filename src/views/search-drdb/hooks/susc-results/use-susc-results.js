@@ -165,6 +165,10 @@ function usePrepareQuery({
           expiso.var_name AS var_name,
           pair.iso_aggkey,
           pair.num_mutations,
+          CASE
+            WHEN expiso.var_name IS NOT NULL THEN expiso.var_name
+            ELSE pair.iso_aggkey
+          END var_name_or_iso_aggkey,
           S.section,
           S.potency_type,
           S.control_potency,
