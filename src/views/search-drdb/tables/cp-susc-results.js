@@ -5,6 +5,58 @@ import SuscResults from '../hooks/susc-results';
 import LocationParams from '../hooks/location-params';
 import style from '../style.module.scss';
 
+const subfilterOptions = {
+  infectedVarName: [
+    {
+      action: 'infected',
+      value: 'no',
+      label: 'None',
+      descAdd: <>
+        List results of samples from <strong>uninfected</strong> persons
+      </>,
+      predicate: r => r.infectedVarName === null
+    },
+    {
+      action: 'infected',
+      value: 'yes',
+      label: 'Infected',
+      descAdd: <>
+        List results of samples from <strong>infected</strong> persons
+      </>,
+      predicate: r => r.infectedVarName !== null
+    }
+  ],
+  timingRange: [
+    {
+      action: 'month',
+      value: '1',
+      descAdd: <>
+        List results of samples collected{' '}
+        <strong>up to 1 month</strong> after symptom onset
+      </>,
+      predicate: r => r.timingRange === '1'
+    },
+    {
+      action: 'month',
+      value: '2-6',
+      descAdd: <>
+        List results of samples collected{' '}
+        <strong>between 2 to 6 months</strong> after symptom onset
+      </>,
+      predicate: r => r.timingRange === '2-6'
+    },
+    {
+      action: 'month',
+      value: '≥6',
+      descAdd: <>
+        List results of samples collected{' '}
+        <strong>more than 6 months</strong> after symptom onset
+      </>,
+      predicate: r => r.timingRange === '≥6'
+    }
+  ]
+};
+
 const allTableConfig = {
   indivMut: {
     columns: [
@@ -68,7 +120,8 @@ const allTableConfig = {
       'isoAggkey',
       'numMutations',
       'rxType'
-    ]
+    ],
+    subfilterOptions
   },
   comboMuts: {
     columns: [
@@ -131,7 +184,8 @@ const allTableConfig = {
       'controlVarName',
       'varNameOrIsoAggkey',
       'rxType'
-    ]
+    ],
+    subfilterOptions
   }
 };
 

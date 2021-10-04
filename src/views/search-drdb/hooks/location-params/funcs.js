@@ -76,7 +76,10 @@ export function buildQuery(
     query[action] = value;
   }
   else {
-    query = {...query, ...action};
+    query = {
+      ...query,
+      ...action
+    };
   }
 
   delete query.form_only;
@@ -88,10 +91,14 @@ export function buildQuery(
   else if (action === 'antibodies') {
     delete query.vaccine;
     delete query.cp;
+    delete query.infected;
+    delete query.dosage;
+    delete query.month;
   }
   else if (action === 'cp') {
     delete query.antibodies;
     delete query.vaccine;
+    delete query.dosage;
   }
   else if (action === 'variant') {
     delete query.mutations;

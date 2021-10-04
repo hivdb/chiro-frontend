@@ -1,4 +1,5 @@
 @import "../../../../styles/variables";
+@import "../../../../styles/mixins";
 
 .group-by-options_container {
   font-family: "Arial Narrow", $font-family;
@@ -32,5 +33,40 @@ ul.group-by-options {
     label {
       margin-right: 1.2rem;
     }
+  }
+}
+
+.group-by-checkbox:not(:last-child) label {
+  margin-right: .4rem;
+}
+
+.subfilter-options {
+  margin-right: .8rem;
+}
+
+.subfilter {
+  $icon-size: 1rem;
+  @include tooltip("> .filter-desc");
+  > .filter-desc {
+    left: 60%;
+    top: 150%;
+    width: max-content;
+  }
+  > .filter-icons {
+    display: inline-block;
+    line-height: 1rem;
+    overflow: hidden;
+    vertical-align: text-top;
+    font-size: $icon-size;
+    width: $icon-size;
+    height: $icon-size;
+    display: inline-block;
+    > svg {
+      vertical-align: text-top;
+      transition: transform 120ms ease-in-out;
+    }
+  }
+  &:hover > .filter-icons > svg {
+    transform: translate(0,- $icon-size);
   }
 }

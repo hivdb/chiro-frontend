@@ -45,6 +45,9 @@ PivotTableWrapper.propTypes = {
     ).isRequired,
     defaultGroupBy: PropTypes.arrayOf(
       PropTypes.string.isRequired
+    ),
+    subfilterOptions: PropTypes.objectOf(
+      PropTypes.array.isRequired
     )
   }).isRequired
 };
@@ -93,7 +96,8 @@ export default function PivotTableWrapper({
     columns,
     labels,
     groupBy,
-    defaultGroupBy
+    defaultGroupBy,
+    subfilterOptions
   },
   hideNN: defaultHideNN = true,
   hideNon50: defaultHideNon50 = true,
@@ -209,7 +213,8 @@ export default function PivotTableWrapper({
      onChange={handleChangeGroupBy}
      allColumnDefs={columnDefs}
      allGroupByOptions={groupBy}
-     defaultGroupByOptions={defaultGroupBy || groupBy} />
+     defaultGroupByOptions={defaultGroupBy || groupBy}
+     subfilterOptions={subfilterOptions} />
     <HeadNote
      numRows={numRows}
      numExps={numExps}

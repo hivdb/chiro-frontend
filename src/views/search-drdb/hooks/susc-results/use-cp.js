@@ -8,7 +8,7 @@ import useSuscResults from './use-susc-results';
 const CPSuscResultsContext = React.createContext();
 
 
-function usePrepareQuery({infectedVarName, skip}) {
+function usePrepareQuery({infectedVarName, infected, month, skip}) {
   const {config, isPending} = useConfig();
   return React.useMemo(
     () => {
@@ -78,6 +78,30 @@ function usePrepareQuery({infectedVarName, skip}) {
           }
           params.$infectedVarName = infectedVarName;
         }
+        if (infected === 'yes') {
+          where.push(`RXCP.infected_iso_name IS NOT NULL`);
+        }
+        else if (infected === 'no') {
+          where.push(`RXCP.infected_iso_name IS NULL`);
+        }
+
+        if (month) {
+          const {between: [begin, end] = []} = config.monthRanges
+            .find(({name}) => name === month) || {};
+          let cond;
+          if (begin === null || begin === undefined) {
+            cond = `RxCP.timing <= $timingEnd`;
+          }
+          else if (end === null || end === undefined) {
+            cond = `RxCP.timing >= $timingBegin`;
+          }
+          else {
+            cond = `RxCP.timing BETWEEN $timingBegin AND $timingEnd`;
+          }
+          params[`$timingBegin`] = begin;
+          params[`$timingEnd`] = end;
+          where.push(cond);
+        }
 
         joinClause.push(`
           JOIN rx_conv_plasma RXCP ON
@@ -94,7 +118,7 @@ function usePrepareQuery({infectedVarName, skip}) {
       }
       return {addColumns, where, joinClause, params};
     },
-    [skip, isPending, config, infectedVarName]
+    [skip, isPending, config, infectedVarName, infected, month]
   );
 
 }
@@ -113,7 +137,9 @@ export function CPSuscResultsProvider({children}) {
       isoAggkey,
       varName,
       genePos,
-      infectedVarName
+      infectedVarName,
+      infected,
+      month
     },
     filterFlag
   } = LocationParams.useMe();
@@ -123,7 +149,7 @@ export function CPSuscResultsProvider({children}) {
     joinClause,
     where,
     params
-  } = usePrepareQuery({infectedVarName, skip});
+  } = usePrepareQuery({infectedVarName, infected, month, skip});
   const contextValue = useSuscResults({
     refName,
     isoAggkey,

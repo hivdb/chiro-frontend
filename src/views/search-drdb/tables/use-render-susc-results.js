@@ -1,4 +1,5 @@
 import React from 'react';
+import {useRouter} from 'found';
 import {Header} from 'semantic-ui-react';
 import {H3} from 'sierra-frontend/dist/components/heading-tags';
 
@@ -20,11 +21,21 @@ export default function useRenderSuscResults({
   allTableConfig
 }) {
 
+  const {router} = useRouter();
+
   const suscResultsBySection = useSeparateSuscResults({
     suscResults,
     skip: !loaded,
     dimensions: ['isoType']
   });
+
+  const handleGoBack = React.useCallback(
+    e => {
+      e && e.preventDefault();
+      router.go(-1);
+    },
+    [router]
+  );
 
   const element = React.useMemo(
     () => {
@@ -79,7 +90,12 @@ export default function useRenderSuscResults({
           </>;
         }
         else {
-          return "No susceptibility data is found for this request.";
+          return <>
+            <div>
+              No susceptibility data is found for this request.
+              (<a href="#back" onClick={handleGoBack}>Go back</a>)
+            </div>
+          </>;
         }
       }
       else {
@@ -94,7 +110,8 @@ export default function useRenderSuscResults({
       hideNN,
       hideNon50,
       allTableConfig,
-      footnoteMean
+      footnoteMean,
+      handleGoBack
     ]
   );
   return element;

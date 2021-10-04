@@ -1,28 +1,28 @@
 import React from 'react';
-import {Link} from 'found';
+import {useRouter, Link} from 'found';
 import PropTypes from 'prop-types';
+import {buildLocationQuery} from '../../hooks/location-params';
 
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
-
-
-function CellReference({refName, displayName}) {
-  return (
-    <Link to={{
-      pathname: '/search-drdb/',
-      query: {
-        'article': refName
-      }
-    }}>
-      {displayName}
-    </Link>
-  );
-}
 
 
 CellReference.propTypes = {
   refName: PropTypes.string.isRequired,
   displayName: PropTypes.string.isRequired
 };
+
+
+function CellReference({refName, displayName}) {
+  const {match: {location: loc}} = useRouter();
+  return (
+    <Link to={{
+      pathname: loc.pathname,
+      query: buildLocationQuery('article', refName, loc.query)
+    }}>
+      {displayName}
+    </Link>
+  );
+}
 
 
 export default function useRefName({labels, articleLookup, skip, columns}) {

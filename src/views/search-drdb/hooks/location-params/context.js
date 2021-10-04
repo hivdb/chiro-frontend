@@ -24,7 +24,10 @@ function LocationParamsProvider({children}) {
         variant: varName = null,
         position: genePos = null,
         cp: infectedVarName = '',
-        vaccine: vaccineName = null
+        vaccine: vaccineName = null,
+        infected,
+        month,
+        dosage
       } = {}
     }
   } = match;
@@ -57,7 +60,10 @@ function LocationParamsProvider({children}) {
           varName,
           vaccineName,
           infectedVarName,
-          genePos
+          genePos,
+          infected,
+          month,
+          dosage
         },
         filterFlag: {
           article: !!refName,
@@ -80,6 +86,9 @@ function LocationParamsProvider({children}) {
       vaccineName,
       infectedVarName,
       genePos,
+      infected,
+      month,
+      dosage,
       onChange
     ]
   );

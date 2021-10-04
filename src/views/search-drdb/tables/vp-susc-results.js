@@ -5,6 +5,79 @@ import SuscResults from '../hooks/susc-results';
 import LocationParams from '../hooks/location-params';
 import style from '../style.module.scss';
 
+const subfilterOptions = {
+  infectedVarName: [
+    {
+      action: 'infected',
+      value: 'no',
+      label: 'None',
+      descAdd: <>
+        List results of samples from <strong>uninfected</strong> persons
+      </>
+    },
+    {
+      action: 'infected',
+      value: 'yes',
+      label: 'Infected',
+      descAdd: <>
+        List results of samples from <strong>infected</strong> persons
+      </>
+    }
+  ],
+  dosage: [
+    {
+      action: 'dosage',
+      value: '1',
+      descAdd: <>
+        List results of samples from persons
+        received <strong>one vaccine dose</strong>
+      </>
+    },
+    {
+      action: 'dosage',
+      value: '2',
+      descAdd: <>
+        List results of samples from persons
+        received <strong>two vaccine doses</strong>
+      </>
+    },
+    {
+      action: 'dosage',
+      value: '3',
+      descAdd: <>
+        List results of samples from persons
+        received <strong>three vaccine doses</strong>
+      </>
+    }
+  ],
+  timingRange: [
+    {
+      action: 'month',
+      value: '1',
+      descAdd: <>
+        List results of samples collected{' '}
+        <strong>up to 1 month</strong> after last vaccination
+      </>
+    },
+    {
+      action: 'month',
+      value: '2-6',
+      descAdd: <>
+        List results of samples collected{' '}
+        <strong>between 2 to 6 months</strong> after last vaccination
+      </>
+    },
+    {
+      action: 'month',
+      value: '≥6',
+      descAdd: <>
+        List results of samples collected{' '}
+        <strong>more than 6 months</strong> after last vaccination
+      </>
+    }
+  ]
+};
+
 const allTableConfig = {
   indivMut: {
     columns: [
@@ -77,7 +150,8 @@ const allTableConfig = {
       'isoAggkey',
       'numMutations',
       'rxType'
-    ]
+    ],
+    subfilterOptions
   },
   comboMuts: {
     columns: [
@@ -148,7 +222,8 @@ const allTableConfig = {
       'controlVarName',
       'varNameOrIsoAggkey',
       'rxType'
-    ]
+    ],
+    subfilterOptions
   }
 };
 

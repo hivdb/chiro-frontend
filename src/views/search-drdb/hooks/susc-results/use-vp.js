@@ -7,7 +7,7 @@ import useSuscResults from './use-susc-results';
 const VPSuscResultsContext = React.createContext();
 
 
-function usePrepareQuery({vaccineName, skip}) {
+function usePrepareQuery({vaccineName, infected, month, dosage, skip}) {
   const {config, isPending} = useConfig();
   return React.useMemo(
     () => {
@@ -70,11 +70,42 @@ function usePrepareQuery({vaccineName, skip}) {
         if (vaccineName && vaccineName !== 'any') {
           where.push('RXVP.vaccine_name=$vaccineName');
         }
+
+        if (infected === 'yes') {
+          where.push(`RXVP.infected_iso_name IS NOT NULL`);
+        }
+        else if (infected === 'no') {
+          where.push(`RXVP.infected_iso_name IS NULL`);
+        }
+
+        if (month) {
+          const {between: [begin, end] = []} = config.monthRanges
+            .find(({name}) => name === month) || {};
+          let cond;
+          if (begin === null || begin === undefined) {
+            cond = `RxVP.timing <= $timingEnd`;
+          }
+          else if (end === null || end === undefined) {
+            cond = `RxVP.timing >= $timingBegin`;
+          }
+          else {
+            cond = `RxVP.timing BETWEEN $timingBegin AND $timingEnd`;
+          }
+          params.$timingBegin = begin;
+          params.$timingEnd = end;
+          where.push(cond);
+        }
+
+        if (['1', '2', '3'].includes(dosage)) {
+          where.push('dosage = $dosage');
+          params.$dosage = Number.parseInt(dosage, 10);
+        }
+
         params.$vaccineName = vaccineName;
       }
       return {addColumns, joinClause, where, params};
     },
-    [isPending, config, skip, vaccineName]
+    [isPending, config, skip, vaccineName, infected, month, dosage]
   );
 }
 
@@ -92,7 +123,10 @@ export function VPSuscResultsProvider({children}) {
       isoAggkey,
       varName,
       genePos,
-      vaccineName
+      vaccineName,
+      infected,
+      month,
+      dosage
     },
     filterFlag
   } = LocationParams.useMe();
@@ -102,7 +136,7 @@ export function VPSuscResultsProvider({children}) {
     joinClause,
     where,
     params
-  } = usePrepareQuery({vaccineName, skip});
+  } = usePrepareQuery({vaccineName, infected, month, dosage, skip});
 
   const {
     suscResults,

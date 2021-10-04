@@ -6,33 +6,7 @@ import {
 } from 'sierra-frontend/dist/components/simple-table/prop-types';
 import CheckboxInput from 'sierra-frontend/dist/components/checkbox-input';
 
-
-CheckAllBox.propTypes = {
-  idPrefix: PropTypes.string.isRequired,
-  checked: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired
-};
-
-export function CheckAllBox({
-  idPrefix,
-  checked,
-  onChange
-}) {
-  const handleChange = React.useCallback(
-    evt => onChange(evt.currentTarget.checked),
-    [onChange]
-  );
-
-  return <>
-    <CheckboxInput
-     id={`${idPrefix}_-check-all`}
-     checked={checked}
-     onChange={handleChange}
-     value="-check-all">
-      (Select all)
-    </CheckboxInput>
-  </>;
-}
+import style from './style.module.scss';
 
 
 GroupByCheckbox.propTypes = {
@@ -57,6 +31,7 @@ export default function GroupByCheckbox({
   return <>
     <CheckboxInput
      id={`${idPrefix}_${name}`}
+     className={style['group-by-checkbox']}
      checked={checked}
      onChange={handleChange}
      value={name}>

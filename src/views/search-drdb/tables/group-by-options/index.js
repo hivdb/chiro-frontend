@@ -5,7 +5,8 @@ import {
 } from 'sierra-frontend/dist/components/simple-table/prop-types';
 import createPersistedState from 'use-persisted-state/src';
 
-import Checkbox, {CheckAllBox} from './checkbox';
+import Checkbox from './checkbox';
+import Subfilter, {useResetAllSubfilters} from './subfilter';
 
 import style from './style.module.scss';
 
@@ -23,6 +24,9 @@ GroupByOptions.propTypes = {
   defaultGroupByOptions: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ).isRequired,
+  subfilterOptions: PropTypes.objectOf(
+    PropTypes.array.isRequired
+  ),
   onChange: PropTypes.func
 };
 
@@ -31,6 +35,7 @@ export default function GroupByOptions({
   idPrefix,
   allColumnDefs,
   allGroupByOptions,
+  subfilterOptions = {},
   defaultGroupByOptions,
   onChange
 }) {
@@ -87,9 +92,17 @@ export default function GroupByOptions({
     [groupByOptionMap, onChange, setGroupByOptionMap]
   );
 
+  const allChecked = React.useMemo(
+    () => (
+      columnDefs.every(({name}) => groupByOptionMap[name])
+    ),
+    [groupByOptionMap, columnDefs]
+  );
+
   const handleCheckAll = React.useCallback(
-    shouldCheckAll => {
-      const options = shouldCheckAll ? columnDefs.map(({name}) => name) : [];
+    e => {
+      e && e.preventDefault();
+      const options = allChecked ? [] : columnDefs.map(({name}) => name);
       setGroupByOptionMap(options.reduce(
         (acc, name) => {
           acc[name] = true;
@@ -99,14 +112,24 @@ export default function GroupByOptions({
       ));
       onChange && onChange(options);
     },
-    [columnDefs, setGroupByOptionMap, onChange]
+    [columnDefs, setGroupByOptionMap, onChange, allChecked]
   );
+  const onResetAllSubfilters = useResetAllSubfilters(subfilterOptions);
 
-  const allChecked = React.useMemo(
-    () => (
-      columnDefs.every(({name}) => groupByOptionMap[name])
-    ),
-    [groupByOptionMap, columnDefs]
+  const handleReset = React.useCallback(
+    e => {
+      e && e.preventDefault();
+      setGroupByOptionMap(defaultGroupByOptionMap);
+      onChange && onChange(defaultGroupByOptions);
+      onResetAllSubfilters();
+    },
+    [
+      defaultGroupByOptionMap,
+      defaultGroupByOptions,
+      onChange,
+      setGroupByOptionMap,
+      onResetAllSubfilters
+    ]
   );
 
   return <div className={style['group-by-options_container']}>
@@ -124,14 +147,20 @@ export default function GroupByOptions({
              columnDef={colDef}
              checked={!!groupByOptionMap[colDef.name]}
              onChange={handleChange} />
+            {subfilterOptions[colDef.name] ?
+              <Subfilter options={subfilterOptions[colDef.name]} /> :
+              null}
           </li>
         )
       )}
-      <li data-checked={allChecked}>
-        <CheckAllBox
-         idPrefix={idPrefix}
-         checked={allChecked}
-         onChange={handleCheckAll} />
+      <li>
+        (
+        <a href="#check-all" onClick={handleCheckAll}>
+          {allChecked ? 'Remove all' : 'Select all'}
+        </a>
+        {' · '}
+        <a href="#reset" onClick={handleReset}>Reset</a>
+        )
       </li>
     </ul>
   </div>;
