@@ -29,8 +29,7 @@ export default function FootNote({
       {footnoteMean ? <>
         <strong>GeoMean</strong>: geometric mean{'; '}
         <strong>GSD</strong>: geometric standard deviation{'; '}
-        <strong>Mean</strong>: arithmetic mean{'; '}
-        <strong>SD</strong>: arithmetic standard deviation
+        <strong>IQR</strong>: Interquartile range
       </> : null}
       .
     </p> : null}
