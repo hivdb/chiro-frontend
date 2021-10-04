@@ -104,6 +104,7 @@ export default function PivotTableWrapper({
   footnoteMean = false,
   ...props
 }) {
+  const mountState = React.useRef(false);
   const pivotTableCtlRef = React.useRef();
   const [modalData, setModalData] = React.useState(null);
   const [curGroupBy, setCurGroupBy] = React.useState(defaultGroupBy || groupBy);
@@ -126,6 +127,16 @@ export default function PivotTableWrapper({
     setHideNon50
   ] = useHideNon50State(defaultHideNon50);
 
+  React.useEffect(
+    () => {
+      mountState.current = true;
+      return () => {
+        mountState.current = false;
+      };
+    },
+    []
+  );
+
   const handleModalClose = React.useCallback(() => setModalData(null), []);
   const setLoading = React.useCallback(
     callback => {
@@ -133,10 +144,12 @@ export default function PivotTableWrapper({
       if (target) {
         target.dataset.loading = '';
         setTimeout(() => {
-          callback();
-          setTimeout(() => {
-            delete target.dataset.loading;
-          }, 0);
+          if (mountState.current) {
+            callback();
+            setTimeout(() => {
+              delete target.dataset.loading;
+            }, 0);
+          }
         }, 0);
       }
     },

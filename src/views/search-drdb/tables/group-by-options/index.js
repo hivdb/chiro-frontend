@@ -156,7 +156,7 @@ export default function GroupByOptions({
       <li>
         (
         <a href="#check-all" onClick={handleCheckAll}>
-          {allChecked ? 'Remove all' : 'Select all'}
+          {allChecked ? 'Deselect all' : 'Select all'}
         </a>
         {' · '}
         <a href="#reset" onClick={handleReset}>Reset</a>
