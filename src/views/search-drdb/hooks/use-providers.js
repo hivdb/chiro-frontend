@@ -56,7 +56,7 @@ const presetProviderNames = {
 };
 
 
-export default function useProviders(preset) {
+export default function useProviders(preset, providerProps = {}) {
   const providerNames = React.useMemo(
     () => [
       ...presetProviderNames[preset]
@@ -70,11 +70,11 @@ export default function useProviders(preset) {
       let element = children;
       for (const name of providerNames) {
         const Provider = providers[name];
-        element = <Provider>{element}</Provider>;
+        element = <Provider {...providerProps[name]}>{element}</Provider>;
       }
       return element;
     },
-    [providerNames]
+    [providerNames, providerProps]
   );
 
 }

@@ -10,7 +10,13 @@ import style from './style.module.scss';
 
 
 export default function SusceptibilityData() {
-  const ComboProvider = useProviders('searchBoxOnly');
+  const ComboProvider = useProviders('searchBoxOnly', /*providerProps = */{
+    locationParams: {
+      defaultQuery: {
+        host: 'human'
+      }
+    }
+  });
 
   return (
     <CMSPage

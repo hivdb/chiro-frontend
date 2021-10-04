@@ -7,11 +7,15 @@ import {buildQuery, parseAntibodies} from './funcs';
 const LocationParamsContext = React.createContext();
 
 LocationParamsProvider.propTypes = {
+  defaultQuery: PropTypes.object,
   children: PropTypes.node.isRequired
 };
 
 
-function LocationParamsProvider({children}) {
+function LocationParamsProvider({
+  defaultQuery = {},
+  children
+}) {
   const {router, match} = useRouter();
   const {
     location: loc,
@@ -27,7 +31,8 @@ function LocationParamsProvider({children}) {
         vaccine: vaccineName = null,
         infected,
         month,
-        dosage
+        dosage,
+        host
       } = {}
     }
   } = match;
@@ -37,7 +42,10 @@ function LocationParamsProvider({children}) {
       const query = buildQuery(
         action,
         value,
-        clearAction ? {} : loc.query
+        clearAction ? defaultQuery : {
+          ...defaultQuery,
+          ...loc.query
+        }
       );
 
       router.push({
@@ -45,7 +53,7 @@ function LocationParamsProvider({children}) {
         query
       });
     },
-    [router, loc.query]
+    [router, defaultQuery, loc.query]
   );
 
   const contextValue = React.useMemo(
@@ -63,7 +71,8 @@ function LocationParamsProvider({children}) {
           genePos,
           infected,
           month,
-          dosage
+          dosage,
+          host
         },
         filterFlag: {
           article: !!refName,
@@ -89,6 +98,7 @@ function LocationParamsProvider({children}) {
       infected,
       month,
       dosage,
+      host,
       onChange
     ]
   );

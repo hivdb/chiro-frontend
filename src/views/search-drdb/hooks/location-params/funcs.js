@@ -1,9 +1,21 @@
+import intersection from 'lodash/intersection';
+
 export function parseAntibodies(antibodyText) {
   return antibodyText
     .split(',')
     .map(ab => ab.trim())
     .filter(ab => ab);
 }
+
+
+const FORM_ONLY_IF_MISSING_ALL = [
+  'antibodies',
+  'vaccine',
+  'cp',
+  'variant',
+  'mutations',
+  'position'
+];
 
 
 export function cleanQuery(query) {
@@ -45,7 +57,10 @@ export function cleanQuery(query) {
       },
       {}
     );
-  if (Object.keys(query).length === 0) {
+  if (intersection(
+    FORM_ONLY_IF_MISSING_ALL,
+    Object.keys(query)
+  ).length === 0) {
     // force form_only since loading all take too long
     /* eslint-disable-next-line camelcase */
     query.form_only = null;
@@ -94,6 +109,7 @@ export function buildQuery(
     delete query.infected;
     delete query.dosage;
     delete query.month;
+    delete query.host;
   }
   else if (action === 'cp') {
     delete query.antibodies;

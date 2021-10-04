@@ -8,7 +8,7 @@ import useSuscResults from './use-susc-results';
 const CPSuscResultsContext = React.createContext();
 
 
-function usePrepareQuery({infectedVarName, infected, month, skip}) {
+function usePrepareQuery({infectedVarName, infected, month, host, skip}) {
   const {config, isPending} = useConfig();
   return React.useMemo(
     () => {
@@ -103,6 +103,15 @@ function usePrepareQuery({infectedVarName, infected, month, skip}) {
           where.push(cond);
         }
 
+        if (host === 'human') {
+          where.push("subject_species = 'Human'");
+        }
+        else if (host === 'animal') {
+          where.push(`
+            subject_species IS NOT NULL AND subject_species != 'Human'
+          `);
+        }
+
         joinClause.push(`
           JOIN rx_conv_plasma RXCP ON
             S.ref_name = RXCP.ref_name AND
@@ -118,7 +127,7 @@ function usePrepareQuery({infectedVarName, infected, month, skip}) {
       }
       return {addColumns, where, joinClause, params};
     },
-    [skip, isPending, config, infectedVarName, infected, month]
+    [skip, isPending, config, infectedVarName, infected, month, host]
   );
 
 }
@@ -139,7 +148,8 @@ export function CPSuscResultsProvider({children}) {
       genePos,
       infectedVarName,
       infected,
-      month
+      month,
+      host
     },
     filterFlag
   } = LocationParams.useMe();
@@ -149,7 +159,7 @@ export function CPSuscResultsProvider({children}) {
     joinClause,
     where,
     params
-  } = usePrepareQuery({infectedVarName, infected, month, skip});
+  } = usePrepareQuery({infectedVarName, infected, month, host, skip});
   const contextValue = useSuscResults({
     refName,
     isoAggkey,

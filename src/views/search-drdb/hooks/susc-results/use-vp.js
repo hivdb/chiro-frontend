@@ -7,7 +7,7 @@ import useSuscResults from './use-susc-results';
 const VPSuscResultsContext = React.createContext();
 
 
-function usePrepareQuery({vaccineName, infected, month, dosage, skip}) {
+function usePrepareQuery({vaccineName, infected, month, dosage, host, skip}) {
   const {config, isPending} = useConfig();
   return React.useMemo(
     () => {
@@ -96,6 +96,15 @@ function usePrepareQuery({vaccineName, infected, month, dosage, skip}) {
           where.push(cond);
         }
 
+        if (host === 'human') {
+          where.push("subject_species = 'Human'");
+        }
+        else if (host === 'animal') {
+          where.push(`
+            subject_species IS NOT NULL AND subject_species != 'Human'
+          `);
+        }
+
         if (['1', '2', '3'].includes(dosage)) {
           where.push('dosage = $dosage');
           params.$dosage = Number.parseInt(dosage, 10);
@@ -105,7 +114,7 @@ function usePrepareQuery({vaccineName, infected, month, dosage, skip}) {
       }
       return {addColumns, joinClause, where, params};
     },
-    [isPending, config, skip, vaccineName, infected, month, dosage]
+    [isPending, config, skip, vaccineName, infected, month, dosage, host]
   );
 }
 
@@ -126,6 +135,7 @@ export function VPSuscResultsProvider({children}) {
       vaccineName,
       infected,
       month,
+      host,
       dosage
     },
     filterFlag
@@ -136,7 +146,7 @@ export function VPSuscResultsProvider({children}) {
     joinClause,
     where,
     params
-  } = usePrepareQuery({vaccineName, infected, month, dosage, skip});
+  } = usePrepareQuery({vaccineName, infected, month, dosage, host, skip});
 
   const {
     suscResults,

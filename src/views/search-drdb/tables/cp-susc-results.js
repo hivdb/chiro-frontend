@@ -13,8 +13,7 @@ const subfilterOptions = {
       label: 'None',
       descAdd: <>
         List results of samples from <strong>uninfected</strong> persons
-      </>,
-      predicate: r => r.infectedVarName === null
+      </>
     },
     {
       action: 'infected',
@@ -22,8 +21,7 @@ const subfilterOptions = {
       label: 'Infected',
       descAdd: <>
         List results of samples from <strong>infected</strong> persons
-      </>,
-      predicate: r => r.infectedVarName !== null
+      </>
     }
   ],
   timingRange: [
@@ -33,8 +31,7 @@ const subfilterOptions = {
       descAdd: <>
         List results of samples collected{' '}
         <strong>up to 1 month</strong> after symptom onset
-      </>,
-      predicate: r => r.timingRange === '1'
+      </>
     },
     {
       action: 'month',
@@ -42,8 +39,7 @@ const subfilterOptions = {
       descAdd: <>
         List results of samples collected{' '}
         <strong>between 2 to 6 months</strong> after symptom onset
-      </>,
-      predicate: r => r.timingRange === '2-6'
+      </>
     },
     {
       action: 'month',
@@ -51,8 +47,23 @@ const subfilterOptions = {
       descAdd: <>
         List results of samples collected{' '}
         <strong>more than 6 months</strong> after symptom onset
-      </>,
-      predicate: r => r.timingRange === '≥6'
+      </>
+    }
+  ],
+  subjectSpecies: [
+    {
+      action: 'host',
+      value: 'human',
+      descAdd: <>
+        List results of <strong>human</strong> samples
+      </>
+    },
+    {
+      action: 'host',
+      value: 'animal',
+      descAdd: <>
+        List results of <strong>animal model</strong> samples
+      </>
     }
   ]
 };

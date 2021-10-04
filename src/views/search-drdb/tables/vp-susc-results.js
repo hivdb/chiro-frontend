@@ -75,6 +75,22 @@ const subfilterOptions = {
         <strong>more than 6 months</strong> after last vaccination
       </>
     }
+  ],
+  subjectSpecies: [
+    {
+      action: 'host',
+      value: 'human',
+      descAdd: <>
+        List results of <strong>human</strong> samples
+      </>
+    },
+    {
+      action: 'host',
+      value: 'animal',
+      descAdd: <>
+        List results of <strong>animal model</strong> samples
+      </>
+    }
   ]
 };
 
