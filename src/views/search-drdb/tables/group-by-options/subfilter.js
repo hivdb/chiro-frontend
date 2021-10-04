@@ -62,7 +62,6 @@ export default function Subfilter({options}) {
                  pathname: loc.pathname,
                  query: buildLocationQuery(action, undefined, loc.query)
                }}
-               title
                className={style['subfilter']}>
                 <span className={style['filter-icons']}>
                   <RiFilterFill data-display-when="initial" />
