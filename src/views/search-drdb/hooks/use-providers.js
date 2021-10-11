@@ -11,6 +11,7 @@ import IsolateAggs from './isolate-aggs';
 import Positions from './positions';
 import SuscSummary from './susc-summary';
 import SuscResults from './susc-results';
+import InVitroMutations from './invitro-mutations';
 
 const providers = {
   locationParams: LocationParams.Provider,
@@ -23,7 +24,8 @@ const providers = {
   isolateAggs: IsolateAggs.Provider,
   positions: Positions.Provider,
   suscSummary: SuscSummary.Provider,
-  suscResults: SuscResults.Provider
+  suscResults: SuscResults.Provider,
+  inVitroMutations: InVitroMutations.Provider
 };
 
 
@@ -51,7 +53,8 @@ const presetProviderNames = {
     'isolateAggs',
     'positions',
     'suscSummary',
-    'suscResults'
+    'suscResults',
+    'inVitroMutations'
   ]
 };
 
