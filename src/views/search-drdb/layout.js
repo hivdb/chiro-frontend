@@ -76,15 +76,6 @@ export default function SearchDRDBLayout() {
           <AbSuscResults />
         </Grid.Column>
       </Grid.Row> : null}
-    {displayAbTables ?
-      <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as={H2} id="invitro-mutations">
-            In-vitro Selection Data
-          </Header>
-          <InVitroMutationsTable />
-        </Grid.Column>
-      </Grid.Row> : null}
     {displayVPTables ?
       <Grid.Row centered>
         <Grid.Column width={16}>
@@ -101,6 +92,15 @@ export default function SearchDRDBLayout() {
             Convalescent Plasma Susceptibility Data
           </Header>
           <CPSuscResults />
+        </Grid.Column>
+      </Grid.Row> : null}
+    {displayAbTables ?
+      <Grid.Row centered>
+        <Grid.Column width={16}>
+          <Header as={H2} id="invitro-mutations">
+            In-vitro Selection Data
+          </Header>
+          <InVitroMutationsTable />
         </Grid.Column>
       </Grid.Row> : null}
     <BackToTop />

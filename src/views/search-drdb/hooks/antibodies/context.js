@@ -44,6 +44,12 @@ function AntibodiesProvider({children}) {
       WHERE
         S.aggregate_by = 'antibody:indiv' AND
         A.ab_name = S.antibody_names
+    ) OR EXISTS (
+      SELECT 1 FROM rx_antibodies RXMAB, invitro_selection_results IM
+      WHERE
+        IM.ref_name = RXMAB.ref_name AND
+        IM.rx_name = RXMAB.rx_name AND
+        RXMAB.ab_name = A.ab_name
     )
     ORDER BY priority, A.ab_name
   `;

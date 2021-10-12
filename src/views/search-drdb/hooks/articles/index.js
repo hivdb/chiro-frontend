@@ -25,6 +25,9 @@ function ArticlesProvider({children}) {
       ) OR EXISTS (
         SELECT 1 FROM variant_status VS
         WHERE R.ref_name = VS.ref_name
+      ) OR EXISTS (
+        SELECT 1 FROM invitro_selection_results IM
+        WHERE R.ref_name = IM.ref_name
       )
     ORDER BY R.ref_name
   `;

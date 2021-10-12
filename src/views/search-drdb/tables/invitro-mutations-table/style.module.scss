@@ -1,0 +1,29 @@
+.invitro-muts-table-control {
+  position: relative;
+  .loader {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-top: 1rem;
+    margin-left: 2rem;
+    font-size: 2rem;
+    z-index: 2000;
+    display: none;
+  }
+  &[data-loading] {
+    .loader {
+      display: block;
+    }
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      z-index: 1000;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,.1);
+    }
+  }
+}

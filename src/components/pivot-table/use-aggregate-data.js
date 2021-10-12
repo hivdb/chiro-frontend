@@ -3,18 +3,24 @@ import uniq from 'lodash/uniq';
 import nestedGet from 'lodash/get';
 
 
-export default function useAggregateData({data, columnDefs, groupBy}) {
+export default function useAggregateData({
+  data,
+  columnDefs,
+  groupBy,
+  skip = false
+}) {
   const aggColumns = React.useMemo(
-    () => uniq([
+    () => skip || uniq([
       ...columnDefs
         .map(({name}) => name),
       ...Object.keys(data[0] || [])
     ]).filter(name => !groupBy.includes(name)),
-    [columnDefs, data, groupBy]
+    [columnDefs, data, groupBy, skip]
   );
 
   return React.useMemo(
     () => {
+      if (skip) { return []; }
       const aggregated = [];
       for (const row of data) {
         let aggObj = {};
@@ -38,7 +44,7 @@ export default function useAggregateData({data, columnDefs, groupBy}) {
       }
       return Object.values(aggregated);
     },
-    [aggColumns, data, groupBy]
+    [aggColumns, data, groupBy, skip]
   );
 
 }

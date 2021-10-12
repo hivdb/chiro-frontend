@@ -125,7 +125,8 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
 
       const sql = `
         SELECT
-          ref_name || rx_name || gene || position || amino_acid AS uniq_key,
+          ref_name || rx_name || M.gene ||
+          M.position || M.amino_acid AS uniq_key,
           ref_name,
           rx_name,
           (
@@ -137,12 +138,15 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
               RXMAB.ab_name = MAB.ab_name
             ORDER BY MAB.priority, RXMAB.ab_name
           ) AS ab_names,
-          gene,
-          position,
-          amino_acid,
+          M.gene,
+          R.amino_acid as ref_amino_acid,
+          M.position,
+          M.amino_acid,
           section,
           date_added
         FROM invitro_selection_results M
+        JOIN ref_amino_acid R ON
+          R.gene = M.gene AND R.position = M.position
         WHERE
           (${where.join(') AND (')})
       `;
