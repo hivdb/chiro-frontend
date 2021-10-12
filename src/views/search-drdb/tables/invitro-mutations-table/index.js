@@ -1,4 +1,5 @@
 import React from 'react';
+import {useRouter} from 'found';
 import difference from 'lodash/difference';
 import intersection from 'lodash/intersection';
 
@@ -77,6 +78,15 @@ export default function InVitroMutationsTable() {
     defaultGroupBy || groupBy
   );
 
+  const {router} = useRouter();
+  const handleGoBack = React.useCallback(
+    e => {
+      e && e.preventDefault();
+      router.go(-1);
+    },
+    [router]
+  );
+
   const {inVitroMuts, isPending} = InVitroMutations.useMe();
   const columnDefs = useColumnDefs({
     columns,
@@ -102,6 +112,15 @@ export default function InVitroMutationsTable() {
 
   if (isPending) {
     return null;
+  }
+
+  if (aggData.length === 0) {
+    return <>
+      <div>
+        No in-vitro selection data is found for this request.
+        (<a href="#back" onClick={handleGoBack}>Go back</a>)
+      </div>
+    </>;
   }
 
   const cacheKey = JSON.stringify({
