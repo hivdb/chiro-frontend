@@ -36,18 +36,18 @@ export default function useInVitroMut({labels, skip, columns}) {
         label: labels.inVitroMut || 'Mutation',
         render: (_, {gene, refAminoAcid, position, aminoAcid}) => (
           <CellInVitroMut
-           gene={gene[0]}
-           refAminoAcid={refAminoAcid[0]}
-           position={position[0]}
-           aminoAcid={aminoAcid[0]} />
+           gene={gene}
+           refAminoAcid={refAminoAcid}
+           position={position}
+           aminoAcid={aminoAcid} />
         ),
         exportCell: (_, {gene, refAminoAcid, position, aminoAcid}) => ({
-          gene: gene[0],
-          refAA: refAminoAcid[0],
-          pos: position[0],
-          AA: aminoAcid[0]
+          gene,
+          refAA: refAminoAcid,
+          pos: position,
+          AA: aminoAcid
         }),
-        sort: rows => sortBy(rows, ['gene.0', 'position.0', 'aminoAcid.0'])
+        sort: rows => sortBy(rows, ['gene', 'position', 'aminoAcid'])
       });
     },
     [columns, labels.inVitroMut, skip]
