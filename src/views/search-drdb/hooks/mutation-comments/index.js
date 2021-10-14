@@ -80,6 +80,7 @@ function MutationCommentsProvider({children}) {
             }
           }
           setContextValue({
+            version: cmtVersion,
             mutationComments: commentObjs,
             mutationCommentLookup: commentLookup,
             isPending: false

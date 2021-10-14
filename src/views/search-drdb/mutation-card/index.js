@@ -45,6 +45,20 @@ function useMessage({isoAggkey, mutationCommentLookup, skip}) {
 }
 
 
+function useFormatVersion(version, skip) {
+  return React.useMemo(
+    () => {
+      if (skip) {
+        return '';
+      }
+      const [, year, month, day] = /(\d{4})(\d{2})(\d{2})/.exec(version);
+      return new Date(year, month - 1, day).toLocaleDateString('en-US');
+    },
+    [skip, version]
+  );
+}
+
+
 export default function MutationCard() {
   const descRef = React.useRef();
   const {
@@ -59,9 +73,12 @@ export default function MutationCard() {
   const {match: {location: loc}} = useRouter();
 
   const {
+    version,
     mutationCommentLookup,
     isPending
   } = MutationComments.useMe();
+
+  const formatVersion = useFormatVersion(version, isPending);
 
   const {
     isolateAggLookup,
@@ -90,6 +107,7 @@ export default function MutationCard() {
      }}
      className={style['mutation-card']}
      loaded={!skip}
+     tagline={`Last updated on ${formatVersion}`}
      titleAs={
        refName || antibodyText ||
        vaccineName || infectedVarName ? 'div' : 'h2'}
