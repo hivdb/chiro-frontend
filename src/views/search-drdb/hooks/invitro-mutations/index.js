@@ -3,51 +3,11 @@ import PropTypes from 'prop-types';
 import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
+import {getMutations} from '../isolate-aggs';
+
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 const InVitroMutationsContext = React.createContext();
-
-
-function parseIsoAggkey(isoAggkey) {
-  let prevGene;
-  const muts = [];
-  for (const mut of isoAggkey.split('+')) {
-    let [gene, geneMut] = mut.split(':');
-    if (!geneMut) {
-      geneMut = gene;
-      gene = prevGene;
-    }
-    else {
-      prevGene = gene;
-    }
-    let posStart, posEnd, aa;
-    if (geneMut.endsWith('del')) {
-      [posStart, posEnd] = geneMut.slice(0, geneMut.length - 3).split('-');
-      if (!posEnd) {
-        posEnd = posStart;
-      }
-      aa = 'del';
-    }
-    else if (geneMut.endsWith('ins')) {
-      posStart = posEnd = geneMut.slice(0, geneMut.length - 3);
-      aa = 'ins';
-    }
-    else if (geneMut.endsWith('stop')) {
-      posStart = posEnd = geneMut.slice(0, geneMut.length - 4);
-      aa = 'stop';
-    }
-    else {
-      posStart = posEnd = geneMut.slice(0, geneMut.length - 1);
-      aa = geneMut[geneMut.length - 1];
-    }
-    posStart = Number.parseInt(posStart);
-    posEnd = Number.parseInt(posEnd);
-    for (let pos = posStart; pos <= posEnd; pos ++) {
-      muts.push([gene, pos, aa]);
-    }
-  }
-  return muts;
-}
 
 
 function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
@@ -71,8 +31,8 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
         const conds = [];
         for (const [
           idx,
-          [gene, pos, aa]
-        ] of parseIsoAggkey(isoAggkey).entries()) {
+          {gene, position: pos, aminoAcid: aa}
+        ] of getMutations(isoAggkey).entries()) {
           conds.push(`(
             M.gene = $gene${idx} AND
             M.position = $pos${idx} AND

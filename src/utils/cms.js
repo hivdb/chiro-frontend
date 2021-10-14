@@ -10,7 +10,7 @@ function cmsStageHost(host) {
 }
 
 
-async function fetchCMS(resPath) {
+export async function fetchCMS(resPath) {
   let stage;
   const {hostname} = window.location;
   stage = cmsStageHost(hostname);

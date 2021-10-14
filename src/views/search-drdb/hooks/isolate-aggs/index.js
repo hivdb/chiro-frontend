@@ -4,7 +4,7 @@ import useQuery from '../use-query';
 
 import {getMutations, compareIsolateAggs} from './funcs';
 
-export {compareIsolateAggs};
+export {getMutations, compareIsolateAggs};
 
 const IsolateAggsContext = React.createContext();
 

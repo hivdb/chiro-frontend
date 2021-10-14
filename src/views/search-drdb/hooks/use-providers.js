@@ -12,6 +12,7 @@ import Positions from './positions';
 import SuscSummary from './susc-summary';
 import SuscResults from './susc-results';
 import InVitroMutations from './invitro-mutations';
+import MutationComments from './mutation-comments';
 
 const providers = {
   locationParams: LocationParams.Provider,
@@ -25,7 +26,8 @@ const providers = {
   positions: Positions.Provider,
   suscSummary: SuscSummary.Provider,
   suscResults: SuscResults.Provider,
-  inVitroMutations: InVitroMutations.Provider
+  inVitroMutations: InVitroMutations.Provider,
+  MutationComments: MutationComments.Provider
 };
 
 
@@ -54,7 +56,8 @@ const presetProviderNames = {
     'positions',
     'suscSummary',
     'suscResults',
-    'inVitroMutations'
+    'inVitroMutations',
+    'MutationComments'
   ]
 };
 

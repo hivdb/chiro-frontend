@@ -1,0 +1,51 @@
+@import '../../../styles/colors';
+
+$placeholder-color: rgba(0, 0, 0, .15);
+
+.mutation-card {
+  $list-row-height: 1.8rem;
+
+  &[data-loaded="false"] > &:global(__title) {
+    &::before {
+      display: block;
+      width: 17%;
+    }
+    &::after {
+      display: none;
+    }
+  }
+
+  section[data-section-reference] {
+    h3 {
+      margin-top: 1rem;
+    }
+    ol {
+      max-height: 15rem;
+      overflow: auto;
+      margin-top: 0;
+      margin-bottom: 0;
+      > li:first-child {
+        margin-top: 0;
+      }
+      > li:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &[data-loaded="false"] {
+    
+    .mutation-desc {
+      div {
+        background-color: $placeholder-color;
+        background-clip: content-box;
+        height: 1.5rem;
+        padding-bottom: .5rem;
+        &:nth-child(4) {
+          width: 38.2%;
+        }
+      }
+    }
+  }
+
+}
