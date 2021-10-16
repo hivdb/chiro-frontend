@@ -9,6 +9,7 @@ export function parseAntibodies(antibodyText) {
 
 
 const FORM_ONLY_IF_MISSING_ALL = [
+  'article',
   'antibodies',
   'vaccine',
   'cp',
