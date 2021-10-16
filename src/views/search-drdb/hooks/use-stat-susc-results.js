@@ -22,12 +22,21 @@ export default function useStatSuscResults(suscResults) {
         ({refName}) => refName
       )).length;
       const numNoNatExps = suscResults.reduce(
-        (acc, {cumulativeCount, ineffective}) => (
-          acc + (
-            ineffective === 'experimental' ||
-            ineffective === null ? 0 : cumulativeCount
-          )
-        ),
+        (acc, {unlinkedControlPotency, cumulativeCount, ineffective}) => {
+          if (unlinkedControlPotency && unlinkedControlPotency.length > 1) {
+            for (const unPot of unlinkedControlPotency) {
+              if (unPot.ineffective) {
+                acc += unPot.cumulativeCount;
+              }
+            }
+          }
+          else {
+            if (ineffective === 'control' || ineffective === 'both') {
+              acc += cumulativeCount;
+            }
+          }
+          return acc;
+        },
         0
       );
       const numNon50Exps = suscResults.reduce(

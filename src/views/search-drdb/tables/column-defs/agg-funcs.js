@@ -79,6 +79,7 @@ export function aggWeightedPercentile(values, weights, percentiles) {
 
 function groupPotencyByTypeAndUnit({
   potency,
+  unlinkedPotency,
   potencyType,
   potencyUnit,
   ineffective,
@@ -92,11 +93,13 @@ function groupPotencyByTypeAndUnit({
       potencyUnit: potencyUnit[i],
       cumulativeCount: [],
       ineffective: [],
-      potency: []
+      potency: [],
+      unlinkedPotency: []
     };
     groups[key].cumulativeCount.push(cumulativeCount[i]);
     groups[key].ineffective.push(ineffective[i]);
     groups[key].potency.push(potency[i]);
+    groups[key].unlinkedPotency.push(unlinkedPotency[i]);
   }
   return Object.values(groups);
 }
@@ -132,22 +135,54 @@ export function aggGeoSDWeighted(geoMean, values, weights) {
 }
 
 function internalAggPotency(row, isControl) {
-  const {potency, controlPotency, ...others} = row;
+  const {
+    potency,
+    controlPotency,
+    unlinkedPotency,
+    unlinkedControlPotency,
+    cumulativeCount,
+    controlCumulativeCount,
+    ...others
+  } = row;
   const myPot = isControl ? controlPotency : potency;
+  const myUnlinkedPot = isControl ? unlinkedControlPotency : unlinkedPotency;
+  const myCumuCount = isControl ? controlCumulativeCount : cumulativeCount;
   const groups = groupPotencyByTypeAndUnit({
-    potency: myPot, ...others
+    potency: myPot,
+    unlinkedPotency: myUnlinkedPot,
+    cumulativeCount: myCumuCount,
+    ...others
   });
   const ineffectiveCmp = isControl ? 'control' : 'experimental';
   return groups
     .map(group => {
+      const potency = [];
+      const cumulativeCount = [];
+      for (const [idx, pot] of group.potency.entries()) {
+        const unPot = group.unlinkedPotency[idx];
+        const cumuCount = group.cumulativeCount[idx];
+        if (!unPot || unPot.length === 0) {
+          potency.push(pot);
+          cumulativeCount.push(cumuCount);
+        }
+        else {
+          for (const {
+            potency: pot,
+            cumulativeCount: cumuCount
+          } of unPot) {
+            potency.push(pot);
+            cumulativeCount.push(cumuCount);
+          }
+        }
+      }
       const avgPot = aggGeoMeanWeighted(
-        group.potency,
-        group.cumulativeCount
+        potency,
+        cumulativeCount
       );
       const potSD = aggGeoSDWeighted(
         avgPot,
-        group.potency,
-        group.cumulativeCount
+        potency,
+        cumulativeCount
       );
       group.potency = avgPot;
       group.potencySD = potSD;
@@ -155,7 +190,7 @@ function internalAggPotency(row, isControl) {
         ie === ineffectiveCmp ||
         ie === 'both'
       ));
-      group.cumulativeCount = aggSum(group.cumulativeCount);
+      group.cumulativeCount = aggSum(cumulativeCount);
       return group;
     })
     .sort(({
@@ -191,6 +226,10 @@ export function aggControlPotency(_, row) {
 }
 
 
-export function aggDataAvailability(_, {cumulativeCount}) {
-  return cumulativeCount.length > 1 || cumulativeCount[0] === 1;
+export function aggDataAvailability(_, {unlinkedPotency, cumulativeCount}) {
+  return (
+    cumulativeCount.length > 1 ||
+    cumulativeCount[0] === 1 ||
+    unlinkedPotency.some(one => one && one.length > 0)
+  );
 }

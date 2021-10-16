@@ -17,7 +17,11 @@ function ungroupData(data, groups) {
   for (const [key, val] of Object.entries(data)) {
     if (
       val instanceof Array &&
-      (key !== 'abNames' || val[0] instanceof Array)
+      (![
+        'abNames',
+        'unlinkedControlPotency',
+        'unlinkedPotency'
+      ].includes(key) || val[0] instanceof Array)
     ) {
       numRows = val.length;
       groupedCols[key] = val;
@@ -37,6 +41,60 @@ function ungroupData(data, groups) {
       }
     }
     rows.push(row);
+  }
+  return rows;
+}
+
+function ungroupUnlinkedPotency(data) {
+  const rows = [];
+  for (const row of data) {
+    if (
+      row.unlinkedControlPotency[0] &&
+      row.unlinkedControlPotency[0].length > 0
+    ) {
+      for (
+        const {potency, cumulativeCount, ineffective}
+        of row.unlinkedControlPotency[0]
+      ) {
+        rows.push({
+          ...row,
+          ineffective: [ineffective ? 'control' : null],
+          controlPotency: [potency],
+          controlCumulativeCount: [cumulativeCount],
+          potency: [null],
+          cumulativeCount: [cumulativeCount],
+          unlinkedControlPotency: [null],
+          unlinkedPotency: [null],
+          foldCmp: [null],
+          fold: [null]
+        });
+      }
+    }
+    if (
+      row.unlinkedPotency[0] &&
+      row.unlinkedPotency[0].length > 0
+    ) {
+      for (
+        const {potency, cumulativeCount, ineffective}
+        of row.unlinkedPotency[0]
+      ) {
+        rows.push({
+          ...row,
+          ineffective: [ineffective ? 'experimental' : null],
+          controlPotency: [null],
+          controlCumulativeCount: [null],
+          potency: [potency],
+          cumulativeCount: [cumulativeCount],
+          unlinkedControlPotency: [null],
+          unlinkedPotency: [null],
+          foldCmp: [null],
+          fold: [null]
+        });
+      }
+    }
+    else {
+      rows.push(row);
+    }
   }
   return rows;
 }
@@ -87,7 +145,9 @@ export default function RawSuscResults({
   },
   onClose
 }) {
-  const ungrouped = ungroupData(data, groupBy);
+  const ungrouped = ungroupUnlinkedPotency(
+    ungroupData(data, groupBy)
+  );
   const columnDefs = useCleanedColumnDefs({
     columns,
     labels: rawDataLabels || labels

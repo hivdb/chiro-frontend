@@ -22,6 +22,9 @@ CellFold.propTypes = {
 
 
 function CellFold({fold, fbResistanceLevel, p25, p75, displayIQR, displayNN}) {
+  if (fold === null || fold === undefined) {
+    return <em>N.A.</em>;
+  }
   let foldCmp = '=';
   let foldValue = fold;
   if (foldValue && foldValue > 100) {
@@ -129,6 +132,9 @@ export default function useFold({
           p75
         }),
         decorator: (fold, {cumulativeCount}) => {
+          if (fold.every(f => f === null || f === undefined)) {
+            return {};
+          }
           const [median, p25, p75] = aggWeightedPercentile(
             fold,
             cumulativeCount,

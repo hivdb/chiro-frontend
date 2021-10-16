@@ -3,21 +3,29 @@ import React from 'react';
 import useQuery from '../use-query';
 import Isolates from '../isolates';
 import {useCompareSuscResultsByIsolate} from './use-compare';
+import useUnlinkedSuscResults, {
+  getUnlinkedControlPotencyUniqKey,
+  getUnlinkedPotencyUniqKey
+} from './use-unlinked-susc-results';
 
+const SEP = '$#\u0008#$';
 
-export function getSuscResultUniqKey(suscResult) {
-  const {
-    refName,
-    rxName,
-    controlIsoName,
-    isoName
-  } = suscResult;
+export function getSuscResultUniqKey({
+  refName,
+  rxGroup,
+  controlIsoName,
+  isoName,
+  potencyType,
+  assayName
+}) {
   return [
     refName,
-    rxName,
+    rxGroup,
     controlIsoName,
-    isoName
-  ].join('$#\u0008#$');
+    isoName,
+    potencyType,
+    assayName
+  ].join(SEP);
 }
 
 
@@ -155,10 +163,9 @@ function usePrepareQuery({
 
       const sql = `
         SELECT
-          S.rx_name || S.control_iso_name || S.iso_name ||
-            S.ref_name || S.potency_type || S.assay_name AS uniq_key,
           S.ref_name,
           S.rx_name,
+          S.rx_group,
           S.control_iso_name,
           ctliso.var_name AS control_var_name,
           S.iso_name,
@@ -182,7 +189,9 @@ function usePrepareQuery({
           S.fold,
           S.resistance_level as fb_resistance_level,
           S.ineffective,
+          S.control_cumulative_count,
           S.cumulative_count,
+          S.control_assay_name,
           S.assay_name
           ${addColumnText}
         FROM susc_results S
@@ -256,6 +265,14 @@ export default function useSuscResults({
   } = useQuery({sql, params, skip});
 
   const {
+    unlinkedSuscResults,
+    isPending: isUSRPending
+  } = useUnlinkedSuscResults({
+    suscResults: payload,
+    skip: skip || isPending
+  });
+
+  const {
     isolateLookup,
     isPending: isIsolatePending
   } = Isolates.useMe();
@@ -264,14 +281,28 @@ export default function useSuscResults({
 
   const [suscResults, suscResultLookup] = React.useMemo(
     () => {
-      let suscResults;
+      let suscResults = [];
       let suscResultLookup = {};
 
-      if (!skip && !isPending && !isIsolatePending) {
-        suscResults = payload.map(sr => ({
-          ...sr,
-          resistanceLevel: calcResistanceLevel(sr)
-        }));
+      if (!skip && !isPending && !isUSRPending && !isIsolatePending) {
+        suscResults = payload.map(sr => {
+          const row = {
+            ...sr,
+            uniqKey: getSuscResultUniqKey(sr),
+            resistanceLevel: calcResistanceLevel(sr),
+            unlinkedControlPotency: null,
+            unlinkedPotency: null
+          };
+          if (sr.rxName === null) {
+            row.unlinkedControlPotency = unlinkedSuscResults[
+              getUnlinkedControlPotencyUniqKey(sr)
+            ];
+            row.unlinkedPotency = unlinkedSuscResults[
+              getUnlinkedPotencyUniqKey(sr)
+            ];
+          }
+          return row;
+        });
 
         suscResults.sort((srA, srB) => {
           let cmp = addCompareSuscResults(srA, srB);
@@ -287,8 +318,7 @@ export default function useSuscResults({
 
         suscResultLookup = suscResults.reduce(
           (acc, sr) => {
-            const key = getSuscResultUniqKey(sr);
-            acc[key] = sr;
+            acc[sr.uniqKey] = sr;
             return acc;
           },
           {}
@@ -301,14 +331,16 @@ export default function useSuscResults({
       compareByIsolates,
       isIsolatePending,
       isPending,
+      isUSRPending,
       payload,
-      skip
+      skip,
+      unlinkedSuscResults
     ]
   );
 
   return {
     suscResults,
     suscResultLookup,
-    isPending: isPending || isIsolatePending
+    isPending: isPending || isUSRPending || isIsolatePending
   };
 }

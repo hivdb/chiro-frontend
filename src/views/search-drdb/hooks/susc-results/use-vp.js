@@ -56,8 +56,24 @@ function usePrepareQuery({vaccineName, infected, month, dosage, host, skip}) {
 
         joinClause.push(`
           JOIN rx_vacc_plasma RXVP ON
-            S.ref_name = RXVP.ref_name AND
-            S.rx_name = RXVP.rx_name
+            RXVP.rowid = (
+              SELECT rowid FROM rx_vacc_plasma RXVP2
+              WHERE
+                S.ref_name = RXVP2.ref_name AND
+                (
+                  S.rx_name = RXVP2.rx_name OR
+                  EXISTS (
+                    SELECT 1 FROM
+                      unlinked_susc_results USR
+                    WHERE
+                      S.ref_name = USR.ref_name AND
+                      S.rx_group = USR.rx_group AND
+                      USR.rx_name = RXVP2.rx_name
+                  )
+                )
+              ORDER BY rowid
+              LIMIT 1
+            )
           LEFT JOIN subjects SUB ON
             RXVP.ref_name = SUB.ref_name AND
             RXVP.subject_name = SUB.subject_name

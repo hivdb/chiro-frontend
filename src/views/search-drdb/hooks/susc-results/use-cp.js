@@ -114,8 +114,24 @@ function usePrepareQuery({infectedVarName, infected, month, host, skip}) {
 
         joinClause.push(`
           JOIN rx_conv_plasma RXCP ON
-            S.ref_name = RXCP.ref_name AND
-            S.rx_name = RXCP.rx_name
+            RXCP.rowid = (
+              SELECT rowid FROM rx_conv_plasma RXCP2
+              WHERE
+                S.ref_name = RXCP2.ref_name AND
+                (
+                  S.rx_name = RXCP2.rx_name OR
+                  EXISTS (
+                    SELECT 1 FROM
+                      unlinked_susc_results USR
+                    WHERE
+                      S.ref_name = USR.ref_name AND
+                      S.rx_group = USR.rx_group AND
+                      USR.rx_name = RXCP2.rx_name
+                  )
+                )
+              ORDER BY rowid
+              LIMIT 1
+            )
           LEFT JOIN subjects SUB ON
             RXCP.ref_name = SUB.ref_name AND
             RXCP.subject_name = SUB.subject_name

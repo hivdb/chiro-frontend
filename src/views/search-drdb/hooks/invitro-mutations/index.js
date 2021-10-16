@@ -85,8 +85,6 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
 
       const sql = `
         SELECT
-          ref_name || rx_name || M.gene ||
-          M.position || M.amino_acid AS uniq_key,
           ref_name,
           rx_name,
           (
