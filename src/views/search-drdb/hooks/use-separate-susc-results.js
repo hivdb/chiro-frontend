@@ -41,7 +41,11 @@ export default function useSeparateSuscResults({
   const keyGetterLookup = React.useMemo(
     () => ({
       isoType: sr => isoTypes[isolateLookup[sr.isoName].type],
-      aggForm: sr => sr.cumulativeCount > 1 ? 'aggFold' : 'indivFold',
+      aggForm: sr => (
+        sr.cumulativeCount === 1 ||
+        (sr.unlinkedPotency && sr.unlinkedPotency.length > 0) ?
+          'indivFold' : 'aggFold'
+      ),
       potencyType: ({rxType, potencyType}) => {
         if (rxType === 'antibody' && potencyType === 'IC50') {
           return 'main';
