@@ -51,15 +51,15 @@ function usePrepareQuery({
       const params = {};
       for (const [idx, sr] of unlinkedSuscResults.entries()) {
         where.push(`(
-          usr.ref_name = $refName${idx} AND
-          usr.rx_group = $rxGroup${idx} AND
-          usr.potency_type = $potType${idx} AND (
+          ref_name = $refName${idx} AND
+          rx_group = $rxGroup${idx} AND
+          potency_type = $potType${idx} AND (
             (
-              usr.iso_name = $isoName${idx} AND
-              usr.assay_name = $assayName${idx}
+              iso_name = $isoName${idx} AND
+              assay_name = $assayName${idx}
             ) OR (
-              usr.iso_name = $ctlIsoName${idx} AND
-              usr.assay_name = $ctlAssayName${idx}
+              iso_name = $ctlIsoName${idx} AND
+              assay_name = $ctlAssayName${idx}
             )
           )
         )`);
@@ -73,26 +73,17 @@ function usePrepareQuery({
       }
       const sql = `
         SELECT
-          usr.ref_name,
-          usr.rx_group,
-          usr.rx_name,
-          usr.potency_type,
-          usr.iso_name,
-          usr.assay_name,
+          ref_name,
+          rx_group,
+          rx_name,
+          potency_type,
+          iso_name,
+          assay_name,
           potency,
           cumulative_count,
-          CASE WHEN CAST(usr.potency_type AS TEXT) LIKE 'NT%' THEN
-            potency <= potency_lower_limit
-          ELSE
-            potency >= potency_upper_limit
-          END AS ineffective
-        FROM rx_potency pot, unlinked_susc_results usr
+          ineffective
+        FROM unlinked_susc_results
         WHERE
-          usr.ref_name = pot.ref_name AND
-          usr.rx_name = pot.rx_name AND
-          usr.potency_type = pot.potency_type AND
-          usr.iso_name = pot.iso_name AND
-          usr.assay_name = pot.assay_name AND
           (${where.join(' OR ')})
       `;
       return {sql, params};
