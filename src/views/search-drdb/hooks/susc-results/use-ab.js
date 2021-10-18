@@ -28,15 +28,8 @@ function usePrepareQuery({abNames, skip}) {
               EXISTS (
                 SELECT 1 FROM rx_antibodies RXMAB WHERE
                   S.ref_name = RXMAB.ref_name AND
-                  RXMAB.ab_name = MAB.ab_name AND (
-                    S.rx_name = RXMAB.rx_name OR
-                    EXISTS (
-                      SELECT 1 FROM unlinked_susc_results USR WHERE
-                      S.ref_name = USR.ref_name AND
-                      S.rx_group = USR.rx_group AND
-                      USR.rx_name = RXMAB.rx_name
-                    )
-                  )
+                  RXMAB.ab_name = MAB.ab_name AND
+                  S.rx_name = RXMAB.rx_name
               )
             ORDER BY MAB.priority, MAB.ab_name
           ) AS ab_names`
@@ -54,15 +47,8 @@ function usePrepareQuery({abNames, skip}) {
                 SELECT 1 FROM rx_antibodies RXMAB
                 WHERE
                 RXMAB.ref_name = S.ref_name AND
-                RXMAB.ab_name = $abName${idx} AND (
-                  S.rx_name = RXMAB.rx_name OR
-                  EXISTS (
-                    SELECT 1 FROM unlinked_susc_results USR WHERE
-                    S.ref_name = USR.ref_name AND
-                    S.rx_group = USR.rx_group AND
-                    USR.rx_name = RXMAB.rx_name
-                  )
-                )
+                RXMAB.ab_name = $abName${idx} AND
+                S.rx_name = RXMAB.rx_name
               )
             `);
             params[`$abName${idx}`] = abName;
@@ -75,15 +61,8 @@ function usePrepareQuery({abNames, skip}) {
             EXISTS (
               SELECT 1 FROM rx_antibodies RXMAB
               WHERE
-                RXMAB.ref_name = S.ref_name AND (
-                  S.rx_name = RXMAB.rx_name OR
-                  EXISTS (
-                    SELECT 1 FROM unlinked_susc_results USR WHERE
-                    S.ref_name = USR.ref_name AND
-                    S.rx_group = USR.rx_group AND
-                    USR.rx_name = RXMAB.rx_name
-                  )
-                )
+                RXMAB.ref_name = S.ref_name AND
+                S.rx_name = RXMAB.rx_name
             )
           `);
         }
