@@ -5,7 +5,7 @@ import sortBy from 'lodash/sortBy';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
 
-CellInVitroMut.propTypes = {
+CellMutation.propTypes = {
   gene: PropTypes.string.isRequired,
   refAminoAcid: PropTypes.string.isRequired,
   position: PropTypes.number.isRequired,
@@ -13,7 +13,7 @@ CellInVitroMut.propTypes = {
 };
 
 
-function CellInVitroMut({gene, refAminoAcid, position, aminoAcid}) {
+function CellMutation({gene, refAminoAcid, position, aminoAcid}) {
   let mut = `${refAminoAcid}${position}${aminoAcid}`;
   if (aminoAcid === 'del') {
     mut = `Δ${position}`;
@@ -25,17 +25,17 @@ function CellInVitroMut({gene, refAminoAcid, position, aminoAcid}) {
 }
 
 
-export default function useInVitroMut({labels, skip, columns}) {
+export default function useMutation({labels, skip, columns}) {
   return React.useMemo(
     () => {
-      if (skip || !columns.includes('inVitroMut')) {
+      if (skip || !columns.includes('mutation')) {
         return null;
       }
       return new ColumnDef({
-        name: 'inVitroMut',
-        label: labels.inVitroMut || 'Mutation',
+        name: 'mutation',
+        label: labels.mutation || 'Mutation',
         render: (_, {gene, refAminoAcid, position, aminoAcid}) => (
-          <CellInVitroMut
+          <CellMutation
            gene={gene}
            refAminoAcid={refAminoAcid}
            position={position}
@@ -50,6 +50,6 @@ export default function useInVitroMut({labels, skip, columns}) {
         sort: rows => sortBy(rows, ['gene', 'position', 'aminoAcid'])
       });
     },
-    [columns, labels.inVitroMut, skip]
+    [columns, labels.mutation, skip]
   );
 }

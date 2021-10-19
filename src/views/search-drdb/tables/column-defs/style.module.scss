@@ -36,6 +36,15 @@ ul.potency {
   }
 }
 
+svg {
+  &.yes {
+    color: #3ca832;
+  }
+  &.no {
+    color: #c72222;
+  }
+}
+
 .data-availability {
   @include tooltip(".desc");
   font-size: 1.3rem;
@@ -47,12 +56,6 @@ ul.potency {
   }
   &[data-has-multiple="false"] {
     color: rgba(0, 0, 0, .3);
-  }
-  .yes {
-    color: #3ca832;
-  }
-  .no {
-    color: #c72222;
   }
   .desc {
     right: 80%;

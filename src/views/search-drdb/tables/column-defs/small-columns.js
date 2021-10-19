@@ -1,11 +1,14 @@
 import React from 'react';
 import uniq from 'lodash/uniq';
+import {AiOutlineCheck} from '@react-icons/all-files/ai/AiOutlineCheck';
+import {AiOutlineClose} from '@react-icons/all-files/ai/AiOutlineClose';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
 import CellAssay from './cell-assay';
 import CellSection from './cell-section';
 import CellAntibodies from './cell-antibodies';
 import CellRLevel from './cell-resistance-level';
+import style from './style.module.scss';
 
 
 export default function useSmallColumns({
@@ -81,24 +84,39 @@ export default function useSmallColumns({
           name: 'resistanceLevel',
           label: labels.resistanceLevel,
           render: resistanceLevel => <CellRLevel rLevel={resistanceLevel} />
+        }),
+        escapeScore: new ColumnDef({
+          name: 'escapeScore',
+          label: labels.escapeScore,
+          render: score => score.toFixed(3)
+        }),
+        ace2Binding: new ColumnDef({
+          name: 'ace2Binding',
+          label: labels.ace2Binding || 'ACE 2 Binding',
+          render: binding => binding.toFixed(2)
+        }),
+        expression: new ColumnDef({
+          name: 'expression',
+          label: labels.expression,
+          render: exp => exp.toFixed(2)
+        }),
+        ace2Contact: new ColumnDef({
+          name: 'ace2Contact',
+          label: labels.ace2Contact || 'ACE 2 Contact',
+          render: flag => <>
+            {flag ?
+              <AiOutlineCheck className={style['yes']} /> :
+              <AiOutlineClose className={style['no']} />}
+          </>,
+          exportCell: flag => flag
         })
       };
     },
     [
+      skip,
+      labels,
       antibodyLookup,
-      compareByAntibodies,
-      labels.abNames,
-      labels.assayName,
-      labels.dosage,
-      labels.subjectSpecies,
-      labels.numStudies,
-      labels.resistanceLevel,
-      labels.section,
-      labels.severity,
-      labels.timing,
-      labels.timingRange,
-      labels.vaccineName,
-      skip
+      compareByAntibodies
     ]
   );
 }

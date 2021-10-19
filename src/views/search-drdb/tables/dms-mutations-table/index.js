@@ -6,7 +6,7 @@ import InlineLoader
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 
 
-import InVitroMutations from '../../hooks/invitro-mutations';
+import DMSMutations from '../../hooks/dms-mutations';
 import LocationParams from '../../hooks/location-params';
 
 import useColumnDefs from '../column-defs';
@@ -16,14 +16,17 @@ import style from './style.module.scss';
 const tableConfig = {
   columns: [
     'refName',
-    'section',
     'abNames',
-    'mutation'
+    'mutation',
+    'escapeScore',
+    'ace2Binding',
+    'expression',
+    'ace2Contact'
   ],
   labels: {}
 };
 
-export default function InVitroMutationsTable() {
+export default function DMSMutationsTable() {
   let {columns, labels} = tableConfig;
 
   const {
@@ -45,7 +48,7 @@ export default function InVitroMutationsTable() {
     [router]
   );
 
-  const {inVitroMuts, isPending} = InVitroMutations.useMe();
+  const {dmsMuts, isPending} = DMSMutations.useMe();
   const columnDefs = useColumnDefs({
     columns,
     labels
@@ -56,10 +59,10 @@ export default function InVitroMutationsTable() {
     return <InlineLoader />;
   }
 
-  if (inVitroMuts.length === 0) {
+  if (dmsMuts.length === 0) {
     return <>
       <div>
-        No in-vitro selection data is found for this request.
+        No deep mutational scanning data is found for this request.
         (<a href="#back" onClick={handleGoBack}>Go back</a>)
       </div>
     </>;
@@ -73,13 +76,13 @@ export default function InVitroMutationsTable() {
   });
   return <>
     <br />
-    <div ref={tableCtlRef} className={style['invitro-muts-table-control']}>
+    <div ref={tableCtlRef} className={style['dms-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable
-       className={style['invitro-muts-table']}
+       className={style['dms-muts-table']}
        columnDefs={columnDefs}
        cacheKey={cacheKey}
-       data={inVitroMuts} />
+       data={dmsMuts} />
     </div>
   </>;
 }

@@ -23,7 +23,7 @@ import useRefName from './reference';
 import useCumulativeCount from './cumulative-count';
 import useDataAvailability from './data-availability';
 import useSmallColumns from './small-columns';
-import useInVitroMut from './invitro-mut';
+import useMutation from './mutation';
 
 
 export default function useColumnDefs({
@@ -88,7 +88,7 @@ export default function useColumnDefs({
   const potency = usePotency(commonArgs);
   const fold = useFold(commonArgs);
   const dataAvailability = useDataAvailability(commonArgs);
-  const inVitroMut = useInVitroMut(commonArgs);
+  const mutation = useMutation(commonArgs);
   const smallColumns = useSmallColumns(commonArgs);
 
   return React.useMemo(
@@ -106,7 +106,7 @@ export default function useColumnDefs({
         potency,
         fold,
         dataAvailability,
-        inVitroMut,
+        mutation,
         ...smallColumns
       };
 
@@ -125,7 +125,7 @@ export default function useColumnDefs({
       varNameOrIsoAggkey,
       potency,
       refName,
-      inVitroMut,
+      mutation,
       smallColumns,
       skip
     ]
