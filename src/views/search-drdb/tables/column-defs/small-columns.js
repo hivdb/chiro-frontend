@@ -87,7 +87,7 @@ export default function useSmallColumns({
         }),
         escapeScore: new ColumnDef({
           name: 'escapeScore',
-          label: labels.escapeScore,
+          label: labels.escapeScore || 'Escape Fraction',
           render: score => score.toFixed(3)
         }),
         ace2Binding: new ColumnDef({
