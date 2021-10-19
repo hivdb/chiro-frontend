@@ -75,7 +75,10 @@ export default function DMSMutationsTable() {
     abNames
   });
   return <>
-    <br />
+    <div><em>
+      Mutations with an escape score <strong>≥0.1</strong> and a global
+      prevalence <strong>≥0.001%</strong>.
+    </em></div>
     <div ref={tableCtlRef} className={style['dms-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable
