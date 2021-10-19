@@ -50,6 +50,12 @@ function AntibodiesProvider({children}) {
         IM.ref_name = RXMAB.ref_name AND
         IM.rx_name = RXMAB.rx_name AND
         RXMAB.ab_name = A.ab_name
+    ) OR EXISTS (
+      SELECT 1 FROM rx_antibodies RXMAB, dms_escape_results DM
+      WHERE
+        DM.ref_name = RXMAB.ref_name AND
+        DM.rx_name = RXMAB.rx_name AND
+        RXMAB.ab_name = A.ab_name
     )
     ORDER BY priority, A.ab_name
   `;
