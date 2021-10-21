@@ -1,5 +1,6 @@
 import React from 'react';
 import uniq from 'lodash/uniq';
+import sortBy from 'lodash/sortBy';
 import {AiOutlineCheck} from '@react-icons/all-files/ai/AiOutlineCheck';
 import {AiOutlineClose} from '@react-icons/all-files/ai/AiOutlineClose';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
@@ -116,7 +117,8 @@ export default function useSmallColumns({
           render: (_, {count, total}) => (
             total > 1 ? `${count} / ${total}` : total
           ),
-          exportCell: (_, {count, total}) => ({count, total})
+          exportCell: (_, {count, total}) => ({count, total}),
+          sort: rows => sortBy(rows, ['count', 'total'])
         })
       };
     },

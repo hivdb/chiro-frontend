@@ -100,7 +100,7 @@ export default function SearchDRDBLayout() {
       <Grid.Row centered>
         <Grid.Column width={16}>
           <Header as={H2} id="invitro-mutations">
-            In-vitro Selection Data
+            In vitro Selection Data
           </Header>
           <InVitroMutationsTable />
         </Grid.Column>
@@ -109,7 +109,7 @@ export default function SearchDRDBLayout() {
       <Grid.Row centered>
         <Grid.Column width={16}>
           <Header as={H2} id="dms-mutations">
-            In-vivo Selection Data
+            In vivo Selection Data
           </Header>
           <InVivoMutationsTable />
         </Grid.Column>

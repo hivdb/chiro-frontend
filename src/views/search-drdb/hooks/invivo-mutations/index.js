@@ -105,6 +105,7 @@ function usePrepareQuery({
         SELECT
           M.ref_name,
           M.subject_name,
+          SBJ.subject_species,
           M.infected_var_name,
           M.gene,
           R.amino_acid as ref_amino_acid,
@@ -124,7 +125,11 @@ function usePrepareQuery({
           M.severity
         FROM invivo_selection_results M
         JOIN ref_amino_acid R ON
-          R.gene = M.gene AND R.position = M.position
+          R.gene = M.gene AND
+          R.position = M.position
+        JOIN subjects SBJ ON
+          M.ref_name = SBJ.ref_name AND
+          M.subject_name = SBJ.subject_name
         WHERE
           (${where.join(') AND (')})
       `;

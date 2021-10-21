@@ -16,9 +16,9 @@ import style from './style.module.scss';
 const tableConfig = {
   columns: [
     'refName',
+    'subjectSpecies',
     'infectedVarName',
     'treatments',
-    'timing',
     'severity',
     'countTotal',
     'mutation'
@@ -26,7 +26,7 @@ const tableConfig = {
   labels: {
     'infectedVarName': 'Infection',
     'timing': 'Months since Infection',
-    'countTotal': '# Patients'
+    'countTotal': '# Samples'
   }
 };
 
