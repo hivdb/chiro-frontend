@@ -109,6 +109,14 @@ export default function useSmallColumns({
               <AiOutlineClose className={style['no']} />}
           </>,
           exportCell: flag => flag
+        }),
+        countTotal: new ColumnDef({
+          name: 'countTotal',
+          label: labels.countTotal || '# Results',
+          render: (_, {count, total}) => (
+            total > 1 ? `${count} / ${total}` : total
+          ),
+          exportCell: (_, {count, total}) => ({count, total})
         })
       };
     },

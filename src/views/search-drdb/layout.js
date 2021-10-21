@@ -10,6 +10,7 @@ import AbSuscResults from './tables/ab-susc-results';
 import VPSuscResults from './tables/vp-susc-results';
 import CPSuscResults from './tables/cp-susc-results';
 import InVitroMutationsTable from './tables/invitro-mutations-table';
+import InVivoMutationsTable from './tables/invivo-mutations-table';
 import DMSMutationsTable from './tables/dms-mutations-table';
 
 import {useLastUpdate} from './hooks';
@@ -102,6 +103,15 @@ export default function SearchDRDBLayout() {
             In-vitro Selection Data
           </Header>
           <InVitroMutationsTable />
+        </Grid.Column>
+      </Grid.Row> : null}
+    {displayAbTables || displayCPTables ?
+      <Grid.Row centered>
+        <Grid.Column width={16}>
+          <Header as={H2} id="dms-mutations">
+            In-vivo Selection Data
+          </Header>
+          <InVivoMutationsTable />
         </Grid.Column>
       </Grid.Row> : null}
     {displayAbTables ?

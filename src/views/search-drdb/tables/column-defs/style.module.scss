@@ -90,3 +90,19 @@ svg {
     top: .25em;
   }
 }
+
+.treatments {
+  vertical-align: top;
+
+  .item-treatment {
+    display: inline-block;
+    vertical-align: top;
+    > sub {
+      line-height: 1.3em;
+      font-size: .8rem;
+      color: rgba(0,0,0,.4);
+      display: block;
+      margin-bottom: .3rem;
+    }
+  }
+}

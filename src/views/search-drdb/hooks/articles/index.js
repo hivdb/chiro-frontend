@@ -29,6 +29,9 @@ function ArticlesProvider({children}) {
         SELECT 1 FROM invitro_selection_results IM
         WHERE R.ref_name = IM.ref_name
       ) OR EXISTS (
+        SELECT 1 FROM invivo_selection_results IM
+        WHERE R.ref_name = IM.ref_name
+      ) OR EXISTS (
         SELECT 1 FROM dms_escape_results DM
         WHERE R.ref_name = DM.ref_name
       )
