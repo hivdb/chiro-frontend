@@ -6215,6 +6215,11 @@ fflate@^0.3.8:
   resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.3.11.tgz#2c440d7180fdeb819e64898d8858af327b042a5d"
   integrity sha512-Rr5QlUeGN1mbOHlaqcSYMKVpPbgLy0AWT/W0EHxA6NGI12yO1jpoui2zBBvU2G824ltM6Ut8BFgfHSBGfkmS0A==
 
+fflate@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.7.1.tgz#56e87e87c3f2fe01b025fbb1c4ea835990c02fa2"
+  integrity sha512-VYM2Xy1gSA5MerKzCnmmuV2XljkpKwgJBKezW+495TTnTCh1x5HcYa1aH8wRU/MfTGhW4ziXqgwprgQUVl3Ohw==
+
 figgy-pudding@^3.4.1, figgy-pudding@^3.5.1:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
@@ -13332,9 +13337,9 @@ side-channel@^1.0.4:
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
 
-sierra-frontend@hivdb/sierra-frontend#7403966:
+sierra-frontend@hivdb/sierra-frontend#767ccc7:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#7403966cd6bfa7a8dced2b5c06779dafce40538e"
+  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#767ccc7f1d7ed80ba648f6d980e4d2a78b8e4ab1"
   dependencies:
     "@react-icons/all-files" "^4.1.0"
     "@vx/axis" "^0.0.199"
@@ -13344,6 +13349,7 @@ sierra-frontend@hivdb/sierra-frontend#7403966:
     create-hash "1.2.0"
     farce "^0.4.1"
     fast-memoize "^2.5.2"
+    fflate "^0.7.1"
     flexbox-grid-mixins "^0.2.1"
     griddle-react "^1.13.1"
     jszip "^3.4.0"
