@@ -158,11 +158,25 @@ function internalAggPotency(row, isControl) {
     .map(group => {
       const potency = [];
       const cumulativeCount = [];
+      group.ineffective = group.ineffective.map(ie => (
+        ie === ineffectiveCmp ||
+        ie === 'both'
+      ));
+      const ineffectivePots = [];
       for (const [idx, pot] of group.potency.entries()) {
         const unPot = group.unlinkedPotency[idx];
         const cumuCount = group.cumulativeCount[idx];
         if (!unPot || unPot.length === 0) {
-          potency.push(pot);
+          // for ineffective potency, use the square-root value since the
+          // actual value should be much lower/higher than the detection
+          // threshold
+          if (group.ineffective[idx]) {
+            potency.push(Math.pow(pot, .5));
+            ineffectivePots.push(pot);
+          }
+          else {
+            potency.push(pot);
+          }
           cumulativeCount.push(cumuCount);
         }
         else {
@@ -175,21 +189,36 @@ function internalAggPotency(row, isControl) {
           }
         }
       }
-      const avgPot = aggGeoMeanWeighted(
+      let avgPot = aggGeoMeanWeighted(
         potency,
         cumulativeCount
       );
-      const potSD = aggGeoSDWeighted(
+      let potSD = aggGeoSDWeighted(
         avgPot,
         potency,
         cumulativeCount
       );
+      group.ineffective = false;
+      if (ineffectivePots.length > 0) {
+        let cmpPot;
+        const potTypeFirstTwo = group.potencyType.slice(0, 2);
+        if (potTypeFirstTwo === 'NT' || potTypeFirstTwo === 'NC') {
+          cmpPot = Math.max(...ineffectivePots);
+          if (avgPot <= cmpPot) {
+            avgPot = cmpPot;
+            group.ineffective = true;
+          }
+        }
+        else if (potTypeFirstTwo === 'IC') {
+          cmpPot = Math.min(...ineffectivePots);
+          if (avgPot >= cmpPot) {
+            avgPot = cmpPot;
+            group.ineffective = true;
+          }
+        }
+      }
       group.potency = avgPot;
       group.potencySD = potSD;
-      group.ineffective = group.ineffective.every(ie => (
-        ie === ineffectiveCmp ||
-        ie === 'both'
-      ));
       group.cumulativeCount = aggSum(cumulativeCount);
       return group;
     })
