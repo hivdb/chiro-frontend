@@ -50,9 +50,9 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
-      let rxAbFiltered = false;
+      // let rxAbFiltered = false;
       if (realAbNames && realAbNames.length > 0) {
-        rxAbFiltered = true;
+        // rxAbFiltered = true;
         const excludeAbQuery = [];
         for (const [idx, abName] of realAbNames.entries()) {
           where.push(`
@@ -68,7 +68,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
           excludeAbQuery.push(`$abName${idx}`);
         }
       }
-      if (!rxAbFiltered) {
+      /* if (!rxAbFiltered) {
         where.push(`
           EXISTS (
             SELECT 1 FROM rx_antibodies RXMAB
@@ -77,7 +77,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
               RXMAB.rx_name = M.rx_name
           )
         `);
-      }
+      } */
 
       if (where.length === 0) {
         where.push('true');
@@ -87,6 +87,27 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
         SELECT
           ref_name,
           rx_name,
+          CASE
+            WHEN EXISTS (
+              SELECT 1 FROM rx_conv_plasma RXCP
+              WHERE
+                RXCP.ref_name = M.ref_name AND
+                RXCP.rx_name = M.rx_name
+            ) THEN 'conv-plasma'
+            WHEN EXISTS (
+              SELECT 1 FROM rx_vacc_plasma RXVP
+              WHERE
+                RXVP.ref_name = M.ref_name AND
+                RXVP.rx_name = M.rx_name
+            ) THEN 'vacc-plasma'
+            WHEN EXISTS (
+              SELECT 1 FROM rx_antibodies RXMAB
+              WHERE
+                RXMAB.ref_name = M.ref_name AND
+                RXMAB.rx_name = M.rx_name
+            ) THEN 'antibody'
+            ELSE 'unclassified'
+          END AS rx_type,
           (
             SELECT GROUP_CONCAT(RXMAB.ab_name, $joinSep)
             FROM rx_antibodies RXMAB, antibodies MAB
@@ -151,7 +172,9 @@ function InVitroMutationsProvider({children}) {
       }
       return payload.map(
         mut => {
-          mut.abNames = mut.abNames.split(LIST_JOIN_MAGIC_SEP);
+          mut.abNames = (
+            mut.abNames ? mut.abNames.split(LIST_JOIN_MAGIC_SEP) : []
+          );
           return mut;
         }
       );

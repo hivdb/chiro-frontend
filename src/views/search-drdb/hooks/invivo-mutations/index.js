@@ -155,6 +155,12 @@ function usePrepareQuery({
                 RXCP.rx_name = SRX.rx_name
             ) THEN 'conv-plasma'
             WHEN EXISTS (
+              SELECT 1 FROM rx_vacc_plasma RXVP
+              WHERE
+                RXVP.ref_name = SRX.ref_name AND
+                RXVP.rx_name = SRX.rx_name
+            ) THEN 'vacc-plasma'
+            WHEN EXISTS (
               SELECT 1 FROM rx_antibodies RXMAB
               WHERE
                 RXMAB.ref_name = SRX.ref_name AND

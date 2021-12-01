@@ -17,10 +17,12 @@ const tableConfig = {
   columns: [
     'refName',
     'section',
-    'abNames',
+    'treatment',
     'mutation'
   ],
-  labels: {}
+  labels: {
+    treatment: 'Antibodies'
+  }
 };
 
 export default function InVitroMutationsTable() {

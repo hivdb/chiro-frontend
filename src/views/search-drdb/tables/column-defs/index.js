@@ -22,7 +22,7 @@ import useVarNameOrIsoAggkey from './variant-or-isolate-agg';
 import useRefName from './reference';
 import useCumulativeCount from './cumulative-count';
 import useDataAvailability from './data-availability';
-import useTreatments from './treatments';
+import useTreatments, {useTreatment} from './treatments';
 import useMutation from './mutation';
 import useSmallColumns from './small-columns';
 
@@ -90,6 +90,7 @@ export default function useColumnDefs({
   const fold = useFold(commonArgs);
   const dataAvailability = useDataAvailability(commonArgs);
   const treatments = useTreatments(commonArgs);
+  const treatment = useTreatment(commonArgs);
   const mutation = useMutation(commonArgs);
   const smallColumns = useSmallColumns(commonArgs);
 
@@ -109,6 +110,7 @@ export default function useColumnDefs({
         fold,
         dataAvailability,
         treatments,
+        treatment,
         mutation,
         ...smallColumns
       };
@@ -129,6 +131,7 @@ export default function useColumnDefs({
       potency,
       refName,
       treatments,
+      treatment,
       mutation,
       smallColumns,
       skip
