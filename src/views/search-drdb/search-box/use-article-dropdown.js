@@ -33,10 +33,10 @@ export default function useArticleDropdown() {
     numExpLookup,
     isNumExpLookupPending
   ] = NumExpStats.useRef();
-  const {
-    inVitroMuts,
-    isPending: isInVitroMutsPending
-  } = InVitroMutations.useMe();
+  const [
+    numInVitroMuts,
+    isInVitroMutsPending
+  ] = InVitroMutations.useSummaryByArticle();
   const {
     inVivoMuts,
     isPending: isInVivoMutsPending
@@ -58,14 +58,25 @@ export default function useArticleDropdown() {
         return {};
       }
       const lookup = {...numExpLookup};
-      for (const {refName} of [...inVitroMuts, ...inVivoMuts, ...dmsMuts]) {
+      for (const {refName, count} of numInVitroMuts) {
+        lookup[refName] = lookup[refName] || 0;
+        lookup[refName] += count;
+        lookup[ANY] += count;
+      }
+      for (const {refName} of [...inVivoMuts, ...dmsMuts]) {
         lookup[refName] = lookup[refName] || 0;
         lookup[refName] ++;
         lookup[ANY] ++;
       }
       return lookup;
     },
-    [isPending, inVitroMuts, inVivoMuts, dmsMuts, numExpLookup]
+    [
+      isPending,
+      numInVitroMuts,
+      inVivoMuts,
+      dmsMuts,
+      numExpLookup
+    ]
   );
   const articleOptions = React.useMemo(
     () => {
