@@ -154,7 +154,7 @@ function InVitroMutationsProvider({children}) {
     },
     filterFlag
   } = LocationParams.useMe();
-  const skip = formOnly || filterFlag.vaccine || filterFlag.infectedVariant;
+  const skip = formOnly || filterFlag.vaccine;
   const {
     sql,
     params

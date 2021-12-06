@@ -4,6 +4,9 @@ import {Dropdown} from 'semantic-ui-react';
 
 import Articles from '../hooks/articles';
 import {NumExpStats} from '../hooks/susc-summary';
+import InVitroMutations from '../hooks/invitro-mutations';
+import InVivoMutations from '../hooks/invivo-mutations';
+import DMSMutations from '../hooks/dms-mutations';
 import LocationParams from '../hooks/location-params';
 
 import style from './style.module.scss';
@@ -30,7 +33,40 @@ export default function useArticleDropdown() {
     numExpLookup,
     isNumExpLookupPending
   ] = NumExpStats.useRef();
-  const isPending = isRefLookupPending || isNumExpLookupPending;
+  const {
+    inVitroMuts,
+    isPending: isInVitroMutsPending
+  } = InVitroMutations.useMe();
+  const {
+    inVivoMuts,
+    isPending: isInVivoMutsPending
+  } = InVivoMutations.useMe();
+  const {
+    dmsMuts,
+    isPending: isDMSMutsPending
+  } = DMSMutations.useMe();
+  const isPending = (
+    isRefLookupPending ||
+    isNumExpLookupPending ||
+    isInVitroMutsPending ||
+    isInVivoMutsPending ||
+    isDMSMutsPending
+  );
+  const totalNumExpLookup = React.useMemo(
+    () => {
+      if (isPending) {
+        return {};
+      }
+      const lookup = {...numExpLookup};
+      for (const {refName} of [...inVitroMuts, ...inVivoMuts, ...dmsMuts]) {
+        lookup[refName] = lookup[refName] || 0;
+        lookup[refName] ++;
+        lookup[ANY] ++;
+      }
+      return lookup;
+    },
+    [isPending, inVitroMuts, inVivoMuts, dmsMuts, numExpLookup]
+  );
   const articleOptions = React.useMemo(
     () => {
       if (isPending) {
@@ -60,7 +96,7 @@ export default function useArticleDropdown() {
             value: ANY,
             description: pluralize(
               'result',
-              numExpLookup[ANY],
+              totalNumExpLookup[ANY],
               true
             )
           },
@@ -81,10 +117,10 @@ export default function useArticleDropdown() {
                 value: refName,
                 description: pluralize(
                   'result',
-                  numExpLookup[refName] || 0,
+                  totalNumExpLookup[refName] || 0,
                   true
                 ),
-                'data-is-empty': !numExpLookup[refName]
+                'data-is-empty': !totalNumExpLookup[refName]
               })
             )
             .filter(a => !a['data-is-empty'])
@@ -97,7 +133,7 @@ export default function useArticleDropdown() {
       articleLookup,
       paramRefName,
       formOnly,
-      numExpLookup
+      totalNumExpLookup
     ]
   );
 

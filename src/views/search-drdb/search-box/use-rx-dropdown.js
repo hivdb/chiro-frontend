@@ -7,6 +7,9 @@ import escapeRegExp from 'lodash/escapeRegExp';
 import Antibodies from '../hooks/antibodies';
 import Vaccines from '../hooks/vaccines';
 import {NumExpStats} from '../hooks/susc-summary';
+import InVitroMutations from '../hooks/invitro-mutations';
+import InVivoMutations from '../hooks/invivo-mutations';
+import DMSMutations from '../hooks/dms-mutations';
 import InfectedVariants from '../hooks/infected-variants';
 import LocationParams from '../hooks/location-params';
 
@@ -76,6 +79,19 @@ export default function useRxDropdown() {
     onChange
   } = LocationParams.useMe();
 
+  const {
+    inVitroMuts,
+    isPending: isInVitroMutsPending
+  } = InVitroMutations.useMe();
+  const {
+    inVivoMuts,
+    isPending: isInVivoMutsPending
+  } = InVivoMutations.useMe();
+  const {
+    dmsMuts,
+    isPending: isDMSMutsPending
+  } = DMSMutations.useMe();
+
   const isPending = (
     isAntibodiesPending ||
     isVaccinesPending ||
@@ -83,7 +99,85 @@ export default function useRxDropdown() {
     isRxTotalNumExpPending ||
     isAbNumExpPending ||
     isVaccNumExpPending ||
-    isInfVarNumExpPending
+    isInfVarNumExpPending ||
+    isInVitroMutsPending ||
+    isInVivoMutsPending ||
+    isDMSMutsPending
+  );
+
+  const [
+    finalRxTotalNumExp,
+    finalAbNumExpLookup,
+    finalVaccNumExpLookup,
+    finalInfVarNumExpLookup
+  ] = React.useMemo(
+    () => {
+      if (isPending) {
+        return [0, {}, {}, {}];
+      }
+      let finalRxTotalNumExp = rxTotalNumExp;
+      const finalAbNumExpLookup = {...abNumExpLookup};
+      const finalVaccNumExpLookup = {...vaccNumExpLookup};
+      const finalInfVarNumExpLookup = {...infVarNumExpLookup};
+      for (const {
+        rxType,
+        abNames
+      } of [...inVitroMuts, ...dmsMuts]) {
+        finalRxTotalNumExp ++;
+        if (rxType === 'antibody') {
+          for (const abName of abNames) {
+            finalAbNumExpLookup[abName] = finalAbNumExpLookup[abName] || 0;
+            finalAbNumExpLookup[abName] ++;
+          }
+          finalAbNumExpLookup[ANY] ++;
+        }
+        else if (rxType === 'vacc-plasma') {
+          finalVaccNumExpLookup[ANY] ++;
+        }
+        else if (rxType === 'conv-plasma') {
+          finalInfVarNumExpLookup[ANY] ++;
+        }
+      }
+      for (const {treatments} of inVivoMuts) {
+        finalRxTotalNumExp ++;
+        const abLookup = {};
+        for (const {rxType, abNames} of treatments) {
+          if (rxType === 'antibody') {
+            for (const abName of abNames) {
+              abLookup[abName] = 1;
+              abLookup[ANY] = 1;
+            }
+          }
+        }
+        for (const abName in abLookup) {
+          finalAbNumExpLookup[abName] = finalAbNumExpLookup[abName] || 0;
+          finalAbNumExpLookup[abName] ++;
+        }
+        /* TODO: should we fix this? the concept of infvar of in-vivo exps
+         * is different from other experiment types
+        finalInfVarNumExpLookup[infectedVarName] =
+          finalInfVarNumExpLookup[infectedVarName] || 0;
+        finalInfVarNumExpLookup[infectedVarName] ++;
+        finalInfVarNumExpLookup[ANY] ++;
+        */
+      }
+      return [
+        finalRxTotalNumExp,
+        finalAbNumExpLookup,
+        finalVaccNumExpLookup,
+        finalInfVarNumExpLookup
+      ];
+    },
+    [
+      isPending,
+      rxTotalNumExp,
+      abNumExpLookup,
+      vaccNumExpLookup,
+      infVarNumExpLookup,
+      inVitroMuts,
+      inVivoMuts,
+      dmsMuts
+    ]
   );
 
   const options = React.useMemo(
@@ -151,11 +245,11 @@ export default function useRxDropdown() {
             value: ANY,
             description: pluralize(
               'result',
-              rxTotalNumExp,
+              finalRxTotalNumExp,
               true
             )
           },
-          ...(infVarNumExpLookup[ANY] > 0 ? [
+          ...(finalInfVarNumExpLookup[ANY] > 0 ? [
             {
               key: 'cp-divider',
               as: FragmentWithoutWarning,
@@ -167,7 +261,7 @@ export default function useRxDropdown() {
               value: 'cp-any',
               description: pluralize(
                 'result',
-                infVarNumExpLookup[ANY],
+                finalInfVarNumExpLookup[ANY],
                 true
               ),
               type: CP
@@ -185,16 +279,16 @@ export default function useRxDropdown() {
                   type: CP,
                   description: pluralize(
                     'result',
-                    infVarNumExpLookup[varName] || 0,
+                    finalInfVarNumExpLookup[varName] || 0,
                     true
                   ),
-                  'data-num-exp': infVarNumExpLookup[varName] || 0
+                  'data-num-exp': finalInfVarNumExpLookup[varName] || 0
                 })
               )
               .filter(v => v['data-num-exp'] > 0)
               .sort((a, b) => b['data-num-exp'] - a['data-num-exp'])
           ] : []),
-          ...(vaccNumExpLookup[ANY] > 0 ? [
+          ...(finalVaccNumExpLookup[ANY] > 0 ? [
             {
               key: 'vaccine-divider',
               as: FragmentWithoutWarning,
@@ -207,7 +301,7 @@ export default function useRxDropdown() {
               type: VACCINE,
               description: pluralize(
                 'result',
-                vaccNumExpLookup[ANY],
+                finalVaccNumExpLookup[ANY],
                 true
               )
             },
@@ -224,17 +318,17 @@ export default function useRxDropdown() {
                   value: vaccineName,
                   description: pluralize(
                     'result',
-                    vaccNumExpLookup[vaccineName] || 0,
+                    finalVaccNumExpLookup[vaccineName] || 0,
                     true
                   ),
-                  'data-num-exp': vaccNumExpLookup[vaccineName] || 0,
+                  'data-num-exp': finalVaccNumExpLookup[vaccineName] || 0,
                   type: VACCINE
                 })
               )
               .filter(v => v['data-num-exp'] > 0)
               .sort((a, b) => b['data-num-exp'] - a['data-num-exp'])
           ] : []),
-          ...(abNumExpLookup[ANY] > 0 ? [
+          ...(finalAbNumExpLookup[ANY] > 0 ? [
             {
               key: 'antibody-divider',
               as: FragmentWithoutWarning,
@@ -247,7 +341,7 @@ export default function useRxDropdown() {
               type: ANTIBODY,
               description: pluralize(
                 'result',
-                abNumExpLookup[ANY],
+                finalAbNumExpLookup[ANY],
                 true
               )
             },
@@ -264,10 +358,10 @@ export default function useRxDropdown() {
                   type: ANTIBODY,
                   description: pluralize(
                     'result',
-                    abNumExpLookup[abName] || 0,
+                    finalAbNumExpLookup[abName] || 0,
                     true
                   ),
-                  'data-is-empty': !abNumExpLookup[abName],
+                  'data-is-empty': !finalAbNumExpLookup[abName],
                   synonyms
                 })
               )
@@ -287,10 +381,10 @@ export default function useRxDropdown() {
       paramVaccineName,
       paramAbNames,
       formOnly,
-      abNumExpLookup,
-      vaccNumExpLookup,
-      infVarNumExpLookup,
-      rxTotalNumExp
+      finalAbNumExpLookup,
+      finalVaccNumExpLookup,
+      finalInfVarNumExpLookup,
+      finalRxTotalNumExp
     ]
   );
   const handleChange = React.useCallback(

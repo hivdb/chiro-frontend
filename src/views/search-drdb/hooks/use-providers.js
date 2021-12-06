@@ -46,7 +46,10 @@ const presetProviderNames = {
     'variants',
     'isolateAggs',
     'positions',
-    'suscSummary'
+    'suscSummary',
+    'inVitroMutations',
+    'inVivoMutations',
+    'dmsMutations'
   ],
   all: [
     'locationParams',

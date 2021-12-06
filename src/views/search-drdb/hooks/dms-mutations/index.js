@@ -87,6 +87,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
         SELECT
           ref_name,
           rx_name,
+          'antibody' AS rx_type,
           (
             SELECT GROUP_CONCAT(RXMAB.ab_name, $joinSep)
             FROM rx_antibodies RXMAB, antibodies MAB
