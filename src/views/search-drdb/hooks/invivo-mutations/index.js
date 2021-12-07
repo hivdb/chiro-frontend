@@ -5,6 +5,10 @@ import LocationParams from '../location-params';
 
 import {getMutations} from '../isolate-aggs';
 
+import useSummaryByArticle from './use-summary-by-article';
+import useSummaryByAntibodies from './use-summary-by-antibodies';
+import useSummaryByInfVar from './use-summary-by-infvar';
+
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 const InVivoMutationsContext = React.createContext();
 
@@ -67,6 +71,7 @@ function usePrepareQuery({
                 subject_treatments SBJRX,
                 rx_antibodies RXMAB
               WHERE
+                SBJRX.subject_name = M.subject_name AND
                 SBJRX.start_date < M.appearance_date AND
                 SBJRX.ref_name = M.ref_name AND
                 RXMAB.ref_name = M.ref_name AND
@@ -79,16 +84,21 @@ function usePrepareQuery({
         }
       }
       if (infectedVarName) {
-        where.push('M.infected_var_name = $infVarName');
+        where.push(`
+          $infVarName = 'any' OR
+          ($infVarName = 'Wild Type' AND INFVAR.as_wildtype IS TRUE) OR
+          (INFVAR.var_name = $infVarName)
+        `);
         params.$infVarName = infectedVarName;
       }
-      else if (!rxAbFiltered && abNames.some(n => n === 'any')) {
+      else if (rxAbFiltered && abNames.some(n => n === 'any')) {
         where.push(`
           EXISTS (
             SELECT 1 FROM
               subject_treatments SBJRX,
               rx_antibodies RXMAB
             WHERE
+              SBJRX.subject_name = M.subject_name AND
               SBJRX.start_date < M.appearance_date AND
               SBJRX.ref_name = M.ref_name AND
               RXMAB.ref_name = M.ref_name AND
@@ -106,7 +116,10 @@ function usePrepareQuery({
           M.ref_name,
           M.subject_name,
           SBJ.subject_species,
-          M.infected_var_name,
+          CASE
+            WHEN INFVAR.as_wildtype THEN 'Wild Type'
+            ELSE INFVAR.var_name
+          END AS infected_var_name,
           M.gene,
           R.amino_acid as ref_amino_acid,
           M.position,
@@ -130,6 +143,8 @@ function usePrepareQuery({
         JOIN subjects SBJ ON
           M.ref_name = SBJ.ref_name AND
           M.subject_name = SBJ.subject_name
+        LEFT JOIN variants INFVAR ON
+          M.infected_var_name = INFVAR.var_name
         WHERE
           (${where.join(') AND (')})
       `;
@@ -177,6 +192,8 @@ function usePrepareQuery({
         FROM subject_treatments SRX
         WHERE EXISTS (
           SELECT 1 FROM invivo_selection_results M
+          LEFT JOIN variants INFVAR ON
+            M.infected_var_name = INFVAR.var_name
           WHERE
             M.ref_name = SRX.ref_name AND
             M.subject_name = SRX.subject_name AND
@@ -203,18 +220,26 @@ function InVivoMutationsProvider({children}) {
     params: {
       formOnly,
       refName,
+      infectedVarName,
       isoAggkey,
       genePos,
       abNames
     },
     filterFlag
   } = LocationParams.useMe();
-  const skip = formOnly || filterFlag.vaccine || filterFlag.infectedVariant;
+  const skip = formOnly || filterFlag.vaccine;
   const {
     sql,
     sbjRxSql,
     params
-  } = usePrepareQuery({abNames, refName, isoAggkey, genePos, skip});
+  } = usePrepareQuery({
+    refName,
+    abNames,
+    infectedVarName,
+    isoAggkey,
+    genePos,
+    skip
+  });
 
   const {
     payload,
@@ -301,7 +326,10 @@ function useInVivoMutations() {
 
 const InVivoMutations = {
   Provider: InVivoMutationsProvider,
-  useMe: useInVivoMutations
+  useMe: useInVivoMutations,
+  useSummaryByArticle,
+  useSummaryByAntibodies,
+  useSummaryByInfVar
 };
 
 export default InVivoMutations;

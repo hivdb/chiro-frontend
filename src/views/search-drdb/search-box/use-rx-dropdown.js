@@ -79,18 +79,26 @@ export default function useRxDropdown() {
     onChange
   } = LocationParams.useMe();
 
-  const {
-    inVitroMuts,
-    isPending: isInVitroMutsPending
-  } = InVitroMutations.useMe();
-  const {
-    inVivoMuts,
-    isPending: isInVivoMutsPending
-  } = InVivoMutations.useMe();
-  const {
-    dmsMuts,
-    isPending: isDMSMutsPending
-  } = DMSMutations.useMe();
+  const [
+    numInVitroMutsByAbs,
+    isInVitroMutsByAbsPending
+  ] = InVitroMutations.useSummaryByAntibodies();
+  const [
+    numInVitroMutsByInfVar,
+    isInVitroMutsByInfVarPending
+  ] = InVitroMutations.useSummaryByInfVar();
+  const [
+    numInVivoMutsByAbs,
+    isInVivoMutsByAbsPending
+  ] = InVivoMutations.useSummaryByAntibodies();
+  const [
+    numInVivoMutsByInfVar,
+    isInVivoMutsByInfVarPending
+  ] = InVivoMutations.useSummaryByInfVar();
+  const [
+    numDMSMutsByAbs,
+    isDMSMutsByAbsPending
+  ] = DMSMutations.useSummaryByAntibodies();
 
   const isPending = (
     isAntibodiesPending ||
@@ -100,9 +108,11 @@ export default function useRxDropdown() {
     isAbNumExpPending ||
     isVaccNumExpPending ||
     isInfVarNumExpPending ||
-    isInVitroMutsPending ||
-    isInVivoMutsPending ||
-    isDMSMutsPending
+    isInVitroMutsByAbsPending ||
+    isInVitroMutsByInfVarPending ||
+    isInVivoMutsByAbsPending ||
+    isInVivoMutsByInfVarPending ||
+    isDMSMutsByAbsPending
   );
 
   const [
@@ -119,47 +129,28 @@ export default function useRxDropdown() {
       const finalAbNumExpLookup = {...abNumExpLookup};
       const finalVaccNumExpLookup = {...vaccNumExpLookup};
       const finalInfVarNumExpLookup = {...infVarNumExpLookup};
-      for (const {
-        rxType,
-        abNames
-      } of [...inVitroMuts, ...dmsMuts]) {
-        finalRxTotalNumExp ++;
-        if (rxType === 'antibody') {
-          for (const abName of abNames) {
-            finalAbNumExpLookup[abName] = finalAbNumExpLookup[abName] || 0;
-            finalAbNumExpLookup[abName] ++;
-          }
-          finalAbNumExpLookup[ANY] ++;
-        }
-        else if (rxType === 'vacc-plasma') {
-          finalVaccNumExpLookup[ANY] ++;
-        }
-        else if (rxType === 'conv-plasma') {
-          finalInfVarNumExpLookup[ANY] ++;
-        }
-      }
-      for (const {treatments} of inVivoMuts) {
-        finalRxTotalNumExp ++;
-        const abLookup = {};
-        for (const {rxType, abNames} of treatments) {
-          if (rxType === 'antibody') {
-            for (const abName of abNames) {
-              abLookup[abName] = 1;
-              abLookup[ANY] = 1;
-            }
-          }
-        }
-        for (const abName in abLookup) {
+      for (const {abNames, count} of [
+        ...numInVitroMutsByAbs,
+        ...numInVivoMutsByAbs,
+        ...numDMSMutsByAbs
+      ]) {
+        // finalRxTotalNumExp += count;
+        for (const abName of abNames) {
           finalAbNumExpLookup[abName] = finalAbNumExpLookup[abName] || 0;
-          finalAbNumExpLookup[abName] ++;
+          finalAbNumExpLookup[abName] += count;
         }
-        /* TODO: should we fix this? the concept of infvar of in-vivo exps
-         * is different from other experiment types
+        finalAbNumExpLookup[ANY] += count;
+      }
+
+      for (const {infectedVarName, count} of [
+        ...numInVitroMutsByInfVar,
+        ...numInVivoMutsByInfVar
+      ]) {
+        finalRxTotalNumExp += count;
         finalInfVarNumExpLookup[infectedVarName] =
           finalInfVarNumExpLookup[infectedVarName] || 0;
-        finalInfVarNumExpLookup[infectedVarName] ++;
-        finalInfVarNumExpLookup[ANY] ++;
-        */
+        finalInfVarNumExpLookup[infectedVarName] += count;
+        finalInfVarNumExpLookup[ANY] += count;
       }
       return [
         finalRxTotalNumExp,
@@ -174,9 +165,11 @@ export default function useRxDropdown() {
       abNumExpLookup,
       vaccNumExpLookup,
       infVarNumExpLookup,
-      inVitroMuts,
-      inVivoMuts,
-      dmsMuts
+      numInVitroMutsByAbs,
+      numInVivoMutsByAbs,
+      numDMSMutsByAbs,
+      numInVitroMutsByInfVar,
+      numInVivoMutsByInfVar
     ]
   );
 

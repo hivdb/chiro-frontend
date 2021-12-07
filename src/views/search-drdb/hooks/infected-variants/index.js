@@ -16,25 +16,16 @@ function InfectedVariantsProvider({children}) {
 
   const sql = `
     SELECT
-      infected_var_name AS var_name,
+      var_name,
       (
         SELECT GROUP_CONCAT(synonym, "${LIST_JOIN_UNIQ}")
         FROM variant_synonyms VS
         WHERE V.var_name=VS.var_name
         ORDER BY LENGTH(synonym)
       ) AS synonyms
-    FROM (
-      SELECT DISTINCT infected_var_name FROM susc_summary
-      WHERE
-        aggregate_by = 'infected_variant' AND
-        infected_var_name IS NOT NULL
-    ) S
-    LEFT JOIN variants V ON
-      S.infected_var_name = V.var_name
-    ORDER BY CASE
-      WHEN infected_var_name = 'Wild Type' THEN '_WT'
-      ELSE infected_var_name
-    END
+    FROM variants V WHERE
+      V.as_wildtype IS FALSE
+    ORDER BY var_name
   `;
 
   const {
@@ -44,12 +35,15 @@ function InfectedVariantsProvider({children}) {
 
   let infectedVariants;
   if (payload) {
-    infectedVariants = payload.map(
-      ({varName, synonyms}) => ({
-        varName,
-        synonyms: synonyms ? synonyms.split(LIST_JOIN_UNIQ) : []
-      })
-    );
+    infectedVariants = [
+      {varName: 'Wild Type', synonyms: []},
+      ...payload.map(
+        ({varName, synonyms}) => ({
+          varName,
+          synonyms: synonyms ? synonyms.split(LIST_JOIN_UNIQ) : []
+        })
+      )
+    ];
   }
 
   const contextValue = {

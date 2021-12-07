@@ -5,7 +5,13 @@ import LocationParams from '../location-params';
 import {getMutations} from '../isolate-aggs';
 
 
-function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
+function usePrepareQuery({
+  abNames,
+  infectedVarName,
+  isoAggkey,
+  genePos,
+  skip
+}) {
   return React.useMemo(
     () => {
       if (skip) {
@@ -39,16 +45,23 @@ function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
+      let rxAbFiltered = false;
       if (realAbNames && realAbNames.length > 0) {
+        rxAbFiltered = true;
         const excludeAbQuery = [];
         for (const [idx, abName] of realAbNames.entries()) {
           where.push(`
             EXISTS (
-              SELECT 1 FROM rx_antibodies RXMAB
+              SELECT 1 FROM
+                subject_treatments SBJRX,
+                rx_antibodies RXMAB
               WHERE
-              RXMAB.ref_name = M.ref_name AND
-              RXMAB.rx_name = M.rx_name AND
-              RXMAB.ab_name = $abName${idx}
+                SBJRX.subject_name = M.subject_name AND
+                SBJRX.start_date < M.appearance_date AND
+                SBJRX.ref_name = M.ref_name AND
+                RXMAB.ref_name = M.ref_name AND
+                SBJRX.rx_name = RXMAB.rx_name AND
+                RXMAB.ab_name = $abName${idx}
             )
           `);
           params[`$abName${idx}`] = abName;
@@ -57,31 +70,24 @@ function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
       }
       if (infectedVarName) {
         where.push(`
-          EXISTS (
-            SELECT 1 FROM rx_conv_plasma RXCP
-              LEFT JOIN isolates INFISO
-                ON RXCP.infected_iso_name = INFISO.iso_name
-              LEFT JOIN variants INFVAR
-                ON INFISO.var_name = INFVAR.var_name
-              WHERE
-                RXCP.ref_name = M.ref_name AND
-                RXCP.rx_name = M.rx_name AND
-                (
-                  $infVarName = 'any' OR
-                  ($infVarName = 'Wild Type' AND INFVAR.as_wildtype IS TRUE) OR
-                  (INFISO.var_name = $infVarName)
-                )
-          )
+          $infVarName = 'any' OR
+          ($infVarName = 'Wild Type' AND INFVAR.as_wildtype IS TRUE) OR
+          (INFVAR.var_name = $infVarName)
         `);
         params.$infVarName = infectedVarName;
       }
-      else if (abNames.some(n => n === 'any')) {
+      else if (rxAbFiltered && abNames.some(n => n === 'any')) {
         where.push(`
           EXISTS (
-            SELECT 1 FROM rx_antibodies RXMAB
+            SELECT 1 FROM
+              subject_treatments SBJRX,
+              rx_antibodies RXMAB
             WHERE
+              SBJRX.subject_name = M.subject_name AND
+              SBJRX.start_date < M.appearance_date AND
+              SBJRX.ref_name = M.ref_name AND
               RXMAB.ref_name = M.ref_name AND
-              RXMAB.rx_name = M.rx_name
+              SBJRX.rx_name = RXMAB.rx_name
           )
         `);
       }
@@ -93,8 +99,10 @@ function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
       const sql = `
         SELECT
           M.ref_name,
-          COUNT(*) AS count
-        FROM invitro_selection_results M
+          COUNT(*)
+        FROM invivo_selection_results M
+        LEFT JOIN variants INFVAR ON
+          M.infected_var_name = INFVAR.var_name
         WHERE
           (${where.join(') AND (')})
         GROUP BY M.ref_name
@@ -104,24 +112,31 @@ function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
         params
       };
     },
-    [abNames, infectedVarName, genePos, isoAggkey, skip]
+    [abNames, genePos, infectedVarName, isoAggkey, skip]
   );
 }
+
 
 export default function useSummaryByArticle() {
   const {
     params: {
       isoAggkey,
-      infectedVarName,
       genePos,
-      abNames
+      abNames,
+      infectedVarName
     }
   } = LocationParams.useMe();
   const skip = false;
   const {
     sql,
     params
-  } = usePrepareQuery({abNames, isoAggkey, infectedVarName, genePos, skip});
+  } = usePrepareQuery({
+    abNames,
+    isoAggkey,
+    infectedVarName,
+    genePos,
+    skip
+  });
 
   const {
     payload,

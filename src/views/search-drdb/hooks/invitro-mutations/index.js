@@ -6,13 +6,22 @@ import LocationParams from '../location-params';
 import {getMutations} from '../isolate-aggs';
 
 import useSummaryByArticle from './use-summary-by-article';
+import useSummaryByAntibodies from './use-summary-by-antibodies';
+import useSummaryByInfVar from './use-summary-by-infvar';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 const InVitroMutationsContext = React.createContext();
 
 
-function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
+function usePrepareQuery({
+  refName,
+  abNames,
+  isoAggkey,
+  infectedVarName,
+  genePos,
+  skip
+}) {
   return React.useMemo(
     () => {
       if (skip) {
@@ -52,9 +61,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
-      // let rxAbFiltered = false;
       if (realAbNames && realAbNames.length > 0) {
-        // rxAbFiltered = true;
         const excludeAbQuery = [];
         for (const [idx, abName] of realAbNames.entries()) {
           where.push(`
@@ -70,7 +77,19 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
           excludeAbQuery.push(`$abName${idx}`);
         }
       }
-      /* if (!rxAbFiltered) {
+      if (infectedVarName) {
+        where.push(`
+          RXCP.rx_name IS NOT NULL AND
+          (
+            $infVarName = 'any' OR
+            ($infVarName = 'Wild Type' AND INFVAR.as_wildtype IS TRUE) OR
+            (INFISO.var_name = $infVarName)
+          )
+          
+        `);
+        params.$infVarName = infectedVarName;
+      }
+      else if (abNames.some(n => n === 'any')) {
         where.push(`
           EXISTS (
             SELECT 1 FROM rx_antibodies RXMAB
@@ -79,7 +98,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
               RXMAB.rx_name = M.rx_name
           )
         `);
-      } */
+      }
 
       if (where.length === 0) {
         where.push('true');
@@ -87,8 +106,8 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
 
       const sql = `
         SELECT
-          ref_name,
-          rx_name,
+          M.ref_name,
+          M.rx_name,
           CASE
             WHEN EXISTS (
               SELECT 1 FROM rx_conv_plasma RXCP
@@ -123,11 +142,23 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
           R.amino_acid as ref_amino_acid,
           M.position,
           M.amino_acid,
+          CASE
+            WHEN INFVAR.as_wildtype THEN 'Wild Type'
+            ELSE INFVAR.var_name
+          END AS infected_var_name,
           section,
           date_added
         FROM invitro_selection_results M
         JOIN ref_amino_acid R ON
           R.gene = M.gene AND R.position = M.position
+        LEFT JOIN rx_conv_plasma RXCP ON
+          RXCP.ref_name = M.ref_name AND
+          RXCP.rx_name = M.rx_name
+        LEFT JOIN isolates INFISO ON
+          RXCP.infected_iso_name = INFISO.iso_name
+        LEFT JOIN variants INFVAR ON
+          INFISO.var_name = INFVAR.var_name
+
         WHERE
           (${where.join(') AND (')})
       `;
@@ -136,7 +167,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
         params
       };
     },
-    [abNames, genePos, isoAggkey, refName, skip]
+    [abNames, genePos, infectedVarName, isoAggkey, refName, skip]
   );
 }
 
@@ -151,6 +182,7 @@ function InVitroMutationsProvider({children}) {
       formOnly,
       refName,
       isoAggkey,
+      infectedVarName,
       genePos,
       abNames
     },
@@ -160,7 +192,14 @@ function InVitroMutationsProvider({children}) {
   const {
     sql,
     params
-  } = usePrepareQuery({abNames, refName, isoAggkey, genePos, skip});
+  } = usePrepareQuery({
+    abNames,
+    refName,
+    isoAggkey,
+    infectedVarName,
+    genePos,
+    skip
+  });
 
   const {
     payload,
@@ -200,7 +239,9 @@ function useInVitroMutations() {
 const InVitroMutations = {
   Provider: InVitroMutationsProvider,
   useMe: useInVitroMutations,
-  useSummaryByArticle
+  useSummaryByArticle,
+  useSummaryByAntibodies,
+  useSummaryByInfVar
 };
 
 export default InVitroMutations;

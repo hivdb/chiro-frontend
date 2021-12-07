@@ -10,6 +10,7 @@ ItemTreatment.propTypes = {
   ]).isRequired,
   rxName: PropTypes.string.isRequired,
   abNames: PropTypes.arrayOf(PropTypes.string.isRequired),
+  infectedVarName: PropTypes.string,
   timing: PropTypes.number,
   endTiming: PropTypes.number,
   dosage: PropTypes.number,
@@ -20,6 +21,7 @@ function ItemTreatment({
   rxType,
   rxName,
   abNames,
+  infectedVarName,
   timing,
   endTiming,
   dosage,
@@ -34,7 +36,7 @@ function ItemTreatment({
         </React.Fragment>)}
       </> : null}
     {rxType === 'conv-plasma' ? <>
-      CP
+      {infectedVarName ? `${infectedVarName} ` : null}CP
     </> : null}
     {rxType === 'vacc-plasma' ? <>
       VP
@@ -57,6 +59,7 @@ function exportTreatment({
   rxType,
   rxName,
   abNames,
+  infectedVarName,
   timing,
   endTiming,
   dosage,
@@ -72,7 +75,8 @@ function exportTreatment({
     return abNames.join(' + ') + suffix;
   }
   else if (rxType === 'conv-plasma') {
-    return 'CP' + suffix;
+    const prefix = infectedVarName ? `${infectedVarName} ` : '';
+    return prefix + 'CP' + suffix;
   }
   else if (rxType === 'vacc-plasma') {
     return 'VP' + suffix;

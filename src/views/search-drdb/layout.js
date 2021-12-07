@@ -96,7 +96,7 @@ export default function SearchDRDBLayout() {
           <CPSuscResults />
         </Grid.Column>
       </Grid.Row> : null}
-    {displayAbTables ?
+    {displayAbTables || displayCPTables ?
       <Grid.Row centered>
         <Grid.Column width={16}>
           <Header as={H2} id="invitro-mutations">

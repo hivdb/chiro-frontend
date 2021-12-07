@@ -5,7 +5,7 @@ import LocationParams from '../location-params';
 import {getMutations} from '../isolate-aggs';
 
 
-function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
+function usePrepareQuery({abNames, isoAggkey, genePos, skip}) {
   return React.useMemo(
     () => {
       if (skip) {
@@ -39,7 +39,9 @@ function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
+      let rxAbFiltered = false;
       if (realAbNames && realAbNames.length > 0) {
+        rxAbFiltered = true;
         const excludeAbQuery = [];
         for (const [idx, abName] of realAbNames.entries()) {
           where.push(`
@@ -55,27 +57,7 @@ function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
           excludeAbQuery.push(`$abName${idx}`);
         }
       }
-      if (infectedVarName) {
-        where.push(`
-          EXISTS (
-            SELECT 1 FROM rx_conv_plasma RXCP
-              LEFT JOIN isolates INFISO
-                ON RXCP.infected_iso_name = INFISO.iso_name
-              LEFT JOIN variants INFVAR
-                ON INFISO.var_name = INFVAR.var_name
-              WHERE
-                RXCP.ref_name = M.ref_name AND
-                RXCP.rx_name = M.rx_name AND
-                (
-                  $infVarName = 'any' OR
-                  ($infVarName = 'Wild Type' AND INFVAR.as_wildtype IS TRUE) OR
-                  (INFISO.var_name = $infVarName)
-                )
-          )
-        `);
-        params.$infVarName = infectedVarName;
-      }
-      else if (abNames.some(n => n === 'any')) {
+      if (rxAbFiltered && abNames.some(n => n === 'any')) {
         where.push(`
           EXISTS (
             SELECT 1 FROM rx_antibodies RXMAB
@@ -92,19 +74,19 @@ function usePrepareQuery({abNames, infectedVarName, isoAggkey, genePos, skip}) {
 
       const sql = `
         SELECT
-          M.ref_name,
+          ref_name,
           COUNT(*) AS count
-        FROM invitro_selection_results M
+        FROM dms_escape_results M
         WHERE
           (${where.join(') AND (')})
-        GROUP BY M.ref_name
+        GROUP BY ref_name
       `;
       return {
         sql,
         params
       };
     },
-    [abNames, infectedVarName, genePos, isoAggkey, skip]
+    [abNames, genePos, isoAggkey, skip]
   );
 }
 
@@ -112,7 +94,6 @@ export default function useSummaryByArticle() {
   const {
     params: {
       isoAggkey,
-      infectedVarName,
       genePos,
       abNames
     }
@@ -121,7 +102,7 @@ export default function useSummaryByArticle() {
   const {
     sql,
     params
-  } = usePrepareQuery({abNames, isoAggkey, infectedVarName, genePos, skip});
+  } = usePrepareQuery({abNames, isoAggkey, genePos, skip});
 
   const {
     payload,

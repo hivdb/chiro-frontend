@@ -5,6 +5,9 @@ import LocationParams from '../location-params';
 
 import {getMutations} from '../isolate-aggs';
 
+import useSummaryByArticle from './use-summary-by-article';
+import useSummaryByAntibodies from './use-summary-by-antibodies';
+
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 const DMSMutationsContext = React.createContext();
@@ -68,7 +71,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
           excludeAbQuery.push(`$abName${idx}`);
         }
       }
-      if (!rxAbFiltered) {
+      if (rxAbFiltered && abNames.some(n => n === 'any')) {
         where.push(`
           EXISTS (
             SELECT 1 FROM rx_antibodies RXMAB
@@ -182,7 +185,9 @@ function useDMSMutations() {
 
 const DMSMutations = {
   Provider: DMSMutationsProvider,
-  useMe: useDMSMutations
+  useMe: useDMSMutations,
+  useSummaryByArticle,
+  useSummaryByAntibodies
 };
 
 export default DMSMutations;
