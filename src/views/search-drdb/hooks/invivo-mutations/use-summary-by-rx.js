@@ -4,6 +4,8 @@ import LocationParams from '../location-params';
 
 import {getMutations} from '../isolate-aggs';
 
+const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
+
 
 function usePrepareQuery({
   refName,
@@ -17,7 +19,7 @@ function usePrepareQuery({
         return {};
       }
 
-      const params = {};
+      const params = {$joinSep: LIST_JOIN_MAGIC_SEP};
       const where = [];
 
       if (refName) {
@@ -49,29 +51,40 @@ function usePrepareQuery({
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
-
       if (where.length === 0) {
         where.push('true');
       }
 
       const sql = `
         SELECT
+          (
+            SELECT GROUP_CONCAT(RXMAB.ab_name, $joinSep)
+            FROM rx_antibodies RXMAB, antibodies MAB
+            WHERE
+              M.ref_name = RXMAB.ref_name AND
+              RXMAB.ab_name = MAB.ab_name AND
+              EXISTS (
+                SELECT 1 FROM
+                  subject_treatments SBJRX
+                WHERE
+                  SBJRX.subject_name = M.subject_name AND
+                  SBJRX.start_date < M.appearance_date AND
+                  SBJRX.ref_name = RXMAB.ref_name AND
+                  SBJRX.rx_name = RXMAB.rx_name
+              )
+            ORDER BY MAB.priority, RXMAB.ab_name
+          ) AS ab_names,
           CASE
-            WHEN INFVAR.as_wildtype IS TRUE THEN 'Wild Type'
+            WHEN INFVAR.as_wildtype THEN 'Wild Type'
             ELSE INFVAR.var_name
           END AS infected_var_name,
           COUNT(*) AS count
-        FROM invitro_selection_results M
-          JOIN rx_conv_plasma RXCP ON
-            RXCP.ref_name = M.ref_name AND
-            RXCP.rx_name = M.rx_name
-          LEFT JOIN isolates INFISO ON
-            RXCP.infected_iso_name = INFISO.iso_name
+        FROM invivo_selection_results M
           LEFT JOIN variants INFVAR ON
-            INFISO.var_name = INFVAR.var_name
+            M.infected_var_name = INFVAR.var_name
         WHERE
           (${where.join(') AND (')})
-        GROUP BY infected_var_name
+        GROUP BY ab_names, infected_var_name
       `;
       return {
         sql,
@@ -82,8 +95,7 @@ function usePrepareQuery({
   );
 }
 
-
-export default function useSummaryByInfVar() {
+export default function useSummaryByRx() {
   const {
     params: {
       refName,
@@ -95,17 +107,29 @@ export default function useSummaryByInfVar() {
   const {
     sql,
     params
-  } = usePrepareQuery({
-    refName,
-    isoAggkey,
-    genePos,
-    skip
-  });
+  } = usePrepareQuery({refName, isoAggkey, genePos, skip});
 
   const {
     payload,
     isPending
   } = useQuery({sql, params, skip});
 
-  return [payload, skip || isPending];
+  const abSplitted = React.useMemo(
+    () => {
+      if (skip || isPending) {
+        return [];
+      }
+      return payload.map(
+        one => {
+          one.abNames = (
+            one.abNames ? one.abNames.split(LIST_JOIN_MAGIC_SEP) : []
+          );
+          return one;
+        }
+      );
+    },
+    [isPending, payload, skip]
+  );
+
+  return [abSplitted, skip || isPending];
 }

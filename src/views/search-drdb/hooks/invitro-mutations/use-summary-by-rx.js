@@ -7,12 +7,7 @@ import {getMutations} from '../isolate-aggs';
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 
-function usePrepareQuery({
-  refName,
-  isoAggkey,
-  genePos,
-  skip
-}) {
+function usePrepareQuery({refName, isoAggkey, genePos, skip}) {
   return React.useMemo(
     () => {
       if (skip) {
@@ -51,6 +46,7 @@ function usePrepareQuery({
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
+
       if (where.length === 0) {
         where.push('true');
       }
@@ -62,23 +58,26 @@ function usePrepareQuery({
             FROM rx_antibodies RXMAB, antibodies MAB
             WHERE
               M.ref_name = RXMAB.ref_name AND
-              RXMAB.ab_name = MAB.ab_name AND
-              EXISTS (
-                SELECT 1 FROM
-                  subject_treatments SBJRX
-                WHERE
-                  SBJRX.subject_name = M.subject_name AND
-                  SBJRX.start_date < M.appearance_date AND
-                  SBJRX.ref_name = RXMAB.ref_name AND
-                  SBJRX.rx_name = RXMAB.rx_name
-              )
+              M.rx_name = RXMAB.rx_name AND
+              RXMAB.ab_name = MAB.ab_name
             ORDER BY MAB.priority, RXMAB.ab_name
           ) AS ab_names,
+          CASE
+            WHEN INFVAR.as_wildtype IS TRUE THEN 'Wild Type'
+            ELSE INFVAR.var_name
+          END AS infected_var_name,
           COUNT(*) AS count
-        FROM invivo_selection_results M
+        FROM invitro_selection_results M
+          LEFT JOIN rx_conv_plasma RXCP ON
+            RXCP.ref_name = M.ref_name AND
+            RXCP.rx_name = M.rx_name
+          LEFT JOIN isolates INFISO ON
+            RXCP.infected_iso_name = INFISO.iso_name
+          LEFT JOIN variants INFVAR ON
+            INFISO.var_name = INFVAR.var_name
         WHERE
           (${where.join(') AND (')})
-        GROUP BY ab_names
+        GROUP BY ab_names, infected_var_name
       `;
       return {
         sql,
@@ -89,7 +88,7 @@ function usePrepareQuery({
   );
 }
 
-export default function useSummaryByAntibodies() {
+export default function useSummaryByRx() {
   const {
     params: {
       refName,

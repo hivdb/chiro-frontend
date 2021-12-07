@@ -6,8 +6,7 @@ import LocationParams from '../location-params';
 import {getMutations} from '../isolate-aggs';
 
 import useSummaryByArticle from './use-summary-by-article';
-import useSummaryByAntibodies from './use-summary-by-antibodies';
-import useSummaryByInfVar from './use-summary-by-infvar';
+import useSummaryByRx from './use-summary-by-rx';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 const InVivoMutationsContext = React.createContext();
@@ -60,9 +59,7 @@ function usePrepareQuery({
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
-      let rxAbFiltered = false;
       if (realAbNames && realAbNames.length > 0) {
-        rxAbFiltered = true;
         const excludeAbQuery = [];
         for (const [idx, abName] of realAbNames.entries()) {
           where.push(`
@@ -84,6 +81,7 @@ function usePrepareQuery({
         }
       }
       if (infectedVarName) {
+        // TODO: infectedVarName should be CP infectedVarName
         where.push(`
           $infVarName = 'any' OR
           ($infVarName = 'Wild Type' AND INFVAR.as_wildtype IS TRUE) OR
@@ -91,7 +89,7 @@ function usePrepareQuery({
         `);
         params.$infVarName = infectedVarName;
       }
-      else if (rxAbFiltered && abNames.some(n => n === 'any')) {
+      else if (abNames.some(n => n === 'any')) {
         where.push(`
           EXISTS (
             SELECT 1 FROM
@@ -328,8 +326,7 @@ const InVivoMutations = {
   Provider: InVivoMutationsProvider,
   useMe: useInVivoMutations,
   useSummaryByArticle,
-  useSummaryByAntibodies,
-  useSummaryByInfVar
+  useSummaryByRx
 };
 
 export default InVivoMutations;

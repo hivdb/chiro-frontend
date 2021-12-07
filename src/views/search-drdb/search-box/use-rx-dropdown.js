@@ -80,21 +80,13 @@ export default function useRxDropdown() {
   } = LocationParams.useMe();
 
   const [
-    numInVitroMutsByAbs,
-    isInVitroMutsByAbsPending
-  ] = InVitroMutations.useSummaryByAntibodies();
+    numInVitroMuts,
+    isInVitroMutsPending
+  ] = InVitroMutations.useSummaryByRx();
   const [
-    numInVitroMutsByInfVar,
-    isInVitroMutsByInfVarPending
-  ] = InVitroMutations.useSummaryByInfVar();
-  const [
-    numInVivoMutsByAbs,
-    isInVivoMutsByAbsPending
-  ] = InVivoMutations.useSummaryByAntibodies();
-  const [
-    numInVivoMutsByInfVar,
-    isInVivoMutsByInfVarPending
-  ] = InVivoMutations.useSummaryByInfVar();
+    numInVivoMuts,
+    isInVivoMutsPending
+  ] = InVivoMutations.useSummaryByRx();
   const [
     numDMSMutsByAbs,
     isDMSMutsByAbsPending
@@ -108,10 +100,8 @@ export default function useRxDropdown() {
     isAbNumExpPending ||
     isVaccNumExpPending ||
     isInfVarNumExpPending ||
-    isInVitroMutsByAbsPending ||
-    isInVitroMutsByInfVarPending ||
-    isInVivoMutsByAbsPending ||
-    isInVivoMutsByInfVarPending ||
+    isInVitroMutsPending ||
+    isInVivoMutsPending ||
     isDMSMutsByAbsPending
   );
 
@@ -129,9 +119,28 @@ export default function useRxDropdown() {
       const finalAbNumExpLookup = {...abNumExpLookup};
       const finalVaccNumExpLookup = {...vaccNumExpLookup};
       const finalInfVarNumExpLookup = {...infVarNumExpLookup};
+      for (const {abNames, infectedVarName, count} of [
+        ...numInVitroMuts,
+        ...numInVivoMuts
+      ]) {
+        finalRxTotalNumExp += count;
+
+        for (const abName of abNames) {
+          finalAbNumExpLookup[abName] = finalAbNumExpLookup[abName] || 0;
+          finalAbNumExpLookup[abName] += count;
+        }
+        if (abNames && abNames.length > 0) {
+          finalAbNumExpLookup[ANY] += count;
+        }
+
+        if (infectedVarName) {
+          finalInfVarNumExpLookup[infectedVarName] =
+            finalInfVarNumExpLookup[infectedVarName] || 0;
+          finalInfVarNumExpLookup[infectedVarName] += count;
+          finalInfVarNumExpLookup[ANY] += count;
+        }
+      }
       for (const {abNames, count} of [
-        ...numInVitroMutsByAbs,
-        ...numInVivoMutsByAbs,
         ...numDMSMutsByAbs
       ]) {
         // finalRxTotalNumExp += count;
@@ -142,16 +151,6 @@ export default function useRxDropdown() {
         finalAbNumExpLookup[ANY] += count;
       }
 
-      for (const {infectedVarName, count} of [
-        ...numInVitroMutsByInfVar,
-        ...numInVivoMutsByInfVar
-      ]) {
-        finalRxTotalNumExp += count;
-        finalInfVarNumExpLookup[infectedVarName] =
-          finalInfVarNumExpLookup[infectedVarName] || 0;
-        finalInfVarNumExpLookup[infectedVarName] += count;
-        finalInfVarNumExpLookup[ANY] += count;
-      }
       return [
         finalRxTotalNumExp,
         finalAbNumExpLookup,
@@ -165,11 +164,9 @@ export default function useRxDropdown() {
       abNumExpLookup,
       vaccNumExpLookup,
       infVarNumExpLookup,
-      numInVitroMutsByAbs,
-      numInVivoMutsByAbs,
-      numDMSMutsByAbs,
-      numInVitroMutsByInfVar,
-      numInVivoMutsByInfVar
+      numInVitroMuts,
+      numInVivoMuts,
+      numDMSMutsByAbs
     ]
   );
 

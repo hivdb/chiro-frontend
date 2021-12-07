@@ -6,8 +6,7 @@ import LocationParams from '../location-params';
 import {getMutations} from '../isolate-aggs';
 
 import useSummaryByArticle from './use-summary-by-article';
-import useSummaryByAntibodies from './use-summary-by-antibodies';
-import useSummaryByInfVar from './use-summary-by-infvar';
+import useSummaryByRx from './use-summary-by-rx';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
@@ -240,8 +239,7 @@ const InVitroMutations = {
   Provider: InVitroMutationsProvider,
   useMe: useInVitroMutations,
   useSummaryByArticle,
-  useSummaryByAntibodies,
-  useSummaryByInfVar
+  useSummaryByRx
 };
 
 export default InVitroMutations;
