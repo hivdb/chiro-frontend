@@ -68,7 +68,7 @@ export default function RxDesc({
       <p>
         This category contains{' '}
         <strong>{numExp.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('experiment result', numExp)}
+        {pluralize('neutralization test result', numExp)}
         {type === TYPE_MAB ? <>
           {' from '}
           <strong>

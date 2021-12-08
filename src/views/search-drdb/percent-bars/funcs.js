@@ -71,7 +71,10 @@ export function groupSmallSlices(
       }
       else {
         resultItems.push({
-          pcnt: size / totalSize * scale,
+          pcnt: (
+            (isNaN(totalSize) || totalSize === 0) ?
+              1. : size / totalSize * scale
+          ),
           item
         });
       }

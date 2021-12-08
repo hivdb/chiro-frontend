@@ -1,5 +1,6 @@
 import React from 'react';
 import {useRouter} from 'found';
+import pluralize from 'pluralize';
 
 import InlineLoader
   from 'sierra-frontend/dist/components/inline-loader';
@@ -66,6 +67,7 @@ export default function InVitroMutationsTable() {
       </div>
     </>;
   }
+  const numExps = inVitroMuts.length;
 
   const cacheKey = JSON.stringify({
     refName,
@@ -74,7 +76,12 @@ export default function InVitroMutationsTable() {
     abNames
   });
   return <>
-    <br />
+    <div>
+      <em>
+        <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('result', numExps, false)}.
+      </em>
+    </div>
     <div ref={tableCtlRef} className={style['invitro-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable

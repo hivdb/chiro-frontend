@@ -1,16 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import RxPcntBar from './rx-percent-bar';
 import VirusPcntBar from './virus-percent-bar';
 import style from './style.module.scss';
 
 
-export default function PercentBars(props) {
+PercentBars.propTypes = {
+  children: PropTypes.node
+};
+
+
+export default function PercentBars({children, ...props}) {
 
   return <section className={style['stat-section']}>
+    <h2>Susceptibility data</h2>
     <div className={style['percent-bars']}>
       <RxPcntBar {...props} />
       <VirusPcntBar {...props} />
     </div>
+    {children}
   </section>;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import {useRouter} from 'found';
+import pluralize from 'pluralize';
 
 import InlineLoader
   from 'sierra-frontend/dist/components/inline-loader';
@@ -72,6 +73,8 @@ export default function InVivoMutationsTable() {
     </>;
   }
 
+  const numExps = inVivoMuts.length;
+
   const cacheKey = JSON.stringify({
     refName,
     varName,
@@ -79,7 +82,12 @@ export default function InVivoMutationsTable() {
     abNames
   });
   return <>
-    <br />
+    <div>
+      <em>
+        <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('result', numExps, false)}.
+      </em>
+    </div>
     <div ref={tableCtlRef} className={style['invivo-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable

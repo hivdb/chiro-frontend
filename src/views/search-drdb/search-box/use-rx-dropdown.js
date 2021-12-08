@@ -88,9 +88,9 @@ export default function useRxDropdown() {
     isInVivoMutsPending
   ] = InVivoMutations.useSummaryByRx();
   const [
-    numDMSMutsByAbs,
-    isDMSMutsByAbsPending
-  ] = DMSMutations.useSummaryByAntibodies();
+    numDMSMuts,
+    isDMSMutsPending
+  ] = DMSMutations.useSummaryByRx();
 
   const isPending = (
     isAntibodiesPending ||
@@ -102,7 +102,7 @@ export default function useRxDropdown() {
     isInfVarNumExpPending ||
     isInVitroMutsPending ||
     isInVivoMutsPending ||
-    isDMSMutsByAbsPending
+    isDMSMutsPending
   );
 
   const [
@@ -121,7 +121,8 @@ export default function useRxDropdown() {
       const finalInfVarNumExpLookup = {...infVarNumExpLookup};
       for (const {abNames, infectedVarName, count} of [
         ...numInVitroMuts,
-        ...numInVivoMuts
+        ...numInVivoMuts,
+        ...numDMSMuts
       ]) {
         finalRxTotalNumExp += count;
 
@@ -140,16 +141,6 @@ export default function useRxDropdown() {
           finalInfVarNumExpLookup[ANY] += count;
         }
       }
-      for (const {abNames, count} of [
-        ...numDMSMutsByAbs
-      ]) {
-        // finalRxTotalNumExp += count;
-        for (const abName of abNames) {
-          finalAbNumExpLookup[abName] = finalAbNumExpLookup[abName] || 0;
-          finalAbNumExpLookup[abName] += count;
-        }
-        finalAbNumExpLookup[ANY] += count;
-      }
 
       return [
         finalRxTotalNumExp,
@@ -166,7 +157,7 @@ export default function useRxDropdown() {
       infVarNumExpLookup,
       numInVitroMuts,
       numInVivoMuts,
-      numDMSMutsByAbs
+      numDMSMuts
     ]
   );
 

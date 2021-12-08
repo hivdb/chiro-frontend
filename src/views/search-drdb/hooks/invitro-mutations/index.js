@@ -7,6 +7,7 @@ import {getMutations} from '../isolate-aggs';
 
 import useSummaryByArticle from './use-summary-by-article';
 import useSummaryByRx from './use-summary-by-rx';
+import useSummaryByVirus from './use-summary-by-virus';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
@@ -239,7 +240,8 @@ const InVitroMutations = {
   Provider: InVitroMutationsProvider,
   useMe: useInVitroMutations,
   useSummaryByArticle,
-  useSummaryByRx
+  useSummaryByRx,
+  useSummaryByVirus
 };
 
 export default InVitroMutations;

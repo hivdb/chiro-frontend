@@ -39,9 +39,7 @@ function usePrepareQuery({abNames, isoAggkey, genePos, skip}) {
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
-      let rxAbFiltered = false;
       if (realAbNames && realAbNames.length > 0) {
-        rxAbFiltered = true;
         const excludeAbQuery = [];
         for (const [idx, abName] of realAbNames.entries()) {
           where.push(`
@@ -57,7 +55,7 @@ function usePrepareQuery({abNames, isoAggkey, genePos, skip}) {
           excludeAbQuery.push(`$abName${idx}`);
         }
       }
-      if (rxAbFiltered && abNames.some(n => n === 'any')) {
+      if (abNames.some(n => n === 'any')) {
         where.push(`
           EXISTS (
             SELECT 1 FROM rx_antibodies RXMAB

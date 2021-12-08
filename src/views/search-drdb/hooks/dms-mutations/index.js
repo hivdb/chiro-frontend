@@ -6,7 +6,8 @@ import LocationParams from '../location-params';
 import {getMutations} from '../isolate-aggs';
 
 import useSummaryByArticle from './use-summary-by-article';
-import useSummaryByAntibodies from './use-summary-by-antibodies';
+import useSummaryByRx from './use-summary-by-rx';
+import useSummaryByVirus from './use-summary-by-virus';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
@@ -53,9 +54,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
         params.$gene = gene;
         params.$pos = Number.parseInt(pos);
       }
-      let rxAbFiltered = false;
       if (realAbNames && realAbNames.length > 0) {
-        rxAbFiltered = true;
         const excludeAbQuery = [];
         for (const [idx, abName] of realAbNames.entries()) {
           where.push(`
@@ -71,7 +70,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
           excludeAbQuery.push(`$abName${idx}`);
         }
       }
-      if (rxAbFiltered && abNames.some(n => n === 'any')) {
+      if (abNames.some(n => n === 'any')) {
         where.push(`
           EXISTS (
             SELECT 1 FROM rx_antibodies RXMAB
@@ -187,7 +186,8 @@ const DMSMutations = {
   Provider: DMSMutationsProvider,
   useMe: useDMSMutations,
   useSummaryByArticle,
-  useSummaryByAntibodies
+  useSummaryByRx,
+  useSummaryByVirus
 };
 
 export default DMSMutations;

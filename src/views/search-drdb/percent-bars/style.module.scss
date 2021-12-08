@@ -131,6 +131,22 @@
 }
 
 section.stat-section {
+  position: relative;
+  margin: 1.5rem 0 0;
+  border: 2px solid rgba(0,0,0,.1);
+  padding: 1rem;
+  > h2:first-child {
+    position: absolute;
+    top: -.55rem;
+    left: 0.5rem;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1rem;
+    color: rgba(0,0,0,.6);
+    padding: 0 .4rem;
+    background-color: white;
+  }
   .percent-bars {
     margin-top: .5rem;
   }

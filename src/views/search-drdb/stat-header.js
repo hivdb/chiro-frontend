@@ -65,8 +65,9 @@ export default function SearchDRDBStatHeader() {
                   <AntibodyCard />
                   <VariantCard />
                   <MutationCard />
-                  <PercentBars />
-                  {formOnly ? null : <TableOfContent />}
+                  <PercentBars>
+                    {formOnly ? null : <TableOfContent />}
+                  </PercentBars>
                 </>
               }
             ]}

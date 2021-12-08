@@ -40,7 +40,7 @@ export default function prepareItems({
         type: TYPE_ISO,
         shortDisplay: display,
         fullDisplay: display,
-        numExp: isoLookup[isoName]
+        numExp: isoLookup[isoName] || 0
       });
       return acc;
     }, {});
@@ -61,7 +61,7 @@ export default function prepareItems({
           </> : null}
         </>,
         subItems: namedIsoLookup[varName] || [],
-        numExp: varLookup[varName]
+        numExp: varLookup[varName] || 0
       })),
     ...isolateAggs
       .filter(({isoAggkey, varName}) => (
@@ -74,7 +74,7 @@ export default function prepareItems({
         type: TYPE_ISOAGG,
         shortDisplay: isoAggDisplay,
         fullDisplay: isoAggDisplay,
-        numExp: isoAggLookup[isoAggkey]
+        numExp: isoAggLookup[isoAggkey] || 0
       }))
   ];
   presentVariants.sort(

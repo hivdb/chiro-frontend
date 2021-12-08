@@ -1,5 +1,6 @@
 import React from 'react';
 import {useRouter} from 'found';
+import pluralize from 'pluralize';
 
 import InlineLoader
   from 'sierra-frontend/dist/components/inline-loader';
@@ -68,6 +69,8 @@ export default function DMSMutationsTable() {
     </>;
   }
 
+  const numExps = dmsMuts.length;
+
   const cacheKey = JSON.stringify({
     refName,
     varName,
@@ -76,6 +79,8 @@ export default function DMSMutationsTable() {
   });
   return <>
     <div><em>
+      <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('result', numExps, false)}.
       Mutations with an escape score <strong>≥0.1</strong> and a global
       prevalence <strong>≥0.001%</strong>.
     </em></div>

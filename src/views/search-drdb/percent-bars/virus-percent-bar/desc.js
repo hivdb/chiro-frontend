@@ -53,7 +53,7 @@ export default function VirusDesc({
         This category contains{' '}
         <strong>
           {numExp && numExp.toLocaleString('en-US')}
-        </strong> {pluralize('experiment result', numExp)}
+        </strong> {pluralize('neutralization test result', numExp)}
         {type === TYPE_VARIANT ? <>
           {' from '}
           <strong>

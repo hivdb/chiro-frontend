@@ -1,11 +1,15 @@
 import React from 'react';
 import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
+import escapeRegExp from 'lodash/escapeRegExp';
 import {NumExpStats} from '../hooks/susc-summary';
 import LocationParams from '../hooks/location-params';
 import Variants from '../hooks/variants';
 import IsolateAggs, {compareIsolateAggs} from '../hooks/isolate-aggs';
 import Positions from '../hooks/positions';
+import InVitroMutations from '../hooks/invitro-mutations';
+import InVivoMutations from '../hooks/invivo-mutations';
+import DMSMutations from '../hooks/dms-mutations';
 
 import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
@@ -14,6 +18,28 @@ import style from './style.module.scss';
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
 const EMPTY_TEXT = 'Select item';
+
+
+function orderedSearch(options, query) {
+  const re = new RegExp(escapeRegExp(query), 'i');
+  return options
+    .filter((opt) => re.test(opt.text))
+    .sort(
+      (a, b) => {
+        let cmp = re.exec(a.text).index - re.exec(b.text).index;
+        if (cmp) {
+          return cmp;
+        }
+        if (a.text < b.text) {
+          return -1;
+        }
+        else if (a.text > b.text) {
+          return 1;
+        }
+        return 0;
+      }
+    );
+}
 
 
 export default function useVirusDropdown() {
@@ -44,8 +70,8 @@ export default function useVirusDropdown() {
   } = Positions.useMe();
 
   const [
-    varTotalNumExp,
-    isVarTotalNumExpPending
+    virusTotalNumExp,
+    isVirusTotalNumExpPending
   ] = NumExpStats.useVirusTotal();
   const [
     varNumExpLookup,
@@ -60,15 +86,80 @@ export default function useVirusDropdown() {
     isPosNumExpLookupPending
   ] = NumExpStats.usePos();
 
+  const [
+    numInVitroMuts,
+    isInVitroMutsPending
+  ] = InVitroMutations.useSummaryByVirus();
+
+  const [
+    numInVivoMuts,
+    isInVivoMutsPending
+  ] = InVivoMutations.useSummaryByVirus();
+
+  const [
+    numDMSMuts,
+    isDMSMutsPending
+  ] = DMSMutations.useSummaryByVirus();
+
   const isPending = (
     isVarsPending ||
     isIsoAggsPending ||
     isPositionsPending ||
-    isVarTotalNumExpPending ||
+    isVirusTotalNumExpPending ||
     isVarNumExpLookupPending ||
     isIsoAggNumExpLookupPending ||
-    isPosNumExpLookupPending
+    isPosNumExpLookupPending ||
+    isInVitroMutsPending ||
+    isInVivoMutsPending ||
+    isDMSMutsPending
   );
+
+  const [
+    finalVirusTotalNumExp,
+    finalVarNumExpLookup,
+    finalIsoAggNumExpLookup,
+    finalPosNumExpLookup
+  ] = React.useMemo(() => {
+    let finalVirusTotalNumExp = virusTotalNumExp;
+    const finalVarNumExpLookup = {...varNumExpLookup};
+    const finalIsoAggNumExpLookup = {...isoAggNumExpLookup};
+    const finalPosNumExpLookup = {...posNumExpLookup};
+
+    for (const {varNames, isoAggkeys, genePos, count} of [
+      ...numInVitroMuts,
+      ...numInVivoMuts,
+      ...numDMSMuts
+    ]) {
+      finalVirusTotalNumExp += count;
+      for (const varName of varNames) {
+        finalVarNumExpLookup[varName] = finalVarNumExpLookup[varName] || 0;
+        finalVarNumExpLookup[varName] += count;
+      }
+      for (const isoAggkey of isoAggkeys) {
+        finalIsoAggNumExpLookup[isoAggkey] =
+          finalIsoAggNumExpLookup[isoAggkey] || 0;
+        finalIsoAggNumExpLookup[isoAggkey] += count;
+      }
+      if (genePos) {
+        finalPosNumExpLookup[genePos] = finalPosNumExpLookup[genePos] || 0;
+        finalPosNumExpLookup[genePos] += count;
+      }
+    }
+    return [
+      finalVirusTotalNumExp,
+      finalVarNumExpLookup,
+      finalIsoAggNumExpLookup,
+      finalPosNumExpLookup
+    ];
+  }, [
+    isoAggNumExpLookup,
+    numInVitroMuts,
+    numInVivoMuts,
+    numDMSMuts,
+    posNumExpLookup,
+    varNumExpLookup,
+    virusTotalNumExp
+  ]);
 
   const variantOptions = React.useMemo(
     () => {
@@ -103,7 +194,7 @@ export default function useVirusDropdown() {
               varName,
               synonyms,
               asWildtype,
-              numExp: varNumExpLookup[varName] || 0
+              numExp: finalVarNumExpLookup[varName] || 0
             })
           )
           .filter(({varName, asWildtype, numExp}) => (
@@ -126,7 +217,7 @@ export default function useVirusDropdown() {
               gene: mutations[0]?.gene,
               position: mutations[0]?.position,
               aa: mutations[0]?.aminoAcid,
-              numExp: isoAggNumExpLookup[isoAggkey] || 0
+              numExp: finalIsoAggNumExpLookup[isoAggkey] || 0
             })
           )
           .filter(({isoAggkey, numExp}) => (
@@ -159,7 +250,7 @@ export default function useVirusDropdown() {
             value: ANY,
             description: pluralize(
               'result',
-              varTotalNumExp,
+              finalVirusTotalNumExp,
               true
             )
           },
@@ -206,7 +297,7 @@ export default function useVirusDropdown() {
                     position,
                     description: pluralize(
                       'result',
-                      posNumExpLookup[posKey],
+                      finalPosNumExpLookup[posKey],
                       true
                     )
                   })
@@ -235,11 +326,11 @@ export default function useVirusDropdown() {
       variants,
       isolateAggs,
       formOnly,
-      varTotalNumExp,
+      finalVirusTotalNumExp,
       positions,
-      varNumExpLookup,
-      isoAggNumExpLookup,
-      posNumExpLookup
+      finalVarNumExpLookup,
+      finalIsoAggNumExpLookup,
+      finalPosNumExpLookup
     ]
   );
 
@@ -252,7 +343,8 @@ export default function useVirusDropdown() {
         if (value === ANY) {
           onChange({
             variant: undefined,
-            mutations: undefined
+            mutations: undefined,
+            position: undefined
           });
         }
         else {
@@ -271,7 +363,8 @@ export default function useVirusDropdown() {
      data-loaded={!isPending}
      className={style['search-box-dropdown-container']}>
       <Dropdown
-       search direction="right"
+       search={orderedSearch}
+       direction="right"
        placeholder={EMPTY_TEXT}
        options={variantOptions}
        onChange={handleChange}

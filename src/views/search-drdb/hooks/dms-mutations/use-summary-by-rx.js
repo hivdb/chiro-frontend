@@ -85,7 +85,7 @@ function usePrepareQuery({refName, isoAggkey, genePos, skip}) {
   );
 }
 
-export default function useSummaryByAntibodies() {
+export default function useSummaryByRx() {
   const {
     params: {
       refName,
