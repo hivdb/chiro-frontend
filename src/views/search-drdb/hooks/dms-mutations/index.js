@@ -3,18 +3,32 @@ import PropTypes from 'prop-types';
 import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
-import {getMutations} from '../isolate-aggs';
-
 import useSummaryByArticle from './use-summary-by-article';
 import useSummaryByRx from './use-summary-by-rx';
 import useSummaryByVirus from './use-summary-by-virus';
+
+import {
+  filterByRefName,
+  filterByVarName,
+  filterByIsoAggkey,
+  filterByGenePos,
+  filterByAbNames,
+  queryAbNames
+} from '../sql-fragments/selection-mutations';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 
 const DMSMutationsContext = React.createContext();
 
 
-function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
+function usePrepareQuery({
+  refName,
+  abNames,
+  varName,
+  isoAggkey,
+  genePos,
+  skip
+}) {
   return React.useMemo(
     () => {
       if (skip) {
@@ -23,63 +37,12 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
 
       const params = {$joinSep: LIST_JOIN_MAGIC_SEP};
       const where = [];
-      const realAbNames = abNames.filter(n => n !== 'any');
 
-      if (refName) {
-        where.push(`
-          M.ref_name = $refName
-        `);
-        params.$refName = refName;
-      }
-      if (isoAggkey) {
-        const conds = [];
-        for (const [
-          idx,
-          {gene, position: pos, aminoAcid: aa}
-        ] of getMutations(isoAggkey).entries()) {
-          conds.push(`(
-            M.gene = $gene${idx} AND
-            M.position = $pos${idx} AND
-            M.amino_acid = $aa${idx}
-          )`);
-          params[`$gene${idx}`] = gene;
-          params[`$pos${idx}`] = pos;
-          params[`$aa${idx}`] = aa;
-        }
-        where.push(conds.join(' OR '));
-      }
-      else if (genePos) {
-        const [gene, pos] = genePos.split(':');
-        where.push(`M.gene = $gene AND M.position = $pos`);
-        params.$gene = gene;
-        params.$pos = Number.parseInt(pos);
-      }
-      if (realAbNames && realAbNames.length > 0) {
-        const excludeAbQuery = [];
-        for (const [idx, abName] of realAbNames.entries()) {
-          where.push(`
-            EXISTS (
-              SELECT 1 FROM rx_antibodies RXMAB
-              WHERE
-              RXMAB.ref_name = M.ref_name AND
-              RXMAB.rx_name = M.rx_name AND
-              RXMAB.ab_name = $abName${idx}
-            )
-          `);
-          params[`$abName${idx}`] = abName;
-          excludeAbQuery.push(`$abName${idx}`);
-        }
-      }
-      if (abNames.some(n => n === 'any')) {
-        where.push(`
-          EXISTS (
-            SELECT 1 FROM rx_antibodies RXMAB
-            WHERE
-              RXMAB.ref_name = M.ref_name AND
-              RXMAB.rx_name = M.rx_name
-          )
-        `);
-      }
+      filterByRefName({refName, where, params});
+      filterByVarName({varName, where, params});
+      filterByIsoAggkey({isoAggkey, where, params});
+      filterByGenePos({genePos, where, params});
+      filterByAbNames({abNames, where, params});
 
       if (where.length === 0) {
         where.push('true');
@@ -90,15 +53,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
           ref_name,
           rx_name,
           'antibody' AS rx_type,
-          (
-            SELECT GROUP_CONCAT(RXMAB.ab_name, $joinSep)
-            FROM rx_antibodies RXMAB, antibodies MAB
-            WHERE
-              M.ref_name = RXMAB.ref_name AND
-              M.rx_name = RXMAB.rx_name AND
-              RXMAB.ab_name = MAB.ab_name
-            ORDER BY MAB.priority, RXMAB.ab_name
-          ) AS ab_names,
+          ${queryAbNames()},
           M.gene,
           R.amino_acid as ref_amino_acid,
           M.position,
@@ -122,7 +77,7 @@ function usePrepareQuery({refName, abNames, isoAggkey, genePos, skip}) {
         params
       };
     },
-    [abNames, genePos, isoAggkey, refName, skip]
+    [abNames, varName, genePos, isoAggkey, refName, skip]
   );
 }
 
@@ -136,6 +91,7 @@ function DMSMutationsProvider({children}) {
     params: {
       formOnly,
       refName,
+      varName,
       isoAggkey,
       genePos,
       abNames
@@ -146,7 +102,7 @@ function DMSMutationsProvider({children}) {
   const {
     sql,
     params
-  } = usePrepareQuery({abNames, refName, isoAggkey, genePos, skip});
+  } = usePrepareQuery({abNames, varName, refName, isoAggkey, genePos, skip});
 
   const {
     payload,

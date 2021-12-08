@@ -2,10 +2,15 @@ import React from 'react';
 import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
-import {getMutations} from '../isolate-aggs';
+import {
+  filterByVarName,
+  filterByIsoAggkey,
+  filterByGenePos,
+  filterByAbNames
+} from '../sql-fragments/selection-mutations';
 
 
-function usePrepareQuery({abNames, isoAggkey, genePos, skip}) {
+function usePrepareQuery({abNames, varName, isoAggkey, genePos, skip}) {
   return React.useMemo(
     () => {
       if (skip) {
@@ -14,57 +19,11 @@ function usePrepareQuery({abNames, isoAggkey, genePos, skip}) {
 
       const params = {};
       const where = [];
-      const realAbNames = abNames.filter(n => n !== 'any');
 
-      if (isoAggkey) {
-        const conds = [];
-        for (const [
-          idx,
-          {gene, position: pos, aminoAcid: aa}
-        ] of getMutations(isoAggkey).entries()) {
-          conds.push(`(
-            M.gene = $gene${idx} AND
-            M.position = $pos${idx} AND
-            M.amino_acid = $aa${idx}
-          )`);
-          params[`$gene${idx}`] = gene;
-          params[`$pos${idx}`] = pos;
-          params[`$aa${idx}`] = aa;
-        }
-        where.push(conds.join(' OR '));
-      }
-      else if (genePos) {
-        const [gene, pos] = genePos.split(':');
-        where.push(`M.gene = $gene AND M.position = $pos`);
-        params.$gene = gene;
-        params.$pos = Number.parseInt(pos);
-      }
-      if (realAbNames && realAbNames.length > 0) {
-        const excludeAbQuery = [];
-        for (const [idx, abName] of realAbNames.entries()) {
-          where.push(`
-            EXISTS (
-              SELECT 1 FROM rx_antibodies RXMAB
-              WHERE
-              RXMAB.ref_name = M.ref_name AND
-              RXMAB.rx_name = M.rx_name AND
-              RXMAB.ab_name = $abName${idx}
-            )
-          `);
-          params[`$abName${idx}`] = abName;
-          excludeAbQuery.push(`$abName${idx}`);
-        }
-      }
-      if (abNames.some(n => n === 'any')) {
-        where.push(`
-          EXISTS (
-            SELECT 1 FROM rx_antibodies RXMAB
-            WHERE
-              RXMAB.ref_name = M.ref_name AND
-              RXMAB.rx_name = M.rx_name
-          )
-        `);
-      }
+      filterByVarName({varName, where, params});
+      filterByIsoAggkey({isoAggkey, where, params});
+      filterByGenePos({genePos, where, params});
+      filterByAbNames({abNames, where, params});
 
       if (where.length === 0) {
         where.push('true');
@@ -84,13 +43,14 @@ function usePrepareQuery({abNames, isoAggkey, genePos, skip}) {
         params
       };
     },
-    [abNames, genePos, isoAggkey, skip]
+    [abNames, varName, genePos, isoAggkey, skip]
   );
 }
 
 export default function useSummaryByArticle() {
   const {
     params: {
+      varName,
       isoAggkey,
       genePos,
       abNames
@@ -100,7 +60,7 @@ export default function useSummaryByArticle() {
   const {
     sql,
     params
-  } = usePrepareQuery({abNames, isoAggkey, genePos, skip});
+  } = usePrepareQuery({abNames, varName, isoAggkey, genePos, skip});
 
   const {
     payload,

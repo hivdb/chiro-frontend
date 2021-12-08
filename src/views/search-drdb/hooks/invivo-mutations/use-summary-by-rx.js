@@ -2,13 +2,22 @@ import React from 'react';
 import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
-import {getMutations} from '../isolate-aggs';
+import {
+  filterByRefName,
+  filterByVarName,
+  filterByIsoAggkey,
+  filterByGenePos,
+  querySbjRxAbNames,
+  querySbjRxInfectedVarNames
+} from '../sql-fragments/selection-mutations';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
+const NA = '$#\u0008NA\u0008#$';
 
 
 function usePrepareQuery({
   refName,
+  varName,
   isoAggkey,
   genePos,
   skip
@@ -19,79 +28,34 @@ function usePrepareQuery({
         return {};
       }
 
-      const params = {$joinSep: LIST_JOIN_MAGIC_SEP};
+      const params = {$joinSep: LIST_JOIN_MAGIC_SEP, $na: NA};
       const where = [];
 
-      if (refName) {
-        where.push(`
-          M.ref_name = $refName
-        `);
-        params.$refName = refName;
-      }
-      if (isoAggkey) {
-        const conds = [];
-        for (const [
-          idx,
-          {gene, position: pos, aminoAcid: aa}
-        ] of getMutations(isoAggkey).entries()) {
-          conds.push(`(
-            M.gene = $gene${idx} AND
-            M.position = $pos${idx} AND
-            M.amino_acid = $aa${idx}
-          )`);
-          params[`$gene${idx}`] = gene;
-          params[`$pos${idx}`] = pos;
-          params[`$aa${idx}`] = aa;
-        }
-        where.push(conds.join(' OR '));
-      }
-      else if (genePos) {
-        const [gene, pos] = genePos.split(':');
-        where.push(`M.gene = $gene AND M.position = $pos`);
-        params.$gene = gene;
-        params.$pos = Number.parseInt(pos);
-      }
+      filterByRefName({refName, where, params});
+      filterByVarName({varName, where, params});
+      filterByIsoAggkey({isoAggkey, where, params});
+      filterByGenePos({genePos, where, params});
+
       if (where.length === 0) {
         where.push('true');
       }
 
       const sql = `
         SELECT
-          (
-            SELECT GROUP_CONCAT(RXMAB.ab_name, $joinSep)
-            FROM rx_antibodies RXMAB, antibodies MAB
-            WHERE
-              M.ref_name = RXMAB.ref_name AND
-              RXMAB.ab_name = MAB.ab_name AND
-              EXISTS (
-                SELECT 1 FROM
-                  subject_treatments SBJRX
-                WHERE
-                  SBJRX.subject_name = M.subject_name AND
-                  SBJRX.start_date < M.appearance_date AND
-                  SBJRX.ref_name = RXMAB.ref_name AND
-                  SBJRX.rx_name = RXMAB.rx_name
-              )
-            ORDER BY MAB.priority, RXMAB.ab_name
-          ) AS ab_names,
-          CASE
-            WHEN INFVAR.as_wildtype THEN 'Wild Type'
-            ELSE INFVAR.var_name
-          END AS infected_var_name,
+          ${querySbjRxAbNames()},
+          ${querySbjRxInfectedVarNames()},
           COUNT(*) AS count
         FROM invivo_selection_results M
-          LEFT JOIN variants INFVAR ON
-            M.infected_var_name = INFVAR.var_name
         WHERE
           (${where.join(') AND (')})
-        GROUP BY ab_names, infected_var_name
+        GROUP BY ab_names, infected_var_names
       `;
       return {
         sql,
         params
       };
     },
-    [genePos, isoAggkey, refName, skip]
+    [varName, genePos, isoAggkey, refName, skip]
   );
 }
 
@@ -99,6 +63,7 @@ export default function useSummaryByRx() {
   const {
     params: {
       refName,
+      varName,
       isoAggkey,
       genePos
     }
@@ -107,7 +72,7 @@ export default function useSummaryByRx() {
   const {
     sql,
     params
-  } = usePrepareQuery({refName, isoAggkey, genePos, skip});
+  } = usePrepareQuery({refName, varName, isoAggkey, genePos, skip});
 
   const {
     payload,
@@ -123,6 +88,11 @@ export default function useSummaryByRx() {
         one => {
           one.abNames = (
             one.abNames ? one.abNames.split(LIST_JOIN_MAGIC_SEP) : []
+          );
+          one.infectedVarNames = (
+            one.infectedVarNames ? one.infectedVarNames
+              .split(LIST_JOIN_MAGIC_SEP)
+              .map(one => one === NA ? null : one) : []
           );
           return one;
         }

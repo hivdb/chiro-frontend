@@ -36,7 +36,8 @@ function ItemTreatment({
         </React.Fragment>)}
       </> : null}
     {rxType === 'conv-plasma' ? <>
-      {infectedVarName ? `${infectedVarName} ` : null}CP
+      {infectedVarName && infectedVarName !== 'Wild Type' ?
+        `${infectedVarName} ` : null}CP
     </> : null}
     {rxType === 'vacc-plasma' ? <>
       VP
@@ -75,7 +76,8 @@ function exportTreatment({
     return abNames.join(' + ') + suffix;
   }
   else if (rxType === 'conv-plasma') {
-    const prefix = infectedVarName ? `${infectedVarName} ` : '';
+    const prefix = infectedVarName && infectedVarName !== 'Wild Type' ?
+      `${infectedVarName} ` : '';
     return prefix + 'CP' + suffix;
   }
   else if (rxType === 'vacc-plasma') {

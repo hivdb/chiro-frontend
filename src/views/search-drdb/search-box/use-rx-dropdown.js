@@ -119,7 +119,7 @@ export default function useRxDropdown() {
       const finalAbNumExpLookup = {...abNumExpLookup};
       const finalVaccNumExpLookup = {...vaccNumExpLookup};
       const finalInfVarNumExpLookup = {...infVarNumExpLookup};
-      for (const {abNames, infectedVarName, count} of [
+      for (const {abNames, infectedVarNames, infectedVarName, count} of [
         ...numInVitroMuts,
         ...numInVivoMuts,
         ...numDMSMuts
@@ -134,7 +134,19 @@ export default function useRxDropdown() {
           finalAbNumExpLookup[ANY] += count;
         }
 
-        if (infectedVarName) {
+        if (infectedVarNames) {
+          for (const infVarName of infectedVarNames) {
+            if (infVarName) {
+              finalInfVarNumExpLookup[infVarName] =
+                finalInfVarNumExpLookup[infVarName] || 0;
+              finalInfVarNumExpLookup[infVarName] += count;
+            }
+          }
+          if (infectedVarNames.length > 0) {
+            finalInfVarNumExpLookup[ANY] += count;
+          }
+        }
+        else if (infectedVarName) {
           finalInfVarNumExpLookup[infectedVarName] =
             finalInfVarNumExpLookup[infectedVarName] || 0;
           finalInfVarNumExpLookup[infectedVarName] += count;

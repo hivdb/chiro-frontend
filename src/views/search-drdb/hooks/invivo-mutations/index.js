@@ -3,11 +3,21 @@ import PropTypes from 'prop-types';
 import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
-import {getMutations} from '../isolate-aggs';
-
 import useSummaryByArticle from './use-summary-by-article';
 import useSummaryByRx from './use-summary-by-rx';
 import useSummaryByVirus from './use-summary-by-virus';
+
+import {
+  filterByRefName,
+  filterByVarName,
+  filterByIsoAggkey,
+  filterByGenePos,
+  filterBySbjRxAbNames,
+  filterBySbjRxInfectedVarName,
+  queryInfectedVarName,
+  queryAbNames,
+  queryRxType
+} from '../sql-fragments/selection-mutations';
 
 const LIST_JOIN_MAGIC_SEP = '$#\u0008#$';
 const InVivoMutationsContext = React.createContext();
@@ -17,6 +27,7 @@ function usePrepareQuery({
   refName,
   abNames,
   infectedVarName,
+  varName,
   isoAggkey,
   genePos,
   skip
@@ -29,82 +40,13 @@ function usePrepareQuery({
 
       const params = {$joinSep: LIST_JOIN_MAGIC_SEP};
       const where = [];
-      const realAbNames = abNames.filter(n => n !== 'any');
 
-      if (refName) {
-        where.push(`
-          M.ref_name = $refName
-        `);
-        params.$refName = refName;
-      }
-      if (isoAggkey) {
-        const conds = [];
-        for (const [
-          idx,
-          {gene, position: pos, aminoAcid: aa}
-        ] of getMutations(isoAggkey).entries()) {
-          conds.push(`(
-            M.gene = $gene${idx} AND
-            M.position = $pos${idx} AND
-            M.amino_acid = $aa${idx}
-          )`);
-          params[`$gene${idx}`] = gene;
-          params[`$pos${idx}`] = pos;
-          params[`$aa${idx}`] = aa;
-        }
-        where.push(conds.join(' OR '));
-      }
-      else if (genePos) {
-        const [gene, pos] = genePos.split(':');
-        where.push(`M.gene = $gene AND M.position = $pos`);
-        params.$gene = gene;
-        params.$pos = Number.parseInt(pos);
-      }
-      if (realAbNames && realAbNames.length > 0) {
-        const excludeAbQuery = [];
-        for (const [idx, abName] of realAbNames.entries()) {
-          where.push(`
-            EXISTS (
-              SELECT 1 FROM
-                subject_treatments SBJRX,
-                rx_antibodies RXMAB
-              WHERE
-                SBJRX.subject_name = M.subject_name AND
-                SBJRX.start_date < M.appearance_date AND
-                SBJRX.ref_name = M.ref_name AND
-                RXMAB.ref_name = M.ref_name AND
-                SBJRX.rx_name = RXMAB.rx_name AND
-                RXMAB.ab_name = $abName${idx}
-            )
-          `);
-          params[`$abName${idx}`] = abName;
-          excludeAbQuery.push(`$abName${idx}`);
-        }
-      }
-      if (infectedVarName) {
-        // TODO: infectedVarName should be CP infectedVarName
-        where.push(`
-          $infVarName = 'any' OR
-          ($infVarName = 'Wild Type' AND INFVAR.as_wildtype IS TRUE) OR
-          (INFVAR.var_name = $infVarName)
-        `);
-        params.$infVarName = infectedVarName;
-      }
-      else if (abNames.some(n => n === 'any')) {
-        where.push(`
-          EXISTS (
-            SELECT 1 FROM
-              subject_treatments SBJRX,
-              rx_antibodies RXMAB
-            WHERE
-              SBJRX.subject_name = M.subject_name AND
-              SBJRX.start_date < M.appearance_date AND
-              SBJRX.ref_name = M.ref_name AND
-              RXMAB.ref_name = M.ref_name AND
-              SBJRX.rx_name = RXMAB.rx_name
-          )
-        `);
-      }
+      filterByRefName({refName, where, params});
+      filterByVarName({varName, where, params});
+      filterByIsoAggkey({isoAggkey, where, params});
+      filterByGenePos({genePos, where, params});
+      filterBySbjRxAbNames({abNames, where, params});
+      filterBySbjRxInfectedVarName({infectedVarName, where, params});
 
       if (where.length === 0) {
         where.push('true');
@@ -115,10 +57,7 @@ function usePrepareQuery({
           M.ref_name,
           M.subject_name,
           SBJ.subject_species,
-          CASE
-            WHEN INFVAR.as_wildtype THEN 'Wild Type'
-            ELSE INFVAR.var_name
-          END AS infected_var_name,
+          ${queryInfectedVarName()},
           M.gene,
           R.amino_acid as ref_amino_acid,
           M.position,
@@ -149,39 +88,12 @@ function usePrepareQuery({
       `;
       const sbjRxSql = `
         SELECT
-          ref_name,
-          subject_name,
-          rx_name,
-          (
-            SELECT GROUP_CONCAT(RXMAB.ab_name, $joinSep)
-            FROM rx_antibodies RXMAB, antibodies MAB
-            WHERE
-              SRX.ref_name = RXMAB.ref_name AND
-              SRX.rx_name = RXMAB.rx_name AND
-              RXMAB.ab_name = MAB.ab_name
-            ORDER BY MAB.priority, RXMAB.ab_name
-          ) AS ab_names,
-          CASE
-            WHEN EXISTS (
-              SELECT 1 FROM rx_conv_plasma RXCP
-              WHERE
-                RXCP.ref_name = SRX.ref_name AND
-                RXCP.rx_name = SRX.rx_name
-            ) THEN 'conv-plasma'
-            WHEN EXISTS (
-              SELECT 1 FROM rx_vacc_plasma RXVP
-              WHERE
-                RXVP.ref_name = SRX.ref_name AND
-                RXVP.rx_name = SRX.rx_name
-            ) THEN 'vacc-plasma'
-            WHEN EXISTS (
-              SELECT 1 FROM rx_antibodies RXMAB
-              WHERE
-                RXMAB.ref_name = SRX.ref_name AND
-                RXMAB.rx_name = SRX.rx_name
-            ) THEN 'antibody'
-            ELSE 'unclassified'
-          END AS rx_type,
+          SRX.ref_name,
+          SRX.subject_name,
+          SRX.rx_name,
+          ${queryAbNames({mainTableName: 'SRX'})},
+          ${queryRxType({mainTableName: 'SRX'})},
+          ${queryInfectedVarName()},
           start_date_cmp,
           start_date,
           end_date_cmp,
@@ -189,6 +101,13 @@ function usePrepareQuery({
           dosage,
           dosage_unit
         FROM subject_treatments SRX
+        LEFT JOIN rx_conv_plasma RXCP ON
+          RXCP.ref_name = SRX.ref_name AND
+          RXCP.rx_name = SRX.rx_name
+        LEFT JOIN isolates INFISO ON
+          RXCP.infected_iso_name = INFISO.iso_name
+        LEFT JOIN variants INFVAR ON
+          INFISO.var_name = INFVAR.var_name
         WHERE EXISTS (
           SELECT 1 FROM invivo_selection_results M
           LEFT JOIN variants INFVAR ON
@@ -205,7 +124,15 @@ function usePrepareQuery({
         params
       };
     },
-    [abNames, genePos, infectedVarName, isoAggkey, refName, skip]
+    [
+      abNames,
+      varName,
+      genePos,
+      infectedVarName,
+      isoAggkey,
+      refName,
+      skip
+    ]
   );
 }
 
@@ -219,6 +146,7 @@ function InVivoMutationsProvider({children}) {
     params: {
       formOnly,
       refName,
+      varName,
       infectedVarName,
       isoAggkey,
       genePos,
@@ -234,6 +162,7 @@ function InVivoMutationsProvider({children}) {
   } = usePrepareQuery({
     refName,
     abNames,
+    varName,
     infectedVarName,
     isoAggkey,
     genePos,

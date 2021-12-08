@@ -2,11 +2,18 @@ import React from 'react';
 import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
-import {getMutations} from '../isolate-aggs';
+import {
+  filterByVarName,
+  filterByIsoAggkey,
+  filterByGenePos,
+  filterBySbjRxAbNames,
+  filterBySbjRxInfectedVarName
+} from '../sql-fragments/selection-mutations';
 
 
 function usePrepareQuery({
   abNames,
+  varName,
   infectedVarName,
   isoAggkey,
   genePos,
@@ -20,75 +27,12 @@ function usePrepareQuery({
 
       const params = {};
       const where = [];
-      const realAbNames = abNames.filter(n => n !== 'any');
 
-      if (isoAggkey) {
-        const conds = [];
-        for (const [
-          idx,
-          {gene, position: pos, aminoAcid: aa}
-        ] of getMutations(isoAggkey).entries()) {
-          conds.push(`(
-            M.gene = $gene${idx} AND
-            M.position = $pos${idx} AND
-            M.amino_acid = $aa${idx}
-          )`);
-          params[`$gene${idx}`] = gene;
-          params[`$pos${idx}`] = pos;
-          params[`$aa${idx}`] = aa;
-        }
-        where.push(conds.join(' OR '));
-      }
-      else if (genePos) {
-        const [gene, pos] = genePos.split(':');
-        where.push(`M.gene = $gene AND M.position = $pos`);
-        params.$gene = gene;
-        params.$pos = Number.parseInt(pos);
-      }
-      if (realAbNames && realAbNames.length > 0) {
-        const excludeAbQuery = [];
-        for (const [idx, abName] of realAbNames.entries()) {
-          where.push(`
-            EXISTS (
-              SELECT 1 FROM
-                subject_treatments SBJRX,
-                rx_antibodies RXMAB
-              WHERE
-                SBJRX.subject_name = M.subject_name AND
-                SBJRX.start_date < M.appearance_date AND
-                SBJRX.ref_name = M.ref_name AND
-                RXMAB.ref_name = M.ref_name AND
-                SBJRX.rx_name = RXMAB.rx_name AND
-                RXMAB.ab_name = $abName${idx}
-            )
-          `);
-          params[`$abName${idx}`] = abName;
-          excludeAbQuery.push(`$abName${idx}`);
-        }
-      }
-      if (infectedVarName) {
-        where.push(`
-          $infVarName = 'any' OR
-          ($infVarName = 'Wild Type' AND INFVAR.as_wildtype IS TRUE) OR
-          (INFVAR.var_name = $infVarName)
-        `);
-        params.$infVarName = infectedVarName;
-      }
-      else if (abNames.some(n => n === 'any')) {
-        where.push(`
-          EXISTS (
-            SELECT 1 FROM
-              subject_treatments SBJRX,
-              rx_antibodies RXMAB
-            WHERE
-              SBJRX.subject_name = M.subject_name AND
-              SBJRX.start_date < M.appearance_date AND
-              SBJRX.ref_name = M.ref_name AND
-              RXMAB.ref_name = M.ref_name AND
-              SBJRX.rx_name = RXMAB.rx_name
-          )
-        `);
-      }
+      filterByVarName({varName, where, params});
+      filterByIsoAggkey({isoAggkey, where, params});
+      filterByGenePos({genePos, where, params});
+      filterBySbjRxAbNames({abNames, where, params});
+      filterBySbjRxInfectedVarName({infectedVarName, where, params});
 
       if (where.length === 0) {
         where.push('true');
@@ -110,7 +54,7 @@ function usePrepareQuery({
         params
       };
     },
-    [abNames, genePos, infectedVarName, isoAggkey, skip]
+    [abNames, varName, genePos, infectedVarName, isoAggkey, skip]
   );
 }
 
@@ -118,6 +62,7 @@ function usePrepareQuery({
 export default function useSummaryByArticle() {
   const {
     params: {
+      varName,
       isoAggkey,
       genePos,
       abNames,
@@ -130,6 +75,7 @@ export default function useSummaryByArticle() {
     params
   } = usePrepareQuery({
     abNames,
+    varName,
     isoAggkey,
     infectedVarName,
     genePos,
