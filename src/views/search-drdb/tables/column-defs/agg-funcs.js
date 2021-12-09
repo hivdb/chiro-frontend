@@ -163,6 +163,7 @@ function internalAggPotency(row, isControl) {
         ie === 'both'
       ));
       const ineffectivePots = [];
+      const potTypeFirstTwo = group.potencyType.slice(0, 2);
       for (const [idx, pot] of group.potency.entries()) {
         const unPot = group.unlinkedPotency[idx];
         const cumuCount = group.cumulativeCount[idx];
@@ -170,7 +171,11 @@ function internalAggPotency(row, isControl) {
           // for ineffective potency, use the square-root value since the
           // actual value should be much lower/higher than the detection
           // threshold
-          if (group.ineffective[idx]) {
+          if (
+            group.ineffective[idx] && group.potency.length > 1 && (
+              potTypeFirstTwo === 'NT' || potTypeFirstTwo === 'NC'
+            )
+          ) {
             potency.push(Math.pow(pot, .5));
             ineffectivePots.push(pot);
           }
@@ -201,7 +206,6 @@ function internalAggPotency(row, isControl) {
       group.ineffective = false;
       if (ineffectivePots.length > 0) {
         let cmpPot;
-        const potTypeFirstTwo = group.potencyType.slice(0, 2);
         if (potTypeFirstTwo === 'NT' || potTypeFirstTwo === 'NC') {
           cmpPot = Math.max(...ineffectivePots);
           if (avgPot <= cmpPot) {
