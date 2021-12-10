@@ -198,9 +198,10 @@ export default function PivotTableWrapper({
         const filterredUnCtlPot = row.unlinkedControlPotency.filter(
           d => !d.ineffective
         );
-        const filterredUnPot = row.unlinkedPotency.filter(
-          d => !d.ineffective
-        );
+        // const filterredUnPot = row.unlinkedPotency.filter(
+        //   d => !d.ineffective
+        // );
+        const filterredUnPot = row.unlinkedPotency;
         const controlCumulativeCount = filterredUnCtlPot.reduce(
           (acc, {cumulativeCount}) => acc + cumulativeCount,
           0
