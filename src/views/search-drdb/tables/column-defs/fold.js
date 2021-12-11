@@ -14,6 +14,7 @@ export {comparePotency};
 CellFold.propTypes = {
   fbResistanceLevel: PropTypes.array.isRequired,
   fold: PropTypes.number,
+  foldCmp: PropTypes.string,
   p25: PropTypes.number,
   p75: PropTypes.number,
   displayIQR: PropTypes.bool,
@@ -21,11 +22,18 @@ CellFold.propTypes = {
 };
 
 
-function CellFold({fold, fbResistanceLevel, p25, p75, displayIQR, displayNN}) {
+function CellFold({
+  fold,
+  foldCmp,
+  fbResistanceLevel,
+  p25,
+  p75,
+  displayIQR,
+  displayNN
+}) {
   if (fold === null || fold === undefined) {
     return <em>N.A.</em>;
   }
-  let foldCmp = '=';
   let foldValue = fold;
   if (foldValue && foldValue > 100) {
     foldValue = 100;
@@ -54,10 +62,15 @@ function CellFold({fold, fbResistanceLevel, p25, p75, displayIQR, displayNN}) {
 }
 
 
-function exportCellFold(
-  {fold, fbResistanceLevel, p25, p75, displayIQR, displayNN}
-) {
-  let foldCmp = '=';
+function exportCellFold({
+  fold,
+  foldCmp,
+  fbResistanceLevel,
+  p25,
+  p75,
+  displayIQR,
+  displayNN
+}) {
   let foldValue = fold;
   if (foldValue && foldValue > 100) {
     foldValue = 100;
@@ -107,6 +120,7 @@ export default function useFold({
         render: (fold, row) => (
           <CellFold
            fold={fold.median}
+           foldCmp={fold.cmp}
            fbResistanceLevel={uniq(row.fbResistanceLevel || []).sort()}
            displayNN={
              aggSum(row.cumulativeCount) ===
@@ -118,8 +132,9 @@ export default function useFold({
            p25={fold.p25}
            p75={fold.p75} />
         ),
-        exportCell: ({median, p25, p75}, row) => exportCellFold({
+        exportCell: ({median, cmp, p25, p75}, row) => exportCellFold({
           fold: median,
+          foldCmp: cmp,
           fbResistanceLevel: uniq(row.fbResistanceLevel || []).sort(),
           displayNN: (
             aggSum(row.cumulativeCount) === Array
@@ -131,16 +146,23 @@ export default function useFold({
           p25,
           p75
         }),
-        decorator: (fold, {cumulativeCount}) => {
+        decorator: (fold, {
+          ineffective,
+          cumulativeCount
+        }) => {
           if (fold.every(f => f === null || f === undefined)) {
             return {};
+          }
+          let cmp = '=';
+          if (ineffective.every(ineff => ineff === 'experimental')) {
+            cmp = '>';
           }
           const [median, p25, p75] = aggWeightedPercentile(
             fold,
             cumulativeCount,
             [0.5, 0.25, 0.75]
           );
-          return {median, p25, p75};
+          return {cmp, median, p25, p75};
         },
         sort: rows => sortBy(
           rows,

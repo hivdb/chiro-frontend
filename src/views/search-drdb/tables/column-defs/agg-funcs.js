@@ -2,35 +2,6 @@ export function aggSum(nums) {
   return nums.reduce((acc, n) => acc + n, 0);
 }
 
-export function aggFold(fold, {cumulativeCount: n}) {
-  let total = 0;
-  let sumN = 0;
-  // artmean for fold
-  for (let i = 0; i < fold.length; i ++) {
-    if (fold[i] !== undefined && fold[i] !== null) {
-      total += fold[i] * n[i];
-      sumN += n[i];
-    }
-  }
-  if (sumN) {
-    return total / sumN;
-  }
-}
-
-export function aggFoldSD(avgFold, {fold, cumulativeCount: n}) {
-  let total = 0;
-  let sumN = 0;
-  for (let i = 0; i < fold.length; i ++) {
-    if (fold[i] !== undefined && fold[i] !== null) {
-      total += (fold[i] - avgFold) ** 2 * n[i];
-      sumN += n[i];
-    }
-  }
-  if (sumN) {
-    return Math.sqrt(total / sumN);
-  }
-}
-
 
 function zip(array, ...others) {
   return array.map(
@@ -164,20 +135,24 @@ function internalAggPotency(row, isControl) {
       ));
       const ineffectivePots = [];
       const potTypeFirstTwo = group.potencyType.slice(0, 2);
+      const theHigherTheMoreEffective = (
+        potTypeFirstTwo === 'NT' || potTypeFirstTwo === 'NC'
+      );
       for (const [idx, pot] of group.potency.entries()) {
         const unPot = group.unlinkedPotency[idx];
         const cumuCount = group.cumulativeCount[idx];
         if (!unPot || unPot.length === 0) {
-          // for ineffective potency, use the square-root value since the
-          // actual value should be much lower/higher than the detection
-          // threshold
-          if (
-            group.ineffective[idx] && group.potency.length > 1 && (
-              potTypeFirstTwo === 'NT' || potTypeFirstTwo === 'NC'
-            )
-          ) {
-            potency.push(Math.pow(pot, .5));
+          if (group.ineffective[idx]) {
             ineffectivePots.push(pot);
+            if (group.potency.length > 1 && theHigherTheMoreEffective) {
+              // for NT/NC ineffective potency, use the square-root value since
+              // the actual value should be much lower/higher than the
+              // detection threshold
+              potency.push(Math.pow(pot, .5));
+            }
+            else {
+              potency.push(pot);
+            }
           }
           else {
             potency.push(pot);
@@ -187,9 +162,28 @@ function internalAggPotency(row, isControl) {
         else {
           for (const {
             potency: pot,
+            ineffective: ineff,
             cumulativeCount: cumuCount
           } of unPot) {
-            potency.push(pot);
+            if (ineff) {
+              ineffectivePots.push(pot);
+              if (
+                (
+                  group.potency.length > 1 ||
+                  unPot.length > 1
+                ) &&
+                theHigherTheMoreEffective
+              ) {
+                // also apply square-root for NT/NC ineffective potency
+                potency.push(Math.pow(pot, .5));
+              }
+              else {
+                potency.push(pot);
+              }
+            }
+            else {
+              potency.push(pot);
+            }
             cumulativeCount.push(cumuCount);
           }
         }
@@ -206,16 +200,18 @@ function internalAggPotency(row, isControl) {
       group.ineffective = false;
       if (ineffectivePots.length > 0) {
         let cmpPot;
-        if (potTypeFirstTwo === 'NT' || potTypeFirstTwo === 'NC') {
+        if (theHigherTheMoreEffective) {
           cmpPot = Math.max(...ineffectivePots);
-          if (avgPot <= cmpPot) {
+          // plus 1e-4 to "fix" binary floating quirks (#38)
+          if (avgPot <= cmpPot + 1e-4) {
             avgPot = cmpPot;
             group.ineffective = true;
           }
         }
-        else if (potTypeFirstTwo === 'IC') {
+        else {
           cmpPot = Math.min(...ineffectivePots);
-          if (avgPot >= cmpPot) {
+          // minus 1e-4 to "fix" binary floating quirks (#38)
+          if (avgPot >= cmpPot - 1e-4) {
             avgPot = cmpPot;
             group.ineffective = true;
           }

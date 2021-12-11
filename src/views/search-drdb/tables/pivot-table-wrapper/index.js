@@ -185,21 +185,44 @@ export default function PivotTableWrapper({
       .filter(d => !hideNon50 || d.potencyType === mainPotencyType)
       .map(row => {
         // hideNN for unlinked potency data.
-        // Since the potency data are unlinked, we need to also hide
-        // ineffective expPotency data to "balance" the lose of
-        // ineffective ctlPotency
+        // Since the potency data are unlinked, we need to also hide the same
+        // or less amount of ineffective expPotency data to "balance" the lose
+        // of ineffective ctlPotency. In another words, if we hide n control
+        // potency data, we also hide ≤n target potency data.
         if (
-          !hideNN ||
           !row.unlinkedControlPotency ||
           row.unlinkedControlPotency.length === 0
         ) {
           return row;
         }
+        let {fold, ineffective, potencyType: potType} = row;
+
+        const theHigherTheMoreEffective = (
+          potType.startsWith('NT') || potType.startsWith('NC')
+        );
+
+        const findThreshold = theHigherTheMoreEffective ? Math.max : Math.min;
+
+        const ctlPotThreshold = findThreshold(
+          ...row.unlinkedControlPotency
+            .filter(d => d.ineffective)
+            .map(d => d.potency)
+        );
+
+        const potThreshold = findThreshold(
+          ...row.unlinkedPotency
+            .filter(d => d.ineffective)
+            .map(d => d.potency)
+        );
+
         const filterredUnCtlPot = row.unlinkedControlPotency.filter(
-          d => !d.ineffective
+          d => !hideNN || !d.ineffective
+        );
+        let hideIneffUnPotAllowance = (
+          row.unlinkedControlPotency.length - filterredUnCtlPot.length
         );
         const filterredUnPot = row.unlinkedPotency.filter(
-          d => !d.ineffective
+          d => !hideNN || !d.ineffective || (hideIneffUnPotAllowance --) <= 0
         );
         const controlCumulativeCount = filterredUnCtlPot.reduce(
           (acc, {cumulativeCount}) => acc + cumulativeCount,
@@ -209,45 +232,57 @@ export default function PivotTableWrapper({
           (acc, {cumulativeCount}) => acc + cumulativeCount,
           0
         );
+        if (controlCumulativeCount > 0 && cumulativeCount > 0) {
+          const finalCtlPot = aggGeoMeanWeighted(
+            filterredUnCtlPot.map(({potency}) => potency),
+            filterredUnCtlPot.map(({cumulativeCount}) => cumulativeCount)
+          );
+          const finalPot = aggGeoMeanWeighted(
+            filterredUnPot.map(({potency}) => potency),
+            filterredUnPot.map(({cumulativeCount}) => cumulativeCount)
+          );
+          if (theHigherTheMoreEffective) {
+            fold = finalCtlPot / finalPot;
+            if (finalCtlPot <= ctlPotThreshold) {
+              ineffective = 'control';
+            }
+            if (finalPot <= potThreshold) {
+              if (ineffective === 'control') {
+                ineffective = 'both';
+              }
+              else {
+                ineffective = 'experimental';
+              }
+            }
+          }
+          else {
+            fold = finalPot / finalCtlPot;
+            if (finalCtlPot >= ctlPotThreshold) {
+              ineffective = 'control';
+            }
+            if (finalPot >= potThreshold) {
+              if (ineffective === 'control') {
+                ineffective = 'both';
+              }
+              else {
+                ineffective = 'experimental';
+              }
+            }
+          }
+        }
         return {
           ...row,
           unlinkedControlPotency: filterredUnCtlPot,
           unlinkedPotency: filterredUnPot,
+          ineffective,
+          fold,
           controlCumulativeCount,
           cumulativeCount
         };
       })
       .filter(({controlCumulativeCount, cumulativeCount}) => (
         controlCumulativeCount > 0 && cumulativeCount > 0
-      ))
-      .map(row => {
-        let {
-          fold,
-          unlinkedControlPotency: unCtlPot,
-          unlinkedPotency: unPot,
-          potencyType: potType
-        } = row;
-        if (unCtlPot && unCtlPot.length > 0 && unPot && unPot.length > 0) {
-          unCtlPot = aggGeoMeanWeighted(
-            unCtlPot.map(({potency}) => potency),
-            unCtlPot.map(({cumulativeCount}) => cumulativeCount)
-          );
-          unPot = aggGeoMeanWeighted(
-            unPot.map(({potency}) => potency),
-            unPot.map(({cumulativeCount}) => cumulativeCount)
-          );
-          if (potType.startsWith('NT')) {
-            fold = unCtlPot / unPot;
-          }
-          else {
-            fold = unPot / unCtlPot;
-          }
-        }
-        return {
-          ...row,
-          fold
-        };
-      }),
+      )),
     [data, hideNN, hideNon50, mainPotencyType]
   );
   const cleanedGroupBy = useCleanGroupBy(curGroupBy, groupBy);
