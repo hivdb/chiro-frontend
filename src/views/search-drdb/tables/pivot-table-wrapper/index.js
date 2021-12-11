@@ -242,12 +242,15 @@ export default function PivotTableWrapper({
             filterredUnPot.map(({cumulativeCount}) => cumulativeCount)
           );
           if (theHigherTheMoreEffective) {
+            // for NT/NC
             fold = finalCtlPot / finalPot;
-            if (finalCtlPot <= ctlPotThreshold) {
+            // relative to #38, floating quirks
+            if (finalCtlPot <= ctlPotThreshold + 1e-4) {
               ineffective = 'control';
             }
             if (finalPot <= potThreshold) {
-              if (ineffective === 'control') {
+            // relative to #38, floating quirks
+              if (ineffective === 'control' + 1e-4) {
                 ineffective = 'both';
               }
               else {
@@ -256,11 +259,14 @@ export default function PivotTableWrapper({
             }
           }
           else {
+            // for IC
             fold = finalPot / finalCtlPot;
-            if (finalCtlPot >= ctlPotThreshold) {
+            // relative to #38, floating quirks
+            if (finalCtlPot >= ctlPotThreshold - 1e-4) {
               ineffective = 'control';
             }
-            if (finalPot >= potThreshold) {
+            // relative to #38, floating quirks
+            if (finalPot >= potThreshold - 1e-4) {
               if (ineffective === 'control') {
                 ineffective = 'both';
               }
