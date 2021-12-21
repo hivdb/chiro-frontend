@@ -5,7 +5,11 @@ import sortBy from 'lodash/sortBy';
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
 import {comparePotency} from './potency';
-import {aggWeightedPercentile, aggSum} from './agg-funcs';
+import {
+  aggPotency,
+  aggWeightedPercentile,
+  aggSum
+} from './agg-funcs';
 import style from './style.module.scss';
 
 export {comparePotency};
@@ -146,15 +150,17 @@ export default function useFold({
           p25,
           p75
         }),
-        decorator: (fold, {
-          ineffective,
-          cumulativeCount
-        }) => {
+        decorator: (fold, row) => {
+          const {
+            potency,
+            cumulativeCount
+          } = row;
           if (fold.every(f => f === null || f === undefined)) {
             return {};
           }
           let cmp = '=';
-          if (ineffective.every(ineff => ineff === 'experimental')) {
+          const pot = aggPotency(potency, row);
+          if (pot.every(({ineffective}) => ineffective)) {
             cmp = '>';
           }
           const [median, p25, p75] = aggWeightedPercentile(
