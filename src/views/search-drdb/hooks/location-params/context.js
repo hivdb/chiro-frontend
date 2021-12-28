@@ -29,6 +29,7 @@ function LocationParamsProvider({
         position: genePos = null,
         cp: infectedVarName = '',
         vaccine: vaccineName = null,
+        debug: debugMsg = null,
         infected,
         month,
         dosage,
@@ -72,7 +73,8 @@ function LocationParamsProvider({
           infected,
           month,
           dosage,
-          host
+          host,
+          debugMsg
         },
         filterFlag: {
           article: !!refName,
@@ -99,6 +101,7 @@ function LocationParamsProvider({
       month,
       dosage,
       host,
+      debugMsg,
       onChange
     ]
   );

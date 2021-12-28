@@ -13,6 +13,7 @@ import {useSetLoading} from '../../../../utils/set-loading';
 import {useAggregateData} from '../../../../components/pivot-table';
 
 import {useStatSuscResults} from '../../hooks';
+import LocationParams from '../../hooks/location-params';
 import GroupByOptions from '../group-by-options';
 
 import useColumnDefs from '../column-defs';
@@ -108,6 +109,7 @@ export default function PivotTableWrapper({
 }) {
   const pivotTableCtlRef = React.useRef();
   const [modalData, setModalData] = React.useState(null);
+  const {params: {debugMsg}} = LocationParams.useMe();
   const [curGroupBy, setCurGroupBy] = React.useState(defaultGroupBy || groupBy);
 
   const columnDefs = useColumnDefs({columns, labels});
@@ -119,6 +121,7 @@ export default function PivotTableWrapper({
     hideNN,
     setHideNN
   ] = useHideNNState(defaultHideNN);
+  const debugOnlyNN = /\bonlyNN\b/.test(debugMsg);
 
   const useHideNon50State = createPersistedState(
     `${id}__hideNon50State`
@@ -177,9 +180,14 @@ export default function PivotTableWrapper({
     () => data
       .filter(
         d => (
-          !hideNN ||
-          d.ineffective === 'experimental' ||
-          d.ineffective === null
+          debugOnlyNN ? (
+            d.ineffective !== 'experimental' &&
+            d.ineffective !== null
+          ) : (
+            !hideNN ||
+            d.ineffective === 'experimental' ||
+            d.ineffective === null
+          )
         )
       )
       .filter(d => !hideNon50 || d.potencyType === mainPotencyType)
@@ -289,7 +297,7 @@ export default function PivotTableWrapper({
       .filter(({controlCumulativeCount, cumulativeCount}) => (
         controlCumulativeCount > 0 && cumulativeCount > 0
       )),
-    [data, hideNN, hideNon50, mainPotencyType]
+    [data, debugOnlyNN, hideNN, hideNon50, mainPotencyType]
   );
   const cleanedGroupBy = useCleanGroupBy(curGroupBy, groupBy);
   const cleanedColumnDefs = useCleanColumnDefs(columnDefs, curGroupBy, groupBy);
@@ -316,6 +324,7 @@ export default function PivotTableWrapper({
      numNoNatExps={numNoNatExps}
      numNon50Exps={numNon50Exps}
      hideNN={hideNN}
+     debugOnlyNN={debugOnlyNN}
      hideNon50={hideNon50}
      mainPotencyType={mainPotencyType}
      onToggleHideNN={handleToggleHideNN}

@@ -11,6 +11,7 @@ HeadNote.propTypes = {
   numNon50Exps: PropTypes.number.isRequired,
   mainPotencyType: PropTypes.string.isRequired,
   hideNN: PropTypes.bool,
+  debugOnlyNN: PropTypes.bool,
   onToggleHideNN: PropTypes.func,
   hideNon50: PropTypes.bool,
   onToggleHideNon50: PropTypes.func
@@ -25,12 +26,13 @@ export default function HeadNote({
   numNon50Exps,
   mainPotencyType,
   hideNN = true,
+  debugOnlyNN = false,
   onToggleHideNN,
   hideNon50 = true,
   onToggleHideNon50
 }) {
   return <div>
-    <em>
+    {debugOnlyNN ? <strong><code>debug=onlyNN</code>: </strong> : <em>
       <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
       {pluralize('result', numExps, false)}{'; '}
       <strong>{numRows.toLocaleString('en-US')}</strong>{' '}
@@ -38,7 +40,7 @@ export default function HeadNote({
       ({pluralize('row', numRows, false)}){'; '}
       <strong>{numArticles.toLocaleString('en-US')}</strong>{' '}
       {pluralize('publications', numArticles, false)}.
-    </em>
+    </em>}
     {numNoNatExps > 0 ? <>
       <br />
       <em>
@@ -46,11 +48,15 @@ export default function HeadNote({
         {pluralize('results', numNoNatExps, false)} had{' '}
         {pluralize('titers', numNoNatExps, false)} against the control virus
         below the experimental detection threshold
-        {hideNN ? ' and are not shown' : null}.
+        {debugOnlyNN ? ' are only shown' : (
+          hideNN ? ' and are not shown' : null
+        )}.
       </em>
-      {' '}(<a onClick={onToggleHideNN} href="#toggle-hideNN">
-        {hideNN ? 'unhide' : 'hide'}
-      </a>)
+      {debugOnlyNN ? null : <>
+        {' '}(<a onClick={onToggleHideNN} href="#toggle-hideNN">
+          {hideNN ? 'unhide' : 'hide'}
+        </a>)
+      </>}
     </> : null}
     {numNon50Exps > 0 ? <>
       <br />
