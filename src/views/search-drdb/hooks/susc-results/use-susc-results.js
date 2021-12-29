@@ -166,6 +166,7 @@ function usePrepareQuery({
           S.ref_name,
           S.rx_name,
           S.rx_group,
+          S.rx_type,
           S.control_iso_name,
           ctliso.var_name AS control_var_name,
           S.iso_name,

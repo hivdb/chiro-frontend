@@ -17,7 +17,6 @@ function usePrepareQuery({vaccineName, infected, month, dosage, host, skip}) {
       const params = {};
 
       if (!skip && !isPending) {
-        addColumns.push("'vacc-plasma' AS rx_type");
         addColumns.push('subject_species');
         addColumns.push('infected_iso_name');
         addColumns.push(`

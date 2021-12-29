@@ -19,7 +19,6 @@ function usePrepareQuery({abNames, skip}) {
       const realAbNames = abNames.filter(n => n !== 'any');
 
       if (!skip) {
-        addColumns.push("'antibody' AS rx_type");
         addColumns.push(
           `(
             SELECT GROUP_CONCAT(MAB.ab_name, $joinSep)
@@ -57,14 +56,7 @@ function usePrepareQuery({abNames, skip}) {
         }
 
         if (!rxAbFiltered) {
-          where.push(`
-            EXISTS (
-              SELECT 1 FROM rx_antibodies RXMAB
-              WHERE
-                RXMAB.ref_name = S.ref_name AND
-                S.rx_name = RXMAB.rx_name
-            )
-          `);
+          where.push("S.rx_type = 'antibody'");
         }
 
       }
