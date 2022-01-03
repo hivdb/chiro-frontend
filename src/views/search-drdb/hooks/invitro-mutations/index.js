@@ -9,7 +9,6 @@ import useSummaryByVirus from './use-summary-by-virus';
 
 import {
   filterByRefName,
-  filterByVarName,
   filterByIsoAggkey,
   filterByGenePos,
   filterByAbNames,
@@ -41,12 +40,16 @@ function usePrepareQuery({
       const params = {$joinSep: LIST_JOIN_MAGIC_SEP};
       const where = [];
 
-      filterByRefName({refName, where, params});
-      filterByVarName({varName, where, params});
-      filterByIsoAggkey({isoAggkey, where, params});
-      filterByGenePos({genePos, where, params});
-      filterByAbNames({abNames, where, params});
-      filterByInfectedVarName({infectedVarName, where, params});
+      if (varName) {
+        where.push('false');
+      }
+      else {
+        filterByRefName({refName, where, params});
+        filterByIsoAggkey({isoAggkey, where, params});
+        filterByGenePos({genePos, where, params});
+        filterByAbNames({abNames, where, params});
+        filterByInfectedVarName({infectedVarName, where, params});
+      }
 
       if (where.length === 0) {
         where.push('true');

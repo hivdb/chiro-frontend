@@ -90,7 +90,14 @@ export function filterByIsoAggkey({
       params[`$pos${idx}`] = pos;
       params[`$aa${idx}`] = aa;
     }
+    where.push(`EXISTS (
+      SELECT 1 FROM isolate_pairs IP
+      WHERE
+        IP.num_mutations = 1 AND
+        IP.iso_name = $isoAggkey
+    )`);
     where.push(conds.join(' OR '));
+    params.$isoAggkey = isoAggkey;
   }
 }
 
@@ -338,6 +345,7 @@ export function queryIsoAggkeys({mainTableName = 'M'} = {}) {
     (
       SELECT GROUP_CONCAT(iso_aggkey, $joinSep) FROM (
         SELECT DISTINCT ISOP.iso_aggkey FROM isolate_pairs ISOP WHERE
+          ISOP.num_mutations = 1 AND
           ${matchIsolateMutation({mainTableName, isoTableName: 'ISOP'})}
       ) tmp2
     ) AS iso_aggkeys

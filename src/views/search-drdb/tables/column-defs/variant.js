@@ -21,14 +21,10 @@ function getDisplay({
   if (!(varName in variantLookup)) {
     return varName;
   }
-  const synonyms = variantLookup[varName]?.synonyms;
-
-  if (synonyms && synonyms.length > 0) {
-    return `${varName} (${synonyms[0]})`;
+  if (variantLookup[varName].asWildtype) {
+    return `Wild Type (${varName})`;
   }
-  else {
-    return varName;
-  }
+  return varName;
 }
 
 

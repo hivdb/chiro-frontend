@@ -4,7 +4,6 @@ import LocationParams from '../location-params';
 
 import {
   filterByRefName,
-  filterByVarName,
   filterByIsoAggkey,
   filterByGenePos,
   queryAbNames,
@@ -24,10 +23,14 @@ function usePrepareQuery({refName, varName, isoAggkey, genePos, skip}) {
       const params = {$joinSep: LIST_JOIN_MAGIC_SEP};
       const where = [];
 
-      filterByRefName({refName, where, params});
-      filterByVarName({varName, where, params});
-      filterByIsoAggkey({isoAggkey, where, params});
-      filterByGenePos({genePos, where, params});
+      if (varName) {
+        where.push('false');
+      }
+      else {
+        filterByRefName({refName, where, params});
+        filterByIsoAggkey({isoAggkey, where, params});
+        filterByGenePos({genePos, where, params});
+      }
 
       if (where.length === 0) {
         where.push('true');
@@ -55,7 +58,7 @@ function usePrepareQuery({refName, varName, isoAggkey, genePos, skip}) {
         params
       };
     },
-    [genePos, isoAggkey, refName, skip, varName]
+    [genePos, varName, isoAggkey, refName, skip]
   );
 }
 

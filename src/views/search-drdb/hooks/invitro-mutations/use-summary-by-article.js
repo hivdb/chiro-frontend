@@ -3,7 +3,6 @@ import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
 import {
-  filterByVarName,
   filterByIsoAggkey,
   filterByGenePos,
   filterByAbNames,
@@ -28,11 +27,15 @@ function usePrepareQuery({
       const params = {};
       const where = [];
 
-      filterByVarName({varName, where, params});
-      filterByIsoAggkey({isoAggkey, where, params});
-      filterByGenePos({genePos, where, params});
-      filterByAbNames({abNames, where, params});
-      filterByInfectedVarName({infectedVarName, where, params});
+      if (varName) {
+        where.push('false');
+      }
+      else {
+        filterByIsoAggkey({isoAggkey, where, params});
+        filterByGenePos({genePos, where, params});
+        filterByAbNames({abNames, where, params});
+        filterByInfectedVarName({infectedVarName, where, params});
+      }
 
       if (where.length === 0) {
         where.push('true');
@@ -79,9 +82,9 @@ export default function useSummaryByArticle() {
     params
   } = usePrepareQuery({
     abNames,
-    varName,
     isoAggkey,
     infectedVarName,
+    varName,
     genePos,
     skip
   });

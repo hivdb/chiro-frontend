@@ -39,8 +39,8 @@ function CellFold({
     return <em>N.A.</em>;
   }
   let foldValue = fold;
-  if (foldValue && foldValue > 100) {
-    foldValue = 100;
+  if (foldValue && foldValue > 1000) {
+    foldValue = 1000;
     foldCmp = '>';
   }
   else if (!isNaN(foldValue) && foldValue < 0.1) {
@@ -76,8 +76,8 @@ function exportCellFold({
   displayNN
 }) {
   let foldValue = fold;
-  if (foldValue && foldValue > 100) {
-    foldValue = 100;
+  if (foldValue && foldValue > 1000) {
+    foldValue = 1000;
     foldCmp = '>';
   }
   else if (!isNaN(foldValue) && foldValue < 0.1) {

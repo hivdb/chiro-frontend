@@ -3,7 +3,6 @@ import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
 import {
-  filterByVarName,
   filterByIsoAggkey,
   filterByGenePos,
   filterByAbNames
@@ -20,10 +19,14 @@ function usePrepareQuery({abNames, varName, isoAggkey, genePos, skip}) {
       const params = {};
       const where = [];
 
-      filterByVarName({varName, where, params});
-      filterByIsoAggkey({isoAggkey, where, params});
-      filterByGenePos({genePos, where, params});
-      filterByAbNames({abNames, where, params});
+      if (varName) {
+        where.push('false');
+      }
+      else {
+        filterByIsoAggkey({isoAggkey, where, params});
+        filterByGenePos({genePos, where, params});
+        filterByAbNames({abNames, where, params});
+      }
 
       if (where.length === 0) {
         where.push('true');

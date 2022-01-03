@@ -14,6 +14,7 @@ import InVivoMutationsTable from './tables/invivo-mutations-table';
 import DMSMutationsTable from './tables/dms-mutations-table';
 
 import {useLastUpdate} from './hooks';
+import IsolateAggs from './hooks/isolate-aggs';
 import LocationParams from './hooks/location-params';
 
 import style from './style.module.scss';
@@ -25,10 +26,17 @@ export default function SearchDRDBLayout() {
   /* loading || redirectIfNeeded(props); */
 
   const {
-    params: {formOnly},
+    params: {varName, isoAggkey, formOnly},
     filterFlag
   } = LocationParams.useMe();
   const lastUpdate = useLastUpdate();
+  const {isolateAggLookup, isPending} = IsolateAggs.useMe();
+  const isIndivMut = Boolean(
+    !isPending &&
+    isoAggkey &&
+    isoAggkey in isolateAggLookup &&
+    isolateAggLookup[isoAggkey].isoType === 'indiv-mut'
+  );
 
   const displayAbTables = (
     !formOnly &&
@@ -96,33 +104,35 @@ export default function SearchDRDBLayout() {
           <CPSuscResults />
         </Grid.Column>
       </Grid.Row> : null}
-    {displayAbTables || displayCPTables ?
-      <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as={H2} id="invitro-mutations">
-            In vitro Selection Data
-          </Header>
-          <InVitroMutationsTable />
-        </Grid.Column>
-      </Grid.Row> : null}
-    {displayAbTables || displayCPTables ?
-      <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as={H2} id="dms-mutations">
-            In vivo Selection Data
-          </Header>
-          <InVivoMutationsTable />
-        </Grid.Column>
-      </Grid.Row> : null}
-    {displayAbTables ?
-      <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as={H2} id="dms-mutations">
-            Deep Mutational Scanning (DMS) Data
-          </Header>
-          <DMSMutationsTable />
-        </Grid.Column>
-      </Grid.Row> : null}
+    {!varName && isIndivMut ? <>
+      {displayAbTables || displayCPTables ?
+        <Grid.Row centered>
+          <Grid.Column width={16}>
+            <Header as={H2} id="invitro-mutations">
+              In vitro Selection Data
+            </Header>
+            <InVitroMutationsTable />
+          </Grid.Column>
+        </Grid.Row> : null}
+      {displayAbTables || displayCPTables ?
+        <Grid.Row centered>
+          <Grid.Column width={16}>
+            <Header as={H2} id="dms-mutations">
+              In vivo Selection Data
+            </Header>
+            <InVivoMutationsTable />
+          </Grid.Column>
+        </Grid.Row> : null}
+      {displayAbTables ?
+        <Grid.Row centered>
+          <Grid.Column width={16}>
+            <Header as={H2} id="dms-mutations">
+              Deep Mutational Scanning (DMS) Data
+            </Header>
+            <DMSMutationsTable />
+          </Grid.Column>
+        </Grid.Row> : null}
+    </> : null}
     <BackToTop />
   </Grid>;
 }

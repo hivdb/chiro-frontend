@@ -14,8 +14,7 @@ function getDisplay({
   numMutations,
   varNames,
   isoAggkeys,
-  isolateAggLookup,
-  variantLookup
+  isolateAggLookup
 }) {
   const isoAggDisplay = isoAggkeys
     .map(isoAggkey => isolateAggLookup[isoAggkey]?.isoAggDisplay || '')
@@ -30,7 +29,7 @@ function getDisplay({
       display = `${varNames.join(' / ')} (Wild Type)`;
     }
     else {
-      display = varNames.map(
+      /* display = varNames.map(
         varName => {
           const synonyms = variantLookup[varName]?.synonyms;
           if (synonyms && synonyms.length > 0) {
@@ -40,7 +39,8 @@ function getDisplay({
             return varName;
           }
         }
-      ).join(' / ');
+      ).join(' / '); */
+      display = varNames.join(' / ');
     }
   }
   else if (isoAggDisplay) {
@@ -67,7 +67,8 @@ function exportCellVariantOrIsolateAgg({
     isolateAggLookup,
     variantLookup
   });
-  const ret = {'': isolateDisplay};
+  return isolateDisplay;
+  /* const ret = {'': isolateDisplay};
   if (isoAggkeys.length > 1) {
     ret.Pos = '(Various)';
     ret.Mutations = '(Various)';
@@ -80,7 +81,7 @@ function exportCellVariantOrIsolateAgg({
     ret.Pos = '(WT)';
     ret.Mutations = '(WT)';
   }
-  return ret;
+  return ret; */
 }
 
 

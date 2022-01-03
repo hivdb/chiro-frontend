@@ -5,7 +5,6 @@ import LocationParams from '../location-params';
 import {
   filterByRefName,
   filterByAbNames,
-  queryVarNames,
   queryIsoAggkeys
 } from '../sql-fragments/selection-mutations';
 
@@ -35,14 +34,13 @@ function usePrepareQuery({
 
       const sql = `
         SELECT
-          ${queryVarNames()},
           ${queryIsoAggkeys()},
           (M.gene || ':' || M.position) AS gene_pos,
           COUNT(*) AS count
         FROM dms_escape_results M
         WHERE
           (${where.join(') AND (')})
-        GROUP BY var_names, iso_aggkeys, gene_pos
+        GROUP BY iso_aggkeys, gene_pos
       `;
       return {
         sql,
@@ -82,9 +80,7 @@ export default function useSummaryByVirus() {
       }
       return payload.map(
         row => {
-          row.varNames = (
-            row.varNames ? row.varNames.split(LIST_JOIN_MAGIC_SEP) : []
-          );
+          row.varNames = [];
           row.isoAggkeys = (
             row.isoAggkeys ? row.isoAggkeys.split(LIST_JOIN_MAGIC_SEP) : []
           );

@@ -3,7 +3,6 @@ import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
 import {
-  filterByVarName,
   filterByIsoAggkey,
   filterByGenePos,
   filterBySbjRxAbNames,
@@ -13,8 +12,8 @@ import {
 
 function usePrepareQuery({
   abNames,
-  varName,
   infectedVarName,
+  varName,
   isoAggkey,
   genePos,
   skip
@@ -28,11 +27,15 @@ function usePrepareQuery({
       const params = {};
       const where = [];
 
-      filterByVarName({varName, where, params});
-      filterByIsoAggkey({isoAggkey, where, params});
-      filterByGenePos({genePos, where, params});
-      filterBySbjRxAbNames({abNames, where, params});
-      filterBySbjRxInfectedVarName({infectedVarName, where, params});
+      if (varName) {
+        where.push('false');
+      }
+      else {
+        filterByIsoAggkey({isoAggkey, where, params});
+        filterByGenePos({genePos, where, params});
+        filterBySbjRxAbNames({abNames, where, params});
+        filterBySbjRxInfectedVarName({infectedVarName, where, params});
+      }
 
       if (where.length === 0) {
         where.push('true');
