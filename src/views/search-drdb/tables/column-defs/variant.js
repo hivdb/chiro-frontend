@@ -61,10 +61,13 @@ function exportCellVariant({
       potencySD,
       ineffective
     } of potencyArray) {
-      result[`${potencyType} Cmp`] = getPotencyCmp({potencyType, ineffective});
-      result[`${potencyType} GeoMean`] = potency && potency.toFixed(1);
-      result[`${potencyType} Unit`] = potencyUnit;
-      result[`${potencyType} GSD`] = potencySD && potencySD.toFixed(1);
+      if (!(`${potencyType} GeoMean` in result)) {
+        result[`${potencyType} Cmp`] =
+          getPotencyCmp({potencyType, ineffective});
+        result[`${potencyType} GeoMean`] = potency && potency.toFixed(1);
+        result[`${potencyType} Unit`] = potencyUnit;
+        result[`${potencyType} GSD`] = potencySD && potencySD.toFixed(1);
+      }
     }
   }
   return result;
