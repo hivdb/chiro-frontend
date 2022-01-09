@@ -12,11 +12,20 @@ import style from './style.module.scss';
 
 function getDisplay({
   varName,
+  rawVarNames,
   variantLookup,
   missing
 }) {
   if (!varName) {
     return missing;
+  }
+  if (varName === 'Wild Type' && rawVarNames) {
+    if (rawVarNames.length > 1) {
+      return varName;
+    }
+    else if (rawVarNames.length > 0) {
+      return `Wild Type (${rawVarNames.join('/')})`;
+    }
   }
   if (!(varName in variantLookup)) {
     return varName;
@@ -30,6 +39,7 @@ function getDisplay({
 
 function exportCellVariant({
   varName,
+  rawVarNames,
   potencyArray,
   enablePotency,
   variantLookup,
@@ -38,6 +48,7 @@ function exportCellVariant({
   const result = {
     '': getDisplay({
       varName,
+      rawVarNames,
       variantLookup,
       missing: varNameMissing
     })
@@ -62,6 +73,7 @@ function exportCellVariant({
 
 CellVariant.propTypes = {
   varName: PropTypes.string,
+  rawVarNames: PropTypes.arrayOf(PropTypes.string.isRequired),
   potencyArray: PropTypes.arrayOf(
     PropTypes.shape({
       potency: PropTypes.number.isRequired,
@@ -79,6 +91,7 @@ CellVariant.propTypes = {
 
 function CellVariant({
   varName,
+  rawVarNames,
   potencyArray,
   enablePotency,
   variantLookup,
@@ -86,6 +99,7 @@ function CellVariant({
 }) {
   const varDisplay = getDisplay({
     varName,
+    rawVarNames,
     variantLookup,
     missing: varNameMissing
   });
@@ -166,6 +180,7 @@ export function useControlVarName({
            {...{
              varName,
              potencyArray: aggControlPotency(null, row),
+             rawVarNames: uniq(row.rawControlVarName).sort(),
              variantLookup,
              varNameMissing: varName ? '?' : (uniq(row.controlIsoName)
                .sort()
@@ -183,6 +198,7 @@ export function useControlVarName({
           return exportCellVariant({
             varName,
             potencyArray: aggControlPotency(null, row),
+            rawVarNames: uniq(row.rawControlVarName).sort(),
             variantLookup,
             enablePotency: true,
             varNameMissing: varName ? '?' : (uniq(row.controlIsoName)

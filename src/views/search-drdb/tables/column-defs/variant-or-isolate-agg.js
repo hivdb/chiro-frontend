@@ -26,7 +26,7 @@ function getDisplay({
       display = `${varNames.join(' / ')} (${isoAggDisplay})`;
     }
     else if (varNames.length > 1 && !isoAggDisplay) {
-      display = `${varNames.join(' / ')} (Wild Type)`;
+      display = `Wild Type (${varNames.join(' / ')})`;
     }
     else {
       /* display = varNames.map(

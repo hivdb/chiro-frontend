@@ -70,10 +70,7 @@ function VariantsProvider({children}) {
       ) AS synonyms,
       as_wildtype,
       consensus_availability
-    FROM variants V JOIN susc_summary SS ON
-      SS.aggregate_by = 'variant' AND
-      V.var_name = SS.var_name
-    ORDER BY SS.num_experiments DESC
+    FROM variants V
   `;
 
   const {

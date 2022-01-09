@@ -111,6 +111,8 @@ function usePrepareQuery({
       const myJoinClause = [
         `LEFT JOIN isolates ctliso ON
           S.control_iso_name = ctliso.iso_name`,
+        `LEFT JOIN variants ctlvar ON
+          ctliso.var_name = ctlvar.var_name`,
         `LEFT JOIN isolates expiso ON
           S.iso_name = expiso.iso_name`,
         `JOIN isolate_pairs pair ON
@@ -168,7 +170,11 @@ function usePrepareQuery({
           S.rx_group,
           S.rx_type,
           S.control_iso_name,
-          ctliso.var_name AS control_var_name,
+          CASE
+            WHEN ctlvar.as_wildtype IS TRUE THEN 'Wild Type'
+            ELSE ctliso.var_name
+          END AS control_var_name,
+          ctliso.var_name AS raw_control_var_name,
           S.iso_name,
           expiso.var_name AS var_name,
           pair.iso_aggkey,
