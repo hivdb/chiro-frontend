@@ -6,7 +6,7 @@ import useSuscSummary from './use-susc-summary';
 
 
 export default function useAntibodyNumExp(
-  abAggregateBy = 'antibody:indiv'
+  abAggregateBy = 'antibody:any'
 ) {
   const aggregateBy = [];
   const {

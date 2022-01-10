@@ -33,9 +33,12 @@ export default function SearchDRDBLayout() {
   const {isolateAggLookup, isPending} = IsolateAggs.useMe();
   const isIndivMut = Boolean(
     !isPending &&
-    isoAggkey &&
-    isoAggkey in isolateAggLookup &&
-    isolateAggLookup[isoAggkey].isoType === 'indiv-mut'
+    (
+      !isoAggkey || (
+        isoAggkey in isolateAggLookup &&
+        isolateAggLookup[isoAggkey].isoType === 'indiv-mut'
+      )
+    )
   );
 
   const displayAbTables = (

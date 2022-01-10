@@ -23,11 +23,8 @@ export default function useVariantNumExp() {
       aggregateBy.push('rx_type');
       abNames = null;
     }
-    else if (abNames.length === 1) {
-      aggregateBy.push('antibody:indiv');
-    }
     else {
-      aggregateBy.push('antibody');
+      aggregateBy.push('antibody:any');
     }
   }
   if (vaccineName) {

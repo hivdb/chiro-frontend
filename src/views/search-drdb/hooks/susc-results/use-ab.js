@@ -40,8 +40,9 @@ function usePrepareQuery({abNames, skip}) {
         if (realAbNames && realAbNames.length > 0) {
           rxAbFiltered = true;
           const excludeAbQuery = [];
+          const orConds = [];
           for (const [idx, abName] of realAbNames.entries()) {
-            where.push(`
+            orConds.push(`
               EXISTS (
                 SELECT 1 FROM rx_antibodies RXMAB
                 WHERE
@@ -53,6 +54,7 @@ function usePrepareQuery({abNames, skip}) {
             params[`$abName${idx}`] = abName;
             excludeAbQuery.push(`$abName${idx}`);
           }
+          where.push(orConds.join(' OR '));
         }
 
         if (!rxAbFiltered) {

@@ -1,5 +1,4 @@
 import React from 'react';
-import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 
 import Articles from '../hooks/articles';
@@ -9,6 +8,7 @@ import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 import LocationParams from '../hooks/location-params';
 
+import Desc from './desc';
 import style from './style.module.scss';
 
 const EMPTY = '__EMPTY';
@@ -20,6 +20,7 @@ export default function useArticleDropdown() {
   const {
     params: {
       formOnly,
+      // abNames: paramAbNames,
       refName: paramRefName
     },
     onChange
@@ -88,6 +89,7 @@ export default function useArticleDropdown() {
         ];
       }
       else {
+        const approx = false; // paramAbNames && paramAbNames.length > 1;
         return [
           ...(formOnly ? [{
             key: 'empty',
@@ -98,10 +100,10 @@ export default function useArticleDropdown() {
             key: 'any',
             text: 'Any',
             value: ANY,
-            description: pluralize(
-              'result',
-              totalNumExpLookup[ANY],
-              true
+            description: (
+              <Desc
+               approx={approx}
+               n={totalNumExpLookup[ANY]} />
             )
           },
           ...(
@@ -119,10 +121,10 @@ export default function useArticleDropdown() {
                 key: refName,
                 text: displayName,
                 value: refName,
-                description: pluralize(
-                  'result',
-                  totalNumExpLookup[refName] || 0,
-                  true
+                description: (
+                  <Desc
+                   approx={approx}
+                   n={totalNumExpLookup[refName] || 0} />
                 ),
                 'data-is-empty': !totalNumExpLookup[refName]
               })
@@ -136,6 +138,7 @@ export default function useArticleDropdown() {
       articles,
       articleLookup,
       paramRefName,
+      // paramAbNames,
       formOnly,
       totalNumExpLookup
     ]

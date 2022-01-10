@@ -1,9 +1,10 @@
 import React from 'react';
-import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
+import uniq from 'lodash/uniq';
 import capitalize from 'lodash/capitalize';
 import escapeRegExp from 'lodash/escapeRegExp';
 
+import useConfig from '../hooks/use-config';
 import Antibodies from '../hooks/antibodies';
 import Vaccines from '../hooks/vaccines';
 import {NumExpStats} from '../hooks/susc-summary';
@@ -13,6 +14,7 @@ import DMSMutations from '../hooks/dms-mutations';
 import InfectedVariants from '../hooks/infected-variants';
 import LocationParams from '../hooks/location-params';
 
+import Desc from './desc';
 import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
 
@@ -48,6 +50,10 @@ export default function useRxDropdown() {
     },
     [setIncludeAll]
   );
+  const {
+    config,
+    isPending: isConfigPending
+  } = useConfig();
 
   const {
     antibodies,
@@ -65,7 +71,7 @@ export default function useRxDropdown() {
   } = InfectedVariants.useMe();
 
   const [rxTotalNumExp, isRxTotalNumExpPending] = NumExpStats.useRxTotal();
-  const [abNumExpLookup, isAbNumExpPending] = NumExpStats.useAb();
+  const [abNumExpLookup, isAbNumExpPending] = NumExpStats.useAb('antibody:any');
   const [vaccNumExpLookup, isVaccNumExpPending] = NumExpStats.useVacc();
   const [infVarNumExpLookup, isInfVarNumExpPending] = NumExpStats.useInfVar();
 
@@ -93,6 +99,7 @@ export default function useRxDropdown() {
   ] = DMSMutations.useSummaryByRx();
 
   const isPending = (
+    isConfigPending ||
     isAntibodiesPending ||
     isVaccinesPending ||
     isInfectedVarsPending ||
@@ -115,6 +122,7 @@ export default function useRxDropdown() {
       if (isPending) {
         return [0, {}, {}, {}];
       }
+      const {antibodyCombinations} = config;
       let finalRxTotalNumExp = rxTotalNumExp;
       const finalAbNumExpLookup = {...abNumExpLookup};
       const finalVaccNumExpLookup = {...vaccNumExpLookup};
@@ -125,10 +133,22 @@ export default function useRxDropdown() {
         ...numDMSMuts
       ]) {
         finalRxTotalNumExp += count;
+        const countedMulAb = {};
 
         for (const abName of abNames) {
           finalAbNumExpLookup[abName] = finalAbNumExpLookup[abName] || 0;
           finalAbNumExpLookup[abName] += count;
+
+          for (const mulAb of antibodyCombinations) {
+            const textMulAb = mulAb.join(',');
+            if (!(textMulAb in countedMulAb) && mulAb.includes(abName)) {
+              // only count once for a combination
+              finalAbNumExpLookup[textMulAb] =
+                finalAbNumExpLookup[textMulAb] || 0;
+              finalAbNumExpLookup[textMulAb] += count;
+              countedMulAb[textMulAb] = true;
+            }
+          }
         }
         if (abNames && abNames.length > 0) {
           finalAbNumExpLookup[ANY] += count;
@@ -163,6 +183,7 @@ export default function useRxDropdown() {
     },
     [
       isPending,
+      config,
       rxTotalNumExp,
       abNumExpLookup,
       vaccNumExpLookup,
@@ -226,6 +247,13 @@ export default function useRxDropdown() {
         ];
       }
       else {
+        const {antibodyCombinations} = config;
+        const excludeAbs = uniq(
+          antibodyCombinations.reduce(
+            (acc, abs) => [...acc, ...abs],
+            []
+          )
+        );
         return [
           ...(formOnly ? [{
             key: 'empty',
@@ -236,11 +264,7 @@ export default function useRxDropdown() {
             key: 'any',
             text: 'Any',
             value: ANY,
-            description: pluralize(
-              'result',
-              finalRxTotalNumExp,
-              true
-            )
+            description: <Desc n={finalRxTotalNumExp} />
           },
           ...(finalInfVarNumExpLookup[ANY] > 0 ? [
             {
@@ -252,11 +276,7 @@ export default function useRxDropdown() {
               key: 'cp-any',
               text: 'Convalescent plasma - any',
               value: 'cp-any',
-              description: pluralize(
-                'result',
-                finalInfVarNumExpLookup[ANY],
-                true
-              ),
+              description: <Desc n={finalInfVarNumExpLookup[ANY]} />,
               type: CP
             },
             ...infectedVariants
@@ -270,10 +290,8 @@ export default function useRxDropdown() {
                   } infection`,
                   value: varName,
                   type: CP,
-                  description: pluralize(
-                    'result',
-                    finalInfVarNumExpLookup[varName] || 0,
-                    true
+                  description: (
+                    <Desc n={finalInfVarNumExpLookup[varName] || 0} />
                   ),
                   'data-num-exp': finalInfVarNumExpLookup[varName] || 0
                 })
@@ -292,11 +310,7 @@ export default function useRxDropdown() {
               text: 'Vaccinee plasma - any',
               value: 'vp-any',
               type: VACCINE,
-              description: pluralize(
-                'result',
-                finalVaccNumExpLookup[ANY],
-                true
-              )
+              description: <Desc n={finalVaccNumExpLookup[ANY]} />
             },
             ...vaccines
               .filter(({vaccineName}) => (
@@ -309,10 +323,8 @@ export default function useRxDropdown() {
                   key: vaccineName,
                   text: vaccineName,
                   value: vaccineName,
-                  description: pluralize(
-                    'result',
-                    finalVaccNumExpLookup[vaccineName] || 0,
-                    true
+                  description: (
+                    <Desc n={finalVaccNumExpLookup[vaccineName] || 0} />
                   ),
                   'data-num-exp': finalVaccNumExpLookup[vaccineName] || 0,
                   type: VACCINE
@@ -332,52 +344,61 @@ export default function useRxDropdown() {
               text: 'MAb - any',
               value: 'ab-any',
               type: ANTIBODY,
-              description: pluralize(
-                'result',
-                finalAbNumExpLookup[ANY],
-                true
-              )
+              description: <Desc n={finalAbNumExpLookup[ANY]} />
             },
-            ...antibodies
-              .map(
-                ({
-                  abName,
-                  abbreviationName: abbr,
-                  synonyms
-                }) => ({
-                  key: abName,
-                  text: abbr ? `${abName} (${abbr})` : abName,
-                  value: abName,
+            ...[
+              ...antibodyCombinations
+                .map(abNames => ({
+                  key: abNames.join(','),
+                  text: abNames.join(' + '),
+                  value: abNames.join(','),
                   type: ANTIBODY,
-                  description: pluralize(
-                    'result',
-                    finalAbNumExpLookup[abName] || 0,
-                    true
+                  description: (
+                    <Desc
+                     n={finalAbNumExpLookup[abNames.join(',')] || 0} />
                   ),
-                  'data-is-empty': !finalAbNumExpLookup[abName],
-                  synonyms
-                })
-              )
-              .filter(v => !v['data-is-empty'])
-              .sort((a, b) => a['data-is-empty'] - b['data-is-empty'])
+                  'data-num-results': finalAbNumExpLookup[abNames.join(',')],
+                  'data-is-empty': !finalAbNumExpLookup[abNames.join(',')],
+                  synonyms: []
+                })),
+              ...antibodies
+                .filter(({abName}) => !excludeAbs.includes(abName))
+                .map(
+                  ({
+                    abName,
+                    abbreviationName: abbr,
+                    synonyms
+                  }) => ({
+                    key: abName,
+                    text: abbr ? `${abName} (${abbr})` : abName,
+                    value: abName,
+                    type: ANTIBODY,
+                    description: <Desc n={finalAbNumExpLookup[abName] || 0} />,
+                    'data-num-results': finalAbNumExpLookup[abName],
+                    'data-is-empty': !finalAbNumExpLookup[abName],
+                    synonyms
+                  })
+                )
+            ].filter(v => !v['data-is-empty'])
           ] : [])
         ];
       }
     },
     [
       isPending,
-      includeAll,
-      vaccines,
-      antibodies,
-      infectedVariants,
       paramInfectedVarName,
       paramVaccineName,
       paramAbNames,
+      config,
       formOnly,
-      finalAbNumExpLookup,
-      finalVaccNumExpLookup,
+      finalRxTotalNumExp,
       finalInfVarNumExpLookup,
-      finalRxTotalNumExp
+      infectedVariants,
+      finalVaccNumExpLookup,
+      vaccines,
+      finalAbNumExpLookup,
+      antibodies,
+      includeAll
     ]
   );
   const handleChange = React.useCallback(

@@ -1,5 +1,4 @@
 import React from 'react';
-import pluralize from 'pluralize';
 import {Dropdown} from 'semantic-ui-react';
 import escapeRegExp from 'lodash/escapeRegExp';
 import {NumExpStats} from '../hooks/susc-summary';
@@ -12,6 +11,7 @@ import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 
 import FragmentWithoutWarning from './fragment-without-warning';
+import Desc from './desc';
 import style from './style.module.scss';
 
 
@@ -46,6 +46,7 @@ export default function useVirusDropdown() {
 
   const {
     params: {
+      // abNames: paramAbNames,
       varName: paramVarName,
       isoAggkey: paramIsoAggKey,
       genePos: paramGenePos,
@@ -188,6 +189,7 @@ export default function useVirusDropdown() {
         ];
       }
       else {
+        const approx = false; // paramAbNames && paramAbNames.length > 1;
         const displayVariants = variants
           .map(
             ({varName, synonyms, asWildtype}) => ({
@@ -248,10 +250,10 @@ export default function useVirusDropdown() {
             key: 'any',
             text: 'Any',
             value: ANY,
-            description: pluralize(
-              'result',
-              finalVirusTotalNumExp,
-              true
+            description: (
+              <Desc
+               approx={approx}
+               n={finalVirusTotalNumExp} />
             )
           },
           ...(displayVariants.length > 0 ? [
@@ -270,7 +272,11 @@ export default function useVirusDropdown() {
                   ),
                   value: varName,
                   type: 'variant',
-                  description: pluralize('result', numExp, true)
+                  description: (
+                    <Desc
+                     approx={approx}
+                     n={numExp} />
+                  )
                 })
               )
           ] : []),
@@ -295,10 +301,10 @@ export default function useVirusDropdown() {
                     value: posKey,
                     type: 'position',
                     position,
-                    description: pluralize(
-                      'result',
-                      finalPosNumExpLookup[posKey],
-                      true
+                    description: (
+                      <Desc
+                       approx={approx}
+                       n={finalPosNumExpLookup[posKey]} />
                     )
                   })
                 ),
@@ -310,7 +316,11 @@ export default function useVirusDropdown() {
                     value: isoAggkey,
                     type: 'mutations',
                     position,
-                    description: pluralize('result', numExp, true)
+                    description: (
+                      <Desc
+                       approx={approx}
+                       n={numExp} />
+                    )
                   })
                 )
             ].sort((a, b) => a.position - b.position)
@@ -320,6 +330,7 @@ export default function useVirusDropdown() {
     },
     [
       isPending,
+      // paramAbNames,
       paramVarName,
       paramIsoAggKey,
       paramGenePos,

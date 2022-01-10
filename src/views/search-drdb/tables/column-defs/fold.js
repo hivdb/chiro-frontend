@@ -95,7 +95,7 @@ function exportCellFold({
       foldValue = '?';
     }
   }
-  else {
+  else if (!isNaN(foldValue)) {
     foldValue = foldValue.toFixed(1);
   }
   return {

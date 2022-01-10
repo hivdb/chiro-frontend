@@ -95,7 +95,7 @@ export default function RxPercentBar() {
             }
             else {
               filteredOrderedAbNames = orderedAbNames.filter(
-                myAbNames => abNames.every(
+                myAbNames => abNames.some(
                   abName => myAbNames.includes(abName)
                 )
               );

@@ -129,8 +129,9 @@ export function filterByAbNames({
   const realAbNames = abNames.filter(n => n !== 'any');
   if (realAbNames && realAbNames.length > 0) {
     const excludeAbQuery = [];
+    const orConds = [];
     for (const [idx, abName] of realAbNames.entries()) {
-      where.push(`
+      orConds.push(`
         EXISTS (
           SELECT 1 FROM rx_antibodies RXMAB
           WHERE
@@ -142,6 +143,7 @@ export function filterByAbNames({
       params[`$abName${idx}`] = abName;
       excludeAbQuery.push(`$abName${idx}`);
     }
+    where.push(orConds.join(' OR '));
   }
   else if (abNames.some(n => n === 'any')) {
     where.push(`
@@ -183,8 +185,9 @@ export function filterBySbjRxAbNames({
   const realAbNames = abNames.filter(n => n !== 'any');
   if (realAbNames && realAbNames.length > 0) {
     const excludeAbQuery = [];
+    const orConds = [];
     for (const [idx, abName] of realAbNames.entries()) {
-      where.push(`
+      orConds.push(`
         EXISTS (
           SELECT 1 FROM
             rx_antibodies RXMAB
@@ -197,6 +200,7 @@ export function filterBySbjRxAbNames({
       params[`$abName${idx}`] = abName;
       excludeAbQuery.push(`$abName${idx}`);
     }
+    where.push(orConds.join(' OR '));
   }
   else if (abNames.some(n => n === 'any')) {
     where.push(`

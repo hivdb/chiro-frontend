@@ -4,6 +4,7 @@ const AGG_OPTIONS = [
   'infected_variant',
   'vaccine',
   'antibody',
+  'antibody:any',
   'antibody:indiv',
   'variant',
   'isolate_agg',
@@ -17,7 +18,7 @@ const AGG_OPTIONS = [
 const AGG_OPTION_BY_VALUE_NAME = {
   rxType: ['rx_type'],
   refName: ['article'],
-  antibodyNames: ['antibody', 'antibody:indiv'],
+  antibodyNames: ['antibody', 'antibody:indiv', 'antibody:any'],
   vaccineName: ['vaccine'],
   infectedVarName: ['infected_variant'],
   controlIsoName: ['control_isolate'],
