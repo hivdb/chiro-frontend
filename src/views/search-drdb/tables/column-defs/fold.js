@@ -47,6 +47,30 @@ function CellFold({
     foldValue = 0.1;
     foldCmp = '<';
   }
+  if (!isNaN(foldValue)) {
+    if (foldCmp !== '=') {
+      if (foldValue >= 1) {
+        foldValue = foldValue.toFixed(0);
+        p25 = p25.toFixed(0);
+        p75 = p75.toFixed(0);
+      }
+      else {
+        foldValue = foldValue.toFixed(1);
+        p25 = p25.toFixed(1);
+        p75 = p75.toFixed(1);
+      }
+    }
+    else if (foldValue >= 10) {
+      foldValue = foldValue.toFixed(0);
+      p25 = p25.toFixed(0);
+      p75 = p75.toFixed(0);
+    }
+    else {
+      foldValue = foldValue.toFixed(1);
+      p25 = p25.toFixed(1);
+      p75 = p75.toFixed(1);
+    }
+  }
   return <>
     {displayNN ? <em>N.N.</em> :
       (foldValue === undefined || foldValue === null ? (
@@ -54,11 +78,11 @@ function CellFold({
           fbResistanceLevel.join(' / ') : '?'
       ) : <>
         {foldCmp === "=" ? "" : foldCmp}
-        {foldValue.toFixed(1)}
+        {foldValue}
         {displayIQR ? <>
           {' '}
           <span className={style['supplement-info']}>
-            ({p25.toFixed(1)}-{p75.toFixed(1)})
+            ({p25}-{p75})
           </span>
         </> : null}
       </>)}
