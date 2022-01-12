@@ -66,7 +66,7 @@ const execSQL = memoize(
             if (process.env.NODE_ENV !== 'production') {
               // eslint-disable-next-line no-console
               console.debug(
-                `${results.length > 0 ?
+                `${results && results.length > 0 ?
                   `${results[0].values.length} returned` :
                   'SQL was executed'} in ${end - start}ms:`,
                 sql,

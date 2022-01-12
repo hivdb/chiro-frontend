@@ -30,10 +30,10 @@ function LocationParamsProvider({
         cp: infectedVarName = '',
         vaccine: vaccineName = null,
         debug: debugMsg = null,
-        infected,
-        month,
-        dosage,
-        host
+        infected: infectedStrOrArr,
+        month: monthStrOrArr,
+        dosage: dosageStrOrArr,
+        host: hostStrOrArr
       } = {}
     }
   } = match;
@@ -60,6 +60,22 @@ function LocationParamsProvider({
   const contextValue = React.useMemo(
     () => {
       const abNames = parseAntibodies(antibodyText);
+      const month = monthStrOrArr instanceof Array ?
+        monthStrOrArr : (
+          typeof monthStrOrArr === 'string' ? [monthStrOrArr] : []
+        );
+      const dosage = dosageStrOrArr instanceof Array ?
+        dosageStrOrArr : (
+          typeof dosageStrOrArr === 'string' ? [dosageStrOrArr] : []
+        );
+      const host = hostStrOrArr instanceof Array ?
+        hostStrOrArr : (
+          typeof hostStrOrArr === 'string' ? [hostStrOrArr] : []
+        );
+      const infected = infectedStrOrArr instanceof Array ?
+        infectedStrOrArr : (
+          typeof infectedStrOrArr === 'string' ? [infectedStrOrArr] : []
+        );
       return {
         params: {
           formOnly: formOnly !== undefined,
@@ -97,10 +113,10 @@ function LocationParamsProvider({
       vaccineName,
       infectedVarName,
       genePos,
-      infected,
-      month,
-      dosage,
-      host,
+      infectedStrOrArr,
+      monthStrOrArr,
+      dosageStrOrArr,
+      hostStrOrArr,
       debugMsg,
       onChange
     ]

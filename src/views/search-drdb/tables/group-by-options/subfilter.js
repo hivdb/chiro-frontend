@@ -1,9 +1,12 @@
 import React from 'react';
 import {useRouter, Link} from 'found';
 import capitalize from 'lodash/capitalize';
+import snakeCase from 'lodash/snakeCase';
 import PropTypes from 'prop-types';
-import {RiFilterFill} from '@react-icons/all-files/ri/RiFilterFill';
-import {RiFilterOffFill} from '@react-icons/all-files/ri/RiFilterOffFill';
+import {AiOutlineCheck} from '@react-icons/all-files/ai/AiOutlineCheck';
+import {AiOutlineClose} from '@react-icons/all-files/ai/AiOutlineClose';
+import {AiOutlineArrowRight} from
+  '@react-icons/all-files/ai/AiOutlineArrowRight';
 import LocationParams, {buildLocationQuery} from '../../hooks/location-params';
 
 import style from './style.module.scss';
@@ -46,43 +49,61 @@ export function useResetAllSubfilters(allOptions) {
 export default function Subfilter({options}) {
   const {params: curParams} = LocationParams.useMe();
   const {match: {location: loc}} = useRouter();
+  const allValues = options.map(({value}) => value).sort();
 
   return <span className={style['subfilter-options']}>
     ({
       options.map(({action, value, label, descAdd, descRemove}, idx) => {
-        const isCurValue = curParams[action] === value;
+        let curValues = curParams[action] || [];
+        if (curValues.length === 0) {
+          curValues = [...allValues];
+        }
+        const inCurValues = curValues.includes(value);
 
         return <React.Fragment key={`${action}__${value}`}>
           {idx > 0 ? ', ' : null}
-          {isCurValue ?
-            <>
-              {label || capitalize(value)}
-              <Link
-               to={{
-                 pathname: loc.pathname,
-                 query: buildLocationQuery(action, undefined, loc.query)
-               }}
-               className={style['subfilter']}>
-                <span className={style['filter-icons']}>
-                  <RiFilterFill data-display-when="initial" />
-                  <RiFilterOffFill data-display-when="hover" />
-                </span>
-                <span className={style['filter-desc']}>
-                  {descRemove || 'List all results'}
-                </span>
-              </Link>
-            </> :
-            <Link
-             to={{
-               pathname: loc.pathname,
-               query: buildLocationQuery(action, value, loc.query)
-             }}
-             className={style['subfilter']}>
-              {label || capitalize(value)}
-              <span className={style['filter-desc']}>
+          <Link
+           to={{
+             pathname: loc.pathname,
+             query: buildLocationQuery(
+               snakeCase(action),
+               inCurValues ? (
+                 curValues.length > 1 ?
+                   curValues.filter(v => v !== value) :
+                   allValues.filter(v => v !== value)
+               ) : (
+                 curValues.length + 1 === allValues.length ?
+                   undefined :
+                   [...curValues, value].sort()
+               ),
+               loc.query
+             )
+           }}
+           className={style['subfilter']}>
+            {label || capitalize(value)}
+            <span className={style['filter-icons']}>
+              {inCurValues ?
+                <AiOutlineCheck className={style.yes} /> :
+                <AiOutlineClose className={style.no} />}
+            </span>
+            <span className={style['filter-desc']}>
+              {inCurValues ? <>
+                <span data-transition className={style['filter-icons']}>
+                  <AiOutlineCheck className={style.yes} />
+                  <AiOutlineArrowRight className={style.transit} />
+                  <AiOutlineClose className={style.no} />
+                </span>{': '}
+                {descRemove || 'Remove this filter'}
+              </> : <>
+                <span data-transition className={style['filter-icons']}>
+                  <AiOutlineClose className={style.no} />
+                  <AiOutlineArrowRight className={style.transit} />
+                  <AiOutlineCheck className={style.yes} />
+                </span>{': '}
                 {descAdd || 'List filtered results'}
-              </span>
-            </Link>}
+              </>}
+            </span>
+          </Link>
         </React.Fragment>;
       })
     })

@@ -15,8 +15,11 @@
   }
 }
 
-@mixin tooltip($selector) {
+@mixin tooltip($selector, $use-overflow: false) {
   position: relative;
+  @if $use-overflow {
+    overflow: hidden;
+  }
   #{$selector} {
     color: black;
     font-size: 1rem;
@@ -27,9 +30,17 @@
     border-radius: .2rem;
     box-shadow: 1px 1px 2px 1px rgba(0,0,0,.3);
     padding: 9.8px;
-    display: none;
+    @if not $use-overflow {
+      display: none;
+    }
   }
-  &:hover #{$selector} {
-    display: block;
+  @if $use-overflow {
+    &:hover {
+      overflow: visible;
+    }
+  } @else {
+    &:hover #{$selector} {
+      display: block;
+    }
   }
 }

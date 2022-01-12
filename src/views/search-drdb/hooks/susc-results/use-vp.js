@@ -86,43 +86,57 @@ function usePrepareQuery({vaccineName, infected, month, dosage, host, skip}) {
           where.push('RXVP.vaccine_name=$vaccineName');
         }
 
-        if (infected === 'yes') {
+        if (infected.includes('yes')) {
           where.push(`RXVP.infected_iso_name IS NOT NULL`);
         }
-        else if (infected === 'no') {
+        else if (infected.includes('no')) {
           where.push(`RXVP.infected_iso_name IS NULL`);
         }
 
-        if (month) {
-          const {between: [begin, end] = []} = config.monthRanges
-            .find(({name}) => name === month) || {};
-          let cond;
-          if (begin === null || begin === undefined) {
-            cond = `RxVP.timing <= $timingEnd`;
+        if (month && month.length > 0) {
+          const monRanges = config.monthRanges
+            .filter(({name}) => month.includes(name)) || [];
+          const orConds = [];
+          for (const [
+            idx,
+            {between: [begin, end] = []}
+          ] of monRanges.entries()) {
+            if (begin === null || begin === undefined) {
+              orConds.push(`RxVP.timing <= $timingEnd${idx}`);
+            }
+            else if (end === null || end === undefined) {
+              orConds.push(`RxVP.timing >= $timingBegin${idx}`);
+            }
+            else {
+              orConds.push(
+                `RxVP.timing BETWEEN $timingBegin${idx} AND $timingEnd${idx}`
+              );
+            }
+            params[`$timingBegin${idx}`] = begin;
+            params[`$timingEnd${idx}`] = end;
           }
-          else if (end === null || end === undefined) {
-            cond = `RxVP.timing >= $timingBegin`;
+          if (orConds.length > 0) {
+            where.push('(' + orConds.join(') OR (') + ')');
           }
-          else {
-            cond = `RxVP.timing BETWEEN $timingBegin AND $timingEnd`;
-          }
-          params.$timingBegin = begin;
-          params.$timingEnd = end;
-          where.push(cond);
         }
 
-        if (host === 'human') {
+        if (host.includes('human')) {
           where.push("subject_species = 'Human'");
         }
-        else if (host === 'animal') {
+        else if (host.includes('animal')) {
           where.push(`
             subject_species IS NOT NULL AND subject_species != 'Human'
           `);
         }
 
-        if (['1', '2', '3'].includes(dosage)) {
-          where.push('dosage = $dosage');
-          params.$dosage = Number.parseInt(dosage, 10);
+        if (dosage && dosage.length > 0) {
+          const orConds = [];
+          for (const dose of dosage) {
+            if (['1', '2', '3'].includes(dose)) {
+              orConds.push(`dosage = ${Number.parseInt(dose, 10)}`);
+            }
+          }
+          where.push(orConds.join(' OR '));
         }
 
         params.$vaccineName = vaccineName;

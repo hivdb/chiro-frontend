@@ -13,7 +13,8 @@ export default function SusceptibilityData() {
   const ComboProvider = useProviders('searchBoxOnly', /*providerProps = */{
     locationParams: {
       defaultQuery: {
-        host: 'human'
+        host: 'human',
+        dosage: ['2', '3']
       }
     }
   });

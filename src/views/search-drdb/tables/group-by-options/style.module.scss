@@ -6,7 +6,7 @@
   border-radius: .3rem;
   border: 1px solid rgba(34, 36, 38, 0.15);
   background-color: #f9fafb;
-  padding: 1rem;
+  padding: .5rem 1rem 1rem;
   margin-bottom: 1rem;
   transition: background-color 300ms ease-in-out;
   &:hover {
@@ -28,6 +28,7 @@ ul.group-by-options {
   list-style-type: none;
   font-size: 1rem;
   > li {
+    margin-top: .5rem;
     display: inline-block;
     list-style-type: none;
     label {
@@ -46,13 +47,19 @@ ul.group-by-options {
 
 .subfilter {
   $icon-size: 1rem;
-  @include tooltip("> .filter-desc");
+  @include tooltip("> .filter-desc", true);
+  display: inline-block;
+  vertical-align: bottom;
+  &[disabled] {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
   > .filter-desc {
     left: 60%;
     top: 150%;
     width: max-content;
   }
-  > .filter-icons {
+  .filter-icons {
     display: inline-block;
     line-height: 1rem;
     overflow: hidden;
@@ -64,9 +71,22 @@ ul.group-by-options {
     > svg {
       vertical-align: text-top;
       transition: transform 120ms ease-in-out;
+      &.yes {
+        color: #3ca832;
+      }
+      &.no {
+        color: #c72222;
+      }
+      &.transit {
+        color: rgba(0, 0, 0, .4);
+      }
     }
+    transition: width 400ms ease-in-out 400ms;
   }
-  &:hover > .filter-icons > svg {
+  &:hover .filter-icons[data-transition] {
+    width: $icon-size * 3;
+  }
+  /* &:hover > .filter-icons > svg {
     transform: translate(0,- $icon-size);
-  }
+  } */
 }

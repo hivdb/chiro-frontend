@@ -12,7 +12,12 @@ const subfilterOptions = {
       value: 'no',
       label: 'None',
       descAdd: <>
-        List results of samples from <strong>uninfected</strong> persons
+        Click to show results of samples
+        from <strong>previously uninfected</strong> persons
+      </>,
+      descRemove: <>
+        Click to hide results of samples
+        from <strong>previously uninfected</strong> persons
       </>
     },
     {
@@ -20,7 +25,12 @@ const subfilterOptions = {
       value: 'yes',
       label: 'Infected',
       descAdd: <>
-        List results of samples from <strong>infected</strong> persons
+        Click to show results of samples
+        from <strong>previously infected</strong> persons
+      </>,
+      descRemove: <>
+        Click to hide results of samples
+        from <strong>previously infected</strong> persons
       </>
     }
   ],
@@ -29,7 +39,11 @@ const subfilterOptions = {
       action: 'month',
       value: '1',
       descAdd: <>
-        List results of samples collected{' '}
+        Click to show results of samples collected{' '}
+        <strong>up to 1 month</strong> after symptom onset
+      </>,
+      descRemove: <>
+        Click to hide results of samples collected{' '}
         <strong>up to 1 month</strong> after symptom onset
       </>
     },
@@ -37,7 +51,11 @@ const subfilterOptions = {
       action: 'month',
       value: '2-6',
       descAdd: <>
-        List results of samples collected{' '}
+        Click to show results of samples collected{' '}
+        <strong>between 2 to 6 months</strong> after symptom onset
+      </>,
+      descRemove: <>
+        Click to hide results of samples collected{' '}
         <strong>between 2 to 6 months</strong> after symptom onset
       </>
     },
@@ -45,7 +63,11 @@ const subfilterOptions = {
       action: 'month',
       value: '≥6',
       descAdd: <>
-        List results of samples collected{' '}
+        Click to show results of samples collected{' '}
+        <strong>more than 6 months</strong> after symptom onset
+      </>,
+      descRemove: <>
+        Click to hide results of samples collected{' '}
         <strong>more than 6 months</strong> after symptom onset
       </>
     }
@@ -55,14 +77,20 @@ const subfilterOptions = {
       action: 'host',
       value: 'human',
       descAdd: <>
-        List results of <strong>human</strong> samples
+        Click to show results of <strong>human</strong> samples
+      </>,
+      descRemove: <>
+        Click to hide results of <strong>human</strong> samples
       </>
     },
     {
       action: 'host',
       value: 'animal',
       descAdd: <>
-        List results of <strong>animal model</strong> samples
+        Click to show results of <strong>animal model</strong> samples
+      </>,
+      descRemove: <>
+        Click to hide results of <strong>animal model</strong> samples
       </>
     }
   ]
