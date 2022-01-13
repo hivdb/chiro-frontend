@@ -184,7 +184,7 @@ export default function useFold({
           }
           let cmp = '=';
           const pot = aggPotency(potency, row);
-          if (pot.every(({ineffective}) => ineffective)) {
+          if (pot.length > 0 && pot.every(({ineffective}) => ineffective)) {
             cmp = '>';
           }
           const [median, p25, p75] = aggWeightedPercentile(
