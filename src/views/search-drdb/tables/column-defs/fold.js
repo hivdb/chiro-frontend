@@ -187,6 +187,15 @@ export default function useFold({
           if (pot.length > 0 && pot.every(({ineffective}) => ineffective)) {
             cmp = '>';
           }
+          const {foldCmp} = row;
+          if (cmp === '=' && foldCmp.length > 0) {
+            if (foldCmp.every(cmp => cmp === '>')) {
+              cmp = '>';
+            }
+            else if (foldCmp.every(cmp => cmp === '<')) {
+              cmp = '<';
+            }
+          }
           const [median, p25, p75] = aggWeightedPercentile(
             fold,
             cumulativeCount,
