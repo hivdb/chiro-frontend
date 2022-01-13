@@ -77,6 +77,7 @@ export default function useRxDropdown() {
 
   const {
     params: {
+      refName: paramRefName,
       infectedVarName: paramInfectedVarName,
       vaccineName: paramVaccineName,
       abNames: paramAbNames,
@@ -362,7 +363,13 @@ export default function useRxDropdown() {
                   synonyms: []
                 })),
               ...antibodies
-                .filter(({abName}) => !excludeAbs.includes(abName))
+                .filter(({
+                  abName,
+                  priority
+                }) => (
+                  !excludeAbs.includes(abName) &&
+                  (paramRefName || priority < 4000)
+                ))
                 .map(
                   ({
                     abName,
@@ -386,6 +393,7 @@ export default function useRxDropdown() {
     },
     [
       isPending,
+      paramRefName,
       paramInfectedVarName,
       paramVaccineName,
       paramAbNames,
