@@ -67,8 +67,7 @@ function exportCellVariantOrIsolateAgg({
     isolateAggLookup,
     variantLookup
   });
-  return isolateDisplay;
-  /* const ret = {'': isolateDisplay};
+  const ret = {'': isolateDisplay};
   if (isoAggkeys.length > 1) {
     ret.Pos = '(Various)';
     ret.Mutations = '(Various)';
@@ -81,7 +80,7 @@ function exportCellVariantOrIsolateAgg({
     ret.Pos = '(WT)';
     ret.Mutations = '(WT)';
   }
-  return ret; */
+  return ret;
 }
 
 
