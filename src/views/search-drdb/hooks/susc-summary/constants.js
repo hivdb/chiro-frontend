@@ -56,11 +56,7 @@ const DEFAULT_SELECT_COLUMNS = [
   'potency_unit',
   'num_subjects',
   'num_samples',
-  'num_experiments',
-  'all_studies',
-  'all_control_potency',
-  'all_potency',
-  'all_fold'
+  'num_experiments'
 ];
 
 export {
