@@ -134,6 +134,7 @@ function internalAggPotency(row, isControl) {
         ie === 'both'
       ));
       const ineffectivePots = [];
+      const ineffPotCumuCount = [];
       const potTypeFirstTwo = group.potencyType.slice(0, 2);
       const theHigherTheMoreEffective = (
         potTypeFirstTwo === 'NT' || potTypeFirstTwo === 'NC'
@@ -144,6 +145,7 @@ function internalAggPotency(row, isControl) {
         if (!unPot || unPot.length === 0) {
           if (group.ineffective[idx]) {
             ineffectivePots.push(pot);
+            ineffPotCumuCount.push(cumuCount);
             if (group.potency.length > 1 && theHigherTheMoreEffective) {
               // for NT/NC ineffective potency, use the square-root value since
               // the actual value should be much lower/higher than the
@@ -167,6 +169,7 @@ function internalAggPotency(row, isControl) {
           } of unPot) {
             if (ineff) {
               ineffectivePots.push(pot);
+              ineffPotCumuCount.push(cumuCount);
               if (
                 (
                   group.potency.length > 1 ||
@@ -199,9 +202,8 @@ function internalAggPotency(row, isControl) {
       );
       group.ineffective = false;
       if (ineffectivePots.length > 0) {
-        let cmpPot;
+        const cmpPot = aggGeoMeanWeighted(ineffectivePots, ineffPotCumuCount);
         if (theHigherTheMoreEffective) {
-          cmpPot = Math.max(...ineffectivePots);
           // plus 1e-4 to "fix" binary floating quirks (#38)
           if (avgPot <= cmpPot + 1e-4) {
             avgPot = cmpPot;
@@ -209,7 +211,6 @@ function internalAggPotency(row, isControl) {
           }
         }
         else {
-          cmpPot = Math.min(...ineffectivePots);
           // minus 1e-4 to "fix" binary floating quirks (#38)
           if (avgPot >= cmpPot - 1e-4) {
             avgPot = cmpPot;
