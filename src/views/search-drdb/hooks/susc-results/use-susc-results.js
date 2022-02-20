@@ -29,8 +29,8 @@ export function getSuscResultUniqKey({
 }
 
 
-const PARTIAL_RESIST_FOLD = 3;
-const RESIST_FOLD = 10;
+const PARTIAL_RESIST_FOLD = 5;
+const RESIST_FOLD = 25;
 
 function calcResistanceLevel({
   fbResistanceLevel,
