@@ -27,13 +27,13 @@ export default class Footer extends React.Component {
           <Header as="h2">Resources</Header>
           <ul>
             <li><Link to="/page/links/">COVID-19 Websites and Links</Link></li>
-            <li><Link to="/page/press-release/">Press Releases</Link></li>
+            {/* <li><Link to="/page/press-release/">Press Releases</Link></li>
             <li><Link to="/virus-list/">Viruses</Link></li>
             <li><Link to="/cells-list/">Cell lines</Link></li>
             <li><Link to="/animal-model-list/">Animal models</Link></li>
             <li><Link to="/cell-culture-measurement-list/">
               Measurements
-            </Link></li>
+            </Link></li> */}
             <li><Link to="/archive/">Archive</Link></li>
           </ul>
         </Grid.Column>
@@ -52,7 +52,7 @@ export default class Footer extends React.Component {
             </li>
             <li>
               <a
-               href="https://www.mdpi.com/1999-4915/12/9/1006"
+               href="https://doi.org/10.1371/journal.pone.0261045"
                target="_blank" rel="noopener noreferrer">
                 Citation
               </a>

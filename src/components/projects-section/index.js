@@ -13,20 +13,35 @@ function trimTags(text) {
 }
 
 
-export function Projects({className, projects = [], imagePrefix}) {
-  return <ul className={classNames(style['list-projects'], className)}>
+Projects.propTypes = {
+  className: PropTypes.string,
+  compact: PropTypes.bool,
+  projects: PropTypes.array,
+  imagePrefix: PropTypes.string.isRequired
+};
+
+export function Projects({
+  className,
+  compact,
+  projects = [],
+  imagePrefix
+}) {
+  return <ul
+   className={classNames(style['list-projects'], className)}
+   data-compact={compact}>
     {projects.map(({
       title, description, link, extLink, image
     }, idx) => (
       <li key={idx}>
         {extLink ?
           <>
-            <a
-             className={style['image-trimmer']}
-             rel="noopener noreferrer"
-             href={link} target="_blank">
-              <img src={`${imagePrefix}${image}`} alt={trimTags(title)} />
-            </a>
+            {image ?
+              <a
+               className={style['image-trimmer']}
+               rel="noopener noreferrer"
+               href={link} target="_blank">
+                <img src={`${imagePrefix}${image}`} alt={trimTags(title)} />
+              </a> : null}
             <a
              className={style['project-title']}
              rel="noopener noreferrer"
@@ -36,11 +51,12 @@ export function Projects({className, projects = [], imagePrefix}) {
               </Markdown>
             </a>
           </> : <>
-            <Link
-             className={style['image-trimmer']}
-             to={link}>
-              <img src={`${imagePrefix}${image}`} alt={trimTags(title)} />
-            </Link>
+            {image ?
+              <Link
+               className={style['image-trimmer']}
+               to={link}>
+                <img src={`${imagePrefix}${image}`} alt={trimTags(title)} />
+              </Link> : null}
             <Link
              className={style['project-title']}
              to={link}>
@@ -60,15 +76,18 @@ export function Projects({className, projects = [], imagePrefix}) {
   </ul>;
 }
 
-Projects.propTypes = {
-  className: PropTypes.string,
+
+ProjectsSection.propTypes = {
+  title: PropTypes.node,
+  displayTitle: PropTypes.bool,
+  compact: PropTypes.bool,
   projects: PropTypes.array,
   imagePrefix: PropTypes.string.isRequired
 };
 
-
 export default function ProjectsSection({
   title,
+  compact,
   displayTitle = true,
   projects = [],
   imagePrefix
@@ -77,14 +96,10 @@ export default function ProjectsSection({
   return (
     <section className={style['projects-section']}>
       {displayTitle ? <H2 disableAnchor>{title}</H2> : null}
-      <Projects projects={projects} imagePrefix={imagePrefix} />
+      <Projects
+       projects={projects}
+       compact={compact}
+       imagePrefix={imagePrefix} />
     </section>
   );
 }
-
-ProjectsSection.propTypes = {
-  title: PropTypes.node,
-  displayTitle: PropTypes.bool,
-  projects: PropTypes.array,
-  imagePrefix: PropTypes.string.isRequired
-};

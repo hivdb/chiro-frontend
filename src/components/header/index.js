@@ -97,6 +97,9 @@ export default function Header({currentPathName}) {
           showMenu ? style['show'] : null
         )}>
           <NavItem to="/" {...navItemProps}>Home</NavItem>
+          <NavItem to="/page/mutation-viewer/" {...navItemProps}>
+            Variants
+          </NavItem>
           <NavItem to="/page/susceptibility-data/" {...navItemProps}>
             Resistance
           </NavItem>
@@ -106,15 +109,15 @@ export default function Header({currentPathName}) {
            {...navItemProps}>
             Analysis Program
           </NavItem>
-          <NavItem to="/antiviral-portal/" {...navItemProps}>
+          {/*<NavItem to="/antiviral-portal/" {...navItemProps}>
             Drugs
           </NavItem>
           <NavItem to="/clinical-trials/" {...navItemProps}>
             Trials
-          </NavItem>
+          </NavItem>*/}
           <NavItem {...navItemProps}>
             <a
-             href="https://www.mdpi.com/1999-4915/12/9/1006"
+             href="https://doi.org/10.1371/journal.pone.0261045"
              target="_blank" rel="noopener noreferrer">
               Citation
             </a>

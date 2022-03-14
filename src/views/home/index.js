@@ -36,12 +36,14 @@ function Home() {
   return <>
     {projectSections.map(({
       title,
+      compact,
       displayTitle = true,
       items
     }) => (
       <ProjectsSection
        key={title}
        title={title}
+       compact={compact}
        displayTitle={displayTitle}
        projects={items}
        imagePrefix={imagePrefix} />
