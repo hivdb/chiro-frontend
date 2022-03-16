@@ -9,23 +9,14 @@ ItemTreatment.propTypes = {
     'antibody', 'conv-plasma', 'vacc-plasma', 'unclassified'
   ]).isRequired,
   rxName: PropTypes.string.isRequired,
-  abNames: PropTypes.arrayOf(PropTypes.string.isRequired),
-  infectedVarName: PropTypes.string,
-  timing: PropTypes.number,
-  endTiming: PropTypes.number,
-  dosage: PropTypes.number,
-  dosageUnit: PropTypes.string
+  abNames: PropTypes.arrayOf(PropTypes.string.isRequired)
 };
+
 
 function ItemTreatment({
   rxType,
   rxName,
-  abNames,
-  infectedVarName,
-  timing,
-  endTiming,
-  dosage,
-  dosageUnit
+  abNames
 }) {
   return <span className={style['item-treatment']}>
     {rxType === 'antibody' ?
@@ -36,8 +27,7 @@ function ItemTreatment({
         </React.Fragment>)}
       </> : null}
     {rxType === 'conv-plasma' ? <>
-      {infectedVarName && infectedVarName !== 'Wild Type' ?
-        `${infectedVarName} ` : null}CP
+      CP
     </> : null}
     {rxType === 'vacc-plasma' ? <>
       VP
@@ -45,46 +35,25 @@ function ItemTreatment({
     {rxType === 'unclassified' ? <>
       <em>{rxName}</em>
     </> : null}
-    {timing ?
-      <sub>
-        {'('}
-        {timing}{endTiming > timing ? `-${endTiming}` : null} mon
-        {dosage && dosageUnit ?
-          `; ${dosage.toLocaleString('en-US')} ${dosageUnit}` : null}
-        {')'}
-      </sub> : null}
   </span>;
 }
 
 function exportTreatment({
   rxType,
   rxName,
-  abNames,
-  infectedVarName,
-  timing,
-  endTiming,
-  dosage,
-  dosageUnit
+  abNames
 }) {
-  const suffix = timing ? ` (${timing}${
-    endTiming > timing ? `-${endTiming}` : ''
-  } mon${
-    dosage && dosageUnit ?
-      `; ${dosage} ${dosageUnit}` : ''
-  })` : '';
   if (rxType === 'antibody') {
-    return abNames.join(' + ') + suffix;
+    return abNames.join(' + ');
   }
   else if (rxType === 'conv-plasma') {
-    const prefix = infectedVarName && infectedVarName !== 'Wild Type' ?
-      `${infectedVarName} ` : '';
-    return prefix + 'CP' + suffix;
+    return 'CP';
   }
   else if (rxType === 'vacc-plasma') {
-    return 'VP' + suffix;
+    return 'VP';
   }
   else {
-    return rxName + suffix;
+    return rxName;
   }
 }
 
@@ -97,9 +66,7 @@ export function useTreatment({labels, skip, columns}) {
       }
       return new ColumnDef({
         name: 'treatment',
-        label: labels.treatment || <>
-          Treatment<br />(Timepoint; Dosage)
-        </>,
+        label: labels.treatment || 'Treatment',
         render: (_, row) => <div className={style.treatments}>
           <ItemTreatment {...row} />
         </div>,
@@ -119,19 +86,19 @@ export default function useTreatments({labels, skip, columns}) {
       }
       return new ColumnDef({
         name: 'treatments',
-        label: labels.treatments || <>
-          Treatments<br />(Timepoint; Dosage)
-        </>,
+        label: labels.treatments || 'Treatments',
         render: treatments => <div className={style.treatments}>
           {treatments.length > 0 ? treatments.map(
             (rx, idx) => <React.Fragment key={idx}>
-              {idx === 0 ? null : ' ⇒ '}
+              {idx === 0 ? null : ' + '}
               <ItemTreatment {...rx} />
             </React.Fragment>
           ) : <em>Untreated</em>}
         </div>,
         exportCell: treatments => (
-          treatments.map(exportTreatment).join(' => ') || 'Untreated'
+          treatments
+            .map(exportTreatment)
+            .join(' + ') || 'Untreated'
         )
       });
     },

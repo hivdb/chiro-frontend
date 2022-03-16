@@ -38,9 +38,40 @@ const tableConfig = {
 };
 
 
+function uniqTreatments(treatments) {
+  const uniq = {};
+  for (const {
+    rxType,
+    rxName,
+    abNames
+  } of treatments) {
+    let abs;
+    const rx = {rxType, rxName, abNames};
+    switch (rxType) {
+      case 'antibody':
+        abs = abNames.join('+');
+        uniq[abs] = rx;
+        break;
+      case 'conv-plasma':
+        uniq.$cp = rx;
+        break;
+      case 'vacc-plasma':
+        uniq.$vp = rx;
+        break;
+      default:
+        uniq[rxName] = rx;
+        break;
+    }
+  }
+  return Object.values(uniq);
+}
+
+
 function groupMutationsByTreatments(inVivoSbjs) {
   const rxRows = [];
   for (const sbjRow of inVivoSbjs) {
+    const rxMutsMap = {};
+    const rxSoFarMap = {};
     const rxSoFar = [];
     let prevStartDate = new Date(sbjRow.infectionDate);
     for (const rx of sbjRow.treatments) {
@@ -53,11 +84,13 @@ function groupMutationsByTreatments(inVivoSbjs) {
         }
       }
       if (rxMuts.length > 0) {
-        rxRows.push({
-          ...sbjRow,
-          treatments: [...rxSoFar],
-          mutations: rxMuts
-        });
+        const uniqRx = uniqTreatments(rxSoFar);
+        const uniqRxKey = JSON.stringify(uniqRx);
+        if (!(uniqRxKey in rxMutsMap)) {
+          rxMutsMap[uniqRxKey] = [];
+        }
+        rxSoFarMap[uniqRxKey] = uniqRx;
+        rxMutsMap[uniqRxKey] = [...rxMutsMap[uniqRxKey], ...rxMuts];
       }
       rxSoFar.push(rx);
       prevStartDate = startDate;
@@ -71,10 +104,26 @@ function groupMutationsByTreatments(inVivoSbjs) {
       }
     }
     if (rxMuts.length > 0) {
+      const uniqRx = uniqTreatments(rxSoFar);
+      const uniqRxKey = JSON.stringify(uniqRx);
+      if (!(uniqRxKey in rxMutsMap)) {
+        rxMutsMap[uniqRxKey] = [];
+      }
+      rxSoFarMap[uniqRxKey] = uniqRx;
+      rxMutsMap[uniqRxKey] = [...rxMutsMap[uniqRxKey], ...rxMuts];
+    }
+
+    for (const uniqRxKey in rxSoFarMap) {
+      const treatments = rxSoFarMap[uniqRxKey];
+      const mutations = rxMutsMap[uniqRxKey];
+      const infectionTiming = Math.max(
+        ...mutations.map(({timing}) => timing)
+      );
       rxRows.push({
         ...sbjRow,
-        treatments: [],
-        mutations: rxMuts
+        infectionTiming,
+        treatments,
+        mutations
       });
     }
   }

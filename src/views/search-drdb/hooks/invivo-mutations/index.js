@@ -212,7 +212,7 @@ function InVivoMutationsProvider({children}) {
           immuneStatus,
           infectedVarName,
           infectionDate,
-          serverity,
+          severity,
           ...mut
         }) => {
 
@@ -247,7 +247,7 @@ function InVivoMutationsProvider({children}) {
               immuneStatus,
               infectedVarName,
               infectionDate,
-              serverity,
+              severity,
               treatments,
               mutations: []
             };

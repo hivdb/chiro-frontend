@@ -23,7 +23,7 @@ import useRefName from './reference';
 import useCumulativeCount from './cumulative-count';
 import useDataAvailability from './data-availability';
 import useTreatments, {useTreatment} from './treatments';
-import useMutation, {useMutations} from './mutation';
+import useMutations from './mutations';
 import useSmallColumns from './small-columns';
 
 
@@ -91,7 +91,6 @@ export default function useColumnDefs({
   const dataAvailability = useDataAvailability(commonArgs);
   const treatments = useTreatments(commonArgs);
   const treatment = useTreatment(commonArgs);
-  const mutation = useMutation(commonArgs);
   const mutations = useMutations(commonArgs);
   const smallColumns = useSmallColumns(commonArgs);
 
@@ -112,7 +111,6 @@ export default function useColumnDefs({
         dataAvailability,
         treatments,
         treatment,
-        mutation,
         mutations,
         ...smallColumns
       };
@@ -134,7 +132,6 @@ export default function useColumnDefs({
       refName,
       treatments,
       treatment,
-      mutation,
       mutations,
       smallColumns,
       skip

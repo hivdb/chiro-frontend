@@ -20,7 +20,7 @@ export default function shortenMutationList(
   );
   for (const group of groups) {
     let text;
-    const [{gene, position, aminoAcid, refAminoAcid}] = group;
+    const [{gene, position, aminoAcid, refAminoAcid, ...others}] = group;
     if (group.length === 1) {
       text = aminoAcid === 'del' ?
         `Δ${position}` :
@@ -40,7 +40,7 @@ export default function shortenMutationList(
     }
     if (asObject) {
       merged.push({
-        gene, position, text
+        gene, position, ...others, text
       });
     }
     else {
