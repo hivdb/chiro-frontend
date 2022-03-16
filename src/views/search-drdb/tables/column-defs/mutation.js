@@ -53,3 +53,46 @@ export default function useMutation({labels, skip, columns}) {
     [columns, labels.mutation, skip]
   );
 }
+
+export function useMutations({labels, skip, columns}) {
+  return React.useMemo(
+    () => {
+      if (skip || !columns.includes('mutations')) {
+        return null;
+      }
+      return new ColumnDef({
+        name: 'mutations',
+        label: labels.mutations || 'Mutations',
+        render: mutations => mutations.map(({
+          gene,
+          refAminoAcid,
+          position,
+          aminoAcid,
+          count,
+          total
+        }, idx) => <React.Fragment key={idx}>
+          {idx === 0 ? null : ', '}
+          <CellMutation
+           gene={gene}
+           refAminoAcid={refAminoAcid}
+           position={position}
+           aminoAcid={aminoAcid}
+           count={count}
+           total={total} />
+        </React.Fragment>),
+        sort: rows => sortBy(rows, [
+          'mutations.0.gene',
+          'mutations.0.position',
+          'mutations.0.aminoAcid',
+          'mutations.1.gene',
+          'mutations.1.position',
+          'mutations.1.aminoAcid',
+          'mutations.2.gene',
+          'mutations.2.position',
+          'mutations.2.aminoAcid'
+        ])
+      });
+    },
+    [columns, labels.mutations, skip]
+  );
+}

@@ -17,22 +17,76 @@ import style from './style.module.scss';
 const tableConfig = {
   columns: [
     'refName',
-    'subjectSpecies',
+    'subjectName',
+    'immuneStatus',
+    'severity',
     'infectedVarName',
     'treatments',
-    'severity',
-    'countTotal',
-    'mutation'
+    'mutations'
   ],
   labels: {
     'infectedVarName': 'Infection',
-    'timing': 'Months since Infection',
     'countTotal': '# Samples'
-  }
+  },
+  multiCells: [
+    'immuneStatus',
+    'severity',
+    'infectedVarName',
+    'treatments',
+    'mutations'
+  ]
 };
 
+
+function groupMutationsByTreatments(inVivoSbjs) {
+  const rxRows = [];
+  for (const sbjRow of inVivoSbjs) {
+    const rxSoFar = [];
+    let prevStartDate = new Date(sbjRow.infectionDate);
+    if (sbjRow.treatments.length > 0) {
+      for (const rx of sbjRow.treatments) {
+        const startDate = new Date(rx.startDate);
+        const rxMuts = [];
+        for (const mut of sbjRow.mutations) {
+          const appearDate = new Date(mut.appearanceDate);
+          if (appearDate > prevStartDate && appearDate <= startDate) {
+            rxMuts.push(mut);
+          }
+        }
+        if (rxMuts.length > 0) {
+          rxRows.push({
+            ...sbjRow,
+            treatments: [...rxSoFar],
+            mutations: rxMuts
+          });
+        }
+        rxSoFar.push(rx);
+        prevStartDate = startDate;
+      }
+    }
+    else {
+      for (const mut of sbjRow.mutations) {
+        const appearDate = new Date(mut.appearanceDate);
+        const rxMuts = [];
+        if (appearDate > prevStartDate) {
+          rxMuts.push(mut);
+        }
+        if (rxMuts.length > 0) {
+          rxRows.push({
+            ...sbjRow,
+            treatments: [],
+            mutations: rxMuts
+          });
+        }
+      }
+    }
+  }
+  return rxRows;
+}
+
+
 export default function InVivoMutationsTable() {
-  let {columns, labels} = tableConfig;
+  let {columns, labels, multiCells} = tableConfig;
 
   const {
     params: {
@@ -53,18 +107,31 @@ export default function InVivoMutationsTable() {
     [router]
   );
 
-  const {inVivoMuts, isPending} = InVivoMutations.useMe();
-  const columnDefs = useColumnDefs({
+  const {inVivoSbjs, isPending} = InVivoMutations.useMe();
+  const origColumnDefs = useColumnDefs({
     columns,
     labels
   });
+  const columnDefs = React.useMemo(
+    () => origColumnDefs.map(colDef => {
+      if (multiCells.includes(colDef.name)) {
+        colDef.multiCells = true;
+      }
+      return colDef;
+    }),
+    [origColumnDefs, multiCells]
+  );
 
+  const mutsByRx = React.useMemo(
+    () => groupMutationsByTreatments(inVivoSbjs),
+    [inVivoSbjs]
+  );
 
   if (isPending) {
     return <InlineLoader />;
   }
 
-  if (inVivoMuts.length === 0) {
+  if (mutsByRx.length === 0) {
     return <>
       <div>
         No in-vivo selection data is found for this request.
@@ -73,7 +140,7 @@ export default function InVivoMutationsTable() {
     </>;
   }
 
-  const numExps = inVivoMuts.length;
+  const numExps = mutsByRx.length;
 
   const cacheKey = JSON.stringify({
     refName,
@@ -94,7 +161,7 @@ export default function InVivoMutationsTable() {
        className={style['invivo-muts-table']}
        columnDefs={columnDefs}
        cacheKey={cacheKey}
-       data={inVivoMuts} />
+       data={mutsByRx} />
     </div>
   </>;
 }

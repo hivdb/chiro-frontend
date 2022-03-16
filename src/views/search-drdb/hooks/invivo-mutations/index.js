@@ -60,6 +60,7 @@ function usePrepareQuery({
           M.ref_name,
           M.subject_name,
           SBJ.subject_species,
+          SBJ.immune_status,
           ${queryInfectedVarName()},
           M.gene,
           R.amino_acid as ref_amino_acid,
@@ -182,17 +183,17 @@ function InVivoMutationsProvider({children}) {
     isPending: isSbjRxPending
   } = useQuery({sql: sbjRxSql, params, skip});
 
-  const inVivoMuts = React.useMemo(
+  const [inVivoSbjs, inVivoMuts] = React.useMemo(
     () => {
       if (skip || isPending || isSbjRxPending) {
         return [];
       }
       const allSbjRx = sbjRxPayload
         .reduce(
-          (acc, one) => {
-            const key = `${one.refName}${
+          (acc, {refName, subjectName, ...one}) => {
+            const key = `${refName}${
               LIST_JOIN_MAGIC_SEP
-            }${one.subjectName}`;
+            }${subjectName}`;
             acc[key] = acc[key] || [];
             if (one.abNames) {
               one.abNames = one.abNames.split(LIST_JOIN_MAGIC_SEP);
@@ -203,7 +204,61 @@ function InVivoMutationsProvider({children}) {
           {}
         );
 
-      const ret = payload.map(
+      const sbjs = Object.values(payload.reduce(
+        (acc, {
+          refName,
+          subjectName,
+          subjectSpecies,
+          immuneStatus,
+          infectedVarName,
+          infectionDate,
+          serverity,
+          ...mut
+        }) => {
+
+          const key = `${refName}${LIST_JOIN_MAGIC_SEP}${subjectName}`;
+          if (!(key in acc)) {
+            const infectDate = new Date(infectionDate);
+            const treatments = (allSbjRx[key] || [])
+              .map(one => {
+                const timing = Math.max(
+                  1,
+                  Math.round(
+                    (new Date(one.startDate) - infectDate) / 86400000 / 30
+                  )
+                );
+                const endTiming = Math.max(
+                  1,
+                  Math.round(
+                    (new Date(one.endDate) - infectDate) / 86400000 / 30
+                  )
+                );
+                return {
+                  ...one,
+                  timing,
+                  endTiming
+                };
+              })
+              .sort(({timing: t1}, {timing: t2}) => t1 - t2);
+            acc[key] = {
+              refName,
+              subjectName,
+              subjectSpecies,
+              immuneStatus,
+              infectedVarName,
+              infectionDate,
+              serverity,
+              treatments,
+              mutations: []
+            };
+          }
+          acc[key].mutations.push(mut);
+          return acc;
+        },
+        {}
+      ));
+
+      const muts = payload.map(
         mut => {
           const key = `${mut.refName}${LIST_JOIN_MAGIC_SEP}${mut.subjectName}`;
           const infectDate = new Date(mut.infectionDate);
@@ -237,11 +292,12 @@ function InVivoMutationsProvider({children}) {
           };
         }
       );
-      return ret;
+      return [sbjs, muts];
     },
     [isPending, isSbjRxPending, payload, sbjRxPayload, skip]
   );
   const contextValue = {
+    inVivoSbjs,
     inVivoMuts,
     isPending: skip || isPending || isSbjRxPending
   };

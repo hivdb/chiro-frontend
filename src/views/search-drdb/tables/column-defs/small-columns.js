@@ -9,6 +9,7 @@ import CellAssay from './cell-assay';
 import CellSection from './cell-section';
 import CellAntibodies from './cell-antibodies';
 import CellRLevel from './cell-resistance-level';
+import CellSubjectName from './cell-subject-name';
 import style from './style.module.scss';
 
 
@@ -59,6 +60,21 @@ export default function useSmallColumns({
         vaccineName: new ColumnDef({
           name: 'vaccineName',
           label: labels.vaccineName || 'Vaccine'
+        }),
+        subjectName: new ColumnDef({
+          name: 'subjectName',
+          label: labels.subject || 'Subject',
+          render: (subjectName, {subjectSpecies}) => (
+            <CellSubjectName {...{subjectName, subjectSpecies}} />
+          ),
+          exportCell: (subjectName, {subjectSpecies}) => ({
+            '': subjectName,
+            host: subjectSpecies
+          })
+        }),
+        immuneStatus: new ColumnDef({
+          name: 'immuneStatus',
+          label: labels.immuneStatus || 'Immune Status'
         }),
         subjectSpecies: new ColumnDef({
           name: 'subjectSpecies',

@@ -23,7 +23,7 @@ import useRefName from './reference';
 import useCumulativeCount from './cumulative-count';
 import useDataAvailability from './data-availability';
 import useTreatments, {useTreatment} from './treatments';
-import useMutation from './mutation';
+import useMutation, {useMutations} from './mutation';
 import useSmallColumns from './small-columns';
 
 
@@ -92,6 +92,7 @@ export default function useColumnDefs({
   const treatments = useTreatments(commonArgs);
   const treatment = useTreatment(commonArgs);
   const mutation = useMutation(commonArgs);
+  const mutations = useMutations(commonArgs);
   const smallColumns = useSmallColumns(commonArgs);
 
   return React.useMemo(
@@ -112,6 +113,7 @@ export default function useColumnDefs({
         treatments,
         treatment,
         mutation,
+        mutations,
         ...smallColumns
       };
 
@@ -133,6 +135,7 @@ export default function useColumnDefs({
       treatments,
       treatment,
       mutation,
+      mutations,
       smallColumns,
       skip
     ]
