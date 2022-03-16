@@ -43,42 +43,39 @@ function groupMutationsByTreatments(inVivoSbjs) {
   for (const sbjRow of inVivoSbjs) {
     const rxSoFar = [];
     let prevStartDate = new Date(sbjRow.infectionDate);
-    if (sbjRow.treatments.length > 0) {
-      for (const rx of sbjRow.treatments) {
-        const startDate = new Date(rx.startDate);
-        const rxMuts = [];
-        for (const mut of sbjRow.mutations) {
-          const appearDate = new Date(mut.appearanceDate);
-          if (appearDate > prevStartDate && appearDate <= startDate) {
-            rxMuts.push(mut);
-          }
-        }
-        if (rxMuts.length > 0) {
-          rxRows.push({
-            ...sbjRow,
-            treatments: [...rxSoFar],
-            mutations: rxMuts
-          });
-        }
-        rxSoFar.push(rx);
-        prevStartDate = startDate;
-      }
-    }
-    else {
+    for (const rx of sbjRow.treatments) {
+      const startDate = new Date(rx.startDate);
+      const rxMuts = [];
       for (const mut of sbjRow.mutations) {
         const appearDate = new Date(mut.appearanceDate);
-        const rxMuts = [];
-        if (appearDate > prevStartDate) {
+        if (appearDate > prevStartDate && appearDate <= startDate) {
           rxMuts.push(mut);
         }
-        if (rxMuts.length > 0) {
-          rxRows.push({
-            ...sbjRow,
-            treatments: [],
-            mutations: rxMuts
-          });
-        }
       }
+      if (rxMuts.length > 0) {
+        rxRows.push({
+          ...sbjRow,
+          treatments: [...rxSoFar],
+          mutations: rxMuts
+        });
+      }
+      rxSoFar.push(rx);
+      prevStartDate = startDate;
+    }
+
+    const rxMuts = [];
+    for (const mut of sbjRow.mutations) {
+      const appearDate = new Date(mut.appearanceDate);
+      if (appearDate > prevStartDate) {
+        rxMuts.push(mut);
+      }
+    }
+    if (rxMuts.length > 0) {
+      rxRows.push({
+        ...sbjRow,
+        treatments: [],
+        mutations: rxMuts
+      });
     }
   }
   return rxRows;
@@ -123,8 +120,8 @@ export default function InVivoMutationsTable() {
   );
 
   const mutsByRx = React.useMemo(
-    () => groupMutationsByTreatments(inVivoSbjs),
-    [inVivoSbjs]
+    () => isPending ? [] : groupMutationsByTreatments(inVivoSbjs),
+    [isPending, inVivoSbjs]
   );
 
   if (isPending) {
