@@ -141,22 +141,18 @@ export function useInfectedVarName({labels, variantLookup, columns, skip}) {
       return new ColumnDef({
         name: 'infectedVarName',
         label: labels.infectedVarName || 'Infection (CP)',
-        render: (varName, {infectionTiming, rxType}) => <>
+        render: (varName, {rxType}) => <>
           <CellVariant
            {...{
              varName,
              variantLookup,
              varNameMissing: rxType === 'conv-plasma' ? '?' : 'None'
            }} />
-          {isNaN(infectionTiming) ? null : ` (${infectionTiming} mon)`}
         </>,
-        exportCell: (varName, {infectionTiming, rxType}) => ({
-          ...exportCellVariant({
-            varName,
-            variantLookup,
-            varNameMissing: rxType === 'conv-plasma' ? '?' : 'None'
-          }),
-          timing: isNaN(infectionTiming) ? 'None' : `${infectionTiming}m`
+        exportCell: (varName, {rxType}) => exportCellVariant({
+          varName,
+          variantLookup,
+          varNameMissing: rxType === 'conv-plasma' ? '?' : 'None'
         })
       });
     },

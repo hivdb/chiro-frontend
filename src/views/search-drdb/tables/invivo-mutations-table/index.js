@@ -22,11 +22,13 @@ const tableConfig = {
     'immuneStatus',
     'severity',
     'infectedVarName',
+    'infectionTiming',
     'treatments',
     'mutations'
   ],
   labels: {
     'infectedVarName': 'Infection',
+    'infectionTiming': 'Month',
     'countTotal': '# Samples'
   },
   multiCells: [
@@ -34,6 +36,7 @@ const tableConfig = {
     'immuneStatus',
     'severity',
     'infectedVarName',
+    'infectionTiming',
     'treatments',
     'mutations'
   ]
