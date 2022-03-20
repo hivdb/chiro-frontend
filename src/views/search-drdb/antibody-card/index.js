@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import uniq from 'lodash/uniq';
 import {useRouter} from 'found';
 import pluralize from 'pluralize';
@@ -20,7 +21,15 @@ ${'- &nbsp;\n'.repeat(3)}
 `;
 
 
-export default function AntibodyCard() {
+AntibodyCard.propTypes = {
+  formOnly: PropTypes.oneOf(['auto', true, false]).isRequired
+};
+
+AntibodyCard.defaultProps = {
+  formOnly: 'auto'
+};
+
+export default function AntibodyCard({formOnly}) {
   const descRef = React.useRef();
   const {
     config,
@@ -61,7 +70,7 @@ export default function AntibodyCard() {
     <InfoCard
      removeTo={{
        pathname: loc.pathname,
-       query: buildLocationQuery('antibodies', undefined, loc.query)
+       query: buildLocationQuery('antibodies', undefined, loc.query, formOnly)
      }}
      className={style['antibody-card']}
      loaded={loaded}

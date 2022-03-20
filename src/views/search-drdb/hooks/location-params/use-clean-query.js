@@ -5,7 +5,7 @@ import {useRouter} from 'found';
 import {cleanQuery} from './funcs';
 
 
-export default function useCleanQuery() {
+export default function useCleanQuery({formOnly = 'auto'}) {
   const {router, match} = useRouter();
   const {
     location: loc,
@@ -16,7 +16,7 @@ export default function useCleanQuery() {
 
   React.useEffect(
     () => {
-      const cleanedQuery = cleanQuery(query);
+      const cleanedQuery = cleanQuery(query, formOnly);
       if (!isEqual(query, cleanedQuery)) {
         router.replace({
           ...loc,
@@ -24,6 +24,7 @@ export default function useCleanQuery() {
         });
       }
     },
-    [/* eslint-disable-line react-hooks/exhaustive-deps */]
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    [formOnly]
   );
 }

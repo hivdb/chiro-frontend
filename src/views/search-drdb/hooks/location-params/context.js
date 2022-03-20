@@ -7,13 +7,22 @@ import {buildQuery, parseAntibodies} from './funcs';
 const LocationParamsContext = React.createContext();
 
 LocationParamsProvider.propTypes = {
+  redirectTo: PropTypes.string,
   defaultQuery: PropTypes.object,
+  formOnly: PropTypes.oneOf(['auto', true, false]).isRequired,
   children: PropTypes.node.isRequired
+};
+
+
+LocationParamsProvider.defaultProps = {
+  formOnly: 'auto'
 };
 
 
 function LocationParamsProvider({
   defaultQuery = {},
+  redirectTo = null,
+  formOnly: formOnlyConfig,
   children
 }) {
   const {router, match} = useRouter();
@@ -33,10 +42,12 @@ function LocationParamsProvider({
         infected: infectedStrOrArr,
         month: monthStrOrArr,
         dosage: dosageStrOrArr,
-        host: hostStrOrArr
+        host: hostStrOrArr,
+        naive = null
       } = {}
     }
   } = match;
+  const pathname = redirectTo ? redirectTo : loc.pathname;
 
   const onChange = React.useCallback(
     (action, value, clearAction = false) => {
@@ -46,15 +57,16 @@ function LocationParamsProvider({
         clearAction ? defaultQuery : {
           ...defaultQuery,
           ...loc.query
-        }
+        },
+        formOnlyConfig
       );
 
       router.push({
-        pathname: '/search-drdb/',
+        pathname,
         query
       });
     },
-    [router, defaultQuery, loc.query]
+    [formOnlyConfig, router, defaultQuery, pathname, loc.query]
   );
 
   const contextValue = React.useMemo(
@@ -90,6 +102,7 @@ function LocationParamsProvider({
           month,
           dosage,
           host,
+          naive,
           debugMsg
         },
         filterFlag: {
@@ -117,6 +130,7 @@ function LocationParamsProvider({
       monthStrOrArr,
       dosageStrOrArr,
       hostStrOrArr,
+      naive,
       debugMsg,
       onChange
     ]

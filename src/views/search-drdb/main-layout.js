@@ -120,7 +120,7 @@ export default function SearchDRDBLayout() {
       {displayAbTables || displayCPTables ?
         <Grid.Row centered>
           <Grid.Column width={16}>
-            <Header as={H2} id="dms-mutations">
+            <Header as={H2} id="invivo-mutations">
               In vivo Selection Data
             </Header>
             <InVivoMutationsTable />

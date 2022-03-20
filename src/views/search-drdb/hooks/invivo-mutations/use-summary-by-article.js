@@ -6,7 +6,8 @@ import {
   filterByIsoAggkey,
   filterByGenePos,
   filterBySbjRxAbNames,
-  filterBySbjRxInfectedVarName
+  filterBySbjRxInfectedVarName,
+  filterByNaiveRx
 } from '../sql-fragments/selection-mutations';
 
 
@@ -16,6 +17,7 @@ function usePrepareQuery({
   varName,
   isoAggkey,
   genePos,
+  naive,
   skip
 }) {
   return React.useMemo(
@@ -35,6 +37,7 @@ function usePrepareQuery({
         filterByGenePos({genePos, where, params});
         filterBySbjRxAbNames({abNames, where, params});
         filterBySbjRxInfectedVarName({infectedVarName, where, params});
+        filterByNaiveRx({naive, where, params});
       }
 
       if (where.length === 0) {
@@ -57,7 +60,7 @@ function usePrepareQuery({
         params
       };
     },
-    [abNames, varName, genePos, infectedVarName, isoAggkey, skip]
+    [abNames, varName, genePos, infectedVarName, isoAggkey, naive, skip]
   );
 }
 
@@ -69,7 +72,8 @@ export default function useSummaryByArticle() {
       isoAggkey,
       genePos,
       abNames,
-      infectedVarName
+      infectedVarName,
+      naive
     }
   } = LocationParams.useMe();
   const skip = false;
@@ -82,6 +86,7 @@ export default function useSummaryByArticle() {
     isoAggkey,
     infectedVarName,
     genePos,
+    naive,
     skip
   });
 

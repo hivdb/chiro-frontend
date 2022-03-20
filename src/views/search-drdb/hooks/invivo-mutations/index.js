@@ -13,6 +13,7 @@ import {
   filterByGenePos,
   filterBySbjRxAbNames,
   filterBySbjRxInfectedVarName,
+  filterByNaiveRx,
   queryInfectedVarName,
   queryAbNames,
   queryRxType
@@ -29,6 +30,7 @@ function usePrepareQuery({
   varName,
   isoAggkey,
   genePos,
+  naive,
   skip
 }) {
   return React.useMemo(
@@ -49,6 +51,7 @@ function usePrepareQuery({
         filterByGenePos({genePos, where, params});
         filterBySbjRxAbNames({abNames, where, params});
         filterBySbjRxInfectedVarName({infectedVarName, where, params});
+        filterByNaiveRx({naive, where, params});
       }
 
       if (where.length === 0) {
@@ -61,6 +64,8 @@ function usePrepareQuery({
           M.subject_name,
           SBJ.subject_species,
           SBJ.immune_status,
+          CAST(SUBSTR(infection_date, 1, 4) AS INTEGER) -
+          SBJ.birth_year AS subject_age,
           ${queryInfectedVarName()},
           M.gene,
           R.amino_acid as ref_amino_acid,
@@ -89,6 +94,13 @@ function usePrepareQuery({
           M.infected_var_name = INFVAR.var_name
         WHERE
           (${where.join(') AND (')})
+        ORDER BY
+          M.ref_name,
+          M.subject_name,
+          appearance_date,
+          M.gene,
+          M.position,
+          M.amino_acid
       `;
       const sbjRxSql = `
         SELECT
@@ -121,6 +133,11 @@ function usePrepareQuery({
             M.subject_name = SRX.subject_name AND
             (${where.join(') AND (')})
         )
+        ORDER BY
+          SRX.ref_name,
+          SRX.subject_name,
+          start_date,
+          end_date
       `;
       return {
         sql,
@@ -135,6 +152,7 @@ function usePrepareQuery({
       infectedVarName,
       isoAggkey,
       refName,
+      naive,
       skip
     ]
   );
@@ -154,7 +172,8 @@ function InVivoMutationsProvider({children}) {
       infectedVarName,
       isoAggkey,
       genePos,
-      abNames
+      abNames,
+      naive
     },
     filterFlag
   } = LocationParams.useMe();
@@ -170,6 +189,7 @@ function InVivoMutationsProvider({children}) {
     infectedVarName,
     isoAggkey,
     genePos,
+    naive,
     skip
   });
 
@@ -209,6 +229,7 @@ function InVivoMutationsProvider({children}) {
           refName,
           subjectName,
           subjectSpecies,
+          subjectAge,
           immuneStatus,
           infectedVarName,
           infectionDate,
@@ -244,6 +265,7 @@ function InVivoMutationsProvider({children}) {
               refName,
               subjectName,
               subjectSpecies,
+              subjectAge,
               immuneStatus,
               infectedVarName,
               infectionDate,

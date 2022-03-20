@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {useRouter} from 'found';
 import {useQuery} from '@apollo/client';
 
@@ -41,7 +42,15 @@ function normTitle(text) {
 }
 
 
-export default function ArticleCard() {
+ArticleCard.propTypes = {
+  formOnly: PropTypes.oneOf(['auto', true, false]).isRequired
+};
+
+ArticleCard.defaultProps = {
+  formOnly: 'auto'
+};
+
+export default function ArticleCard({formOnly}) {
 
   const {params: {refName}} = LocationParams.useMe();
 
@@ -84,7 +93,7 @@ export default function ArticleCard() {
      className={style['article-card']}
      removeTo={{
        pathname: loc.pathname,
-       query: buildLocationQuery('article', undefined, loc.query)
+       query: buildLocationQuery('article', undefined, loc.query, formOnly)
      }}
      tagline={<>{journal} ({year})</>}
      title={normTitle(title)}>

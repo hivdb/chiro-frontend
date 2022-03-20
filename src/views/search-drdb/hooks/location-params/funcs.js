@@ -19,7 +19,7 @@ const FORM_ONLY_IF_MISSING_ALL = [
 ];
 
 
-export function cleanQuery(query) {
+export function cleanQuery(query, formOnly = 'auto') {
   query = {...query};
   if (query.form_only) {
     query = {
@@ -58,13 +58,22 @@ export function cleanQuery(query) {
       },
       {}
     );
-  if (intersection(
-    FORM_ONLY_IF_MISSING_ALL,
-    Object.keys(query)
-  ).length === 0) {
+  if (
+    formOnly === true || (
+      formOnly === 'auto' &&
+      intersection(
+        FORM_ONLY_IF_MISSING_ALL,
+        Object.keys(query)
+      ).length === 0
+    )) {
     // force form_only since loading all take too long
     /* eslint-disable-next-line camelcase */
     query.form_only = null;
+  }
+  else if (formOnly === false) {
+    // force remove form_only
+    /* eslint-disable-next-line camelcase */
+    delete query.form_only;
   }
 
   query = Object
@@ -85,7 +94,8 @@ export function cleanQuery(query) {
 export function buildQuery(
   action,
   value,
-  baseQuery = {}
+  baseQuery = {},
+  formOnly = 'auto'
 ) {
   let query = {...baseQuery};
   if (typeof action === 'string') {
@@ -103,8 +113,19 @@ export function buildQuery(
   if (action === 'vaccine') {
     delete query.antibodies;
     delete query.cp;
+    delete query.naive;
   }
   else if (action === 'antibodies') {
+    delete query.vaccine;
+    delete query.cp;
+    delete query.infected;
+    delete query.dosage;
+    delete query.month;
+    delete query.host;
+    delete query.naive;
+  }
+  else if (action === 'naive') {
+    delete query.antibodies;
     delete query.vaccine;
     delete query.cp;
     delete query.infected;
@@ -116,6 +137,7 @@ export function buildQuery(
     delete query.antibodies;
     delete query.vaccine;
     delete query.dosage;
+    delete query.naive;
   }
   else if (action === 'variant') {
     delete query.mutations;
@@ -130,5 +152,5 @@ export function buildQuery(
     delete query.mutations;
   }
 
-  return cleanQuery(query);
+  return cleanQuery(query, formOnly);
 }

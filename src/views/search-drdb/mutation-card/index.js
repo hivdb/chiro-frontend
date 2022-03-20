@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import uniq from 'lodash/uniq';
 import {useRouter} from 'found';
 
@@ -59,7 +60,15 @@ function useFormatVersion(version, skip) {
 }
 
 
-export default function MutationCard() {
+MutationCard.propTypes = {
+  formOnly: PropTypes.oneOf(['auto', true, false]).isRequired
+};
+
+MutationCard.defaultProps = {
+  formOnly: 'auto'
+};
+
+export default function MutationCard({formOnly}) {
   const descRef = React.useRef();
   const {
     params: {
@@ -103,7 +112,7 @@ export default function MutationCard() {
     <InfoCard
      removeTo={{
        pathname: loc.pathname,
-       query: buildLocationQuery('mutations', undefined, loc.query)
+       query: buildLocationQuery('mutations', undefined, loc.query, formOnly)
      }}
      className={style['mutation-card']}
      loaded={!skip}

@@ -18,6 +18,7 @@ const tableConfig = {
   columns: [
     'refName',
     'subjectName',
+    'subjectAge',
     'immuneStatus',
     'severity',
     'infectedVarName',
@@ -29,6 +30,7 @@ const tableConfig = {
     'countTotal': '# Samples'
   },
   multiCells: [
+    'subjectAge',
     'immuneStatus',
     'severity',
     'infectedVarName',
@@ -187,6 +189,10 @@ export default function InVivoMutationsTable() {
   }
 
   const numExps = mutsByRx.length;
+  const numMuts = mutsByRx.reduce(
+    (acc, {mutations}) => acc + mutations.length,
+    0
+  );
 
   const cacheKey = JSON.stringify({
     refName,
@@ -198,7 +204,9 @@ export default function InVivoMutationsTable() {
     <div>
       <em>
         <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('result', numExps, false)}.
+        {pluralize('result', numExps, false)}{', '}
+        <strong>{numMuts.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('mutation', numMuts, false)}.
       </em>
     </div>
     <div ref={tableCtlRef} className={style['invivo-muts-table-control']}>

@@ -12,6 +12,7 @@ import style from './style.module.scss';
 export default function SusceptibilityData() {
   const ComboProvider = useProviders('searchBoxOnly', /*providerProps = */{
     locationParams: {
+      redirectTo: '/search-drdb/',
       defaultQuery: {
         host: 'human',
         dosage: ['2', '3']

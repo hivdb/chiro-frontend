@@ -72,6 +72,10 @@ export default function useSmallColumns({
             host: subjectSpecies
           })
         }),
+        subjectAge: new ColumnDef({
+          name: 'subjectAge',
+          label: labels.subject || 'Age'
+        }),
         immuneStatus: new ColumnDef({
           name: 'immuneStatus',
           label: labels.immuneStatus || 'Immune Status'

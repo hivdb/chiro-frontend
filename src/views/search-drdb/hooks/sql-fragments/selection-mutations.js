@@ -94,7 +94,7 @@ export function filterByIsoAggkey({
       SELECT 1 FROM isolate_pairs IP
       WHERE
         IP.num_mutations = 1 AND
-        IP.iso_name = $isoAggkey
+        IP.iso_aggkey = $isoAggkey
     )`);
     where.push(conds.join(' OR '));
     params.$isoAggkey = isoAggkey;
@@ -270,6 +270,34 @@ export function filterBySbjRxInfectedVarName({
       )
     `);
     params.$infVarName = infectedVarName;
+  }
+}
+
+
+export function filterByNaiveRx({
+  naive,
+  where,
+  mainTableName = 'M'
+}) {
+  if (naive === 'any') {
+    where.push(`
+      NOT EXISTS (
+        SELECT 1 FROM
+          rx_antibodies RXMAB
+        WHERE
+          RXMAB.ref_name = ${mainTableName}.ref_name AND
+          ${matchSbjRx({mainTableName, rxTableName: 'RXMAB'})}
+      )
+    `);
+    where.push(`
+      NOT EXISTS (
+        SELECT 1 FROM
+          rx_conv_plasma RXCP
+        WHERE
+          RXCP.ref_name = ${mainTableName}.ref_name AND
+          ${matchSbjRx({mainTableName, rxTableName: 'RXCP'})}
+      )
+    `);
   }
 }
 

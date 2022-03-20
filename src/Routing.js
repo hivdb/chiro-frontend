@@ -10,6 +10,7 @@ import {
 import SARS2Routes from 'sierra-frontend/dist/views/sars2';
 import MutAnnotViewerRoutes from 'sierra-frontend/dist/views/mut-annot-viewer';
 import GenomeViewerRoutes from 'sierra-frontend/dist/views/genome-viewer';
+import SearchDRDBRoutes from './views/search-drdb';
 
 import {mutAnnotViewerConfig, mutationViewerConfig} from './config';
 import style from './index.module.scss';
@@ -31,7 +32,6 @@ const AnimalModelList = lazy(() => import('./views/animal-model-list'));
 const CellCultureMeasurementList = lazy(
   () => import('./views/cell-culture-measurement-list')
 );
-const SearchDRDB = lazy(() => import('./views/search-drdb'));
 const ArticleList = lazy(() => import('./views/article-list'));
 const Donation = lazy(() => import('./views/donation'));
 const ClinicalTrialsV2 = lazy(() => import('./views/clinical-trials-v2'));
@@ -98,7 +98,7 @@ const BrowserRouter = createBrowserRouter({
       </Route>
 
       <Route Component={Search} path="/search/" />
-      <Route Component={SearchDRDB} path="/search-drdb/" />
+      {SearchDRDBRoutes("/search-drdb/")}
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />
       <Route Component={VirusList} path="/virus-list/" />
