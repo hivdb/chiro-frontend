@@ -20,24 +20,30 @@ const tableConfig = {
     'subjectName',
     'subjectAge',
     'immuneStatus',
-    'severity',
     'infectedVarName',
-    'infectionTiming',
+    'infectionDate',
     'treatments',
+    'infectionTiming',
     'mutations'
   ],
   labels: {
-    'infectedVarName': 'Infection',
-    'infectionTiming': 'Month',
-    'countTotal': '# Samples'
+    'infectedVarName': 'Infection Variant'
+  },
+  rowSpanKeyGetter: {
+    subjectName: r => `${r.refName}$$${r.subjectName}`,
+    subjectAge: r => `${r.refName}$$${r.subjectName}`,
+    immuneStatus: r => `${r.refName}$$${r.subjectName}`,
+    infectedVarName: r => (
+      `${r.refName}$$${r.subjectName}$$${r.infectedVarName}`
+    ),
+    infectionDate: r => (
+      `${r.refName}$$${r.subjectName}$$` +
+      new Date(r.infectionDate).getFullYear()
+    )
   },
   multiCells: [
-    'subjectAge',
-    'immuneStatus',
-    'severity',
-    'infectedVarName',
-    'infectionTiming',
     'treatments',
+    'infectionTiming',
     'mutations'
   ]
 };
@@ -137,7 +143,7 @@ function groupMutationsByTreatments(inVivoSbjs) {
 
 
 export default function InVivoMutationsTable() {
-  let {columns, labels, multiCells} = tableConfig;
+  let {columns, labels, rowSpanKeyGetter, multiCells} = tableConfig;
 
   const {
     params: {
@@ -168,9 +174,12 @@ export default function InVivoMutationsTable() {
       if (multiCells.includes(colDef.name)) {
         colDef.multiCells = true;
       }
+      if (colDef.name in rowSpanKeyGetter) {
+        colDef.rowSpanKeyGetter = rowSpanKeyGetter[colDef.name];
+      }
       return colDef;
     }),
-    [origColumnDefs, multiCells]
+    [origColumnDefs, multiCells, rowSpanKeyGetter]
   );
 
   const mutsByRx = React.useMemo(

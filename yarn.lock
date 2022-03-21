@@ -13337,9 +13337,9 @@ side-channel@^1.0.4:
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
 
-sierra-frontend@hivdb/sierra-frontend#63a1d37:
+sierra-frontend@hivdb/sierra-frontend#f4d13c0:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#63a1d3718064f3b2ee3d68f4401ffe9751b18ddf"
+  resolved "git+ssh://git@github.com/hivdb/sierra-frontend.git#f4d13c0511d2c30030831f5b2e4b02e08481a9ba"
   dependencies:
     "@react-icons/all-files" "^4.1.0"
     "@vx/axis" "^0.0.199"

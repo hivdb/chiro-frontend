@@ -84,6 +84,11 @@ export default function useSmallColumns({
           name: 'subjectSpecies',
           label: labels.subjectSpecies || 'Host'
         }),
+        infectionDate: new ColumnDef({
+          name: 'infectionDate',
+          label: labels.infectionDate,
+          render: date => new Date(date).getFullYear()
+        }),
         infectionTiming: new ColumnDef({
           name: 'infectionTiming',
           label: labels.infectionTiming || 'Month since Infection'
