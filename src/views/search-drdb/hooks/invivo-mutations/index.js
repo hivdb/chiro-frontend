@@ -96,6 +96,55 @@ function usePrepareQuery({
           M.position,
           M.amino_acid
       `;
+      const sbjWaningMutSql = `
+        SELECT
+          SHX.ref_name,
+          SHX.subject_name,
+          SHX2.event_date AS isolate_date,
+          ISOM.gene,
+          R.amino_acid as ref_amino_acid,
+          ISOM.position,
+          ISOM.amino_acid,
+          1 AS is_waning
+        FROM subject_history SHX
+        JOIN subject_history SHX2 ON
+          SHX.ref_name = SHX2.ref_name AND
+          SHX.subject_name = SHX2.subject_name
+        JOIN isolate_mutations ISOM ON
+          SHX.iso_name = ISOM.iso_name
+        JOIN ref_amino_acid R ON
+          R.gene = ISOM.gene AND
+          R.position = ISOM.position
+        WHERE
+          SHX.event = 'infection' AND
+          SHX2.event = 'isolation' AND
+          SHX2.event_date > SHX.event_date AND
+          ISOM.gene = 'S' AND
+          NOT EXISTS (
+            SELECT 1 FROM isolate_mutations ISOM2
+            WHERE
+              SHX2.iso_name = ISOM2.iso_name AND
+              ISOM.gene = ISOM2.gene AND
+              ISOM.position = ISOM2.position AND
+              ISOM.amino_acid = ISOM2.amino_acid
+          ) AND
+          EXISTS (
+            SELECT 1 FROM invivo_selection_results M
+            LEFT JOIN variants INFVAR ON
+              M.infected_var_name = INFVAR.var_name
+            WHERE
+              M.ref_name = SHX.ref_name AND
+              M.subject_name = SHX.subject_name AND
+              (${where.join(') AND (')})
+          )
+        ORDER BY
+          SHX.ref_name,
+          SHX.subject_name,
+          SHX2.event_date,
+          ISOM.gene,
+          ISOM.position,
+          ISOM.amino_acid
+      `;
       const sbjIsoSql = `
         SELECT
           DISTINCT
@@ -107,7 +156,16 @@ function usePrepareQuery({
           ISOM.position,
           ISOM.amino_acid,
           ISOM.count,
-          ISOM.total
+          ISOM.total,
+          EXISTS (
+            SELECT 1 FROM invivo_selection_results M
+            WHERE
+              M.ref_name = SHX.ref_name AND
+              M.subject_name = SHX.subject_name AND
+              M.gene = ISOM.gene AND
+              M.position = ISOM.position AND
+              M.amino_acid = ISOM.amino_acid
+          ) AS isEmerging
         FROM subject_history SHX
         JOIN isolate_mutations ISOM ON
           SHX.iso_name = ISOM.iso_name
@@ -175,6 +233,7 @@ function usePrepareQuery({
       return {
         sql,
         sbjIsoSql,
+        sbjWaningMutSql,
         sbjRxSql,
         params
       };
@@ -217,6 +276,8 @@ function buildSbjIsoLookup(sbjIsoPayload) {
         refName,
         subjectName,
         isolateDate,
+        isEmerging,
+        isWaning,
         ...one
       }) => {
         const sbjKey = `${refName}${LIST_JOIN_MAGIC_SEP}${subjectName}`;
@@ -225,6 +286,12 @@ function buildSbjIsoLookup(sbjIsoPayload) {
           isolateDate,
           mutations: []
         };
+        if (isEmerging !== undefined) {
+          one.isEmerging = !!isEmerging;
+        }
+        if (isWaning !== undefined) {
+          one.isWaning = !!isWaning;
+        }
         acc[sbjKey][isolateDate].mutations.push(one);
         return acc;
       },
@@ -239,7 +306,12 @@ function calcTiming(start, end) {
 }
 
 
-function buildSbjArray(payload, sbjIsoLookup, sbjRxLookup) {
+function buildSbjArray(
+  payload,
+  sbjIsoLookup,
+  sbjWaningMutLookup,
+  sbjRxLookup
+) {
   return Object.values(payload.reduce(
     (acc, {
       refName,
@@ -256,12 +328,14 @@ function buildSbjArray(payload, sbjIsoLookup, sbjRxLookup) {
       const infectDate = new Date(infectionDate);
       const key = `${refName}${LIST_JOIN_MAGIC_SEP}${subjectName}`;
       if (!(key in acc)) {
-        const isolates = Object.values(sbjIsoLookup[key] || {})
-          .map(one => {
+        const isolates = Object.entries(sbjIsoLookup[key] || {})
+          .map(([dt, one]) => {
             const timing = calcTiming(infectDate, new Date(one.isolateDate));
+            const waningMuts = (sbjWaningMutLookup[key] || {})[dt] || {};
             return {
               ...one,
-              timing
+              timing,
+              waningMutations: waningMuts.mutations || []
             };
           });
 
@@ -322,6 +396,7 @@ function InVivoMutationsProvider({children}) {
   const {
     sql,
     sbjIsoSql,
+    sbjWaningMutSql,
     sbjRxSql,
     params
   } = usePrepareQuery({
@@ -346,30 +421,47 @@ function InVivoMutationsProvider({children}) {
   } = useQuery({sql: sbjIsoSql, params, skip});
 
   const {
+    payload: sbjWaningMutPayload,
+    isPending: isSbjWaningMutPending
+  } = useQuery({sql: sbjWaningMutSql, params, skip});
+
+  const {
     payload: sbjRxPayload,
     isPending: isSbjRxPending
   } = useQuery({sql: sbjRxSql, params, skip});
 
+  const shouldSkip = (
+    skip ||
+    isPending ||
+    isSbjIsoPending ||
+    isSbjWaningMutPending ||
+    isSbjRxPending
+  );
+
   const inVivoSbjs = React.useMemo(
     () => {
-      if (skip || isPending || isSbjIsoPending || isSbjRxPending) {
+      if (shouldSkip) {
         return [];
       }
 
       const sbjRxLookup = buildSbjRxLookup(sbjRxPayload);
       const sbjIsoLookup = buildSbjIsoLookup(sbjIsoPayload);
-      const sbjs = buildSbjArray(payload, sbjIsoLookup, sbjRxLookup);
+      const sbjWaningMutLookup = buildSbjIsoLookup(sbjWaningMutPayload);
+      const sbjs = buildSbjArray(
+        payload,
+        sbjIsoLookup,
+        sbjWaningMutLookup,
+        sbjRxLookup
+      );
 
       return sbjs;
     },
     [
-      isPending,
-      isSbjIsoPending,
-      isSbjRxPending,
+      shouldSkip,
       payload,
       sbjRxPayload,
       sbjIsoPayload,
-      skip
+      sbjWaningMutPayload
     ]
   );
 

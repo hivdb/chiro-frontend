@@ -26,10 +26,13 @@ const tableConfig = {
     'treatments',
     'infectionTiming',
     'mutations',
-    'emergentMutations'
+    'waningMutations'
   ],
   labels: {
-    'infectedVarName': 'Infection Variant'
+    infectedVarName: 'Infection Variant',
+    mutations: 'Emerging Mutations',
+    waningMutations: 'Waning Mutations',
+    treatments: 'Monoclonal Antibody'
   },
   rowSpanKeyGetter: {
     refName: r => `${r.refName}$$${r.subjectName}`,
@@ -43,11 +46,15 @@ const tableConfig = {
       `${r.refName}$$${r.subjectName}$$` +
       new Date(r.infectionDate).getFullYear()
     ),
-    treatments: r => JSON.stringify(r.treatments)
+    treatments: r => (
+      `${r.refName}$$${r.subjectName}$$` +
+      JSON.stringify(r.treatments)
+    )
   },
   multiCells: [
     'infectionTiming',
-    'mutations'
+    'mutations',
+    'waningMutations'
   ]
 };
 
@@ -86,21 +93,15 @@ function groupByIsolates(inVivoSbjs) {
   for (const {isolates, ...sbjRow} of inVivoSbjs) {
     for (const iso of isolates) {
       const isoDate = new Date(iso.isolateDate);
-      const isoMuts = iso.mutations.map(
-        m => `${m.gene}:${m.position}${m.aminoAcid}`
-      );
       const treatments = sbjRow.treatments.filter(
         ({startDate}) => new Date(startDate) < isoDate
-      );
-      const mutations = sbjRow.mutations.filter(
-        m => isoMuts.includes(`${m.gene}:${m.position}${m.aminoAcid}`)
       );
       isoRows.push({
         ...sbjRow,
         infectionTiming: iso.timing,
         treatments: uniqTreatments(treatments),
         mutations: iso.mutations,
-        emergentMutations: mutations
+        waningMutations: iso.waningMutations
       });
     }
   }
@@ -129,7 +130,7 @@ function groupByIsolates(inVivoSbjs) {
       infectionDate,
       treatments,
       mutations,
-      emergentMutations
+      waningMutations
     }] = group;
     const minTiming = Math.min(...group.map(
       ({infectionTiming}) => infectionTiming
@@ -148,7 +149,7 @@ function groupByIsolates(inVivoSbjs) {
       treatments,
       infectionTiming: [minTiming, maxTiming],
       mutations,
-      emergentMutations
+      waningMutations
     };
   });
 }
@@ -194,16 +195,28 @@ export default function InVivoMutationsTable() {
     [origColumnDefs, multiCells, rowSpanKeyGetter]
   );
 
-  const mutsByRx = React.useMemo(
-    () => isPending ? [] : groupByIsolates(inVivoSbjs),
-    [isPending, inVivoSbjs]
+  const inVivoSbjsMAbOnly = React.useMemo(
+    () => inVivoSbjs.map(
+      sbj => ({
+        ...sbj,
+        treatments: sbj.treatments.filter(
+          ({rxType}) => rxType === 'antibody'
+        )
+      })
+    ),
+    [inVivoSbjs]
+  );
+
+  const MutsByIso = React.useMemo(
+    () => isPending ? [] : groupByIsolates(inVivoSbjsMAbOnly),
+    [isPending, inVivoSbjsMAbOnly]
   );
 
   if (isPending) {
     return <InlineLoader />;
   }
 
-  if (mutsByRx.length === 0) {
+  if (MutsByIso.length === 0) {
     return <>
       <div>
         No in-vivo selection data is found for this request.
@@ -212,8 +225,8 @@ export default function InVivoMutationsTable() {
     </>;
   }
 
-  const numExps = mutsByRx.length;
-  const numMuts = mutsByRx.reduce(
+  const numExps = MutsByIso.length;
+  const numMuts = MutsByIso.reduce(
     (acc, {mutations}) => acc + mutations.length,
     0
   );
@@ -239,7 +252,7 @@ export default function InVivoMutationsTable() {
        className={style['invivo-muts-table']}
        columnDefs={columnDefs}
        cacheKey={cacheKey}
-       data={mutsByRx} />
+       data={MutsByIso} />
     </div>
   </>;
 }

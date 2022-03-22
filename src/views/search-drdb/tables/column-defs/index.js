@@ -92,8 +92,8 @@ export default function useColumnDefs({
   const treatments = useTreatments(commonArgs);
   const treatment = useTreatment(commonArgs);
   const mutations = useMutations(commonArgs);
-  const emergentMutations = useMutations({
-    colName: 'emergentMutations',
+  const waningMutations = useMutations({
+    colName: 'waningMutations',
     ...commonArgs
   });
   const smallColumns = useSmallColumns(commonArgs);
@@ -116,7 +116,7 @@ export default function useColumnDefs({
         treatments,
         treatment,
         mutations,
-        emergentMutations,
+        waningMutations,
         ...smallColumns
       };
 
@@ -138,7 +138,7 @@ export default function useColumnDefs({
       treatments,
       treatment,
       mutations,
-      emergentMutations,
+      waningMutations,
       smallColumns,
       skip
     ]

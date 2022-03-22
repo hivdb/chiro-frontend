@@ -9,21 +9,31 @@ ItemTreatment.propTypes = {
     'antibody', 'conv-plasma', 'vacc-plasma', 'unclassified'
   ]).isRequired,
   rxName: PropTypes.string.isRequired,
-  abNames: PropTypes.arrayOf(PropTypes.string.isRequired)
+  abNames: PropTypes.arrayOf(PropTypes.string.isRequired),
+  antibodyLookup: PropTypes.objectOf(
+    PropTypes.shape({
+      abbreviationName: PropTypes.string
+    }).isRequired
+  ).isRequired
 };
 
 
 function ItemTreatment({
   rxType,
   rxName,
-  abNames
+  abNames,
+  antibodyLookup
 }) {
   return <span className={style['item-treatment']}>
     {rxType === 'antibody' ?
       <>
         {abNames.map((abName, idx) => <React.Fragment key={abName}>
           {idx === 0 ? '' : ' + '}
-          {abName}
+          {antibodyLookup &&
+          abName in antibodyLookup &&
+          antibodyLookup[abName].abbreviationName ?
+            antibodyLookup[abName].abbreviationName :
+            abName}
         </React.Fragment>)}
       </> : null}
     {rxType === 'conv-plasma' ? <>
@@ -41,10 +51,19 @@ function ItemTreatment({
 function exportTreatment({
   rxType,
   rxName,
-  abNames
+  abNames,
+  antibodyLookup
 }) {
   if (rxType === 'antibody') {
-    return abNames.join(' + ');
+    return abNames.map(
+      abName => (
+        antibodyLookup &&
+        abName in antibodyLookup &&
+        antibodyLookup[abName].abbreviationName ?
+          antibodyLookup[abName].abbreviationName :
+          abName
+      )
+    ).join(' + ');
   }
   else if (rxType === 'conv-plasma') {
     return 'CP';
@@ -58,7 +77,12 @@ function exportTreatment({
 }
 
 
-export function useTreatment({labels, skip, columns}) {
+export function useTreatment({
+  antibodyLookup,
+  labels,
+  skip,
+  columns
+}) {
   return React.useMemo(
     () => {
       if (skip || !columns.includes('treatment')) {
@@ -68,17 +92,22 @@ export function useTreatment({labels, skip, columns}) {
         name: 'treatment',
         label: labels.treatment || 'Treatment',
         render: (_, row) => <div className={style.treatments}>
-          <ItemTreatment {...row} />
+          <ItemTreatment {...row} antibodyLookup={antibodyLookup} />
         </div>,
-        exportCell: (_, row) => exportTreatment(row)
+        exportCell: (_, row) => exportTreatment({...row, antibodyLookup})
       });
     },
-    [columns, labels.treatment, skip]
+    [antibodyLookup, columns, labels.treatment, skip]
   );
 }
 
 
-export default function useTreatments({labels, skip, columns}) {
+export default function useTreatments({
+  antibodyLookup,
+  labels,
+  skip,
+  columns
+}) {
   return React.useMemo(
     () => {
       if (skip || !columns.includes('treatments')) {
@@ -91,17 +120,17 @@ export default function useTreatments({labels, skip, columns}) {
           {treatments.length > 0 ? treatments.map(
             (rx, idx) => <React.Fragment key={idx}>
               {idx === 0 ? null : ' + '}
-              <ItemTreatment {...rx} />
+              <ItemTreatment {...rx} antibodyLookup={antibodyLookup} />
             </React.Fragment>
-          ) : <em>Untreated</em>}
+          ) : 'None'}
         </div>,
         exportCell: treatments => (
           treatments
-            .map(exportTreatment)
-            .join(' + ') || 'Untreated'
+            .map(rx => exportTreatment({...rx, antibodyLookup}))
+            .join(' + ') || 'None'
         )
       });
     },
-    [columns, labels.treatments, skip]
+    [antibodyLookup, columns, labels.treatments, skip]
   );
 }

@@ -106,3 +106,15 @@ svg {
     }
   }
 }
+
+.mutation {
+  display: inline-block;
+  margin-top: .05rem;
+  margin-bottom: .05rem;
+  &[data-is-emerging="true"] {
+    padding-left: .15rem;
+    padding-right: .15rem;
+    background-color: #99f099;
+    border-radius: 2px;
+  }
+}

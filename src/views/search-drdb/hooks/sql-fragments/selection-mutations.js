@@ -297,7 +297,7 @@ export function filterByNaiveRx({
           ${matchSbjRx({mainTableName, rxTableName: 'RXMAB'})}
       )
     `);
-    where.push(`
+    /* where.push(`
       NOT EXISTS (
         SELECT 1 FROM
           rx_conv_plasma RXCP
@@ -305,7 +305,7 @@ export function filterByNaiveRx({
           RXCP.ref_name = ${mainTableName}.ref_name AND
           ${matchSbjRx({mainTableName, rxTableName: 'RXCP'})}
       )
-    `);
+    `); */
   }
 }
 

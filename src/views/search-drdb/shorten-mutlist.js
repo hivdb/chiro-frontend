@@ -39,8 +39,13 @@ export default function shortenMutationList(
       }
     }
     if (asObject) {
+      const isEmerging = group.some(({isEmerging}) => isEmerging);
       merged.push({
-        gene, position, ...others, text
+        gene,
+        position,
+        ...others,
+        text,
+        isEmerging
       });
     }
     else {

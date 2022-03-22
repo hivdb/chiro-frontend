@@ -5,16 +5,31 @@ import shortenMutationList from '../../shorten-mutlist';
 
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 
+import style from './style.module.scss';
+
 
 CellMutation.propTypes = {
   text: PropTypes.string.isRequired,
-  count: PropTypes.number,
-  total: PropTypes.number
+  count: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]),
+  total: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]),
+  isEmerging: PropTypes.bool,
+  isWaning: PropTypes.bool
 };
 
 
-function CellMutation({text, count, total}) {
-  return <>{text}{total > 1 ? ` (${count}/${total})` : null}</>;
+function CellMutation({text, count, total, isEmerging, isWaning}) {
+  return <span
+   className={style.mutation}
+   data-is-emerging={isEmerging}
+   data-is-waning={isWaning}>
+    {text}{total > 1 ? ` (${count}/${total})` : null}
+  </span>;
 }
 
 export default function useMutations({
@@ -31,17 +46,38 @@ export default function useMutations({
       return new ColumnDef({
         name: colName,
         label: labels[colName],
-        render: mutations => shortenMutationList(mutations, true).map(({
+        render: mutations => shortenMutationList(
+          mutations || [],
+          true
+        ).map(({
           text,
           count,
-          total
+          total,
+          isEmerging,
+          isWaning
         }, idx) => <React.Fragment key={idx}>
           {idx === 0 ? null : ', '}
-          <CellMutation
-           text={text}
-           count={count}
-           total={total} />
+          <CellMutation {...{
+            text,
+            count,
+            total,
+            isEmerging,
+            isWaning
+          }} />
         </React.Fragment>),
+        exportCell: mutations => (
+          shortenMutationList(mutations || [], true)
+            .map(({
+              text,
+              count,
+              total,
+              isEmerging
+            }) => (
+              `${text}${total > 1 ? ` (${count}/${total})` : ''
+              }${isEmerging ? ' (+)' : ''}`
+            ))
+            .join(', ')
+        ),
         sort: rows => sortBy(rows, [
           `${colName}.0.gene`,
           `${colName}.0.position`,

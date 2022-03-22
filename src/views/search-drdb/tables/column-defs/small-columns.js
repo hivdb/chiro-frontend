@@ -66,11 +66,7 @@ export default function useSmallColumns({
           label: labels.subject || 'Subject',
           render: (subjectName, {subjectSpecies}) => (
             <CellSubjectName {...{subjectName, subjectSpecies}} />
-          ),
-          exportCell: (subjectName, {subjectSpecies}) => ({
-            '': subjectName,
-            host: subjectSpecies
-          })
+          )
         }),
         subjectAge: new ColumnDef({
           name: 'subjectAge',
@@ -78,7 +74,8 @@ export default function useSmallColumns({
         }),
         immuneStatus: new ColumnDef({
           name: 'immuneStatus',
-          label: labels.immuneStatus || 'Immune Status'
+          label: labels.immuneStatus || 'Immune Status',
+          render: s => s === 'Medical' ? 'Iatrogenic immunocompromised' : s
         }),
         subjectSpecies: new ColumnDef({
           name: 'subjectSpecies',
@@ -97,7 +94,11 @@ export default function useSmallColumns({
           ),
           exportCell: ([start, end]) => (
             start === end ? `${start}m` : `${start}-${end}m`
-          )
+          ),
+          sort: rows => sortBy(rows, [
+            'infectionTiming.0',
+            'infectionTiming.1'
+          ])
         }),
         timing: new ColumnDef({
           name: 'timing',
