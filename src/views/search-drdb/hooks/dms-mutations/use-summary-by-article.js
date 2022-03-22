@@ -3,6 +3,7 @@ import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
 import {
+  filterSpike,
   filterByIsoAggkey,
   filterByGenePos,
   filterByAbNames
@@ -23,6 +24,7 @@ function usePrepareQuery({abNames, varName, isoAggkey, genePos, skip}) {
         where.push('false');
       }
       else {
+        filterSpike({where});
         filterByIsoAggkey({isoAggkey, where, params});
         filterByGenePos({genePos, where, params});
         filterByAbNames({abNames, where, params});

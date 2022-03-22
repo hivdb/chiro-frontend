@@ -8,6 +8,7 @@ import useSummaryByRx from './use-summary-by-rx';
 import useSummaryByVirus from './use-summary-by-virus';
 
 import {
+  filterSpike,
   filterByRefName,
   filterByIsoAggkey,
   filterByGenePos,
@@ -46,6 +47,7 @@ function usePrepareQuery({
         where.push('false');
       }
       else {
+        filterSpike({where});
         filterByRefName({refName, where, params});
         filterByIsoAggkey({isoAggkey, where, params});
         filterByGenePos({genePos, where, params});
@@ -71,13 +73,6 @@ function usePrepareQuery({
           R.amino_acid as ref_amino_acid,
           M.position,
           M.amino_acid,
-          MAX(
-            1,
-            ROUND((
-              JULIANDAY(appearance_date) -
-              JULIANDAY(infection_date)
-            ) / 30.)
-          ) timing,
           appearance_date,
           infection_date,
           M.count,
@@ -97,10 +92,46 @@ function usePrepareQuery({
         ORDER BY
           M.ref_name,
           M.subject_name,
-          appearance_date,
           M.gene,
           M.position,
           M.amino_acid
+      `;
+      const sbjIsoSql = `
+        SELECT
+          DISTINCT
+          SHX.ref_name,
+          SHX.subject_name,
+          SHX.event_date AS isolate_date,
+          ISOM.gene,
+          R.amino_acid as ref_amino_acid,
+          ISOM.position,
+          ISOM.amino_acid
+        FROM subject_history SHX
+        JOIN isolate_mutations ISOM ON
+          SHX.iso_name = ISOM.iso_name
+        JOIN ref_amino_acid R ON
+          R.gene = ISOM.gene AND
+          R.position = ISOM.position
+        WHERE
+          SHX.event IN ('infection', 'isolation') AND
+          SHX.iso_name IS NOT NULL AND
+          ISOM.gene = 'S' AND
+          EXISTS (
+            SELECT 1 FROM invivo_selection_results M
+            LEFT JOIN variants INFVAR ON
+              M.infected_var_name = INFVAR.var_name
+            WHERE
+              M.ref_name = SHX.ref_name AND
+              M.subject_name = SHX.subject_name AND
+              (${where.join(') AND (')})
+          )
+        ORDER BY
+          SHX.ref_name,
+          SHX.subject_name,
+          isolate_date,
+          ISOM.gene,
+          ISOM.position,
+          ISOM.amino_acid
       `;
       const sbjRxSql = `
         SELECT
@@ -141,6 +172,7 @@ function usePrepareQuery({
       `;
       return {
         sql,
+        sbjIsoSql,
         sbjRxSql,
         params
       };
@@ -157,6 +189,113 @@ function usePrepareQuery({
     ]
   );
 }
+
+
+function buildSbjRxLookup(sbjRxPayload) {
+  return sbjRxPayload
+    .reduce(
+      (acc, {refName, subjectName, ...one}) => {
+        const key = `${refName}${LIST_JOIN_MAGIC_SEP}${subjectName}`;
+        acc[key] = acc[key] || [];
+        if (one.abNames) {
+          one.abNames = one.abNames.split(LIST_JOIN_MAGIC_SEP);
+        }
+        acc[key].push(one);
+        return acc;
+      },
+      {}
+    );
+}
+
+
+function buildSbjIsoLookup(sbjIsoPayload) {
+  return sbjIsoPayload
+    .reduce(
+      (acc, {
+        refName,
+        subjectName,
+        isolateDate,
+        ...one
+      }) => {
+        const sbjKey = `${refName}${LIST_JOIN_MAGIC_SEP}${subjectName}`;
+        acc[sbjKey] = acc[sbjKey] || {};
+        acc[sbjKey][isolateDate] = acc[sbjKey][isolateDate] || {
+          isolateDate,
+          mutations: []
+        };
+        acc[sbjKey][isolateDate].mutations.push(one);
+        return acc;
+      },
+      {}
+    );
+}
+
+
+function calcTiming(start, end) {
+  const timing = (end - start) / 86400000 / 30;
+  return timing > 1 ? Math.round(timing) : Math.ceil(timing);
+}
+
+
+function buildSbjArray(payload, sbjIsoLookup, sbjRxLookup) {
+  return Object.values(payload.reduce(
+    (acc, {
+      refName,
+      subjectName,
+      subjectSpecies,
+      subjectAge,
+      immuneStatus,
+      infectedVarName,
+      infectionDate,
+      severity,
+      ...mut
+    }) => {
+
+      const infectDate = new Date(infectionDate);
+      const key = `${refName}${LIST_JOIN_MAGIC_SEP}${subjectName}`;
+      if (!(key in acc)) {
+        const isolates = Object.values(sbjIsoLookup[key] || {})
+          .map(one => {
+            const timing = calcTiming(infectDate, new Date(one.isolateDate));
+            return {
+              ...one,
+              timing
+            };
+          });
+
+        const treatments = (sbjRxLookup[key] || [])
+          .map(one => {
+            const timing = calcTiming(infectDate, new Date(one.startDate));
+            const endTiming = calcTiming(infectDate, new Date(one.endDate));
+            return {
+              ...one,
+              timing,
+              endTiming
+            };
+          });
+
+        acc[key] = {
+          refName,
+          subjectName,
+          subjectSpecies,
+          subjectAge,
+          immuneStatus,
+          infectedVarName,
+          infectionDate,
+          severity,
+          isolates,
+          treatments,
+          mutations: []
+        };
+      }
+      mut.timing = calcTiming(infectDate, new Date(mut.appearanceDate));
+      acc[key].mutations.push(mut);
+      return acc;
+    },
+    {}
+  ));
+}
+
 
 InVivoMutationsProvider.propTypes = {
   children: PropTypes.node.isRequired
@@ -180,6 +319,7 @@ function InVivoMutationsProvider({children}) {
   const skip = formOnly || filterFlag.vaccine;
   const {
     sql,
+    sbjIsoSql,
     sbjRxSql,
     params
   } = usePrepareQuery({
@@ -199,128 +339,40 @@ function InVivoMutationsProvider({children}) {
   } = useQuery({sql, params, skip});
 
   const {
+    payload: sbjIsoPayload,
+    isPending: isSbjIsoPending
+  } = useQuery({sql: sbjIsoSql, params, skip});
+
+  const {
     payload: sbjRxPayload,
     isPending: isSbjRxPending
   } = useQuery({sql: sbjRxSql, params, skip});
 
-  const [inVivoSbjs, inVivoMuts] = React.useMemo(
+  const inVivoSbjs = React.useMemo(
     () => {
-      if (skip || isPending || isSbjRxPending) {
+      if (skip || isPending || isSbjIsoPending || isSbjRxPending) {
         return [];
       }
-      const allSbjRx = sbjRxPayload
-        .reduce(
-          (acc, {refName, subjectName, ...one}) => {
-            const key = `${refName}${
-              LIST_JOIN_MAGIC_SEP
-            }${subjectName}`;
-            acc[key] = acc[key] || [];
-            if (one.abNames) {
-              one.abNames = one.abNames.split(LIST_JOIN_MAGIC_SEP);
-            }
-            acc[key].push(one);
-            return acc;
-          },
-          {}
-        );
 
-      const sbjs = Object.values(payload.reduce(
-        (acc, {
-          refName,
-          subjectName,
-          subjectSpecies,
-          subjectAge,
-          immuneStatus,
-          infectedVarName,
-          infectionDate,
-          severity,
-          ...mut
-        }) => {
+      const sbjRxLookup = buildSbjRxLookup(sbjRxPayload);
+      const sbjIsoLookup = buildSbjIsoLookup(sbjIsoPayload);
+      const sbjs = buildSbjArray(payload, sbjIsoLookup, sbjRxLookup);
 
-          const key = `${refName}${LIST_JOIN_MAGIC_SEP}${subjectName}`;
-          if (!(key in acc)) {
-            const infectDate = new Date(infectionDate);
-            const treatments = (allSbjRx[key] || [])
-              .map(one => {
-                const timing = Math.max(
-                  1,
-                  Math.round(
-                    (new Date(one.startDate) - infectDate) / 86400000 / 30
-                  )
-                );
-                const endTiming = Math.max(
-                  1,
-                  Math.round(
-                    (new Date(one.endDate) - infectDate) / 86400000 / 30
-                  )
-                );
-                return {
-                  ...one,
-                  timing,
-                  endTiming
-                };
-              })
-              .sort(({timing: t1}, {timing: t2}) => t1 - t2);
-            acc[key] = {
-              refName,
-              subjectName,
-              subjectSpecies,
-              subjectAge,
-              immuneStatus,
-              infectedVarName,
-              infectionDate,
-              severity,
-              treatments,
-              mutations: []
-            };
-          }
-          acc[key].mutations.push(mut);
-          return acc;
-        },
-        {}
-      ));
-
-      const muts = payload.map(
-        mut => {
-          const key = `${mut.refName}${LIST_JOIN_MAGIC_SEP}${mut.subjectName}`;
-          const infectDate = new Date(mut.infectionDate);
-          const treatments = (allSbjRx[key] || [])
-            .filter(({startDate}) => startDate < mut.appearanceDate)
-            .map(one => {
-              const timing = Math.max(
-                1,
-                Math.round(
-                  (new Date(one.startDate) - infectDate) / 86400000 / 30
-                )
-              );
-              const endTiming = Math.max(
-                1,
-                Math.round(
-                  (new Date(one.endDate) - infectDate) / 86400000 / 30
-                )
-              );
-              return {
-                ...one,
-                timing,
-                endTiming
-              };
-            })
-            .sort(({timing: t1}, {timing: t2}) => t1 - t2);
-          return {
-            ...mut,
-            count: mut.count || 1,
-            total: mut.total || 1,
-            treatments
-          };
-        }
-      );
-      return [sbjs, muts];
+      return sbjs;
     },
-    [isPending, isSbjRxPending, payload, sbjRxPayload, skip]
+    [
+      isPending,
+      isSbjIsoPending,
+      isSbjRxPending,
+      payload,
+      sbjRxPayload,
+      sbjIsoPayload,
+      skip
+    ]
   );
+
   const contextValue = {
     inVivoSbjs,
-    inVivoMuts,
     isPending: skip || isPending || isSbjRxPending
   };
 

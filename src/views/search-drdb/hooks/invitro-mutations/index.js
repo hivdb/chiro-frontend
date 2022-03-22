@@ -8,6 +8,7 @@ import useSummaryByRx from './use-summary-by-rx';
 import useSummaryByVirus from './use-summary-by-virus';
 
 import {
+  filterSpike,
   filterByRefName,
   filterByIsoAggkey,
   filterByGenePos,
@@ -44,6 +45,7 @@ function usePrepareQuery({
         where.push('false');
       }
       else {
+        filterSpike({where});
         filterByRefName({refName, where, params});
         filterByIsoAggkey({isoAggkey, where, params});
         filterByGenePos({genePos, where, params});

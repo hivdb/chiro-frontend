@@ -91,7 +91,13 @@ export default function useSmallColumns({
         }),
         infectionTiming: new ColumnDef({
           name: 'infectionTiming',
-          label: labels.infectionTiming || 'Month since Infection'
+          label: labels.infectionTiming || 'Month since Infection',
+          render: ([start, end]) => (
+            start === end ? start : `${start}-${end}`
+          ),
+          exportCell: ([start, end]) => (
+            start === end ? `${start}m` : `${start}-${end}m`
+          )
         }),
         timing: new ColumnDef({
           name: 'timing',

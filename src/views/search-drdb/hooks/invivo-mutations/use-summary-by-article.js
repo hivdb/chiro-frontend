@@ -3,6 +3,7 @@ import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
 import {
+  filterSpike,
   filterByIsoAggkey,
   filterByGenePos,
   filterBySbjRxAbNames,
@@ -33,6 +34,7 @@ function usePrepareQuery({
         where.push('false');
       }
       else {
+        filterSpike({where});
         filterByIsoAggkey({isoAggkey, where, params});
         filterByGenePos({genePos, where, params});
         filterBySbjRxAbNames({abNames, where, params});

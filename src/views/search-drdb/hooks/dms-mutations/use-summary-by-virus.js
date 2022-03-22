@@ -3,6 +3,7 @@ import useQuery from '../use-query';
 import LocationParams from '../location-params';
 
 import {
+  filterSpike,
   filterByRefName,
   filterByAbNames,
   queryIsoAggkeys
@@ -25,6 +26,7 @@ function usePrepareQuery({
       const params = {$joinSep: LIST_JOIN_MAGIC_SEP};
       const where = [];
 
+      filterSpike({where});
       filterByRefName({refName, where, params});
       filterByAbNames({abNames, where, params});
 

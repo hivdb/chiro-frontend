@@ -5,6 +5,7 @@ import pluralize from 'pluralize';
 import InlineLoader
   from 'sierra-frontend/dist/components/inline-loader';
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+import {consecutiveGroupsBy} from 'sierra-frontend/dist/utils/array-groups';
 
 
 import InVivoMutations from '../../hooks/invivo-mutations';
@@ -30,6 +31,7 @@ const tableConfig = {
     'infectedVarName': 'Infection Variant'
   },
   rowSpanKeyGetter: {
+    refName: r => r.refName,
     subjectName: r => `${r.refName}$$${r.subjectName}`,
     subjectAge: r => `${r.refName}$$${r.subjectName}`,
     immuneStatus: r => `${r.refName}$$${r.subjectName}`,
@@ -39,10 +41,10 @@ const tableConfig = {
     infectionDate: r => (
       `${r.refName}$$${r.subjectName}$$` +
       new Date(r.infectionDate).getFullYear()
-    )
+    ),
+    treatments: r => JSON.stringify(r.treatments)
   },
   multiCells: [
-    'treatments',
     'infectionTiming',
     'mutations'
   ]
@@ -78,67 +80,76 @@ function uniqTreatments(treatments) {
 }
 
 
-function groupMutationsByTreatments(inVivoSbjs) {
-  const rxRows = [];
-  for (const sbjRow of inVivoSbjs) {
-    const rxMutsMap = {};
-    const rxSoFarMap = {};
-    const rxSoFar = [];
-    let prevStartDate = new Date(sbjRow.infectionDate);
-    for (const rx of sbjRow.treatments) {
-      const startDate = new Date(rx.startDate);
-      const rxMuts = [];
-      for (const mut of sbjRow.mutations) {
-        const appearDate = new Date(mut.appearanceDate);
-        if (appearDate > prevStartDate && appearDate <= startDate) {
-          rxMuts.push(mut);
-        }
-      }
-      if (rxMuts.length > 0) {
-        const uniqRx = uniqTreatments(rxSoFar);
-        const uniqRxKey = JSON.stringify(uniqRx);
-        if (!(uniqRxKey in rxMutsMap)) {
-          rxMutsMap[uniqRxKey] = [];
-        }
-        rxSoFarMap[uniqRxKey] = uniqRx;
-        rxMutsMap[uniqRxKey] = [...rxMutsMap[uniqRxKey], ...rxMuts];
-      }
-      rxSoFar.push(rx);
-      prevStartDate = startDate;
-    }
-
-    const rxMuts = [];
-    for (const mut of sbjRow.mutations) {
-      const appearDate = new Date(mut.appearanceDate);
-      if (appearDate > prevStartDate) {
-        rxMuts.push(mut);
-      }
-    }
-    if (rxMuts.length > 0) {
-      const uniqRx = uniqTreatments(rxSoFar);
-      const uniqRxKey = JSON.stringify(uniqRx);
-      if (!(uniqRxKey in rxMutsMap)) {
-        rxMutsMap[uniqRxKey] = [];
-      }
-      rxSoFarMap[uniqRxKey] = uniqRx;
-      rxMutsMap[uniqRxKey] = [...rxMutsMap[uniqRxKey], ...rxMuts];
-    }
-
-    for (const uniqRxKey in rxSoFarMap) {
-      const treatments = rxSoFarMap[uniqRxKey];
-      const mutations = rxMutsMap[uniqRxKey];
-      const infectionTiming = Math.max(
-        ...mutations.map(({timing}) => timing)
+function groupByIsolates(inVivoSbjs) {
+  const isoRows = [];
+  for (const {isolates, ...sbjRow} of inVivoSbjs) {
+    for (const iso of isolates) {
+      const isoDate = new Date(iso.isolateDate);
+      const isoMuts = iso.mutations.map(
+        m => `${m.gene}:${m.position}${m.aminoAcid}`
       );
-      rxRows.push({
+      const treatments = sbjRow.treatments.filter(
+        ({startDate}) => new Date(startDate) < isoDate
+      );
+      const mutations = sbjRow.mutations.filter(
+        m => isoMuts.includes(`${m.gene}:${m.position}${m.aminoAcid}`)
+      );
+      isoRows.push({
         ...sbjRow,
-        infectionTiming,
-        treatments,
-        mutations
+        infectionTiming: iso.timing,
+        treatments: uniqTreatments(treatments),
+        mutations: iso.mutations,
+        emergentMutations: mutations
       });
     }
   }
-  return rxRows;
+
+  // remove duplicated isolates
+  return Array.from(consecutiveGroupsBy(
+    isoRows,
+    (left, right) => (
+      left.refName === right.refName &&
+      left.subjectName === right.subjectName &&
+      left.infectedVarName === right.infectedVarName &&
+      left.infectionDate === right.infectionDate &&
+      JSON.stringify(left.treatments) ===
+      JSON.stringify(right.treatments) &&
+      JSON.stringify(left.mutations) ===
+      JSON.stringify(right.mutations)
+    )
+  )).map(group => {
+    const [{
+      refName,
+      subjectName,
+      subjectSpecies,
+      subjectAge,
+      immuneStatus,
+      infectedVarName,
+      infectionDate,
+      treatments,
+      mutations,
+      emergentMutations
+    }] = group;
+    const minTiming = Math.min(...group.map(
+      ({infectionTiming}) => infectionTiming
+    ));
+    const maxTiming = Math.max(...group.map(
+      ({infectionTiming}) => infectionTiming
+    ));
+    return {
+      refName,
+      subjectName,
+      subjectSpecies,
+      subjectAge,
+      immuneStatus,
+      infectedVarName,
+      infectionDate,
+      treatments,
+      infectionTiming: [minTiming, maxTiming],
+      mutations,
+      emergentMutations
+    };
+  });
 }
 
 
@@ -183,7 +194,7 @@ export default function InVivoMutationsTable() {
   );
 
   const mutsByRx = React.useMemo(
-    () => isPending ? [] : groupMutationsByTreatments(inVivoSbjs),
+    () => isPending ? [] : groupByIsolates(inVivoSbjs),
     [isPending, inVivoSbjs]
   );
 

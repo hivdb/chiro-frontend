@@ -50,6 +50,14 @@ function matchIsolateMutation({
 }
 
 
+export function filterSpike({where, mainTableName = 'M'}) {
+  where.push(
+    // force to only include Spike
+    `${mainTableName}.gene = 'S'`
+  );
+}
+
+
 export function filterByVarName({
   varName,
   where,
