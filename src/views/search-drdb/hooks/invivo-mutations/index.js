@@ -105,7 +105,9 @@ function usePrepareQuery({
           ISOM.gene,
           R.amino_acid as ref_amino_acid,
           ISOM.position,
-          ISOM.amino_acid
+          ISOM.amino_acid,
+          ISOM.count,
+          ISOM.total
         FROM subject_history SHX
         JOIN isolate_mutations ISOM ON
           SHX.iso_name = ISOM.iso_name

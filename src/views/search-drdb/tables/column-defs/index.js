@@ -92,6 +92,10 @@ export default function useColumnDefs({
   const treatments = useTreatments(commonArgs);
   const treatment = useTreatment(commonArgs);
   const mutations = useMutations(commonArgs);
+  const emergentMutations = useMutations({
+    colName: 'emergentMutations',
+    ...commonArgs
+  });
   const smallColumns = useSmallColumns(commonArgs);
 
   return React.useMemo(
@@ -112,6 +116,7 @@ export default function useColumnDefs({
         treatments,
         treatment,
         mutations,
+        emergentMutations,
         ...smallColumns
       };
 
@@ -133,6 +138,7 @@ export default function useColumnDefs({
       treatments,
       treatment,
       mutations,
+      emergentMutations,
       smallColumns,
       skip
     ]

@@ -25,13 +25,14 @@ const tableConfig = {
     'infectionDate',
     'treatments',
     'infectionTiming',
-    'mutations'
+    'mutations',
+    'emergentMutations'
   ],
   labels: {
     'infectedVarName': 'Infection Variant'
   },
   rowSpanKeyGetter: {
-    refName: r => r.refName,
+    refName: r => `${r.refName}$$${r.subjectName}`,
     subjectName: r => `${r.refName}$$${r.subjectName}`,
     subjectAge: r => `${r.refName}$$${r.subjectName}`,
     immuneStatus: r => `${r.refName}$$${r.subjectName}`,

@@ -17,16 +17,20 @@ function CellMutation({text, count, total}) {
   return <>{text}{total > 1 ? ` (${count}/${total})` : null}</>;
 }
 
-
-export default function useMutations({labels, skip, columns}) {
+export default function useMutations({
+  colName = 'mutations',
+  labels,
+  skip,
+  columns
+}) {
   return React.useMemo(
     () => {
-      if (skip || !columns.includes('mutations')) {
+      if (skip || !columns.includes(colName)) {
         return null;
       }
       return new ColumnDef({
-        name: 'mutations',
-        label: labels.mutations || 'Mutations',
+        name: colName,
+        label: labels[colName],
         render: mutations => shortenMutationList(mutations, true).map(({
           text,
           count,
@@ -39,18 +43,18 @@ export default function useMutations({labels, skip, columns}) {
            total={total} />
         </React.Fragment>),
         sort: rows => sortBy(rows, [
-          'mutations.0.gene',
-          'mutations.0.position',
-          'mutations.0.aminoAcid',
-          'mutations.1.gene',
-          'mutations.1.position',
-          'mutations.1.aminoAcid',
-          'mutations.2.gene',
-          'mutations.2.position',
-          'mutations.2.aminoAcid'
+          `${colName}.0.gene`,
+          `${colName}.0.position`,
+          `${colName}.0.aminoAcid`,
+          `${colName}.1.gene`,
+          `${colName}.1.position`,
+          `${colName}.1.aminoAcid`,
+          `${colName}.2.gene`,
+          `${colName}.2.position`,
+          `${colName}.2.aminoAcid`
         ])
       });
     },
-    [columns, labels.mutations, skip]
+    [columns, labels, skip, colName]
   );
 }
