@@ -138,14 +138,42 @@ function InVitroMutationsProvider({children}) {
       if (skip || isPending) {
         return [];
       }
-      return payload.map(
-        mut => {
-          mut.abNames = (
-            mut.abNames ? mut.abNames.split(LIST_JOIN_MAGIC_SEP) : []
-          );
-          return mut;
-        }
-      );
+      return Object.values(payload
+        .map(
+          mut => {
+            mut.abNames = (
+              mut.abNames ? mut.abNames.split(LIST_JOIN_MAGIC_SEP) : []
+            );
+            return mut;
+          }
+        )
+        .reduce(
+          (acc, {
+            refName,
+            rxName,
+            rxType,
+            abNames,
+            infectedVarName,
+            section,
+            ...mut
+          }) => {
+            const key = `${refName}$$${rxName}$$${section}`;
+            if (!(key in acc)) {
+              acc[key] = {
+                refName,
+                rxName,
+                rxType,
+                abNames,
+                infectedVarName,
+                section,
+                mutations: []
+              };
+            }
+            acc[key].mutations.push(mut);
+            return acc;
+          },
+          {}
+        ));
     },
     [isPending, payload, skip]
   );

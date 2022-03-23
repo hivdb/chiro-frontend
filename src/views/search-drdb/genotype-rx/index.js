@@ -7,6 +7,7 @@ import setTitle from '../../../utils/set-title';
 
 import GenotypeRxStatHeader from './stat-header';
 import InVivoMutationsTable from '../tables/invivo-mutations-table';
+import InVitroMutationsTable from '../tables/invitro-mutations-table';
 
 import {useLastUpdate} from '../hooks';
 import LocationParams from '../hooks/location-params';
@@ -48,14 +49,24 @@ export default function GenotypeRxLayout() {
     </Grid.Row>
     <GenotypeRxStatHeader />
     {formOnly ?
-      null : <Grid.Row centered>
-        <Grid.Column width={16}>
-          <Header as={H2} id="invivo-mutations">
-            In vivo Selection Data
-          </Header>
-          <InVivoMutationsTable />
-        </Grid.Column>
-      </Grid.Row>}
+      null : <>
+        <Grid.Row centered>
+          <Grid.Column width={16}>
+            <Header as={H2} id="invivo-mutations">
+              In vivo Selection Data
+            </Header>
+            <InVivoMutationsTable />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row centered>
+          <Grid.Column width={16}>
+            <Header as={H2} id="invitro-mutations">
+              In vitro Selection Data
+            </Header>
+            <InVitroMutationsTable />
+          </Grid.Column>
+        </Grid.Row>
+      </>}
     <BackToTop />
   </Grid>;
 }

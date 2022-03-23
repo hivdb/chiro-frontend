@@ -19,15 +19,31 @@ const tableConfig = {
     'refName',
     'section',
     'treatment',
-    'mutation'
+    'mutations'
   ],
   labels: {
-    treatment: 'Antibodies'
-  }
+    treatment: 'Antibodies',
+    mutations: 'Emerging Mutations'
+  },
+  rowSpanKeyGetter: {
+    refName: r => (
+      `${r.refName}$$${r.rxType}$$` +
+      JSON.stringify(r.abNames)
+    ),
+    section: r => (
+      `${r.refName}$$${r.section}$$${r.rxType}$$` +
+      JSON.stringify(r.abNames)
+    ),
+    treatment: r => (
+      `${r.refName}$$${r.rxType}$$` +
+      JSON.stringify(r.abNames)
+    )
+  },
+  multiCells: ['mutations']
 };
 
 export default function InVitroMutationsTable() {
-  let {columns, labels} = tableConfig;
+  let {columns, labels, rowSpanKeyGetter, multiCells} = tableConfig;
 
   const {
     params: {
@@ -49,11 +65,22 @@ export default function InVitroMutationsTable() {
   );
 
   const {inVitroMuts, isPending} = InVitroMutations.useMe();
-  const columnDefs = useColumnDefs({
+  const origColumnDefs = useColumnDefs({
     columns,
     labels
   });
-
+  const columnDefs = React.useMemo(
+    () => origColumnDefs.map(colDef => {
+      if (multiCells.includes(colDef.name)) {
+        colDef.multiCells = true;
+      }
+      if (colDef.name in rowSpanKeyGetter) {
+        colDef.rowSpanKeyGetter = rowSpanKeyGetter[colDef.name];
+      }
+      return colDef;
+    }),
+    [multiCells, rowSpanKeyGetter, origColumnDefs]
+  );
 
   if (isPending) {
     return <InlineLoader />;
@@ -68,6 +95,10 @@ export default function InVitroMutationsTable() {
     </>;
   }
   const numExps = inVitroMuts.length;
+  const numMuts = inVitroMuts.reduce(
+    (acc, {mutations}) => acc + mutations.length,
+    0
+  );
 
   const cacheKey = JSON.stringify({
     refName,
@@ -79,7 +110,11 @@ export default function InVitroMutationsTable() {
     <div>
       <em>
         <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('result', numExps, false)}.
+        {pluralize('result', numExps, false)}{'; '}
+      </em>
+      <em>
+        <strong>{numMuts.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('mutation', numMuts, false)}.
       </em>
     </div>
     <div ref={tableCtlRef} className={style['invitro-muts-table-control']}>
