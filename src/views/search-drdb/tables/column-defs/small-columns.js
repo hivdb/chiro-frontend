@@ -57,6 +57,11 @@ export default function useSmallColumns({
           ),
           render: n => n && n.toLocaleString('en-US')
         }),
+        numSubjects: new ColumnDef({
+          name: 'numSubjects',
+          label: labels.numSubjects || '# Subjects',
+          render: n => n && n.toLocaleString('en-US')
+        }),
         vaccineName: new ColumnDef({
           name: 'vaccineName',
           label: labels.vaccineName || 'Vaccine'
@@ -75,7 +80,9 @@ export default function useSmallColumns({
         immuneStatus: new ColumnDef({
           name: 'immuneStatus',
           label: labels.immuneStatus || 'Immune Status',
-          render: s => s === 'Medical' ? 'Iatrogenic immunocompromised' : s
+          render: s => s === null ? '?' : (
+            s === 'Medical' ? 'Iatrogenic immunocompromised' : s
+          )
         }),
         subjectSpecies: new ColumnDef({
           name: 'subjectSpecies',

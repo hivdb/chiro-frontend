@@ -1,6 +1,7 @@
 import React from 'react';
 import {Grid, Header/*, Loader*/} from 'semantic-ui-react';
 
+import {H2} from 'sierra-frontend/dist/components/heading-tags';
 import BackToTop from '../../../components/back-to-top';
 import setTitle from '../../../utils/set-title';
 
@@ -49,6 +50,9 @@ export default function GenotypeRxLayout() {
     {formOnly ?
       null : <Grid.Row centered>
         <Grid.Column width={16}>
+          <Header as={H2} id="invivo-mutations">
+            In vivo Selection Data
+          </Header>
           <InVivoMutationsTable />
         </Grid.Column>
       </Grid.Row>}

@@ -1,4 +1,5 @@
 import React from 'react';
+import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import shortenMutationList from '../../shorten-mutlist';
@@ -19,16 +20,26 @@ CellMutation.propTypes = {
     PropTypes.string
   ]),
   isEmerging: PropTypes.bool,
-  isWaning: PropTypes.bool
+  isWaning: PropTypes.bool,
+  species: PropTypes.string
 };
 
 
-function CellMutation({text, count, total, isEmerging, isWaning}) {
+function CellMutation({text, count, total, isEmerging, isWaning, species}) {
   return <span
    className={style.mutation}
-   data-is-emerging={isEmerging}
+   data-is-emerging={!(total > 1) && isEmerging}
    data-is-waning={isWaning}>
-    {text}{total > 1 ? ` (${count}/${total})` : null}
+    {text}{total > 1 ? <>
+      {' ('}
+      {Number.parseInt(count).toLocaleString('en-US')}{' '}
+      {pluralize(
+        !species || species === 'Human' ?
+          'patient' : species.toLocaleLowerCase(),
+        Number.parseInt(count),
+        false
+      )})
+    </> : null}
   </span>;
 }
 
@@ -46,7 +57,7 @@ export default function useMutations({
       return new ColumnDef({
         name: colName,
         label: labels[colName],
-        render: mutations => shortenMutationList(
+        render: (mutations, {subjectSpecies}) => shortenMutationList(
           mutations || [],
           true
         ).map(({
@@ -62,10 +73,11 @@ export default function useMutations({
             count,
             total,
             isEmerging,
-            isWaning
+            isWaning,
+            species: subjectSpecies
           }} />
         </React.Fragment>),
-        exportCell: mutations => (
+        exportCell: (mutations, {subjectSpecies: species}) => (
           shortenMutationList(mutations || [], true)
             .map(({
               text,
@@ -73,8 +85,17 @@ export default function useMutations({
               total,
               isEmerging
             }) => (
-              `${text}${total > 1 ? ` (${count}/${total})` : ''
-              }${isEmerging ? ' (+)' : ''}`
+              `${text}${total > 1 ? ` (${
+                Number.parseInt(count).toLocaleString('en-US')
+              } ${
+                pluralize(
+                  !species || species === 'Human' ?
+                    'patient' : species.toLocaleLowerCase(),
+                  Number.parseInt(count),
+                  false
+                )
+              })` : (isEmerging ? ' (+)' : '')
+              }`
             ))
             .join(', ')
         ),
