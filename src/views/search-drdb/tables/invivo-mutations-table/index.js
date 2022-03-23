@@ -225,9 +225,8 @@ export default function InVivoMutationsTable() {
     </>;
   }
 
-  const numExps = MutsByIso.length;
-  const numMuts = MutsByIso.reduce(
-    (acc, {mutations}) => acc + mutations.length,
+  const numSbjs = inVivoSbjs.reduce(
+    (acc, {numSubjects}) => acc + numSubjects,
     0
   );
 
@@ -240,10 +239,8 @@ export default function InVivoMutationsTable() {
   return <>
     <div>
       <em>
-        <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('result', numExps, false)}{', '}
-        <strong>{numMuts.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('mutation', numMuts, false)}.
+        <strong>{numSbjs.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('patient', numSbjs, false)}.
       </em>
     </div>
     <div ref={tableCtlRef} className={style['invivo-muts-table-control']}>

@@ -66,6 +66,7 @@ function usePrepareQuery({
           M.subject_name,
           SBJ.subject_species,
           SBJ.immune_status,
+          SBJ.num_subjects,
           CAST(SUBSTR(infection_date, 1, 4) AS INTEGER) -
           SBJ.birth_year AS subject_age,
           ${queryInfectedVarName()},
@@ -318,6 +319,7 @@ function buildSbjArray(
       subjectName,
       subjectSpecies,
       subjectAge,
+      numSubjects,
       immuneStatus,
       infectedVarName,
       infectionDate,
@@ -355,6 +357,7 @@ function buildSbjArray(
           subjectName,
           subjectSpecies,
           subjectAge,
+          numSubjects,
           immuneStatus,
           infectedVarName,
           infectionDate,
