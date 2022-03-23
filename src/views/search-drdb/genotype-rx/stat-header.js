@@ -8,6 +8,7 @@ import MutationCard from '../mutation-card';
 import LocationParams from '../hooks/location-params';
 
 import SearchBox from './search-box';
+import TableOfContent from './table-of-content';
 
 import style from '../style.module.scss';
 
@@ -59,6 +60,7 @@ export default function GenotypeRxStatHeader() {
                   <ArticleCard formOnly={false} />
                   <AntibodyCard formOnly={false} />
                   <MutationCard formOnly={false} />
+                  {formOnly ? null : <TableOfContent />}
                 </>
               }
             ]}

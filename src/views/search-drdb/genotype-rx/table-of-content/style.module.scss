@@ -1,0 +1,61 @@
+$list-indent: 1.5rem;
+$line-height: 1.3em;
+$title-width: 28rem;
+$tree-branch-width: .9rem;
+$tree-branch-thick: 2px;
+$tree-branch-color: rgba(0,0,0,.3);
+ul.toc, ul.toc ul {
+  padding-left: calc(#{$list-indent / 3} - #{$tree-branch-thick});
+  list-style-type: none;
+  li {
+    position: relative;
+    padding-left: $list-indent / 3 * 2;
+    list-style-type: none;
+    border-left: $tree-branch-thick solid transparent;
+    &::before {
+      content:'';
+      position: absolute;
+      left: 0;
+      height: $line-height / 3 * 2;
+      width: $tree-branch-width;
+      border: $tree-branch-thick solid $tree-branch-color;
+      border-top: 0 none transparent;
+      border-right: 0 none transparent;
+    }
+    &:not(:last-of-type) {
+      border-left-color: $tree-branch-color;
+      &::before {
+        border-left: $tree-branch-thick none transparent;
+        width: calc(#{$tree-branch-width} - #{$tree-branch-thick});
+      }
+    }
+    &:last-of-type::before {
+      left: -$tree-branch-thick;
+    }
+  }
+}
+
+
+ul.toc, ul.toc > li > ul {
+  > li {
+    font-size: 1rem;
+    line-height: $line-height;
+    > .title {
+      display: inline-block;
+    }
+  }
+}
+ul.toc {
+  > li {
+    &:not(:last-of-type) {
+      padding-bottom: .5rem;
+    }
+    > a.title {
+      width: $title-width;
+      font-weight: 600;
+    }
+    > ul > li > .title {
+      width: $title-width - $list-indent;
+    }
+  }
+}
