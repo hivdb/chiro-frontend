@@ -11,42 +11,116 @@ import {loadBinary} from '../../../utils/covid-drdb';
 import useConfig from './use-config';
 
 
-const createClient = memoize(
-  async function initClient(drdbVersion) {
-    const worker = new Worker('/worker.sql-wasm.js');
+const MAX_WORKERS = (window.navigator.hardwareConcurrency || 5) - 2;
+// eslint-disable-next-line no-console
+console.debug(`SQLite pool: ${MAX_WORKERS} threads allowed`);
+const WORKER_POOL = {};
 
-    const {payload} = await loadBinary(
-      `covid-drdb-${drdbVersion}.db`
-    );
+async function createClient(drdbVersion) {
+  let worker, onRelease, curIdx;
+  WORKER_POOL[drdbVersion] = WORKER_POOL[drdbVersion] || {
+    pool: new Array(MAX_WORKERS).fill(null),
+    totalWorkers: 0,
+    locks: new Array(MAX_WORKERS).fill(null)
+  };
+  const {pool, totalWorkers, locks} = WORKER_POOL[drdbVersion];
+  do {
+    curIdx = locks.findIndex(lock => lock === null);
+    if (curIdx > -1 && pool[curIdx] !== null) {
+      worker = pool[curIdx];
+      pool[curIdx] = null;
+      updateLocks(curIdx);
+      // eslint-disable-next-line no-console
+      console.debug(
+        'SQLite pool: Retrieve worker from pool' +
+        ` (${curIdx + 1}/${MAX_WORKERS})`
+      );
+    }
+    else if (totalWorkers < MAX_WORKERS) {
+      const newWorker = new Worker('/worker.sql-wasm.js');
+      curIdx = totalWorkers;
+      updateLocks(curIdx);
+      // eslint-disable-next-line no-console
+      console.debug(
+        'SQLite pool: New SQLite worker created' +
+        ` (${curIdx + 1}/${MAX_WORKERS}, a)`
+      );
 
-    const promise = new Promise(
-      resolve => {
-        worker.addEventListener('message', handleMessage);
+      WORKER_POOL[drdbVersion].totalWorkers ++;
 
-        function handleMessage({data}) {
-          if (data.id === 1 && data.ready) {
-            worker.removeEventListener('message', handleMessage);
-            resolve(worker);
+      const {payload} = await loadBinary(
+        `covid-drdb-${drdbVersion}.db`
+      );
+
+      const promise = new Promise(
+        resolve => {
+          newWorker.addEventListener('message', handleMessage);
+
+          function handleMessage({data}) {
+            if (data.id === 1 && data.ready) {
+              newWorker.removeEventListener('message', handleMessage);
+              resolve(newWorker);
+            }
           }
         }
+      );
+
+      newWorker.postMessage({
+        id: 1,
+        action: 'open',
+        buffer: new Uint8Array(payload)
+      });
+      worker = await promise;
+    }
+    else {
+      // eslint-disable-next-line no-console
+      console.debug('SQLite pool: Await for free SQLite worker...');
+      curIdx = await Promise.any(locks);
+      if (pool[curIdx] === null) {
+        // eslint-disable-next-line no-console
+        console.debug(
+          'SQLite pool: worker is already locked by another coroutine, ' +
+          'trying again...'
+        );
+        continue;
+      }
+      worker = pool[curIdx];
+      pool[curIdx] = null;
+      updateLocks(curIdx);
+      // eslint-disable-next-line no-console
+      console.debug(
+        'SQLite pool: Retrieve worker from pool' +
+        ` (${curIdx + 1}/${MAX_WORKERS}, b)`
+      );
+    }
+    break;
+  } while (!worker);
+
+  return [await worker, () => {
+    pool[curIdx] = worker;
+    onRelease(curIdx);
+    // eslint-disable-next-line no-console
+    console.debug(
+      'SQLite pool: Put worker back' +
+      ` (${curIdx + 1}/${MAX_WORKERS})`
+    );
+  }];
+
+  function updateLocks(idx) {
+    locks[idx] = new Promise(
+      resolve => {
+        onRelease = resolve;
       }
     );
-
-    worker.postMessage({
-      id: 1,
-      action: 'open',
-      buffer: new Uint8Array(payload)
-    });
-
-    return await promise;
   }
-);
+
+}
 
 
 const execSQL = memoize(
   async function execSQL({sql, params, drdbVersion}) {
     const start = new Date().getTime();
-    const worker = await createClient(drdbVersion);
+    const [worker, releaseWorker] = await createClient(drdbVersion);
 
     const myId = parseInt(
       Math.random() * (Number.MAX_SAFE_INTEGER - 1)
@@ -62,6 +136,7 @@ const execSQL = memoize(
               console.error(sql, params, error);
             }
             worker.removeEventListener('message', handleMessage);
+            releaseWorker();
             const end = new Date().getTime();
             if (process.env.NODE_ENV !== 'production') {
               // eslint-disable-next-line no-console
