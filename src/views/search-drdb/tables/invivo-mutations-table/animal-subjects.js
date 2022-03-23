@@ -1,12 +1,12 @@
 import React from 'react';
 import pluralize from 'pluralize';
 
+import {H3} from 'sierra-frontend/dist/components/heading-tags';
 import InlineLoader
   from 'sierra-frontend/dist/components/inline-loader';
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 
 import {groupByIsolates} from './funcs';
-import {useGoBack} from './hooks';
 
 import InVivoMutations from '../../hooks/invivo-mutations';
 import LocationParams from '../../hooks/location-params';
@@ -69,8 +69,6 @@ export default function InVivoAnimalSbjTable() {
   } = LocationParams.useMe();
   const tableCtlRef = React.useRef();
 
-  const handleGoBack = useGoBack();
-
   const origColumnDefs = useColumnDefs({
     columns,
     labels
@@ -123,12 +121,7 @@ export default function InVivoAnimalSbjTable() {
   }
 
   if (MutsByIso.length === 0) {
-    return <>
-      <div>
-        No in-vivo selection data is found for this request.
-        (<a href="#back" onClick={handleGoBack}>Go back</a>)
-      </div>
-    </>;
+    return null;
   }
 
   const numSbjs = inVivoSbjsFiltered.reduce(
@@ -148,7 +141,8 @@ export default function InVivoAnimalSbjTable() {
     isoAggkey,
     abNames
   });
-  return <>
+  return <section>
+    <H3>Animal models</H3>
     <div>
       {Object.entries(numSbjs).map(([species, num], idx) => <em key={species}>
         <strong>{num.toLocaleString('en-US')}</strong>{' '}
@@ -164,5 +158,5 @@ export default function InVivoAnimalSbjTable() {
        cacheKey={cacheKey}
        data={MutsByIso} />
     </div>
-  </>;
+  </section>;
 }

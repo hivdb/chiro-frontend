@@ -36,7 +36,7 @@ export default function GenotypeRxStatHeader() {
                 cells: [
                   {label: 'References', value: articleDropdown},
                   {
-                    label: 'Treatments',
+                    label: 'Monoclonal antibodies',
                     value: rxDropdown
                   },
                   {

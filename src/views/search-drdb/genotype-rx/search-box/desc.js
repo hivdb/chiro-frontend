@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 
@@ -10,10 +10,10 @@ Desc.propTypes = {
 
 Desc.defaultProps = {
   approx: false
-};
+};*/
 
-export default function Desc({n, approx}) {
-  let prefix = null;
+export default function Desc(/*{n, approx}*/) {
+  /*let prefix = null;
   if (approx) {
     prefix = '~';
     if (n > 1000) {
@@ -41,5 +41,6 @@ export default function Desc({n, approx}) {
 
   return <span className="description">
     {prefix}{pluralize('mutation', n, true)}
-  </span>;
+  </span>;*/
+  return null;
 }

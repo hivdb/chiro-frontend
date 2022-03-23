@@ -5,6 +5,7 @@ import LocationParams from '../../hooks/location-params';
 import IsolateAggs, {compareIsolateAggs} from '../../hooks/isolate-aggs';
 import Positions from '../../hooks/positions';
 import InVivoMutations from '../../hooks/invivo-mutations';
+import InVitroMutations from '../../hooks/invitro-mutations';
 
 import Desc from './desc';
 import style from './style.module.scss';
@@ -65,10 +66,16 @@ export default function useVirusDropdown() {
     isInVivoMutsPending
   ] = InVivoMutations.useSummaryByVirus();
 
+  const [
+    numInVitroMuts,
+    isInVitroMutsPending
+  ] = InVitroMutations.useSummaryByVirus();
+
   const isPending = (
     isIsoAggsPending ||
     isPositionsPending ||
-    isInVivoMutsPending
+    isInVivoMutsPending ||
+    isInVitroMutsPending
   );
 
   const [
@@ -80,7 +87,10 @@ export default function useVirusDropdown() {
     const finalIsoAggNumExpLookup = {};
     const finalPosNumExpLookup = {};
 
-    for (const {isoAggkeys, genePos, count} of numInVivoMuts) {
+    for (const {isoAggkeys, genePos, count} of [
+      ...numInVivoMuts,
+      ...numInVitroMuts
+    ]) {
       finalVirusTotalNumExp += count;
       for (const isoAggkey of isoAggkeys) {
         finalIsoAggNumExpLookup[isoAggkey] =
@@ -97,7 +107,7 @@ export default function useVirusDropdown() {
       finalIsoAggNumExpLookup,
       finalPosNumExpLookup
     ];
-  }, [numInVivoMuts]);
+  }, [numInVivoMuts, numInVitroMuts]);
 
   const variantOptions = React.useMemo(
     () => {

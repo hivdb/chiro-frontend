@@ -6,10 +6,11 @@ import escapeRegExp from 'lodash/escapeRegExp';
 import useConfig from '../../hooks/use-config';
 import Antibodies from '../../hooks/antibodies';
 import InVivoMutations from '../../hooks/invivo-mutations';
+import InVitroMutations from '../../hooks/invitro-mutations';
 import LocationParams from '../../hooks/location-params';
 
 import Desc from './desc';
-import FragmentWithoutWarning from './fragment-without-warning';
+// import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
 
 
@@ -62,18 +63,23 @@ export default function useRxDropdown() {
     numInVivoMuts,
     isInVivoMutsPending
   ] = InVivoMutations.useSummaryByRx();
+  const [
+    numInVitroMuts,
+    isInVitroMutsPending
+  ] = InVitroMutations.useSummaryByRx();
 
   const isPending = (
     isConfigPending ||
     isAntibodiesPending ||
-    isInVivoMutsPending
+    isInVivoMutsPending ||
+    isInVitroMutsPending
   );
 
   const [
     finalRxTotalNumExp,
-    finalAbNumExpLookup,
-    totalInfVarNumExp,
-    totalNaiveRxNumExp
+    finalAbNumExpLookup
+    // totalInfVarNumExp,
+    // totalNaiveRxNumExp
   ] = React.useMemo(
     () => {
       if (isPending) {
@@ -85,7 +91,10 @@ export default function useRxDropdown() {
       let totalNaiveRxNumExp = 0;
       const finalAbNumExpLookup = {};
       finalAbNumExpLookup[ANY] = 0;
-      for (const {abNames, infectedVarNames, count} of numInVivoMuts) {
+      for (const {abNames, infectedVarNames, count} of [
+        ...numInVivoMuts,
+        ...numInVitroMuts
+      ]) {
         finalRxTotalNumExp += count;
         const countedMulAb = {};
 
@@ -130,7 +139,8 @@ export default function useRxDropdown() {
     [
       isPending,
       config,
-      numInVivoMuts
+      numInVivoMuts,
+      numInVitroMuts
     ]
   );
 
@@ -143,7 +153,7 @@ export default function useRxDropdown() {
             text: 'Any',
             value: ANY
           },
-          {
+          /*{
             key: 'naive-any',
             text: <em>Untreated / non-Ab</em>,
             value: 'naive-any',
@@ -154,7 +164,7 @@ export default function useRxDropdown() {
             text: 'Convalescent plasma',
             value: 'cp-any',
             type: CP
-          },
+          },*/
           {
             key: 'ab-any',
             text: 'MAb - any',
@@ -194,7 +204,7 @@ export default function useRxDropdown() {
             value: ANY,
             description: <Desc n={finalRxTotalNumExp} />
           },
-          ...(totalNaiveRxNumExp > 0 ? [
+          /*...(totalNaiveRxNumExp > 0 ? [
             {
               key: 'naive-any',
               text: <em>Untreated / non-Ab</em>,
@@ -211,9 +221,9 @@ export default function useRxDropdown() {
               description: <Desc n={totalInfVarNumExp} />,
               type: CP
             }
-          ] : []),
+          ] : []),*/
           ...(finalAbNumExpLookup[ANY] > 0 ? [
-            {
+            /*{
               key: 'antibody-divider',
               as: FragmentWithoutWarning,
               children: <Dropdown.Divider />
@@ -224,7 +234,7 @@ export default function useRxDropdown() {
               value: 'ab-any',
               type: ANTIBODY,
               description: <Desc n={finalAbNumExpLookup[ANY]} />
-            },
+            },*/
             ...[
               ...antibodyCombinations
                 .map(abNames => ({
@@ -276,8 +286,8 @@ export default function useRxDropdown() {
       config,
       formOnly,
       finalRxTotalNumExp,
-      totalInfVarNumExp,
-      totalNaiveRxNumExp,
+      // totalInfVarNumExp,
+      // totalNaiveRxNumExp,
       finalAbNumExpLookup,
       antibodies
     ]
