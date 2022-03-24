@@ -7,10 +7,10 @@ import AnimalSubjectTable from './animal-subjects';
 
 export default function InVivoMutationsTable() {
 
-  return <section>
+  return <>
     <IndivSubjectTable />
     <AggSubjectTable />
     <AnimalSubjectTable />
-  </section>;
+  </>;
 
 }

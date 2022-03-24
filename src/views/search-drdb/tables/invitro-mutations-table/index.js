@@ -95,10 +95,13 @@ export default function InVitroMutationsTable() {
     </>;
   }
   const numExps = inVitroMuts.length;
-  const numMuts = inVitroMuts.reduce(
-    (acc, {mutations}) => acc + mutations.length,
-    0
-  );
+  const numStudies = Object.keys(inVitroMuts.reduce(
+    (acc, {refName}) => {
+      acc[refName] = 1;
+      return acc;
+    },
+    {}
+  )).length;
 
   const cacheKey = JSON.stringify({
     refName,
@@ -110,12 +113,11 @@ export default function InVitroMutationsTable() {
     <div>
       <em>
         <strong>{numExps.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('result', numExps, false)}{'; '}
-      </em>
-      <em>
-        <strong>{numMuts.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('mutation', numMuts, false)}.
-      </em>
+        {pluralize('experiment', numExps, false)}
+        {' in '}
+        <strong>{numStudies.toLocaleString('en-US')}</strong>{' '}
+        {pluralize('publication', numStudies, false)}
+      </em>.
     </div>
     <div ref={tableCtlRef} className={style['invitro-muts-table-control']}>
       <InlineLoader className={style['loader']} />

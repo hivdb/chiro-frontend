@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Header/*, Loader*/} from 'semantic-ui-react';
+import {Grid, Header} from 'semantic-ui-react';
 
 import {H2} from 'sierra-frontend/dist/components/heading-tags';
 import BackToTop from '../../components/back-to-top';
@@ -60,7 +60,7 @@ export default function SearchDRDBLayout() {
   return <Grid stackable className={style['search']}>
     <Grid.Row>
       <Grid.Column width={16}>
-        <Header as ="h1" dividing className={style['header-title']}>
+        <Header as="h1" dividing className={style['header-title']}>
           Search SARS-CoV-2 resistance database
           <Header.Subheader>
             <span className={style['contribute-options']}>
@@ -83,27 +83,23 @@ export default function SearchDRDBLayout() {
     {displayAbTables ?
       <Grid.Row centered>
         <Grid.Column width={16}>
-          <Header as={H2} id="mab-susc-results">
-            MAb Susceptibility Data
-          </Header>
+          <H2 id="mab-susc-results">MAb Susceptibility Data</H2>
           <AbSuscResults />
         </Grid.Column>
       </Grid.Row> : null}
     {displayVPTables ?
       <Grid.Row centered>
         <Grid.Column width={16}>
-          <Header as={H2} id="vp-susc-results">
-            Vaccinee Plasma Susceptibility Data
-          </Header>
+          <H2 id="vp-susc-results">Vaccinee Plasma Susceptibility Data</H2>
           <VPSuscResults />
         </Grid.Column>
       </Grid.Row> : null}
     {displayCPTables ?
       <Grid.Row centered>
         <Grid.Column width={16}>
-          <Header as={H2} id="cp-susc-results">
+          <H2 id="cp-susc-results">
             Convalescent Plasma Susceptibility Data
-          </Header>
+          </H2>
           <CPSuscResults />
         </Grid.Column>
       </Grid.Row> : null}
@@ -111,27 +107,25 @@ export default function SearchDRDBLayout() {
       {displayAbTables || displayCPTables ?
         <Grid.Row centered>
           <Grid.Column width={16}>
-            <Header as={H2} id="invitro-mutations">
-              In vitro Selection Data
-            </Header>
+            <H2 id="invitro-mutations">In vitro Selection Data</H2>
             <InVitroMutationsTable />
           </Grid.Column>
         </Grid.Row> : null}
       {displayAbTables || displayCPTables ?
         <Grid.Row centered>
           <Grid.Column width={16}>
-            <Header as={H2} id="invivo-mutations">
+            <H2 id="invivo-mutations">
               In vivo Selection Data
-            </Header>
+            </H2>
             <InVivoMutationsTable />
           </Grid.Column>
         </Grid.Row> : null}
       {displayAbTables ?
         <Grid.Row centered>
           <Grid.Column width={16}>
-            <Header as={H2} id="dms-mutations">
+            <H2 id="dms-mutations">
               Deep Mutational Scanning (DMS) Data
-            </Header>
+            </H2>
             <DMSMutationsTable />
           </Grid.Column>
         </Grid.Row> : null}

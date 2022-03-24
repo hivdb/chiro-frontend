@@ -28,8 +28,7 @@ const tableConfig = {
   ],
   labels: {
     infectedVarName: 'Infection Variant',
-    mutations: 'Emerging Mutations',
-    waningMutations: 'Waning Mutations',
+    mutations: 'Emerging Spike Mutations',
     treatments: 'Monoclonal Antibody'
   },
   rowSpanKeyGetter: {
@@ -135,21 +134,35 @@ export default function InVivoAnimalSbjTable() {
     {}
   );
 
+  const numStudies = Object.keys(
+    inVivoSbjsFiltered.reduce(
+      (acc, {refName}) => {
+        acc[refName] = 1;
+        return acc;
+      },
+      {}
+    )
+  ).length;
+
   const cacheKey = JSON.stringify({
     refName,
     varName,
     isoAggkey,
     abNames
   });
-  return <section>
-    <H3>Animal models</H3>
-    <div>
-      {Object.entries(numSbjs).map(([species, num], idx) => <em key={species}>
-        <strong>{num.toLocaleString('en-US')}</strong>{' '}
-        {pluralize(species.toLocaleLowerCase(), num, false)}
-        {idx + 1 < numSbjs.length ? '; ' : '.'}
-      </em>)}
-    </div>
+  return <section className={style['invivo-section']}>
+    <H3 className={style['stat-title']} id="invivo-mutations_animal">
+      {Object.entries(numSbjs).map(([species, num], idx) => (
+        <React.Fragment key={species}>
+          {idx > 0 && idx + 1 < numSbjs.length ? ', ' : null}
+          {idx + 1 === numSbjs.length ? ' and ' : null}
+          <strong>{num.toLocaleString('en-US')}</strong>{' '}
+          {pluralize(species.toLocaleLowerCase(), num, false)}
+        </React.Fragment>
+      ))}{' in '}
+      <strong>{numStudies.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('publication', numStudies, false)}.
+    </H3>
     <div ref={tableCtlRef} className={style['invivo-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable

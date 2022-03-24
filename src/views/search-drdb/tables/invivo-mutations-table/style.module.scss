@@ -27,3 +27,15 @@
     }
   }
 }
+
+h3.stat-title {
+  line-height: 1.3rem;
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+section.invivo-section:not(:first-of-type) {
+  margin-top: 3rem;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import pluralize from 'pluralize';
 
+import {H3} from 'sierra-frontend/dist/components/heading-tags';
 import InlineLoader
   from 'sierra-frontend/dist/components/inline-loader';
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
@@ -29,8 +30,9 @@ const tableConfig = {
     'waningMutations'
   ],
   labels: {
+    subjectName: 'Patient',
     infectedVarName: 'Infection Variant',
-    mutations: 'Emerging Mutations',
+    mutations: 'Emerging Spike Mutations',
     waningMutations: 'Waning Mutations',
     treatments: 'Monoclonal Antibody'
   },
@@ -111,7 +113,7 @@ export default function InVivoIndivSbjTable() {
     [inVivoSbjs]
   );
 
-  const MutsByIso = React.useMemo(
+  const mutsByIso = React.useMemo(
     () => isPending ? [] : groupByIsolates(inVivoSbjsFiltered),
     [isPending, inVivoSbjsFiltered]
   );
@@ -120,19 +122,26 @@ export default function InVivoIndivSbjTable() {
     return <InlineLoader />;
   }
 
-  if (MutsByIso.length === 0) {
-    return <>
-      <div>
-        No in-vivo selection data is found for this request.
-        (<a href="#back" onClick={handleGoBack}>Go back</a>)
-      </div>
-    </>;
+  if (inVivoSbjs.length === 0) {
+    return <div>
+      No in-vivo selection data is found for this request.
+      (<a href="#back" onClick={handleGoBack}>Go back</a>)
+    </div>;
   }
 
   const numSbjs = inVivoSbjsFiltered.reduce(
     (acc, {numSubjects}) => acc + numSubjects,
     0
   );
+  const numStudies = Object.keys(
+    inVivoSbjsFiltered.reduce(
+      (acc, {refName}) => {
+        acc[refName] = 1;
+        return acc;
+      },
+      {}
+    )
+  ).length;
 
   const cacheKey = JSON.stringify({
     refName,
@@ -140,20 +149,21 @@ export default function InVivoIndivSbjTable() {
     isoAggkey,
     abNames
   });
-  return <>
-    <div>
-      <em>
-        <strong>{numSbjs.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('patient', numSbjs, false)}.
-      </em>
-    </div>
+  return <section className={style['invivo-section']}>
+    <H3 className={style['stat-title']} id="invivo-mutations_indiv">
+      <strong>{numSbjs.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('patient', numSbjs, false)}{' in '}
+      <strong>{numStudies.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('publication', numStudies, false)}{' '}
+      with individual treatment records.
+    </H3>
     <div ref={tableCtlRef} className={style['invivo-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable
        className={style['invivo-muts-table']}
        columnDefs={columnDefs}
        cacheKey={cacheKey}
-       data={MutsByIso} />
+       data={mutsByIso} />
     </div>
-  </>;
+  </section>;
 }

@@ -7,7 +7,7 @@ import {useCleanQuery} from './hooks/location-params';
 import {useProviders} from './hooks';
 
 const MainLayout = lazy(() => import('./main-layout'));
-const GenotypeRxLayout = lazy(() => import('./genotype-rx'));
+const SelectionDataLayout = lazy(() => import('./selection-data'));
 
 
 ProviderWrapper.propTypes = {
@@ -18,12 +18,17 @@ ProviderWrapper.propTypes = {
 
 function ProviderWrapper({children, match}) {
   const {location: {pathname}} = match;
-  const formOnly = pathname.endsWith('genotype-rx/') ? false : 'auto';
+  const formOnly = pathname.endsWith('selection-data/') ? false : 'auto';
   useCleanQuery({formOnly});
+  const providerPreset = (
+    pathname.endsWith('selection-data/') ? 'selectionData' : 'all'
+  );
 
-  const ComboProvider = useProviders('all', {
+  const ComboProvider = useProviders(providerPreset, {
     locationParams: {formOnly}
   });
+  // eslint-disable-next-line no-console
+  console.debug('render <ProviderWrapper />');
 
   return <ComboProvider>
     {children}
@@ -35,8 +40,10 @@ function ProviderWrapper({children, match}) {
 
 
 export default function SearchDRDBRoutes(pathPrefix) {
+  // eslint-disable-next-line no-console
+  console.debug('render <SearchDRDBRoutes />');
   return <Route path={pathPrefix} Component={ProviderWrapper}>
     <Route Component={MainLayout} />
-    <Route path="genotype-rx/" Component={GenotypeRxLayout} />
+    <Route path="selection-data/" Component={SelectionDataLayout} />
   </Route>;
 }

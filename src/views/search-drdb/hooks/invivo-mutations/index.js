@@ -99,6 +99,7 @@ function usePrepareQuery({
       `;
       const sbjWaningMutSql = `
         SELECT
+          DISTINCT
           SHX.ref_name,
           SHX.subject_name,
           SHX2.event_date AS isolate_date,

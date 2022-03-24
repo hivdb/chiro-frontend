@@ -28,9 +28,9 @@ const tableConfig = {
     'mutations'
   ],
   labels: {
+    subjectName: 'Patients',
     infectedVarName: 'Infection Variant',
-    mutations: 'Emerging Mutations',
-    waningMutations: 'Waning Mutations',
+    mutations: 'Emerging Spike Mutations',
     treatments: 'Monoclonal Antibody'
   },
   rowSpanKeyGetter: {
@@ -131,6 +131,15 @@ export default function InVivoAggSbjTable() {
     (acc, {numSubjects}) => acc + numSubjects,
     0
   );
+  const numStudies = Object.keys(
+    inVivoSbjsFiltered.reduce(
+      (acc, {refName}) => {
+        acc[refName] = 1;
+        return acc;
+      },
+      {}
+    )
+  ).length;
 
   const cacheKey = JSON.stringify({
     refName,
@@ -138,14 +147,14 @@ export default function InVivoAggSbjTable() {
     isoAggkey,
     abNames
   });
-  return <section>
-    <H3>Results in aggregated form</H3>
-    <div>
-      <em>
-        <strong>{numSbjs.toLocaleString('en-US')}</strong>{' '}
-        {pluralize('patient', numSbjs, false)}.
-      </em>
-    </div>
+  return <section className={style['invivo-section']}>
+    <H3 className={style['stat-title']} id="invivo-mutations_agg">
+      <strong>{numSbjs.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('patient', numSbjs, false)}{' in '}
+      <strong>{numStudies.toLocaleString('en-US')}</strong>{' '}
+      {pluralize('publication', numStudies, false)}{' '}
+      reported in aggregate.
+    </H3>
     <div ref={tableCtlRef} className={style['invivo-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable

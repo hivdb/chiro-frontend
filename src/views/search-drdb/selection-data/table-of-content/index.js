@@ -106,11 +106,14 @@ export default function TableOfContent() {
         .reduce(
           (acc, {numSubjects, subjectSpecies}) => {
             if (subjectSpecies !== 'Human') {
-              acc += numSubjects;
+              if (!(subjectSpecies in acc)) {
+                acc[subjectSpecies] = 0;
+              }
+              acc[subjectSpecies] += numSubjects;
             }
             return acc;
           },
-          0
+          {}
         ),
       inVivoSbjs && inVivoSbjs
         .reduce((acc, {numSubjects}) => acc += numSubjects, 0)
@@ -133,48 +136,75 @@ export default function TableOfContent() {
   if (isInVivoPending || isInVitroPending) {
     return null;
   }
+  // eslint-disable-next-line no-console
+  console.debug('render <TableOfContent />');
 
   return <ul className={style.toc}>
     <li>
-      <a href="#invivo-mutations">In vivo selection data</a>{': '}
-      {numInVivoStudies.toLocaleString('en-US')}{' '}
-      {pluralize('study', numInVivoStudies, false)}{'; '}
+      <a
+       className={style.title}
+       href="#invivo-mutations">
+        In vivo selection data:
+      </a>
       {numInVivoSbjs.toLocaleString('en-US')}{' '}
-      {pluralize('subject', numInVivoSbjs, false)}
-      <ul>
-        <li>
-          {numInVivoIndivSbjs.toLocaleString('en-US')}{' '}
-          {pluralize('patient', numInVivoIndivSbjs, false)}{' of '}
-          {numInVivoIndivStudies.toLocaleString('en-US')}{' '}
-          {pluralize('study', numInVivoIndivStudies, false)}{' '}
-          with individual treatment and sample collection records
-        </li>
-        <li>
-          {numInVivoAggSbjs.toLocaleString('en-US')}{' '}
-          {pluralize('patient', numInVivoIndivSbjs, false)}{' of '}
-          {numInVivoAggStudies.toLocaleString('en-US')}{' '}
-          {pluralize('study', numInVivoAggStudies, false)}{' '}
-          are reported <a href="#results.in.aggregated.form">
-            in aggregated form
-          </a>
-        </li>
-        <li>
-          {numInVivoAnimalSbjs.toLocaleString('en-US')}{' '}
-          <a href="#animal.models">
-            animal model{' '}
-            {pluralize('subject', numInVivoIndivSbjs, false)}
-          </a>{' from '}
-          {numInVivoAnimalStudies.toLocaleString('en-US')}{' '}
-          {pluralize('study', numInVivoAnimalStudies, false)}
-        </li>
-      </ul>
+      {pluralize('subject', numInVivoSbjs, false)}{', '}
+      {numInVivoStudies.toLocaleString('en-US')}{' '}
+      {pluralize('publication', numInVivoStudies, false)}
+      {numInVivoSbjs === 0 ?
+        null :
+        <ul>
+          {numInVivoIndivSbjs === 0 ?
+            null :
+            <li>
+              <a className={style.title} href="#invivo-mutations_indiv">
+                Individual treatment records are available:
+              </a>
+              {numInVivoIndivSbjs.toLocaleString('en-US')}{' '}
+              {pluralize('patient', numInVivoIndivSbjs, false)}{', '}
+              {numInVivoIndivStudies.toLocaleString('en-US')}{' '}
+              {pluralize('publication', numInVivoIndivStudies, false)}
+            </li>}
+          {numInVivoAggSbjs === 0 ?
+            null :
+            <li>
+              <a className={style.title} href="#invivo-mutations_agg">
+                Only aggregate data are available:
+              </a>
+              {numInVivoAggSbjs.toLocaleString('en-US')}{' '}
+              {pluralize('patient', numInVivoIndivSbjs, false)}{', '}
+              {numInVivoAggStudies.toLocaleString('en-US')}{' '}
+              {pluralize('publication', numInVivoAggStudies, false)}
+            </li>}
+          {numInVivoAnimalStudies === 0 ?
+            null :
+            <li>
+              <a className={style.title} href="#invivo-mutations_animal">
+                Animal models:
+              </a>
+              {Object
+                .entries(numInVivoAnimalSbjs)
+                .map(([species, num]) => (
+                  <React.Fragment key={species}>
+                    {num.toLocaleString('en-US')}{' '}
+                    {pluralize(species.toLocaleLowerCase(), num, false)}
+                    {', '}
+                  </React.Fragment>
+                ))}
+              {numInVivoAnimalStudies.toLocaleString('en-US')}
+              {pluralize('publication', numInVivoAnimalStudies, false)}
+            </li>}
+        </ul>}
     </li>
     <li>
-      <a href="#invitro-mutations">In vitro selection data</a>{': '}
-      {numInVitroStudies.toLocaleString('en-US')}{' '}
-      {pluralize('study', numInVitroStudies, false)}{'; '}
+      <a
+       className={style.title}
+       href="#invitro-mutations">
+        In vitro selection data:
+      </a>
       {numInVitro.toLocaleString('en-US')}{' '}
-      {pluralize('experiment', numInVitro, false)}
+      {pluralize('experiment', numInVitro, false)}{', '}
+      {numInVitroStudies.toLocaleString('en-US')}{' '}
+      {pluralize('publication', numInVitroStudies, false)}
     </li>
   </ul>;
 

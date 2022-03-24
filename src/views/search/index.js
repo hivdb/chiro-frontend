@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Link, matchShape} from 'found';
 import {useQuery} from '@apollo/client';
-import {Grid, Header, Loader} from 'semantic-ui-react';
+import {Grid, Loader} from 'semantic-ui-react';
 import uniq from 'lodash/uniq';
 
 import MAbSummaryTable from './mab-summary';
@@ -207,7 +207,7 @@ class SearchInner extends React.Component {
                   width: 12,
                   className: style['search-summary'],
                   description: formOnly ? <>
-                    <Header as={H1} disableAnchor>Database Search</Header>
+                    <H1 disableAnchor>Database Search</H1>
                     <p>
                       Select an option from left drop down
                       lists to start searching.
@@ -217,18 +217,16 @@ class SearchInner extends React.Component {
                       <ArticleInfo {...article} /> : null}
                     {compound || virus || compoundTarget || mAbs.length ? <>
                       {compoundTarget && !compound ? <>
-                        <Header as={H2}>
-                          Target: {compoundTarget.name}
-                        </Header>
+                        <H2>Target: {compoundTarget.name}</H2>
                         <p>{compoundTarget.description || 'Pending.'}</p>
                       </> : null}
                       {compound ? <>
-                        <Header as={H2}>
+                        <H2>
                           Target: {
                             compound.targetObj ?
                               compound.targetObj.name : 'NA'
                           }
-                        </Header>
+                        </H2>
                         <p>{compound.targetObj ?
                           compound.targetObj.description || 'Pending.' :
                           null}</p>
@@ -237,25 +235,25 @@ class SearchInner extends React.Component {
                        displayMAbs={mAbs}
                        curCompound={compound}>
                         {compound ? <>
-                          <Header as={H2}>
+                          <H2>
                             Compound: {compound.name}
-                          </Header>
+                          </H2>
                           <p>{compound.description || 'Pending.'}</p>
                         </> : null}
                       </MAbSummaryTable>
                       {virus ? <>
-                        <Header as={H2}>
+                        <H2>
                           Virus: {virus.name}
-                        </Header>
+                        </H2>
                         <p>{virus.description || 'Pending.'}</p>
                       </> : null}
                     </> : null}
                     {noResult ? null : <>
-                      <Header as={H2}>
+                      <H2>
                         Results
                         {noRelatedCompounds ?
                           ' (without closely related compounds)' : null}
-                      </Header>
+                      </H2>
                       <ul>
                         {!loading && virusExperiments.totalCount > 0 ? <li>
                           <a href="#invitro-cells" className={style['label']}>
@@ -360,9 +358,9 @@ class SearchInner extends React.Component {
           {virusExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as={H2} id="invitro-cells">
+                <H2 id="invitro-cells">
                   Cell Culture
-                </Header>
+                </H2>
                 <VirusExpTable
                  cacheKey={cacheKey}
                  data={virusExperiments} />
@@ -371,9 +369,9 @@ class SearchInner extends React.Component {
           {fusionAssayExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column withd={16}>
-                <Header as={H2} id="invitro-fusionassay">
+                <H2 id="invitro-fusionassay">
                   Fusion Assay
-                </Header>
+                </H2>
                 <FusionAssayExpTable
                  cacheKey={cacheKey}
                  data={fusionAssayExperiments} />
@@ -382,9 +380,9 @@ class SearchInner extends React.Component {
           {pseudovirusExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as={H2} id="pseudovirus">
+                <H2 id="pseudovirus">
                   Pseudovirus Entry
-                </Header>
+                </H2>
                 <PseudovirusExpTable
                  cacheKey={cacheKey}
                  data={pseudovirusExperiments} />
@@ -393,9 +391,9 @@ class SearchInner extends React.Component {
           {biochemExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as={H2} id="invitro-biochem">
+                <H2 id="invitro-biochem">
                   Biochemistry
-                </Header>
+                </H2>
                 <BiochemExpTable
                  cacheKey={cacheKey}
                  data={biochemExperiments} />
@@ -404,9 +402,9 @@ class SearchInner extends React.Component {
           {animalExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as={H2} id="animal-models">
+                <H2 id="animal-models">
                   Animal Models
-                </Header>
+                </H2>
                 <AnimalExpTable
                  cacheKey={cacheKey}
                  data={animalExperiments} />
@@ -415,9 +413,9 @@ class SearchInner extends React.Component {
           {clinicalExperiments.totalCount > 0 ?
             <Grid.Row centered>
               <Grid.Column width={16}>
-                <Header as={H2} id="clinical-studies">
+                <H2 id="clinical-studies">
                   Cinical Studies
-                </Header>
+                </H2>
                 <ClinicalExpTable
                  cacheKey={cacheKey}
                  data={clinicalExperiments} />

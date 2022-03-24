@@ -1,6 +1,5 @@
 import React from 'react';
 import {useRouter} from 'found';
-import {Header} from 'semantic-ui-react';
 import {H3} from 'sierra-frontend/dist/components/heading-tags';
 
 import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
@@ -70,15 +69,15 @@ export default function useRenderSuscResults({
         if (numSections === 2) {
           return <>
             <section>
-              <Header as={H3} id={`${id}_indiv-mut`}>
+              <H3 id={`${id}_indiv-mut`}>
                 Individual mutation
-              </Header>
+              </H3>
               {indivMutTable}
             </section>
             <section>
-              <Header as={H3} id={`${id}_combo-muts`}>
+              <H3 id={`${id}_combo-muts`}>
                 Variant / mutation combination
-              </Header>
+              </H3>
               {comboMutsTable}
             </section>
           </>;

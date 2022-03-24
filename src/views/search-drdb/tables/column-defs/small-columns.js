@@ -68,7 +68,7 @@ export default function useSmallColumns({
         }),
         subjectName: new ColumnDef({
           name: 'subjectName',
-          label: labels.subject || 'Subject',
+          label: labels.subjectName || 'Subject',
           render: (subjectName, {subjectSpecies}) => (
             <CellSubjectName {...{subjectName, subjectSpecies}} />
           )

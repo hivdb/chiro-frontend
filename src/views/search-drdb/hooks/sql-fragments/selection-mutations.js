@@ -134,7 +134,7 @@ export function filterByAbNames({
   params,
   mainTableName = 'M'
 }) {
-  const realAbNames = abNames.filter(n => n !== 'any');
+  const realAbNames = abNames.filter(n => n !== 'any' && n !== 'none');
   if (realAbNames && realAbNames.length > 0) {
     const excludeAbQuery = [];
     const orConds = [];
@@ -153,16 +153,24 @@ export function filterByAbNames({
     }
     where.push(orConds.join(' OR '));
   }
-  else if (abNames.some(n => n === 'any')) {
-    where.push(`
+  else {
+    const cond = `
       EXISTS (
         SELECT 1 FROM rx_antibodies RXMAB
         WHERE
           RXMAB.ref_name = ${mainTableName}.ref_name AND
           RXMAB.rx_name = ${mainTableName}.rx_name
       )
-    `);
+    `;
+
+    if (abNames.some(n => n === 'any')) {
+      where.push(cond);
+    }
+    else if (abNames.some(n => n === 'none')) {
+      where.push(`NOT ${cond}`);
+    }
   }
+
 }
 
 
@@ -190,7 +198,7 @@ export function filterBySbjRxAbNames({
   params,
   mainTableName = 'M'
 }) {
-  const realAbNames = abNames.filter(n => n !== 'any');
+  const realAbNames = abNames.filter(n => n !== 'any' && n !== 'none');
   if (realAbNames && realAbNames.length > 0) {
     const excludeAbQuery = [];
     const orConds = [];
@@ -210,8 +218,8 @@ export function filterBySbjRxAbNames({
     }
     where.push(orConds.join(' OR '));
   }
-  else if (abNames.some(n => n === 'any')) {
-    where.push(`
+  else {
+    const cond = `
       EXISTS (
         SELECT 1 FROM
           rx_antibodies RXMAB
@@ -219,7 +227,14 @@ export function filterBySbjRxAbNames({
           RXMAB.ref_name = ${mainTableName}.ref_name AND
           ${matchSbjRx({mainTableName, rxTableName: 'RXMAB'})}
       )
-    `);
+    `;
+
+    if (abNames.some(n => n === 'any')) {
+      where.push(cond);
+    }
+    else if (abNames.some(n => n === 'none')) {
+      where.push(`NOT ${cond}`);
+    }
   }
 }
 

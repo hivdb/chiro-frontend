@@ -64,6 +64,19 @@ const presetProviderNames = {
     'inVivoMutations',
     'dmsMutations',
     'MutationComments'
+  ],
+  selectionData: [
+    'locationParams',
+    'articles',
+    'antibodies',
+    'infectedVariants',
+    'variants',
+    'isolates', // isolates depends on variants
+    'isolateAggs',
+    'positions',
+    'inVitroMutations',
+    'inVivoMutations',
+    'MutationComments'
   ]
 };
 

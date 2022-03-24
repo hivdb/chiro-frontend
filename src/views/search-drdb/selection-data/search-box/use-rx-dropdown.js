@@ -16,6 +16,7 @@ import style from './style.module.scss';
 
 const EMPTY = '__EMPTY';
 const ANY = '__ANY';
+const NONE = '__NONE';
 const EMPTY_TEXT = 'Select item';
 const NAIVE = 'naive';
 const CP = 'cp';
@@ -116,6 +117,9 @@ export default function useRxDropdown() {
         if (abNames && abNames.length > 0) {
           finalAbNumExpLookup[ANY] += count;
         }
+        else {
+          finalAbNumExpLookup[NONE] += count;
+        }
 
         if (infectedVarNames && infectedVarNames.length > 0) {
           totalInfVarNumExp += count;
@@ -164,11 +168,17 @@ export default function useRxDropdown() {
             text: 'Convalescent plasma',
             value: 'cp-any',
             type: CP
-          },*/
+          },
           {
             key: 'ab-any',
             text: 'MAb - any',
             value: 'ab-any',
+            type: ANTIBODY
+          },*/
+          {
+            key: 'ab-none',
+            text: 'None',
+            value: 'ab-none',
             type: ANTIBODY
           },
           ...(
@@ -235,6 +245,13 @@ export default function useRxDropdown() {
               type: ANTIBODY,
               description: <Desc n={finalAbNumExpLookup[ANY]} />
             },*/
+            {
+              key: 'ab-none',
+              text: 'None',
+              value: 'ab-none',
+              type: ANTIBODY,
+              description: <Desc n={finalAbNumExpLookup[NONE]} />
+            },
             ...[
               ...antibodyCombinations
                 .map(abNames => ({
@@ -308,6 +325,9 @@ export default function useRxDropdown() {
         else if (value === 'ab-any') {
           onChange(ANTIBODY, 'any');
         }
+        else if (value === 'ab-none') {
+          onChange(ANTIBODY, 'none');
+        }
         else if (value === 'cp-any') {
           onChange(CP, 'any');
         }
@@ -328,6 +348,9 @@ export default function useRxDropdown() {
   let activeRx = defaultValue;
   if (paramAbNames && paramAbNames[0] === 'any') {
     activeRx = 'ab-any';
+  }
+  if (paramAbNames && paramAbNames[0] === 'none') {
+    activeRx = 'ab-none';
   }
   else if (paramInfectedVarName === 'any') {
     activeRx = 'cp-any';
