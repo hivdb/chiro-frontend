@@ -19,7 +19,6 @@ function usePrepareQuery({infectedVarName, infected, month, host, skip}) {
 
       if (!skip && !isPending) {
         addColumns.push("subject_species");
-        addColumns.push('RXCP.infected_iso_name');
         addColumns.push(`
           CASE
             WHEN INFECTED_VAR.as_wildtype IS TRUE THEN 'Wild Type'
@@ -57,31 +56,25 @@ function usePrepareQuery({infectedVarName, infected, month, host, skip}) {
           if (infectedVarName === 'Wild Type') {
             where.push(`
               EXISTS (
-                SELECT 1 FROM isolates ISO, variants VAR
+                SELECT 1 FROM variants VAR
                 WHERE
-                  RXCP.infected_iso_name = ISO.iso_name AND
-                  ISO.var_name = VAR.var_name AND
+                  RXCP.infected_var_name = VAR.var_name AND
                   VAR.as_wildtype IS TRUE
               )
             `);
           }
           else if (infectedVarName !== 'any') {
             where.push(`
-              EXISTS (
-                SELECT 1 FROM isolates ISO
-                WHERE
-                  RXCP.infected_iso_name = ISO.iso_name AND
-                  ISO.var_name = $infectedVarName
-              )
+              RXCP.infected_var_name = $infectedVarName
           `);
           }
           params.$infectedVarName = infectedVarName;
         }
         if (infected.includes('yes')) {
-          where.push(`RXCP.infected_iso_name IS NOT NULL`);
+          where.push(`RXCP.infected_var_name IS NOT NULL`);
         }
         else if (infected.includes('no')) {
-          where.push(`RXCP.infected_iso_name IS NULL`);
+          where.push(`RXCP.infected_var_name IS NULL`);
         }
 
         if (month && month.length > 0) {
@@ -143,10 +136,8 @@ function usePrepareQuery({infectedVarName, infected, month, host, skip}) {
           LEFT JOIN subjects SUB ON
             RXCP.ref_name = SUB.ref_name AND
             RXCP.subject_name = SUB.subject_name
-          LEFT JOIN isolates INFECTED_ISO ON
-            INFECTED_ISO.iso_name = RXCP.infected_iso_name
           LEFT JOIN variants INFECTED_VAR ON
-            INFECTED_ISO.var_name = INFECTED_VAR.var_name
+            RXCP.infected_var_name = INFECTED_VAR.var_name
         `);
       }
       return {addColumns, where, joinClause, params};

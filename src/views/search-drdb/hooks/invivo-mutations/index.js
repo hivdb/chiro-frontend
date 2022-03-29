@@ -100,32 +100,37 @@ function usePrepareQuery({
       const sbjWaningMutSql = `
         SELECT
           DISTINCT
-          SHX.ref_name,
-          SHX.subject_name,
-          SHX2.event_date AS isolate_date,
+          BASELINE.ref_name,
+          BASELINE.subject_name,
+          SISO_NEXT.collection_date AS isolate_date,
           ISOM.gene,
           R.amino_acid as ref_amino_acid,
           ISOM.position,
           ISOM.amino_acid,
           1 AS is_waning
-        FROM subject_history SHX
-        JOIN subject_history SHX2 ON
-          SHX.ref_name = SHX2.ref_name AND
-          SHX.subject_name = SHX2.subject_name
+        FROM subject_isolates BASELINE
+        JOIN subject_isolates SISO_NEXT ON
+          BASELINE.ref_name = SISO_NEXT.ref_name AND
+          BASELINE.subject_name = SISO_NEXT.subject_name
         JOIN isolate_mutations ISOM ON
-          SHX.iso_name = ISOM.iso_name
+          BASELINE.iso_name = ISOM.iso_name
         JOIN ref_amino_acid R ON
           R.gene = ISOM.gene AND
           R.position = ISOM.position
         WHERE
-          SHX.event = 'infection' AND
-          SHX2.event = 'isolation' AND
-          SHX2.event_date > SHX.event_date AND
+          NOT EXISTS (
+            SELECT 1 FROM subject_isolates SISO_PREV
+            WHERE
+              SISO_PREV.ref_name = BASELINE.ref_name AND
+              SISO_PREV.subject_name = BASELINE.subject_name AND
+              SISO_PREV.collection_date < BASELINE.collection_date
+          ) AND
+          SISO_NEXT.collection_date > BASELINE.collection_date AND
           ISOM.gene = 'S' AND
           NOT EXISTS (
             SELECT 1 FROM isolate_mutations ISOM2
             WHERE
-              SHX2.iso_name = ISOM2.iso_name AND
+              SISO_NEXT.iso_name = ISOM2.iso_name AND
               ISOM.gene = ISOM2.gene AND
               ISOM.position = ISOM2.position AND
               ISOM.amino_acid = ISOM2.amino_acid
@@ -135,14 +140,14 @@ function usePrepareQuery({
             LEFT JOIN variants INFVAR ON
               M.infected_var_name = INFVAR.var_name
             WHERE
-              M.ref_name = SHX.ref_name AND
-              M.subject_name = SHX.subject_name AND
+              M.ref_name = BASELINE.ref_name AND
+              M.subject_name = BASELINE.subject_name AND
               (${where.join(') AND (')})
           )
         ORDER BY
-          SHX.ref_name,
-          SHX.subject_name,
-          SHX2.event_date,
+          BASELINE.ref_name,
+          BASELINE.subject_name,
+          SISO_NEXT.collection_date,
           ISOM.gene,
           ISOM.position,
           ISOM.amino_acid
@@ -150,9 +155,9 @@ function usePrepareQuery({
       const sbjIsoSql = `
         SELECT
           DISTINCT
-          SHX.ref_name,
-          SHX.subject_name,
-          SHX.event_date AS isolate_date,
+          SISO.ref_name,
+          SISO.subject_name,
+          SISO.collection_date AS isolate_date,
           ISOM.gene,
           R.amino_acid as ref_amino_acid,
           ISOM.position,
@@ -162,34 +167,33 @@ function usePrepareQuery({
           EXISTS (
             SELECT 1 FROM invivo_selection_results M
             WHERE
-              M.ref_name = SHX.ref_name AND
-              M.subject_name = SHX.subject_name AND
+              M.ref_name = SISO.ref_name AND
+              M.subject_name = SISO.subject_name AND
               M.gene = ISOM.gene AND
               M.position = ISOM.position AND
               M.amino_acid = ISOM.amino_acid
           ) AS isEmerging
-        FROM subject_history SHX
+        FROM subject_isolates SISO
         JOIN isolate_mutations ISOM ON
-          SHX.iso_name = ISOM.iso_name
+          SISO.iso_name = ISOM.iso_name
         JOIN ref_amino_acid R ON
           R.gene = ISOM.gene AND
           R.position = ISOM.position
         WHERE
-          SHX.event IN ('infection', 'isolation') AND
-          SHX.iso_name IS NOT NULL AND
+          SISO.iso_name IS NOT NULL AND
           ISOM.gene = 'S' AND
           EXISTS (
             SELECT 1 FROM invivo_selection_results M
             LEFT JOIN variants INFVAR ON
               M.infected_var_name = INFVAR.var_name
             WHERE
-              M.ref_name = SHX.ref_name AND
-              M.subject_name = SHX.subject_name AND
+              M.ref_name = SISO.ref_name AND
+              M.subject_name = SISO.subject_name AND
               (${where.join(') AND (')})
           )
         ORDER BY
-          SHX.ref_name,
-          SHX.subject_name,
+          SISO.ref_name,
+          SISO.subject_name,
           isolate_date,
           ISOM.gene,
           ISOM.position,
@@ -213,10 +217,8 @@ function usePrepareQuery({
         LEFT JOIN rx_conv_plasma RXCP ON
           RXCP.ref_name = SRX.ref_name AND
           RXCP.rx_name = SRX.rx_name
-        LEFT JOIN isolates INFISO ON
-          RXCP.infected_iso_name = INFISO.iso_name
         LEFT JOIN variants INFVAR ON
-          INFISO.var_name = INFVAR.var_name
+          RXCP.infected_var_name = INFVAR.var_name
         WHERE EXISTS (
           SELECT 1 FROM invivo_selection_results M
           LEFT JOIN variants INFVAR ON

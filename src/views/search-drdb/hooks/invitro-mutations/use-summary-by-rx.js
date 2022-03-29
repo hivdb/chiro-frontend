@@ -47,13 +47,11 @@ function usePrepareQuery({refName, varName, isoAggkey, genePos, skip}) {
           LEFT JOIN rx_conv_plasma RXCP ON
             RXCP.ref_name = M.ref_name AND
             RXCP.rx_name = M.rx_name
-          LEFT JOIN isolates INFISO ON
-            RXCP.infected_iso_name = INFISO.iso_name
           LEFT JOIN variants INFVAR ON
-            INFISO.var_name = INFVAR.var_name
+            RXCP.infected_var_name = INFVAR.var_name
         WHERE
           (${where.join(') AND (')})
-        GROUP BY ab_names, infected_var_name
+        GROUP BY ab_names, INFVAR.as_wildtype, INFVAR.var_name
       `;
       return {
         sql,

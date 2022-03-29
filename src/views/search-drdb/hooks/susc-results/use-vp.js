@@ -18,7 +18,6 @@ function usePrepareQuery({vaccineName, infected, month, dosage, host, skip}) {
 
       if (!skip && !isPending) {
         addColumns.push('subject_species');
-        addColumns.push('infected_iso_name');
         addColumns.push(`
           CASE
             WHEN INFECTED_VAR.as_wildtype IS TRUE THEN 'Wild Type'
@@ -76,10 +75,8 @@ function usePrepareQuery({vaccineName, infected, month, dosage, host, skip}) {
           LEFT JOIN subjects SUB ON
             RXVP.ref_name = SUB.ref_name AND
             RXVP.subject_name = SUB.subject_name
-          LEFT JOIN isolates INFECTED_ISO ON
-            INFECTED_ISO.iso_name = RXVP.infected_iso_name
           LEFT JOIN variants INFECTED_VAR ON
-            INFECTED_ISO.var_name = INFECTED_VAR.var_name
+            RXVP.infected_var_name = INFECTED_VAR.var_name
         `);
 
         if (vaccineName && vaccineName !== 'any') {
@@ -87,10 +84,10 @@ function usePrepareQuery({vaccineName, infected, month, dosage, host, skip}) {
         }
 
         if (infected.includes('yes')) {
-          where.push(`RXVP.infected_iso_name IS NOT NULL`);
+          where.push(`RXVP.infected_var_name IS NOT NULL`);
         }
         else if (infected.includes('no')) {
-          where.push(`RXVP.infected_iso_name IS NULL`);
+          where.push(`RXVP.infected_var_name IS NULL`);
         }
 
         if (month && month.length > 0) {

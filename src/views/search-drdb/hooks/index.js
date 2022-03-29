@@ -4,8 +4,7 @@ import useLookup from './use-lookup';
 import {
   useCompareSuscResultsByAntibodies,
   useCompareSuscResultsByIsolate,
-  useCompareSuscResultsByControlIsolate,
-  useCompareSuscResultsByInfectedIsolate
+  useCompareSuscResultsByControlIsolate
 } from './susc-results/use-compare';
 import useCPCount from './use-cp-count';
 import useStatSuscResults from './use-stat-susc-results';
@@ -21,7 +20,6 @@ export {
   useCompareSuscResultsByAntibodies,
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,
-  useCompareSuscResultsByInfectedIsolate,
   useSeparateSuscResults,
   useLastUpdate
 };

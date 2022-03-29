@@ -1,11 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import shortenMutList from '../../shorten-mutlist';
-import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
-
-import {formatPotency} from './potency';
-import style from './style.module.scss';
 
 
 export function getIsolateDisplay({isoName, isolateLookup}) {
@@ -43,77 +36,4 @@ export function getIsolateDisplay({isoName, isolateLookup}) {
       return displayVarName;
     }
   }
-}
-
-
-function CellIsolate({
-  isoName,
-  potency,
-  potencyUnit,
-  potencyType,
-  enablePotency,
-  ineffective,
-  isolateLookup
-}) {
-  const isolateDisplay = getIsolateDisplay({isoName, isolateLookup});
-  if (enablePotency && potency !== null && potency !== undefined) {
-    return <>
-      {isolateDisplay}
-      <div className={classNames(style['supplement-info'], style['small'])}>
-        {potencyType}{': '}
-        {formatPotency({
-          potency,
-          potencyType,
-          ineffective,
-          potencyUnit,
-          forceShowUnit: true
-        })}
-      </div>
-    </>;
-  }
-  else {
-    return isolateDisplay;
-  }
-}
-
-CellIsolate.propTypes = {
-  isoName: PropTypes.string,
-  potency: PropTypes.number,
-  potencyUnit: PropTypes.string,
-  potencyType: PropTypes.string,
-  enablePotency: PropTypes.bool,
-  ineffective: PropTypes.bool,
-  isolateLookup: PropTypes.object
-};
-
-
-export function useInfectedIsoName({
-  labels,
-  columns,
-  isolateLookup,
-  compareByInfectedIsolate,
-  skip
-}) {
-  return React.useMemo(
-    () => {
-      if (skip || !columns.includes('infectedIsoName')) {
-        return null;
-      }
-      return new ColumnDef({
-        name: 'infectedIsoName',
-        label: labels.infectedIsoName || 'Infection (CP)',
-        render: isoName => (
-          <CellIsolate {...{isoName, isolateLookup}} />
-        ),
-        sort: rows => [...rows].sort(compareByInfectedIsolate)
-      });
-    },
-    [
-      columns,
-      compareByInfectedIsolate,
-      isolateLookup,
-      labels.infectedIsoName,
-      skip
-    ]
-  );
 }

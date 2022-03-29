@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {
-  useCompareSuscResultsByInfectedIsolate,
   useCompareSuscResultsByAntibodies
 } from '../../hooks';
 
@@ -55,9 +54,6 @@ export default function useColumnDefs({
   const compareByAntibodies = (
     useCompareSuscResultsByAntibodies(antibodyLookup)
   );
-  const compareByInfectedIsolate = (
-    useCompareSuscResultsByInfectedIsolate(isolateLookup)
-  );
 
   const skip = (
     isRefLookupPending ||
@@ -74,7 +70,6 @@ export default function useColumnDefs({
     isolateAggLookup,
     variantLookup,
     compareByAntibodies,
-    compareByInfectedIsolate,
     labels,
     columns,
     skip

@@ -244,7 +244,6 @@ export function filterByInfectedVarName({
   where,
   params,
   rxcpTableName = 'RXCP',
-  isoTableName = 'INFISO',
   varTableName = 'INFVAR'
 }) {
   if (infectedVarName) {
@@ -256,7 +255,7 @@ export function filterByInfectedVarName({
           $infVarName = 'Wild Type' AND
           ${varTableName}.as_wildtype IS TRUE
         ) OR
-        ${isoTableName}.var_name = $infVarName
+        ${rxcpTableName}.infected_var_name = $infVarName
       )
     `);
     params.$infVarName = infectedVarName;
@@ -275,10 +274,8 @@ export function filterBySbjRxInfectedVarName({
       EXISTS (
         SELECT 1 FROM
           rx_conv_plasma RXCP
-          LEFT JOIN isolates INFISO ON
-            RXCP.infected_iso_name = INFISO.iso_name
           LEFT JOIN variants INFVAR ON
-            INFISO.var_name = INFVAR.var_name
+            RXCP.infected_var_name = INFVAR.var_name
         WHERE
           ${matchSbjRx({mainTableName, rxTableName: 'RXCP'})} AND
           RXCP.ref_name = ${mainTableName}.ref_name AND
@@ -288,7 +285,7 @@ export function filterBySbjRxInfectedVarName({
               $infVarName = 'Wild Type' AND
               INFVAR.as_wildtype IS TRUE
             ) OR
-            INFISO.var_name = $infVarName
+            RXCP.infected_var_name = $infVarName
           )
       )
     `);
@@ -425,14 +422,11 @@ export function querySbjRxInfectedVarNames({mainTableName = 'M'} = {}) {
       FROM (
         SELECT DISTINCT CASE
           WHEN INFVAR.as_wildtype IS TRUE THEN 'Wild Type'
-          WHEN INFISO.var_name IS NULL THEN $na
           ELSE INFVAR.var_name
         END AS infected_var_name
         FROM rx_conv_plasma RXCP
-        LEFT JOIN isolates INFISO ON
-          RXCP.infected_iso_name = INFISO.iso_name
         LEFT JOIN variants INFVAR ON
-          INFISO.var_name = INFVAR.var_name
+          RXCP.infected_var_name = INFVAR.var_name
         WHERE
           ${matchSbjRx({mainTableName, rxTableName: 'RXCP'})} AND
           RXCP.ref_name = ${mainTableName}.ref_name
