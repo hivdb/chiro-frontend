@@ -65,7 +65,7 @@ function usePrepareQuery({
           M.ref_name,
           M.subject_name,
           SBJ.subject_species,
-          SBJ.immune_status,
+          M.immune_status,
           SBJ.num_subjects,
           CAST(SUBSTR(infection_date, 1, 4) AS INTEGER) -
           SBJ.birth_year AS subject_age,
