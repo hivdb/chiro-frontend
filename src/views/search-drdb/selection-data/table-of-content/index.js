@@ -25,7 +25,6 @@ export default function TableOfContent() {
     numInVivoStudies,
     numInVivoIndivSbjs,
     numInVivoAggSbjs,
-    numInVivoAnimalSbjs,
     numInVivoSbjs
   ] = React.useMemo(
     () => [
@@ -103,19 +102,6 @@ export default function TableOfContent() {
           0
         ),
       inVivoSbjs && inVivoSbjs
-        .reduce(
-          (acc, {numSubjects, subjectSpecies}) => {
-            if (subjectSpecies !== 'Human') {
-              if (!(subjectSpecies in acc)) {
-                acc[subjectSpecies] = 0;
-              }
-              acc[subjectSpecies] += numSubjects;
-            }
-            return acc;
-          },
-          {}
-        ),
-      inVivoSbjs && inVivoSbjs
         .reduce((acc, {numSubjects}) => acc += numSubjects, 0)
     ],
     [inVivoSbjs]
@@ -146,8 +132,6 @@ export default function TableOfContent() {
        href="#invivo-mutations">
         In vivo selection data:
       </a>
-      {numInVivoSbjs.toLocaleString('en-US')}{' '}
-      {pluralize('subject', numInVivoSbjs, false)}{', '}
       {numInVivoStudies.toLocaleString('en-US')}{' '}
       {pluralize('publication', numInVivoStudies, false)}
       {numInVivoSbjs === 0 ?
@@ -159,10 +143,10 @@ export default function TableOfContent() {
               <a className={style.title} href="#invivo-mutations_indiv">
                 Individual treatment records are available:
               </a>
-              {numInVivoIndivSbjs.toLocaleString('en-US')}{' '}
-              {pluralize('patient', numInVivoIndivSbjs, false)}{', '}
               {numInVivoIndivStudies.toLocaleString('en-US')}{' '}
-              {pluralize('publication', numInVivoIndivStudies, false)}
+              {pluralize('publication', numInVivoIndivStudies, false)}{', '}
+              {numInVivoIndivSbjs.toLocaleString('en-US')}{' '}
+              {pluralize('patient', numInVivoIndivSbjs, false)}
             </li>}
           {numInVivoAggSbjs === 0 ?
             null :
@@ -170,10 +154,10 @@ export default function TableOfContent() {
               <a className={style.title} href="#invivo-mutations_agg">
                 Only aggregate data are available:
               </a>
-              {numInVivoAggSbjs.toLocaleString('en-US')}{' '}
-              {pluralize('patient', numInVivoIndivSbjs, false)}{', '}
               {numInVivoAggStudies.toLocaleString('en-US')}{' '}
-              {pluralize('publication', numInVivoAggStudies, false)}
+              {pluralize('publication', numInVivoAggStudies, false)}{', '}
+              {numInVivoAggSbjs.toLocaleString('en-US')}{' '}
+              {pluralize('patient', numInVivoIndivSbjs, false)}
             </li>}
           {numInVivoAnimalStudies === 0 ?
             null :
@@ -181,16 +165,7 @@ export default function TableOfContent() {
               <a className={style.title} href="#invivo-mutations_animal">
                 Animal models:
               </a>
-              {Object
-                .entries(numInVivoAnimalSbjs)
-                .map(([species, num]) => (
-                  <React.Fragment key={species}>
-                    {num.toLocaleString('en-US')}{' '}
-                    {pluralize(species.toLocaleLowerCase(), num, false)}
-                    {', '}
-                  </React.Fragment>
-                ))}
-              {numInVivoAnimalStudies.toLocaleString('en-US')}
+              {numInVivoAnimalStudies.toLocaleString('en-US')}{' '}
               {pluralize('publication', numInVivoAnimalStudies, false)}
             </li>}
         </ul>}
@@ -201,10 +176,10 @@ export default function TableOfContent() {
        href="#invitro-mutations">
         In vitro selection data:
       </a>
-      {numInVitro.toLocaleString('en-US')}{' '}
-      {pluralize('experiment', numInVitro, false)}{', '}
       {numInVitroStudies.toLocaleString('en-US')}{' '}
-      {pluralize('publication', numInVitroStudies, false)}
+      {pluralize('publication', numInVitroStudies, false)}{', '}
+      {numInVitro.toLocaleString('en-US')}{' '}
+      {pluralize('experiment', numInVitro, false)}
     </li>
   </ul>;
 
