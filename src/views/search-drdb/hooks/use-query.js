@@ -10,8 +10,18 @@ import {loadBinary} from '../../../utils/covid-drdb';
 
 import useConfig from './use-config';
 
+const MAX_WORKERS = (() => {
+  let workers = (window.navigator.hardwareConcurrency || 5) - 4;
+  if (workers < 1) {
+    workers = 1;
+  }
+  const ram = window.navigator.deviceMemory;
+  if (ram) {
+    workers = Math.min(workers, Math.ceil(ram / 0.5));
+  }
+  return workers;
+})();
 
-const MAX_WORKERS = (window.navigator.hardwareConcurrency || 5) - 2;
 // eslint-disable-next-line no-console
 console.debug(`SQLite pool: ${MAX_WORKERS} threads allowed`);
 const WORKER_POOL = {};
