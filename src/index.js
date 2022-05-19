@@ -10,7 +10,9 @@ import chiroClient from './apollo';
 
 import reportWebVitals from './reportWebVitals';
 
-import 'semantic-ui-css/semantic.min.css';
+// Disabled because the fix for webpack 5 is not yet released:
+// see https://github.com/Semantic-Org/Semantic-UI-CSS/issues/75
+// import 'semantic-ui-css/semantic.min.css';
 
 if (window.location.host === 'covdb.stanford.edu') {
   ReactGA.initialize('UA-443373-7');
