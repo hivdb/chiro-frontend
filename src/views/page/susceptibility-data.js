@@ -28,8 +28,11 @@ export default function SusceptibilityData() {
         <SearchBox>
           {({
             articleDropdown,
-            rxDropdown,
-            virusDropdown
+            infectedVariantDropdown,
+            vaccineDropdown,
+            mabDropdown,
+            variantDropdown,
+            mutationDropdown
           }) => <div className={style['search-container']}>
             <div
              className={style['search-item']}
@@ -41,17 +44,41 @@ export default function SusceptibilityData() {
              className={style['search-item']}
              data-type-item-container>
               <label className={style['search-label']}>
-                Plasma Abs / mAbs
+                Convelescent plasma
               </label>
-              {rxDropdown}
+              {infectedVariantDropdown}
             </div>
             <div
              className={style['search-item']}
              data-type-item-container>
               <label className={style['search-label']}>
-                Variants / Mutations
+                Vaccinee plasma
               </label>
-              {virusDropdown}
+              {vaccineDropdown}
+            </div>
+            <div
+             className={style['search-item']}
+             data-type-item-container>
+              <label className={style['search-label']}>
+                Monoclonal antibodies
+              </label>
+              {mabDropdown}
+            </div>
+            <div
+             className={style['search-item']}
+             data-type-item-container>
+              <label className={style['search-label']}>
+                Variants
+              </label>
+              {variantDropdown}
+            </div>
+            <div
+             className={style['search-item']}
+             data-type-item-container>
+              <label className={style['search-label']}>
+                Mutations
+              </label>
+              {mutationDropdown}
             </div>
           </div>}
         </SearchBox>

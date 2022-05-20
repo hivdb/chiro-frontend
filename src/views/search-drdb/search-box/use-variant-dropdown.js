@@ -4,8 +4,6 @@ import escapeRegExp from 'lodash/escapeRegExp';
 import {NumExpStats} from '../hooks/susc-summary';
 import LocationParams from '../hooks/location-params';
 import Variants from '../hooks/variants';
-import IsolateAggs, {compareIsolateAggs} from '../hooks/isolate-aggs';
-import Positions from '../hooks/positions';
 import InVitroMutations from '../hooks/invitro-mutations';
 import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
@@ -42,7 +40,7 @@ function orderedSearch(options, query) {
 }
 
 
-export default function useVirusDropdown() {
+export default function useVariantDropdown() {
 
   const {
     params: {
@@ -60,16 +58,6 @@ export default function useVirusDropdown() {
     isPending: isVarsPending
   } = Variants.useMe();
 
-  const {
-    isolateAggs,
-    isPending: isIsoAggsPending
-  } = IsolateAggs.useMe();
-
-  const {
-    positions,
-    isPending: isPositionsPending
-  } = Positions.useMe();
-
   const [
     virusTotalNumExp,
     isVirusTotalNumExpPending
@@ -78,14 +66,6 @@ export default function useVirusDropdown() {
     varNumExpLookup,
     isVarNumExpLookupPending
   ] = NumExpStats.useVar();
-  const [
-    isoAggNumExpLookup,
-    isIsoAggNumExpLookupPending
-  ] = NumExpStats.useIsoAgg();
-  const [
-    posNumExpLookup,
-    isPosNumExpLookupPending
-  ] = NumExpStats.usePos();
 
   const [
     numInVitroMuts,
@@ -104,12 +84,8 @@ export default function useVirusDropdown() {
 
   const isPending = (
     isVarsPending ||
-    isIsoAggsPending ||
-    isPositionsPending ||
     isVirusTotalNumExpPending ||
     isVarNumExpLookupPending ||
-    isIsoAggNumExpLookupPending ||
-    isPosNumExpLookupPending ||
     isInVitroMutsPending ||
     isInVivoMutsPending ||
     isDMSMutsPending
@@ -117,16 +93,12 @@ export default function useVirusDropdown() {
 
   const [
     finalVirusTotalNumExp,
-    finalVarNumExpLookup,
-    finalIsoAggNumExpLookup,
-    finalPosNumExpLookup
+    finalVarNumExpLookup
   ] = React.useMemo(() => {
     let finalVirusTotalNumExp = virusTotalNumExp;
     const finalVarNumExpLookup = {...varNumExpLookup};
-    const finalIsoAggNumExpLookup = {...isoAggNumExpLookup};
-    const finalPosNumExpLookup = {...posNumExpLookup};
 
-    for (const {varNames, isoAggkeys, genePos, count} of [
+    for (const {varNames, count} of [
       ...numInVitroMuts,
       ...numInVivoMuts,
       ...numDMSMuts
@@ -136,28 +108,15 @@ export default function useVirusDropdown() {
         finalVarNumExpLookup[varName] = finalVarNumExpLookup[varName] || 0;
         finalVarNumExpLookup[varName] += count;
       }
-      for (const isoAggkey of isoAggkeys) {
-        finalIsoAggNumExpLookup[isoAggkey] =
-          finalIsoAggNumExpLookup[isoAggkey] || 0;
-        finalIsoAggNumExpLookup[isoAggkey] += count;
-      }
-      if (genePos) {
-        finalPosNumExpLookup[genePos] = finalPosNumExpLookup[genePos] || 0;
-        finalPosNumExpLookup[genePos] += count;
-      }
     }
     return [
       finalVirusTotalNumExp,
-      finalVarNumExpLookup,
-      finalIsoAggNumExpLookup,
-      finalPosNumExpLookup
+      finalVarNumExpLookup
     ];
   }, [
-    isoAggNumExpLookup,
     numInVitroMuts,
     numInVivoMuts,
     numDMSMuts,
-    posNumExpLookup,
     varNumExpLookup,
     virusTotalNumExp
   ]);
@@ -175,16 +134,6 @@ export default function useVirusDropdown() {
             key: paramVarName,
             text: paramVarName,
             value: paramVarName
-          }] : []),
-          ...(paramIsoAggKey ? [{
-            key: paramIsoAggKey,
-            text: paramIsoAggKey,
-            value: paramIsoAggKey
-          }] : []),
-          ...(paramGenePos ? [{
-            key: paramGenePos,
-            text: paramGenePos,
-            value: paramGenePos
           }] : [])
         ];
       }
@@ -203,42 +152,6 @@ export default function useVirusDropdown() {
             varName === paramVarName || (!asWildtype && numExp > 0)
           ))
           .sort((a, b) => b.numExp - a.numExp);
-
-        const displayIsolateAggs = isolateAggs
-          .filter(
-            ({varName, isoType}) => (
-              varName === null ||
-              isoType === 'indiv-mut'
-            )
-          )
-          .map(
-            ({isoAggkey, isoAggDisplay, mutations, isoType}) => ({
-              isoAggkey,
-              isoAggDisplay,
-              isoType,
-              gene: mutations[0]?.gene,
-              position: mutations[0]?.position,
-              aa: mutations[0]?.aminoAcid,
-              numExp: finalIsoAggNumExpLookup[isoAggkey] || 0
-            })
-          )
-          .filter(({isoAggkey, numExp}) => (
-            isoAggkey === paramIsoAggKey ||
-            numExp > 0
-          ))
-          .sort(compareIsolateAggs);
-
-        const positionMutCount = displayIsolateAggs
-          .filter(({isoType, aa}) => (
-            isoType === 'indiv-mut' &&
-            aa !== 'del'
-          ))
-          .reduce((acc, {gene, position}) => {
-            const key = `${gene}:${position}`;
-            acc[key] = acc[key] || 0;
-            acc[key] ++;
-            return acc;
-          }, {});
 
         return [
           ...(formOnly ? [{
@@ -279,69 +192,17 @@ export default function useVirusDropdown() {
                   )
                 })
               )
-          ] : []),
-          ...(displayIsolateAggs.length > 0 ? [
-            {
-              key: 'combomut-divider',
-              as: FragmentWithoutWarning,
-              children: <Dropdown.Divider />
-            },
-            ...[
-              ...positions
-                .filter(({posKey}) => (
-                  posKey === paramGenePos ||
-                  positionMutCount[posKey] > 1
-                ))
-                .map(
-                  ({posKey, gene, position, refAminoAcid}) => ({
-                    key: posKey,
-                    text: `${
-                      gene === 'S' ? '' : `${gene}:`
-                    }${refAminoAcid}${position} - any`,
-                    value: posKey,
-                    type: 'position',
-                    position,
-                    description: (
-                      <Desc
-                       approx={approx}
-                       n={finalPosNumExpLookup[posKey]} />
-                    )
-                  })
-                ),
-              ...displayIsolateAggs
-                .map(
-                  ({isoAggkey, isoAggDisplay, position, numExp}) => ({
-                    key: isoAggkey,
-                    text: isoAggDisplay,
-                    value: isoAggkey,
-                    type: 'mutations',
-                    position,
-                    description: (
-                      <Desc
-                       approx={approx}
-                       n={numExp} />
-                    )
-                  })
-                )
-            ].sort((a, b) => a.position - b.position)
           ] : [])
         ];
       }
     },
     [
       isPending,
-      // paramAbNames,
       paramVarName,
-      paramIsoAggKey,
-      paramGenePos,
       variants,
-      isolateAggs,
       formOnly,
       finalVirusTotalNumExp,
-      positions,
-      finalVarNumExpLookup,
-      finalIsoAggNumExpLookup,
-      finalPosNumExpLookup
+      finalVarNumExpLookup
     ]
   );
 

@@ -29,8 +29,11 @@ export default function SearchDRDBStatHeader() {
       <SearchBox>
         {({
           articleDropdown,
-          rxDropdown,
-          virusDropdown
+          infectedVariantDropdown,
+          vaccineDropdown,
+          mabDropdown,
+          variantDropdown,
+          mutationDropdown
         }) => (
           <StatHeader>
             {[
@@ -40,14 +43,28 @@ export default function SearchDRDBStatHeader() {
                 cells: [
                   {label: 'References', value: articleDropdown},
                   {
-                    label: 'Plasma Abs / mAbs',
-                    value: rxDropdown
+                    label: 'Convalescent plasma',
+                    value: infectedVariantDropdown
+                  },
+                  {
+                    label: 'Vaccinee plasma',
+                    value: vaccineDropdown
+                  },
+                  {
+                    label: 'Monoclonal antibodies',
+                    value: mabDropdown
                   },
                   {
                     label: (
-                      'Variants / Mutations'
+                      'Variants'
                     ),
-                    value: virusDropdown
+                    value: variantDropdown
+                  },
+                  {
+                    label: (
+                      'Mutations'
+                    ),
+                    value: mutationDropdown
                   }
                 ]
               },
