@@ -13,22 +13,24 @@ SuscSummaryProvider.propTypes = {
 
 export function SuscSummaryProvider({children}) {
 
-  const cacheRef = React.useRef({});
+  const [cache, setCache] = React.useState({});
 
   const getPayload = React.useCallback(
     cacheKey => {
-      const payload = cacheRef.current[cacheKey] || [];
-      const cached = cacheKey in cacheRef.current;
+      const payload = cache[cacheKey] || [];
+      const cached = cacheKey in cache;
       return [payload, cached];
     },
-    []
+    [cache]
   );
 
   const setPayload = React.useCallback(
     (cacheKey, payload) => {
-      cacheRef.current[cacheKey] = payload;
+      console.log('Set cache');
+      cache[cacheKey] = payload;
+      setCache(cache);
     },
-    []
+    [cache]
   );
 
   return <SuscSummaryContext.Provider value={{

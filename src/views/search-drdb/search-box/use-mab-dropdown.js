@@ -179,9 +179,12 @@ export default function useMAbDropdown() {
             key: 'any',
             text: 'Any',
             value: ANY,
-            description: <Desc n={finalAbNumExpLookup[ANY]} />
+            description: <Desc n={
+              finalAbNumExpLookup[AB_ANY] ?
+                finalAbNumExpLookup[ANY] : null
+            } />
           },
-          ...(finalAbNumExpLookup[ANY] > 0 ? [
+          ...(finalAbNumExpLookup[AB_ANY] > 0 ? [
             {
               key: 'antibody-divider',
               as: FragmentWithoutWarning,

@@ -4,12 +4,23 @@ import sha256 from 'crypto-js/sha256';
 import encHex from 'crypto-js/enc-hex';
 
 import {csvJoin} from './funcs';
-import SuscSummaryContext from './context';
 
 
 const CACHE_URL_PREFIX = (
   'https://s3-us-west-2.amazonaws.com/cms.hivdb.org/covid-drdb:susc-summary'
 );
+
+const EMPTY = {
+  article: {},
+  'antibody:any': {},
+  antibody: {},
+  infectedVariant: {},
+  vaccine: {},
+  isolateAgg: {},
+  variant: {},
+  isolate: {},
+  position: {}
+};
 
 
 const fetchCache = memoize(async cacheKey => {
@@ -24,7 +35,15 @@ const fetchCache = memoize(async cacheKey => {
     hash.slice(4, 64)
   }.json`;
   const resp = await fetch(url);
-  return await resp.json();
+  if (resp.status === 200) {
+    return await resp.json();
+  }
+  else {
+    return {
+      params: JSON.parse(cacheKey),
+      ...EMPTY
+    };
+  }
 });
 
 
@@ -66,24 +85,27 @@ function useCacheKey(props) {
 
 
 export default function useSuscSummary(props) {
-  const {getPayload, setPayload} = React.useContext(SuscSummaryContext);
+  const [payload, setPayload] = React.useState(null);
   const cacheKey = useCacheKey(props);
-
-  let [payload, cached] = getPayload(cacheKey);
+  const isPending = payload === null;
 
   React.useEffect(
     () => {
       let mounted = true;
-      if (!cached) {
+      if (isPending) {
         fetchCache(cacheKey)
-          .then(
-            data => mounted && setPayload(cacheKey, data)
-          );
+          .then(data => mounted && setPayload(data));
       }
       return () => mounted = false;
     },
-    [cached, props, setPayload, cacheKey]
+    [cacheKey, setPayload, isPending]
   );
 
-  return [payload, !cached];
+  const defaultPayload = React.useMemo(
+    () => payload || {},
+    [payload]
+  );
+
+
+  return [defaultPayload, isPending];
 }

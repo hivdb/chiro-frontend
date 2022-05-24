@@ -97,9 +97,12 @@ export default function useRxDropdown() {
             key: ANY,
             text: 'Any',
             value: ANY,
-            description: <Desc n={vaccNumExpLookup[ANY]} />
+            description: <Desc n={
+              vaccNumExpLookup[VP_ANY] ?
+                vaccNumExpLookup[ANY] : 0
+            } />
           },
-          ...(vaccNumExpLookup[ANY] > 0 ? [
+          ...(vaccNumExpLookup[VP_ANY] > 0 ? [
             {
               key: 'vaccine-divider',
               as: FragmentWithoutWarning,

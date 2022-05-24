@@ -44,10 +44,7 @@ export default function useVariantDropdown() {
 
   const {
     params: {
-      // abNames: paramAbNames,
       varName: paramVarName,
-      isoAggkey: paramIsoAggKey,
-      genePos: paramGenePos,
       formOnly
     },
     onChange
@@ -153,7 +150,7 @@ export default function useVariantDropdown() {
             description: (
               <Desc
                approx={approx}
-               n={finalVarNumExpLookup[ANY]} />
+               n={displayVariants.length > 0 ? finalVarNumExpLookup[ANY] : 0} />
             )
           },
           ...(displayVariants.length > 0 ? [
@@ -228,9 +225,7 @@ export default function useVariantDropdown() {
        onChange={handleChange}
        value={
          paramVarName ||
-           paramIsoAggKey ||
-           paramGenePos ||
-           defaultValue
+         defaultValue
         } />
     </div>
   );

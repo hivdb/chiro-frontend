@@ -6,7 +6,6 @@ import {
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate
 } from './susc-results/use-compare';
-import useCPCount from './use-cp-count';
 import useStatSuscResults from './use-stat-susc-results';
 import useSeparateSuscResults from './use-separate-susc-results';
 import useLastUpdate from './use-last-update';
@@ -16,7 +15,6 @@ export {
   useProviders,
   useStatSuscResults,
   useLookup,
-  useCPCount,
   useCompareSuscResultsByAntibodies,
   useCompareSuscResultsByIsolate,
   useCompareSuscResultsByControlIsolate,

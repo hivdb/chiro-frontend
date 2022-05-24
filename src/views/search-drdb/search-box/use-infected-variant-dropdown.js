@@ -153,9 +153,12 @@ export default function useInfectedVariantDropdown() {
             key: 'any',
             text: 'Any',
             value: ANY,
-            description: <Desc n={finalInfVarNumExpLookup[ANY]} />
+            description: <Desc n={
+              finalInfVarNumExpLookup[CP_ANY] ?
+                finalInfVarNumExpLookup[ANY] : null
+            } />
           },
-          ...(finalInfVarNumExpLookup[ANY] > 0 ? [
+          ...(finalInfVarNumExpLookup[CP_ANY] > 0 ? [
             {
               key: 'cp-divider',
               as: FragmentWithoutWarning,

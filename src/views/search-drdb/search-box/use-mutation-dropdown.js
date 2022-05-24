@@ -45,8 +45,6 @@ export default function useMutationDropdown() {
 
   const {
     params: {
-      // abNames: paramAbNames,
-      varName: paramVarName,
       isoAggkey: paramIsoAggKey,
       genePos: paramGenePos,
       formOnly
@@ -207,7 +205,10 @@ export default function useMutationDropdown() {
             description: (
               <Desc
                approx={approx}
-               n={finalPosNumExpLookup[ANY]} />
+               n={
+                 displayIsolateAggs.length > 0 ?
+                   finalPosNumExpLookup[ANY] : 0
+               } />
             )
           },
           ...(displayIsolateAggs.length > 0 ? [
@@ -306,10 +307,9 @@ export default function useMutationDropdown() {
        options={variantOptions}
        onChange={handleChange}
        value={
-         paramVarName ||
-           paramIsoAggKey ||
-           paramGenePos ||
-           defaultValue
+         paramIsoAggKey ||
+         paramGenePos ||
+         defaultValue
         } />
     </div>
   );

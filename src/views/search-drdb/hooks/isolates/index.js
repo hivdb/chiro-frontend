@@ -79,11 +79,8 @@ function IsolatesProvider({children}) {
       var_name,
       expandable,
       gisaid_id,
-      genbank_accn,
-      count AS susc_result_count
+      genbank_accn
     FROM isolates I
-    LEFT JOIN isolate_stats IStat ON
-      I.iso_name=IStat.iso_name AND IStat.stat_group='susc_results'
   `;
 
   const {

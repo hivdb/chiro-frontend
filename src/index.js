@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import {ApolloProvider} from '@apollo/client';
 
 import ReactGA from 'react-ga';
@@ -20,11 +20,11 @@ if (window.location.host === 'covdb.stanford.edu') {
   ReactGA.initialize('UA-443373-6');
 }
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <ApolloProvider client={chiroClient}>
     <BrowserRouter />
-  </ApolloProvider>,
-  document.getElementById('root')
+  </ApolloProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

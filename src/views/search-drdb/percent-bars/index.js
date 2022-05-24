@@ -15,9 +15,9 @@ PercentBars.propTypes = {
 
 export default function PercentBars({children, ...props}) {
 
-  const [totalNumExp, isPending] = NumExpStats.useRxTotal();
+  const [abNumExp, isPending] = NumExpStats.useAb();
 
-  return (isPending || totalNumExp === 0 ? null :
+  return (isPending || abNumExp.any === 0 ? null :
   <section className={style['stat-section']}>
     <h2>Susceptibility data</h2>
     <div className={style['percent-bars']}>

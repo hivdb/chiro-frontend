@@ -16,9 +16,7 @@ function IsolateAggsProvider({children}) {
 
   const sql = `
     SELECT iso_aggkey, iso_agg_display, var_name, iso_type
-    FROM susc_summary
-    WHERE
-      aggregate_by = 'isolate_agg'
+    FROM isolate_aggs
   `;
 
   const {
