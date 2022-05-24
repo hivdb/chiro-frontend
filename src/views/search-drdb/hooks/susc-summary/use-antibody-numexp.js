@@ -1,83 +1,46 @@
 import React from 'react';
-import {csvStringify} from 'sierra-frontend/dist/utils/csv';
 
 import LocationParams from '../location-params';
+
+import {csvSplit} from './funcs';
 import useSuscSummary from './use-susc-summary';
 
 
 export default function useAntibodyNumExp(
   abAggregateBy = 'antibody:any'
 ) {
-  const aggregateBy = [];
-  const {
-    params: {
-      refName,
-      varName,
-      isoAggkey,
-      genePos
-    }
-  } = LocationParams.useMe();
-  if (refName) {
-    aggregateBy.push('article');
-  }
-  if (varName) {
-    aggregateBy.push('variant');
-  }
-  if (isoAggkey) {
-    aggregateBy.push('isolate_agg');
-  }
-  if (genePos) {
-    aggregateBy.push('position');
-  }
-  const [
-    suscSummary,
-    isSuscSummaryPending
-  ] = useSuscSummary({
-    aggregateBy: [abAggregateBy, ...aggregateBy],
-    refName,
-    varName,
-    isoAggkey,
-    genePos,
-    selectColumns: ['antibody_names', 'num_experiments']
-  });
-  const [
-    anySuscSummary,
-    isAnySuscSummaryPending
-  ] = useSuscSummary({
-    aggregateBy: ['rx_type', ...aggregateBy],
-    rxType: 'antibody',
-    refName,
-    varName,
-    isoAggkey,
-    genePos,
-    selectColumns: ['num_experiments']
-  });
-  const isPending = isSuscSummaryPending || isAnySuscSummaryPending;
+  let {params} = LocationParams.useMe();
+
+  const [suscSummary, isPending] = useSuscSummary(params);
+  const lookup = React.useMemo(
+    () => {
+      if (isPending) {
+        return {any: 0};
+      }
+      if (abAggregateBy === 'antibody:any') {
+        return {...suscSummary['antibody:any']};
+      }
+      else if (abAggregateBy === 'antibody') {
+        return {...suscSummary.antibody};
+      }
+      else {
+        return {any: 0};
+      }
+    },
+    [abAggregateBy, isPending, suscSummary]
+  );
 
   const orderedAbNames = React.useMemo(
     () => {
       if (isPending) {
         return [];
       }
-      return suscSummary.map(({antibodyNames}) => antibodyNames);
+      return Object.keys(lookup)
+        .filter(n => n !== 'any' && n !== 'ab-any')
+        .map(csvSplit);
     },
-    [suscSummary, isPending]
+    [isPending, lookup]
   );
 
-  const lookup = React.useMemo(
-    () => {
-      if (isPending) {
-        return {};
-      }
-      const lookup = {
-        __ANY: anySuscSummary[0]?.numExperiments || 0
-      };
-      for (const one of suscSummary) {
-        lookup[csvStringify(one.antibodyNames)] = one.numExperiments;
-      }
-      return lookup;
-    },
-    [isPending, suscSummary, anySuscSummary]
-  );
   return [lookup, isPending, orderedAbNames];
 }

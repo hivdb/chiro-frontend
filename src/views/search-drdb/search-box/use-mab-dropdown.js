@@ -10,14 +10,16 @@ import InVitroMutations from '../hooks/invitro-mutations';
 import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 import LocationParams from '../hooks/location-params';
+import {csvJoin} from '../hooks/susc-summary/funcs';
 
 import Desc from './desc';
 import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
 
 
-const EMPTY = '__EMPTY';
-const ANY = '__ANY';
+const EMPTY = 'empty';
+const ANY = 'any';
+const AB_ANY = 'ab-any';
 const EMPTY_TEXT = 'Select item';
 const CP = 'cp';
 const ANTIBODY = 'antibodies';
@@ -50,7 +52,6 @@ export default function useMAbDropdown() {
     isPending: isAntibodiesPending
   } = Antibodies.useAll();
 
-  const [rxTotalNumExp, isRxTotalNumExpPending] = NumExpStats.useRxTotal();
   const [abNumExpLookup, isAbNumExpPending] = NumExpStats.useAb('antibody:any');
 
   const {
@@ -78,30 +79,25 @@ export default function useMAbDropdown() {
   const isPending = (
     isConfigPending ||
     isAntibodiesPending ||
-    isRxTotalNumExpPending ||
     isAbNumExpPending ||
     isInVitroMutsPending ||
     isInVivoMutsPending ||
     isDMSMutsPending
   );
 
-  const [
-    finalRxTotalNumExp,
-    finalAbNumExpLookup
-  ] = React.useMemo(
+  const finalAbNumExpLookup = React.useMemo(
     () => {
       if (isPending) {
         return [0, {}];
       }
       const {antibodyCombinations} = config;
-      let finalRxTotalNumExp = rxTotalNumExp;
       const finalAbNumExpLookup = {...abNumExpLookup};
       for (const {abNames, count} of [
         ...numInVitroMuts,
         ...numInVivoMuts,
         ...numDMSMuts
       ]) {
-        finalRxTotalNumExp += count;
+        finalAbNumExpLookup[ANY] += count;
         const countedMulAb = {};
 
         for (const abName of abNames) {
@@ -120,20 +116,16 @@ export default function useMAbDropdown() {
           }
         }
         if (abNames && abNames.length > 0) {
-          finalAbNumExpLookup[ANY] += count;
+          finalAbNumExpLookup[AB_ANY] += count;
         }
 
       }
 
-      return [
-        finalRxTotalNumExp,
-        finalAbNumExpLookup
-      ];
+      return finalAbNumExpLookup;
     },
     [
       isPending,
       config,
-      rxTotalNumExp,
       abNumExpLookup,
       numInVitroMuts,
       numInVivoMuts,
@@ -151,9 +143,9 @@ export default function useMAbDropdown() {
             value: ANY
           },
           {
-            key: 'ab-any',
+            key: AB_ANY,
             text: 'Any mAb',
-            value: 'ab-any',
+            value: AB_ANY,
             type: ANTIBODY
           },
           ...(
@@ -187,7 +179,7 @@ export default function useMAbDropdown() {
             key: 'any',
             text: 'Any',
             value: ANY,
-            description: <Desc n={finalRxTotalNumExp} />
+            description: <Desc n={finalAbNumExpLookup[ANY]} />
           },
           ...(finalAbNumExpLookup[ANY] > 0 ? [
             {
@@ -196,27 +188,31 @@ export default function useMAbDropdown() {
               children: <Dropdown.Divider />
             },
             {
-              key: 'ab-any',
+              key: AB_ANY,
               text: 'Any mAb',
-              value: 'ab-any',
+              value: AB_ANY,
               type: ANTIBODY,
-              description: <Desc n={finalAbNumExpLookup[ANY]} />
+              description: <Desc n={finalAbNumExpLookup[AB_ANY]} />
             },
             ...[
               ...antibodyCombinations
-                .map(abNames => ({
-                  key: abNames.join(','),
-                  text: abNames.join(' + '),
-                  value: abNames.join(','),
-                  type: ANTIBODY,
-                  description: (
-                    <Desc
-                     n={finalAbNumExpLookup[abNames.join(',')] || 0} />
-                  ),
-                  'data-num-results': finalAbNumExpLookup[abNames.join(',')],
-                  'data-is-empty': !finalAbNumExpLookup[abNames.join(',')],
-                  synonyms: []
-                })),
+                .map(abNames => {
+                  const textAbNames = csvJoin(abNames);
+
+                  return {
+                    key: textAbNames,
+                    text: abNames.join(' + '),
+                    value: textAbNames,
+                    type: ANTIBODY,
+                    description: (
+                      <Desc
+                       n={finalAbNumExpLookup[textAbNames] || 0} />
+                    ),
+                    'data-num-results': finalAbNumExpLookup[textAbNames],
+                    'data-is-empty': !finalAbNumExpLookup[textAbNames],
+                    synonyms: []
+                  };
+                }),
               ...antibodies
                 .filter(({
                   abName,
@@ -252,7 +248,6 @@ export default function useMAbDropdown() {
       paramAbNames,
       config,
       formOnly,
-      finalRxTotalNumExp,
       finalAbNumExpLookup,
       antibodies
     ]
@@ -270,7 +265,7 @@ export default function useMAbDropdown() {
           clear[ANTIBODY] = undefined;
           onChange(clear);
         }
-        else if (value === 'ab-any') {
+        else if (value === AB_ANY) {
           onChange(ANTIBODY, 'any');
         }
         else {
@@ -286,7 +281,7 @@ export default function useMAbDropdown() {
 
   let activeRx = defaultValue;
   if (paramAbNames && paramAbNames[0] === 'any') {
-    activeRx = 'ab-any';
+    activeRx = AB_ANY;
   }
   else if (paramAbNames && paramAbNames.length > 0) {
     activeRx = paramAbNames.join(',');

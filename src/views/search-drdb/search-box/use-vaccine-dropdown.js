@@ -11,8 +11,9 @@ import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
 
 
-const EMPTY = '__EMPTY';
-const ANY = '__ANY';
+const EMPTY = 'empty';
+const ANY = 'any';
+const VP_ANY = 'vp-any';
 const EMPTY_TEXT = 'Select item';
 const CP = 'cp';
 const ANTIBODY = 'antibodies';
@@ -47,7 +48,6 @@ export default function useRxDropdown() {
     isPending: isVaccinesPending
   } = Vaccines.useAll();
 
-  const [rxTotalNumExp, isRxTotalNumExpPending] = NumExpStats.useRxTotal();
   const [vaccNumExpLookup, isVaccNumExpPending] = NumExpStats.useVacc();
 
   const {
@@ -60,7 +60,6 @@ export default function useRxDropdown() {
 
   const isPending = (
     isVaccinesPending ||
-    isRxTotalNumExpPending ||
     isVaccNumExpPending
   );
 
@@ -69,14 +68,14 @@ export default function useRxDropdown() {
       if (isPending) {
         return [
           {
-            key: 'any',
+            key: ANY,
             text: 'Any',
             value: ANY
           },
           {
-            key: 'vp-any',
+            key: VP_ANY,
             text: 'Any VP',
-            value: 'vp-any',
+            value: VP_ANY,
             type: VACCINE
           },
           ...(paramVaccineName && paramVaccineName !== 'any' ? [{
@@ -95,10 +94,10 @@ export default function useRxDropdown() {
             value: EMPTY
           }] : []),
           {
-            key: 'any',
+            key: ANY,
             text: 'Any',
             value: ANY,
-            description: <Desc n={rxTotalNumExp} />
+            description: <Desc n={vaccNumExpLookup[ANY]} />
           },
           ...(vaccNumExpLookup[ANY] > 0 ? [
             {
@@ -107,11 +106,11 @@ export default function useRxDropdown() {
               children: <Dropdown.Divider />
             },
             {
-              key: 'vp-any',
+              key: VP_ANY,
               text: 'Any VP',
-              value: 'vp-any',
+              value: VP_ANY,
               type: VACCINE,
-              description: <Desc n={vaccNumExpLookup[ANY]} />
+              description: <Desc n={vaccNumExpLookup[VP_ANY]} />
             },
             ...vaccines
               .filter(({vaccineName}) => (
@@ -141,7 +140,6 @@ export default function useRxDropdown() {
       isPending,
       paramVaccineName,
       formOnly,
-      rxTotalNumExp,
       vaccNumExpLookup,
       vaccines,
       includeAll
@@ -160,7 +158,7 @@ export default function useRxDropdown() {
           clear[ANTIBODY] = undefined;
           onChange(clear);
         }
-        else if (value === 'vp-any') {
+        else if (value === VP_ANY) {
           onChange(VACCINE, 'any');
         }
         else {
@@ -177,7 +175,7 @@ export default function useRxDropdown() {
 
   let activeRx = defaultValue;
   if (paramVaccineName === 'any') {
-    activeRx = 'vp-any';
+    activeRx = VP_ANY;
   }
   else if (paramVaccineName) {
     activeRx = paramVaccineName;

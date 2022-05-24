@@ -16,19 +16,17 @@ export function SuscSummaryProvider({children}) {
   const cacheRef = React.useRef({});
 
   const getPayload = React.useCallback(
-    keyProps => {
-      const keyString = JSON.stringify(keyProps);
-      const payload = cacheRef.current[keyString] || [];
-      const cached = keyString in cacheRef.current;
+    cacheKey => {
+      const payload = cacheRef.current[cacheKey] || [];
+      const cached = cacheKey in cacheRef.current;
       return [payload, cached];
     },
     []
   );
 
   const setPayload = React.useCallback(
-    (keyProps, payload) => {
-      const keyString = JSON.stringify(keyProps);
-      cacheRef.current[keyString] = payload;
+    (cacheKey, payload) => {
+      cacheRef.current[cacheKey] = payload;
     },
     []
   );

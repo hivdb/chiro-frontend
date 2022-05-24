@@ -16,15 +16,16 @@ function PositionsProvider({children}) {
 
   const sql = `
     SELECT
-      s.position AS pos_key,
-      r.gene,
-      r.position,
+      m.gene || ':' || m.position AS pos_key,
+      m.gene,
+      m.position,
       r.amino_acid AS ref_amino_acid
-    FROM susc_summary s, ref_amino_acid r
+    FROM isolate_mutations m, ref_amino_acid r
     WHERE
-      aggregate_by = 'position' AND
-      s.position = r.gene || ':' || r.position
-    ORDER BY r.gene, r.position
+      m.gene = r.gene AND
+      m.position = r.position
+    GROUP BY m.gene, m.position, r.amino_acid
+    ORDER BY m.gene, m.position
   `;
 
   const {

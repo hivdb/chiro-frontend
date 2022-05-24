@@ -14,8 +14,8 @@ import Desc from './desc';
 import style from './style.module.scss';
 
 
-const EMPTY = '__EMPTY';
-const ANY = '__ANY';
+const EMPTY = 'empty';
+const ANY = 'any';
 const EMPTY_TEXT = 'Select item';
 
 
@@ -65,10 +65,6 @@ export default function useMutationDropdown() {
   } = Positions.useMe();
 
   const [
-    virusTotalNumExp,
-    isVirusTotalNumExpPending
-  ] = NumExpStats.useVirusTotal();
-  const [
     isoAggNumExpLookup,
     isIsoAggNumExpLookupPending
   ] = NumExpStats.useIsoAgg();
@@ -95,7 +91,6 @@ export default function useMutationDropdown() {
   const isPending = (
     isIsoAggsPending ||
     isPositionsPending ||
-    isVirusTotalNumExpPending ||
     isIsoAggNumExpLookupPending ||
     isPosNumExpLookupPending ||
     isInVitroMutsPending ||
@@ -104,11 +99,9 @@ export default function useMutationDropdown() {
   );
 
   const [
-    finalVirusTotalNumExp,
     finalIsoAggNumExpLookup,
     finalPosNumExpLookup
   ] = React.useMemo(() => {
-    let finalVirusTotalNumExp = virusTotalNumExp;
     const finalIsoAggNumExpLookup = {...isoAggNumExpLookup};
     const finalPosNumExpLookup = {...posNumExpLookup};
 
@@ -117,7 +110,8 @@ export default function useMutationDropdown() {
       ...numInVivoMuts,
       ...numDMSMuts
     ]) {
-      finalVirusTotalNumExp += count;
+      finalIsoAggNumExpLookup[ANY] += count;
+      finalPosNumExpLookup[ANY] += count;
       for (const isoAggkey of isoAggkeys) {
         finalIsoAggNumExpLookup[isoAggkey] =
           finalIsoAggNumExpLookup[isoAggkey] || 0;
@@ -129,12 +123,10 @@ export default function useMutationDropdown() {
       }
     }
     return [
-      finalVirusTotalNumExp,
       finalIsoAggNumExpLookup,
       finalPosNumExpLookup
     ];
   }, [
-    virusTotalNumExp,
     isoAggNumExpLookup,
     numInVitroMuts,
     numInVivoMuts,
@@ -215,7 +207,7 @@ export default function useMutationDropdown() {
             description: (
               <Desc
                approx={approx}
-               n={finalVirusTotalNumExp} />
+               n={finalPosNumExpLookup[ANY]} />
             )
           },
           ...(displayIsolateAggs.length > 0 ? [
@@ -274,7 +266,6 @@ export default function useMutationDropdown() {
       isolateAggs,
       formOnly,
       positions,
-      finalVirusTotalNumExp,
       finalIsoAggNumExpLookup,
       finalPosNumExpLookup
     ]

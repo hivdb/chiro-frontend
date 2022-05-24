@@ -1,6 +1,5 @@
 import React from 'react';
 import {Dropdown} from 'semantic-ui-react';
-import capitalize from 'lodash/capitalize';
 import escapeRegExp from 'lodash/escapeRegExp';
 
 import {NumExpStats} from '../hooks/susc-summary';
@@ -15,8 +14,9 @@ import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
 
 
-const EMPTY = '__EMPTY';
-const ANY = '__ANY';
+const EMPTY = 'empty';
+const ANY = 'any';
+const CP_ANY = 'cp-any';
 const EMPTY_TEXT = 'Select item';
 const CP = 'cp';
 const ANTIBODY = 'antibodies';
@@ -44,7 +44,6 @@ export default function useInfectedVariantDropdown() {
     isPending: isInfectedVarsPending
   } = InfectedVariants.useMe();
 
-  const [rxTotalNumExp, isRxTotalNumExpPending] = NumExpStats.useRxTotal();
   const [infVarNumExpLookup, isInfVarNumExpPending] = NumExpStats.useInfVar();
 
   const {
@@ -70,29 +69,24 @@ export default function useInfectedVariantDropdown() {
 
   const isPending = (
     isInfectedVarsPending ||
-    isRxTotalNumExpPending ||
     isInfVarNumExpPending ||
     isInVitroMutsPending ||
     isInVivoMutsPending ||
     isDMSMutsPending
   );
 
-  const [
-    finalRxTotalNumExp,
-    finalInfVarNumExpLookup
-  ] = React.useMemo(
+  const finalInfVarNumExpLookup = React.useMemo(
     () => {
       if (isPending) {
         return [0, {}];
       }
-      let finalRxTotalNumExp = rxTotalNumExp;
       const finalInfVarNumExpLookup = {...infVarNumExpLookup};
       for (const {infectedVarNames, infectedVarName, count} of [
         ...numInVitroMuts,
         ...numInVivoMuts,
         ...numDMSMuts
       ]) {
-        finalRxTotalNumExp += count;
+        finalInfVarNumExpLookup[ANY] += count;
 
         if (infectedVarNames) {
           for (const infVarName of infectedVarNames) {
@@ -110,18 +104,14 @@ export default function useInfectedVariantDropdown() {
           finalInfVarNumExpLookup[infectedVarName] =
             finalInfVarNumExpLookup[infectedVarName] || 0;
           finalInfVarNumExpLookup[infectedVarName] += count;
-          finalInfVarNumExpLookup[ANY] += count;
+          finalInfVarNumExpLookup[CP_ANY] += count;
         }
       }
 
-      return [
-        finalRxTotalNumExp,
-        finalInfVarNumExpLookup
-      ];
+      return finalInfVarNumExpLookup;
     },
     [
       isPending,
-      rxTotalNumExp,
       infVarNumExpLookup,
       numInVitroMuts,
       numInVivoMuts,
@@ -139,14 +129,14 @@ export default function useInfectedVariantDropdown() {
             value: ANY
           },
           {
-            key: 'cp-any',
+            key: CP_ANY,
             text: 'Any CP',
-            value: 'cp-any',
+            value: CP_ANY,
             type: CP
           },
           ...(paramInfectedVarName && paramInfectedVarName !== 'any' ? [{
             key: paramInfectedVarName,
-            text: `${capitalize(paramInfectedVarName)} infection`,
+            text: paramInfectedVarName,
             value: paramInfectedVarName,
             type: CP
           }] : [])
@@ -163,7 +153,7 @@ export default function useInfectedVariantDropdown() {
             key: 'any',
             text: 'Any',
             value: ANY,
-            description: <Desc n={finalRxTotalNumExp} />
+            description: <Desc n={finalInfVarNumExpLookup[ANY]} />
           },
           ...(finalInfVarNumExpLookup[ANY] > 0 ? [
             {
@@ -172,10 +162,10 @@ export default function useInfectedVariantDropdown() {
               children: <Dropdown.Divider />
             },
             {
-              key: 'cp-any',
+              key: CP_ANY,
               text: 'Any CP',
-              value: 'cp-any',
-              description: <Desc n={finalInfVarNumExpLookup[ANY]} />,
+              value: CP_ANY,
+              description: <Desc n={finalInfVarNumExpLookup[CP_ANY]} />,
               type: CP
             },
             ...infectedVariants
@@ -184,9 +174,9 @@ export default function useInfectedVariantDropdown() {
                   key: varName,
                   text: `${
                     synonyms.length > 0 ?
-                      `${capitalize(varName)} (${synonyms[0]})` :
-                      capitalize(varName)
-                  } infection`,
+                      `${varName} (${synonyms[0]})` :
+                      varName
+                  }`,
                   value: varName,
                   type: CP,
                   description: (
@@ -205,7 +195,6 @@ export default function useInfectedVariantDropdown() {
       isPending,
       paramInfectedVarName,
       formOnly,
-      finalRxTotalNumExp,
       finalInfVarNumExpLookup,
       infectedVariants
     ]
@@ -223,7 +212,7 @@ export default function useInfectedVariantDropdown() {
           clear[ANTIBODY] = undefined;
           onChange(clear);
         }
-        else if (value === 'cp-any') {
+        else if (value === CP_ANY) {
           onChange(CP, 'any');
         }
         else {
@@ -239,7 +228,7 @@ export default function useInfectedVariantDropdown() {
 
   let activeRx = defaultValue;
   if (paramInfectedVarName === 'any') {
-    activeRx = 'cp-any';
+    activeRx = CP_ANY;
   }
   else if (paramInfectedVarName) {
     activeRx = paramInfectedVarName;

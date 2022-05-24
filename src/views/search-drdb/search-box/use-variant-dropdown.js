@@ -13,8 +13,8 @@ import Desc from './desc';
 import style from './style.module.scss';
 
 
-const EMPTY = '__EMPTY';
-const ANY = '__ANY';
+const EMPTY = 'empty';
+const ANY = 'any';
 const EMPTY_TEXT = 'Select item';
 
 
@@ -59,10 +59,6 @@ export default function useVariantDropdown() {
   } = Variants.useMe();
 
   const [
-    virusTotalNumExp,
-    isVirusTotalNumExpPending
-  ] = NumExpStats.useVirusTotal();
-  const [
     varNumExpLookup,
     isVarNumExpLookupPending
   ] = NumExpStats.useVar();
@@ -84,18 +80,13 @@ export default function useVariantDropdown() {
 
   const isPending = (
     isVarsPending ||
-    isVirusTotalNumExpPending ||
     isVarNumExpLookupPending ||
     isInVitroMutsPending ||
     isInVivoMutsPending ||
     isDMSMutsPending
   );
 
-  const [
-    finalVirusTotalNumExp,
-    finalVarNumExpLookup
-  ] = React.useMemo(() => {
-    let finalVirusTotalNumExp = virusTotalNumExp;
+  const finalVarNumExpLookup = React.useMemo(() => {
     const finalVarNumExpLookup = {...varNumExpLookup};
 
     for (const {varNames, count} of [
@@ -103,22 +94,18 @@ export default function useVariantDropdown() {
       ...numInVivoMuts,
       ...numDMSMuts
     ]) {
-      finalVirusTotalNumExp += count;
+      finalVarNumExpLookup[ANY] += count;
       for (const varName of varNames) {
         finalVarNumExpLookup[varName] = finalVarNumExpLookup[varName] || 0;
         finalVarNumExpLookup[varName] += count;
       }
     }
-    return [
-      finalVirusTotalNumExp,
-      finalVarNumExpLookup
-    ];
+    return finalVarNumExpLookup;
   }, [
     numInVitroMuts,
     numInVivoMuts,
     numDMSMuts,
-    varNumExpLookup,
-    virusTotalNumExp
+    varNumExpLookup
   ]);
 
   const variantOptions = React.useMemo(
@@ -160,13 +147,13 @@ export default function useVariantDropdown() {
             value: EMPTY
           }] : []),
           {
-            key: 'any',
+            key: ANY,
             text: 'Any',
             value: ANY,
             description: (
               <Desc
                approx={approx}
-               n={finalVirusTotalNumExp} />
+               n={finalVarNumExpLookup[ANY]} />
             )
           },
           ...(displayVariants.length > 0 ? [
@@ -201,7 +188,6 @@ export default function useVariantDropdown() {
       paramVarName,
       variants,
       formOnly,
-      finalVirusTotalNumExp,
       finalVarNumExpLookup
     ]
   );

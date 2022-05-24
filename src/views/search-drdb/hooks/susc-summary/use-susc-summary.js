@@ -1,134 +1,89 @@
 import React from 'react';
+import memoize from 'lodash/memoize';
+import sha256 from 'crypto-js/sha256';
+import encHex from 'crypto-js/enc-hex';
 
-import useQuery from '../use-query';
-import {
-  compileAggKey,
-  csvJoin,
-  csvSplit,
-  prepareAggFilter
-} from './funcs';
+import {csvJoin} from './funcs';
 import SuscSummaryContext from './context';
-import {DEFAULT_SELECT_COLUMNS} from './constants';
 
 
-export function useSuscSummaryNoCache({
-  aggregateBy,
-  rxType,
-  refName,
-  antibodyNames,
-  vaccineName,
-  infectedVarName,
-  controlIsoName,
-  controlVarName,
-  isoName,
-  varName,
-  isoAggkey,
-  genePos,
-  selectColumns = null
-} = {}, skip = false) {
-  let aggKey, where, params, orderBy, sql;
-  if (!skip) {
-    aggKey = compileAggKey(aggregateBy);
-    where = [];
-    params = {$aggKey: aggKey};
-    orderBy = [];
-    const commonArgs = [
-      aggregateBy,
-      where,
-      params,
-      orderBy
-    ];
+const CACHE_URL_PREFIX = (
+  'https://s3-us-west-2.amazonaws.com/cms.hivdb.org/covid-drdb:susc-summary'
+);
 
-    prepareAggFilter('rxType', rxType, ...commonArgs);
-    prepareAggFilter('refName', refName, ...commonArgs);
-    prepareAggFilter(
-      'antibodyNames',
-      antibodyNames && antibodyNames.length ?
-        csvJoin(antibodyNames) : null,
-      ...commonArgs
-    );
-    prepareAggFilter('vaccineName', vaccineName, ...commonArgs);
-    prepareAggFilter('infectedVarName', infectedVarName, ...commonArgs);
-    prepareAggFilter('controlIsoName', controlIsoName, ...commonArgs);
-    prepareAggFilter('controlVarName', controlVarName, ...commonArgs);
-    prepareAggFilter('isoName', isoName, ...commonArgs);
-    prepareAggFilter('varName', varName, ...commonArgs);
-    prepareAggFilter('isoAggkey', isoAggkey, ...commonArgs);
-    prepareAggFilter('position', genePos, ...commonArgs);
 
-    if (where.length === 0) {
-      where.push('TRUE');
-    }
+const fetchCache = memoize(async cacheKey => {
+  const hash = sha256(cacheKey).toString(encHex);
+  const url = `${
+    CACHE_URL_PREFIX
+  }/${
+    hash.slice(0, 2)
+  }/${
+    hash.slice(2, 4)
+  }/${
+    hash.slice(4, 64)
+  }.json`;
+  const resp = await fetch(url);
+  return await resp.json();
+});
 
-    let orderBySQL = '';
-    if (orderBy.length > 0) {
-      orderBySQL = `ORDER BY ${orderBy.join(', ')}`;
-    }
 
-    if (!selectColumns) {
-      selectColumns = DEFAULT_SELECT_COLUMNS;
-    }
-
-    sql = `
-    SELECT
-      ${selectColumns.join(',')}
-    FROM susc_summary
-    WHERE
-      aggregate_by${aggKey === '' ? ' IS NULL' : ' = $aggKey'} AND
-      ${where.join(' AND ')}
-    ${orderBySQL}
-  `;
+function setParams(params, key, val) {
+  if (val !== undefined && val !== null && val !== '') {
+    params[key] = val;
   }
-
-  const {
-    payload,
-    isPending
-  } = useQuery({sql, params, skip});
-
-  const suscSummary = React.useMemo(
-    () => {
-      if (skip || isPending || !payload) {
-        return [];
-      }
-      return payload.map(
-        suscSummary => {
-          let {
-            aggregateBy,
-            antibodyNames,
-            ...others
-          } = suscSummary;
-          return {
-            aggregateBy: aggregateBy && aggregateBy.split(','),
-            antibodyNames: antibodyNames && csvSplit(antibodyNames),
-            ...others
-          };
-        }
-      );
-    },
-    [skip, isPending, payload]
-  );
-
-  return [suscSummary, isPending];
 }
+
+
+function useCacheKey(props) {
+  return React.useMemo(
+    () => {
+      const params = {};
+      setParams(params, 'refName', props.refName);
+      setParams(
+        params,
+        'antibodyNames',
+        csvJoin(props.abNames || [])
+      );
+      setParams(params, 'vaccineName', props.vaccineName);
+      setParams(params, 'infectedVarName', props.infectedVarName);
+      setParams(params, 'varName', props.varName);
+      setParams(params, 'isoAggkey', props.isoAggkey);
+      setParams(params, 'position', props.genePos);
+      return JSON.stringify(params);
+    },
+    [
+      props.abNames,
+      props.genePos,
+      props.infectedVarName,
+      props.isoAggkey,
+      props.refName,
+      props.vaccineName,
+      props.varName
+    ]
+  );
+}
+
 
 export default function useSuscSummary(props) {
   const {getPayload, setPayload} = React.useContext(SuscSummaryContext);
+  const cacheKey = useCacheKey(props);
 
-  let [payload, cached] = getPayload(props);
+  let [payload, cached] = getPayload(cacheKey);
 
-  let [
-    suscSummary,
-    isPending
-  ] = useSuscSummaryNoCache(props, /* skip = */cached);
+  React.useEffect(
+    () => {
+      let mounted = true;
+      if (!cached) {
+        fetchCache(cacheKey)
+          .then(
+            data => mounted && setPayload(cacheKey, data)
+          );
+      }
+      return () => mounted = false;
+    },
+    [cached, props, setPayload, cacheKey]
+  );
 
-  if (!cached && !isPending) {
-    setPayload(props, suscSummary);
-    payload = suscSummary;
-  }
-
-  if (cached) {
-    isPending = false;
-  }
-
-  return [payload, isPending];
+  return [payload, !cached];
 }

@@ -11,8 +11,8 @@ import LocationParams from '../hooks/location-params';
 import Desc from './desc';
 import style from './style.module.scss';
 
-const EMPTY = '__EMPTY';
-const ANY = '__ANY';
+const EMPTY = 'empty';
+const ANY = 'any';
 const EMPTY_TEXT = 'Select item';
 
 

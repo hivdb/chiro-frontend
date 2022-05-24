@@ -59,8 +59,6 @@ export default function useIsolateNumExp() {
     infectedVarName,
     selectColumns: [
       'iso_name',
-      'potency_type',
-      'potency_unit',
       'num_experiments'
     ]
   });
