@@ -1,0 +1,27 @@
+.susc-data-container {
+  position: relative;
+
+  .susc-data-loader {
+    display: none;
+    position: absolute;
+    background-color: rgba(0,0,0,.1);
+    padding: 1rem;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+  }
+  
+  &[data-loading] .susc-data-loader {
+    display: block;
+  }
+
+  .susc-data-tabs {
+    --tab-width: 20rem;
+  }
+
+  div[role="tabpanel"] {
+    padding: 0 2rem;
+  }
+}

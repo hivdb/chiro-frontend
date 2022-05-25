@@ -1,58 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import isEqual from 'lodash/isEqual';
+import Loader from 'react-loader';
 
-import {loadPage} from '../../utils/cms';
-import PromiseComponent from '../../utils/promise-component';
+import {usePage} from '../../utils/cms';
 
 
-export default class PageLoader extends React.Component {
+PageLoader.propTypes = {
+  pageName: PropTypes.string.isRequired,
+  component: PropTypes.func,
+  children: PropTypes.func
+};
 
-  static propTypes = {
-    pageName: PropTypes.string.isRequired,
-    component: PropTypes.func,
-    children: PropTypes.func,
-    childProps: PropTypes.object.isRequired
-  }
+export default function PageLoader({
+  pageName,
+  component,
+  children,
+  ...childProps
+}) {
+  const [payload, isPending, hasError] = usePage(pageName);
 
-  static defaultProps = {
-    childProps: {}
-  }
-
-  static getDerivedStateFromProps(props, state = {}) {
-    const {pageName, childProps} = props;
-    if (
-      pageName !== state.pageName ||
-      !isEqual(childProps, state.childProps)
-    ) {
-      state.pageName = pageName;
-      state.promise = loadPage(`page-${pageName}`, childProps);
-      state.childProps = childProps;
-      return state;
-    }
-    return null;
-  }
-
-  constructor() {
-    super(...arguments);
-    this.state = this.constructor.getDerivedStateFromProps(this.props);
-  }
-
-  errorRender = () => {
-    return "Page not found.";
-  };
-
-  render() {
-    const {component, children} = this.props;
-    const {promise} = this.state;
-    const props = {promise, error: this.errorRender};
-    if (component) {
-      props.component = component;
-    }
-    else {
-      props.then = children;
-    }
-
-    return <PromiseComponent {...props} />;
-  }
+  return <>
+    {isPending ? <Loader loaded={false} /> : (
+      hasError ? "Page not found." : React.createElement(
+        component,
+        {pageName, ...payload, ...childProps},
+        children
+      )
+    )}
+  </>;
 }

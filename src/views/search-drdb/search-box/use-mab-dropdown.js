@@ -134,6 +134,22 @@ export default function useMAbDropdown() {
     ]
   );
 
+  const activeRx = React.useMemo(
+    () => {
+      const defaultValue = formOnly ? EMPTY : ANY;
+
+      let activeRx = defaultValue;
+      if (paramAbNames && paramAbNames[0] === 'any') {
+        activeRx = AB_ANY;
+      }
+      else if (paramAbNames && paramAbNames.length > 0) {
+        activeRx = paramAbNames.join(',');
+      }
+      return activeRx;
+    },
+    [formOnly, paramAbNames]
+  );
+
   const options = React.useMemo(
     () => {
       if (isPending) {
@@ -182,7 +198,7 @@ export default function useMAbDropdown() {
             value: ANY,
             description: <Desc n={
               finalAbNumExpLookup[AB_ANY] ?
-                finalAbNumExpLookup[ANY] : null
+                finalAbNumExpLookup[ANY] : 0
             } />
           },
           ...(finalAbNumExpLookup[AB_ANY] > 0 ? [
@@ -288,15 +304,6 @@ export default function useMAbDropdown() {
     containerRef
   );
 
-  const defaultValue = formOnly ? EMPTY : ANY;
-
-  let activeRx = defaultValue;
-  if (paramAbNames && paramAbNames[0] === 'any') {
-    activeRx = AB_ANY;
-  }
-  else if (paramAbNames && paramAbNames.length > 0) {
-    activeRx = paramAbNames.join(',');
-  }
   return (
     <div
      ref={containerRef}

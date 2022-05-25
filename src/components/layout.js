@@ -13,34 +13,42 @@ import "typeface-source-sans-pro";
 import globalStyle from '../styles/global.module.scss';
 
 
-export default class Layout extends React.Component {
+Layout.propTypes = {
+  match: matchShape.isRequired,
+  router: routerShape.isRequired,
+  children: PropTypes.node
+};
 
-  static propTypes = {
-    match: matchShape.isRequired,
-    router: routerShape.isRequired,
-    children: PropTypes.node
-  }
+Layout.defaultProps = {
+  children: null
+};
 
-  static defaultProps = {
-    children: null
-  }
 
-  get currentPathName() {
-    return this.props.match.location.pathname;
-  }
+export default function Layout({match, router, children}) {
+  const currentPathName = match.location.pathname;
+  const locationRef = React.useRef(match.location);
+  locationRef.current = match.location;
 
-  render() {
-    const {children, router} = this.props;
-    return <Suspense fallback={<Loader loaded={false} />}>
-      <Header currentPathName={this.currentPathName} />
-      <div className={globalStyle["main-content"]}>
-        <Container className="he is dead jim">
-          {children}
-        </Container>
-      </div>
-      <Footer />
-      <GAWrapper router={router} />
-    </Suspense>;
-  }
+  React.useEffect(
+    () => {
+      if (!currentPathName.endsWith('/')) {
+        router.replace({
+          ...locationRef.current,
+          pathname: currentPathName + '/'
+        });
+      }
+    },
+    [router, currentPathName]
+  );
 
+  return <Suspense fallback={<Loader loaded={false} />}>
+    <Header currentPathName={currentPathName} />
+    <div className={globalStyle["main-content"]}>
+      <Container className="he is dead jim">
+        {children}
+      </Container>
+    </div>
+    <Footer />
+    <GAWrapper router={router} />
+  </Suspense>;
 }

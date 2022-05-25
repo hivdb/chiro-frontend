@@ -1,3 +1,4 @@
+import {useState, useEffect} from 'react';
 import memoize from 'lodash/memoize';
 
 function cmsStageHost(host) {
@@ -72,6 +73,22 @@ export async function loadPage(pageName, props = {}) {
   };
 }
 
+export function usePage(pageName) {
+  const [payload, setPayload] = useState([null, true, null]);
+
+  useEffect(
+    () => {
+      let mounted = true;
+      loadPage(pageName)
+        .then(payload => mounted ? setPayload([payload, false, false]) : null)
+        .catch(error => mounted ? setPayload([error, false, true]) : null);
+      return () => mounted = false;
+    },
+    [pageName, setPayload]
+  );
+
+  return payload;
+}
 
 export function getFullLink(path) {
   let stage;

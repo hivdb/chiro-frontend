@@ -64,6 +64,21 @@ export default function useVaccineDropdown() {
     isVaccNumExpPending
   );
 
+  const activeRx = React.useMemo(
+    () => {
+      const defaultValue = formOnly ? EMPTY : ANY;
+      let activeRx = defaultValue;
+      if (paramVaccineName === 'any') {
+        activeRx = VP_ANY;
+      }
+      else if (paramVaccineName) {
+        activeRx = paramVaccineName;
+      }
+      return activeRx;
+    },
+    [formOnly, paramVaccineName]
+  );
+
   const options = React.useMemo(
     () => {
       if (isPending) {
@@ -182,15 +197,6 @@ export default function useVaccineDropdown() {
     containerRef
   );
 
-  const defaultValue = formOnly ? EMPTY : ANY;
-
-  let activeRx = defaultValue;
-  if (paramVaccineName === 'any') {
-    activeRx = VP_ANY;
-  }
-  else if (paramVaccineName) {
-    activeRx = paramVaccineName;
-  }
   return (
     <div
      ref={containerRef}

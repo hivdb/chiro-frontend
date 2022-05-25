@@ -120,6 +120,22 @@ export default function useInfectedVariantDropdown() {
     ]
   );
 
+  const activeRx = React.useMemo(
+    () => {
+      const defaultValue = formOnly ? EMPTY : ANY;
+
+      let activeRx = defaultValue;
+      if (paramInfectedVarName === 'any') {
+        activeRx = CP_ANY;
+      }
+      else if (paramInfectedVarName) {
+        activeRx = paramInfectedVarName;
+      }
+      return activeRx;
+    },
+    [formOnly, paramInfectedVarName]
+  );
+
   const options = React.useMemo(
     () => {
       if (isPending) {
@@ -156,7 +172,7 @@ export default function useInfectedVariantDropdown() {
             value: ANY,
             description: <Desc n={
               finalInfVarNumExpLookup[CP_ANY] ?
-                finalInfVarNumExpLookup[ANY] : null
+                finalInfVarNumExpLookup[ANY] : 0
             } />
           },
           ...(finalInfVarNumExpLookup[CP_ANY] > 0 ? [
@@ -235,15 +251,6 @@ export default function useInfectedVariantDropdown() {
     containerRef
   );
 
-  const defaultValue = formOnly ? EMPTY : ANY;
-
-  let activeRx = defaultValue;
-  if (paramInfectedVarName === 'any') {
-    activeRx = CP_ANY;
-  }
-  else if (paramInfectedVarName) {
-    activeRx = paramInfectedVarName;
-  }
   return (
     <div
      ref={containerRef}

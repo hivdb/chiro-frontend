@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function setLoading(ref, callback) {
+export default function setLoading(ref, callback, delay = 20) {
   const target = ref.current;
   if (target) {
     target.dataset.loading = '';
@@ -9,12 +9,12 @@ export default function setLoading(ref, callback) {
       setTimeout(() => {
         delete target.dataset.loading;
       });
-    });
+    }, delay);
   }
 }
 
 
-export function useSetLoading(ref) {
+export function useSetLoading(ref, delay = 20) {
   const mountState = React.useRef(false);
 
   React.useEffect(
@@ -33,9 +33,9 @@ export function useSetLoading(ref) {
         if (mountState.current) {
           callback();
         }
-      });
+      }, delay);
     },
-    [ref]
+    [ref, delay]
   );
 
   return safeSetLoading;
