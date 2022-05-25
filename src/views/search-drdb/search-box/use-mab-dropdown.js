@@ -12,6 +12,7 @@ import DMSMutations from '../hooks/dms-mutations';
 import LocationParams from '../hooks/location-params';
 import {csvJoin} from '../hooks/susc-summary/funcs';
 
+import useOnChangeWithLoading from './use-on-change-with-loading';
 import Desc from './desc';
 import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
@@ -280,6 +281,13 @@ export default function useMAbDropdown() {
     [onChange]
   );
 
+  const containerRef = React.useRef();
+
+  const handleChangeWithLoading = useOnChangeWithLoading(
+    handleChange,
+    containerRef
+  );
+
   const defaultValue = formOnly ? EMPTY : ANY;
 
   let activeRx = defaultValue;
@@ -291,14 +299,15 @@ export default function useMAbDropdown() {
   }
   return (
     <div
-     data-loaded={!isPending}
+     ref={containerRef}
+     data-loading={isPending ? '' : undefined}
      className={style['search-box-dropdown-container']}>
       <Dropdown
        direction="right"
        search={rxSearch}
        options={options}
        placeholder={EMPTY_TEXT}
-       onChange={handleChange}
+       onChange={handleChangeWithLoading}
        value={activeRx} />
     </div>
   );

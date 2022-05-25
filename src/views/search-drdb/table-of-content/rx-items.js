@@ -75,10 +75,10 @@ export default function RxItems({id, title, suscResults, loaded}) {
                href={`#${id}${
                  onlyOne ? '' : `_${kebab}`
                }`}>{title} - {subtitle}:</a>{' '}
-              {mutStats.numExps.toLocaleString('en-US')}{' '}
-              {pluralize('result', mutStats.numExps, false)},{' '}
               {mutStats.numArticles.toLocaleString('en-US')}{' '}
-              {pluralize('publication', mutStats.numArticles, false)}
+              {pluralize('publication', mutStats.numArticles, false)}{', '}
+              {mutStats.numExps.toLocaleString('en-US')}{' '}
+              {pluralize('result', mutStats.numExps, false)}
               {mutStats.indivFold.numExps + mutStats.aggFold.numExps > 0 ?
                 <ul>
                   {mutStats.indivFold.numExps > 0 ?
@@ -87,9 +87,6 @@ export default function RxItems({id, title, suscResults, loaded}) {
                         Individual sample data are available{': '}
                       </span>
                       {' '}
-                      {mutStats.indivFold.numExps.toLocaleString('en-US')}{' '}
-                      {pluralize('result', mutStats.indivFold.numExps, false)}
-                      {', '}
                       {mutStats.indivFold.numArticles.toLocaleString('en-US')}
                       {' '}
                       {pluralize(
@@ -97,6 +94,9 @@ export default function RxItems({id, title, suscResults, loaded}) {
                         mutStats.indivFold.numArticles,
                         false
                       )}
+                      {', '}
+                      {mutStats.indivFold.numExps.toLocaleString('en-US')}{' '}
+                      {pluralize('result', mutStats.indivFold.numExps, false)}
                     </li> : null}
                   {mutStats.aggFold.numExps > 0 ?
                     <li>
@@ -104,9 +104,6 @@ export default function RxItems({id, title, suscResults, loaded}) {
                         Only aggregate sample data are available{': '}
                       </span>
                       {' '}
-                      {mutStats.aggFold.numExps.toLocaleString('en-US')}{' '}
-                      {pluralize('result', mutStats.aggFold.numExps, false)}
-                      {', '}
                       {mutStats.aggFold.numArticles.toLocaleString('en-US')}
                       {' '}
                       {pluralize(
@@ -114,6 +111,9 @@ export default function RxItems({id, title, suscResults, loaded}) {
                         mutStats.aggFold.numArticles,
                         false
                       )}
+                      {', '}
+                      {mutStats.aggFold.numExps.toLocaleString('en-US')}{' '}
+                      {pluralize('result', mutStats.aggFold.numExps, false)}
                     </li> : null}
                 </ul> : null}
             </li> : null

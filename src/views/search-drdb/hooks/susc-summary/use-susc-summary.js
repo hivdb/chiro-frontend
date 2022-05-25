@@ -34,15 +34,21 @@ const fetchCache = memoize(async cacheKey => {
   }/${
     hash.slice(4, 64)
   }.json`;
-  const resp = await fetch(url);
-  if (resp.status === 200) {
-    return await resp.json();
+  console.log('T1', new Date().getTime());
+  try {
+    const resp = await fetch(url);
+    if (resp.status === 200) {
+      return await resp.json();
+    }
+    else {
+      return {
+        params: JSON.parse(cacheKey),
+        ...EMPTY
+      };
+    }
   }
-  else {
-    return {
-      params: JSON.parse(cacheKey),
-      ...EMPTY
-    };
+  finally {
+    console.log('T2', new Date().getTime());
   }
 });
 

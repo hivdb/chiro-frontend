@@ -9,6 +9,7 @@ import InVitroMutations from '../hooks/invitro-mutations';
 import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 
+import useOnChangeWithLoading from './use-on-change-with-loading';
 import FragmentWithoutWarning from './fragment-without-warning';
 import Desc from './desc';
 import style from './style.module.scss';
@@ -294,18 +295,26 @@ export default function useMutationDropdown() {
     [onChange]
   );
 
+  const containerRef = React.useRef();
+
+  const handleChangeWithLoading = useOnChangeWithLoading(
+    handleChange,
+    containerRef
+  );
+
   const defaultValue = formOnly ? EMPTY : ANY;
 
   return (
     <div
-     data-loaded={!isPending}
+     ref={containerRef}
+     data-loading={isPending ? '' : undefined}
      className={style['search-box-dropdown-container']}>
       <Dropdown
        search={orderedSearch}
        direction="right"
        placeholder={EMPTY_TEXT}
        options={variantOptions}
-       onChange={handleChange}
+       onChange={handleChangeWithLoading}
        value={
          paramIsoAggKey ||
          paramGenePos ||

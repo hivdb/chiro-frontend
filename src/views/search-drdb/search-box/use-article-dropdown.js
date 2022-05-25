@@ -8,6 +8,7 @@ import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 import LocationParams from '../hooks/location-params';
 
+import useOnChangeWithLoading from './use-on-change-with-loading';
 import Desc from './desc';
 import style from './style.module.scss';
 
@@ -156,17 +157,25 @@ export default function useArticleDropdown() {
     [onChange]
   );
 
+  const containerRef = React.useRef();
+
+  const handleChangeWithLoading = useOnChangeWithLoading(
+    handleChange,
+    containerRef
+  );
+
   const defaultValue = formOnly ? EMPTY : ANY;
 
   return (
     <div
-     data-loaded={!isPending}
+     ref={containerRef}
+     data-loading={isPending ? '' : undefined}
      className={style['search-box-dropdown-container']}>
       <Dropdown
        search direction="left"
        placeholder={EMPTY_TEXT}
        options={articleOptions}
-       onChange={handleChange}
+       onChange={handleChangeWithLoading}
        value={paramRefName || defaultValue} />
     </div>
   );

@@ -1,7 +1,7 @@
 @import "~sierra-frontend/dist/styles/placeholder";
 
 .search-box-dropdown-container {
-  &[data-loaded="false"] {
+  &[data-loading] {
     @extend %placeholder;
     :global(.ui.search.dropdown) {
       background-color: #e0e0e0;

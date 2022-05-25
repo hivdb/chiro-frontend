@@ -5,8 +5,7 @@ import difference from 'lodash/difference';
 import intersection from 'lodash/intersection';
 import createPersistedState from 'use-persisted-state/src';
 
-import InlineLoader
-  from 'sierra-frontend/dist/components/inline-loader';
+import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
 import SimpleTable from 'sierra-frontend/dist/components/simple-table';
 
 import {useSetLoading} from '../../../../utils/set-loading';
@@ -14,7 +13,9 @@ import {useAggregateData} from '../../../../components/pivot-table';
 
 import {useStatSuscResults} from '../../hooks';
 import LocationParams from '../../hooks/location-params';
-import GroupByOptions from '../group-by-options';
+import GroupByOptions, {
+  usePersistedGroupByOptions
+} from '../group-by-options';
 
 import useColumnDefs from '../column-defs';
 import {aggGeoMeanWeighted} from '../column-defs/agg-funcs';
@@ -110,7 +111,10 @@ export default function PivotTableWrapper({
   const pivotTableCtlRef = React.useRef();
   const [modalData, setModalData] = React.useState(null);
   const {params: {debugMsg}} = LocationParams.useMe();
-  const [curGroupBy, setCurGroupBy] = React.useState(defaultGroupBy || groupBy);
+  const [curGroupBy, setCurGroupBy] = usePersistedGroupByOptions({
+    idPrefix: id,
+    defaultGroupByOptions: defaultGroupBy || groupBy
+  });
 
   const columnDefs = useColumnDefs({columns, labels});
 
@@ -138,8 +142,16 @@ export default function PivotTableWrapper({
     newGroupBy => setLoading(
       () => setCurGroupBy(newGroupBy)
     ),
-    [setLoading]
+    [setLoading, setCurGroupBy]
   );
+
+  const handleResetGroupBy = React.useCallback(
+    () => setLoading(
+      () => setCurGroupBy(defaultGroupBy || groupBy)
+    ),
+    [setLoading, setCurGroupBy, defaultGroupBy, groupBy]
+  );
+
 
   const handleToggleHideNN = React.useCallback(
     evt => {
@@ -312,11 +324,12 @@ export default function PivotTableWrapper({
   return <>
     <GroupByOptions
      idPrefix={id}
-     onChange={handleChangeGroupBy}
      allColumnDefs={columnDefs}
      allGroupByOptions={groupBy}
-     defaultGroupByOptions={defaultGroupBy || groupBy}
-     subfilterOptions={subfilterOptions} />
+     curGroupByOptions={curGroupBy}
+     subfilterOptions={subfilterOptions}
+     onChange={handleChangeGroupBy}
+     onReset={handleResetGroupBy} />
     <HeadNote
      numRows={numRows}
      numExps={numExps}
@@ -337,7 +350,7 @@ export default function PivotTableWrapper({
            {...props}
            className={style['pivot-table']}
            columnDefs={cleanedColumnDefs}
-           cacheKey={`${cacheKey}__${hideNN}__${hideNon50}__${
+           key={`${cacheKey}__${hideNN}__${hideNon50}__${
              JSON.stringify(cleanedGroupBy)
            }`}
            data={aggData} />

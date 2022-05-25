@@ -9,6 +9,7 @@ import DMSMutations from '../hooks/dms-mutations';
 import InfectedVariants from '../hooks/infected-variants';
 import LocationParams from '../hooks/location-params';
 
+import useOnChangeWithLoading from './use-on-change-with-loading';
 import Desc from './desc';
 import FragmentWithoutWarning from './fragment-without-warning';
 import style from './style.module.scss';
@@ -227,6 +228,13 @@ export default function useInfectedVariantDropdown() {
     [onChange]
   );
 
+  const containerRef = React.useRef();
+
+  const handleChangeWithLoading = useOnChangeWithLoading(
+    handleChange,
+    containerRef
+  );
+
   const defaultValue = formOnly ? EMPTY : ANY;
 
   let activeRx = defaultValue;
@@ -238,14 +246,15 @@ export default function useInfectedVariantDropdown() {
   }
   return (
     <div
-     data-loaded={!isPending}
+     ref={containerRef}
+     data-loading={isPending ? '' : undefined}
      className={style['search-box-dropdown-container']}>
       <Dropdown
        direction="right"
        search={rxSearch}
        options={options}
        placeholder={EMPTY_TEXT}
-       onChange={handleChange}
+       onChange={handleChangeWithLoading}
        value={activeRx} />
     </div>
   );

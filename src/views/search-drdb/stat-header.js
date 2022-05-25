@@ -82,15 +82,15 @@ export default function SearchDRDBStatHeader() {
                   <AntibodyCard />
                   <VariantCard />
                   <MutationCard />
-                  <PercentBars>
-                    {formOnly ? null : <TableOfContent />}
-                  </PercentBars>
                 </>
               }
             ]}
           </StatHeader>
         )}
       </SearchBox>
+      <PercentBars>
+        {formOnly ? null : <TableOfContent />}
+      </PercentBars>
     </Grid.Row>
   );
 

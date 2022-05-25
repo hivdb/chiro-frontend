@@ -10,7 +10,45 @@ import Subfilter, {useResetAllSubfilters} from './subfilter';
 
 import style from './style.module.scss';
 
-const STATE_VERSION = 2;
+const STATE_VERSION = 3;
+
+
+function groupByOptionMapToArray(optMap) {
+  return Object
+    .entries(optMap)
+    .filter(([, keep]) => keep)
+    .map(([name]) => name);
+}
+
+
+function useGroupByOptionMap({
+  allGroupByOptions,
+  curGroupByOptions
+}) {
+  const curOptMap = React.useMemo(
+    () => allGroupByOptions.reduce(
+      (acc, name) => {
+        acc[name] = curGroupByOptions.includes(name);
+        return acc;
+      },
+      {}
+    ),
+    [allGroupByOptions, curGroupByOptions]
+  );
+  return curOptMap;
+}
+
+
+export function usePersistedGroupByOptions({
+  idPrefix,
+  defaultGroupByOptions
+}) {
+  const useOpts = createPersistedState(
+    `${idPrefix}__dimensions__v${STATE_VERSION}`
+  );
+  const [opts, setOpts] = useOpts(defaultGroupByOptions);
+  return [opts, setOpts];
+}
 
 
 GroupByOptions.propTypes = {
@@ -21,13 +59,14 @@ GroupByOptions.propTypes = {
   allGroupByOptions: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ).isRequired,
-  defaultGroupByOptions: PropTypes.arrayOf(
+  curGroupByOptions: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ).isRequired,
   subfilterOptions: PropTypes.objectOf(
     PropTypes.array.isRequired
   ),
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  onReset: PropTypes.func
 };
 
 
@@ -35,61 +74,30 @@ export default function GroupByOptions({
   idPrefix,
   allColumnDefs,
   allGroupByOptions,
+  curGroupByOptions,
   subfilterOptions = {},
-  defaultGroupByOptions,
-  onChange
+  onChange,
+  onReset
 }) {
-  const defaultGroupByOptionMap = React.useMemo(
-    () => defaultGroupByOptions.reduce(
-      (acc, name) => {
-        acc[name] = true;
-        return acc;
-      },
-      {}
-    ),
-    [defaultGroupByOptions]
-  );
   const columnDefs = React.useMemo(
     () => allColumnDefs.filter(
       ({name}) => allGroupByOptions.includes(name)
     ),
     [allColumnDefs, allGroupByOptions]
   );
-  const useGroupByOptionMap = createPersistedState(
-    `${idPrefix}__dimensions__v${STATE_VERSION}`
-  );
-  const [
-    groupByOptionMap,
-    setGroupByOptionMap
-  ] = useGroupByOptionMap(defaultGroupByOptionMap);
 
-  React.useEffect(
-    () => {
-      if (groupByOptionMap !== defaultGroupByOptionMap) {
-        onChange && onChange(
-          Object
-            .entries(groupByOptionMap)
-            .filter(([, keep]) => keep)
-            .map(([name]) => name)
-        );
-      }
-    },
-    [groupByOptionMap, defaultGroupByOptionMap, onChange]
-  );
+  const groupByOptionMap = useGroupByOptionMap({
+    allGroupByOptions,
+    curGroupByOptions
+  });
 
   const handleChange = React.useCallback(
     (name, checked) => {
       const newOptMap = {...groupByOptionMap};
       newOptMap[name] = checked;
-      setGroupByOptionMap(newOptMap);
-      onChange && onChange(
-        Object
-          .entries(newOptMap)
-          .filter(([, keep]) => keep)
-          .map(([name]) => name)
-      );
+      onChange && onChange(groupByOptionMapToArray(newOptMap));
     },
-    [groupByOptionMap, onChange, setGroupByOptionMap]
+    [groupByOptionMap, onChange]
   );
 
   const allChecked = React.useMemo(
@@ -102,32 +110,21 @@ export default function GroupByOptions({
   const handleCheckAll = React.useCallback(
     e => {
       e && e.preventDefault();
-      const options = allChecked ? [] : columnDefs.map(({name}) => name);
-      setGroupByOptionMap(options.reduce(
-        (acc, name) => {
-          acc[name] = true;
-          return acc;
-        },
-        {}
-      ));
+      const options = allChecked ? [] : [...allGroupByOptions];
       onChange && onChange(options);
     },
-    [columnDefs, setGroupByOptionMap, onChange, allChecked]
+    [allGroupByOptions, onChange, allChecked]
   );
   const onResetAllSubfilters = useResetAllSubfilters(subfilterOptions);
 
   const handleReset = React.useCallback(
     e => {
       e && e.preventDefault();
-      setGroupByOptionMap(defaultGroupByOptionMap);
-      onChange && onChange(defaultGroupByOptions);
+      onReset && onReset();
       onResetAllSubfilters();
     },
     [
-      defaultGroupByOptionMap,
-      defaultGroupByOptions,
-      onChange,
-      setGroupByOptionMap,
+      onReset,
       onResetAllSubfilters
     ]
   );

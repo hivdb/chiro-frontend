@@ -5,8 +5,9 @@ import snakeCase from 'lodash/snakeCase';
 import PropTypes from 'prop-types';
 import {AiOutlineCheck} from '@react-icons/all-files/ai/AiOutlineCheck';
 import {AiOutlineClose} from '@react-icons/all-files/ai/AiOutlineClose';
-import {AiOutlineArrowRight} from
-  '@react-icons/all-files/ai/AiOutlineArrowRight';
+import {
+  AiOutlineArrowRight
+} from '@react-icons/all-files/ai/AiOutlineArrowRight';
 import LocationParams, {buildLocationQuery} from '../../hooks/location-params';
 
 import style from './style.module.scss';
