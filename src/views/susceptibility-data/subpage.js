@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'found';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import useRouter from 'found/useRouter';
@@ -126,7 +127,11 @@ function SuscData({
           <TabList>
             {sections.map(({title, name, desc}) => (
               <Tab key={`tab-${name}`}>
-                <Markdown inline>**{title}**{'  \n'}{desc}</Markdown>
+                <Link
+                 className={style['tab-link']}
+                 to={`/susceptibility/${name}/`}>
+                  <Markdown inline>**{title}**{'  \n'}{desc}</Markdown>
+                </Link>
               </Tab>
             ))}
           </TabList>
