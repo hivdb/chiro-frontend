@@ -138,6 +138,10 @@ export default function useVariantDropdown() {
           ))
           .sort((a, b) => b.numExp - a.numExp);
 
+        const hasAtLeastOne = displayVariants.some(
+          ({numExp}) => numExp > 0
+        );
+
         return [
           ...(formOnly ? [{
             key: 'empty',
@@ -151,7 +155,10 @@ export default function useVariantDropdown() {
             description: (
               <Desc
                approx={approx}
-               n={displayVariants.length > 0 ? finalVarNumExpLookup[ANY] : 0} />
+               n={
+                 hasAtLeastOne ?
+                   finalVarNumExpLookup[ANY] :
+                   (paramVarName ? null : 0)} />
             )
           },
           ...(displayVariants.length > 0 ? [

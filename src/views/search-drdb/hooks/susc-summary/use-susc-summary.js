@@ -11,15 +11,15 @@ const CACHE_URL_PREFIX = (
 );
 
 const EMPTY = {
-  article: {},
-  'antibody:any': {},
-  antibody: {},
-  infectedVariant: {},
-  vaccine: {},
-  isolateAgg: {},
-  variant: {},
-  isolate: {},
-  position: {}
+  article: {any: 0},
+  'antibody:any': {any: 0, 'ab-any': 0},
+  antibody: {any: 0, 'ab-any': 0},
+  infectedVariant: {any: 0, 'cp-any': 0},
+  vaccine: {any: 0, 'vp-any': 0},
+  isolateAgg: {any: 0},
+  variant: {any: 0},
+  isolate: {any: 0},
+  position: {any: 0}
 };
 
 

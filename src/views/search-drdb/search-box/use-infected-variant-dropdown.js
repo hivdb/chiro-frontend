@@ -151,12 +151,18 @@ export default function useInfectedVariantDropdown() {
             value: CP_ANY,
             type: CP
           },
-          ...(paramInfectedVarName && paramInfectedVarName !== 'any' ? [{
-            key: paramInfectedVarName,
-            text: paramInfectedVarName,
-            value: paramInfectedVarName,
-            type: CP
-          }] : [])
+          ...(
+            (
+              activeRx !== EMPTY &&
+              activeRx !== ANY &&
+              activeRx !== CP_ANY
+            ) ?
+              [{
+                key: activeRx,
+                text: activeRx,
+                value: activeRx,
+                type: CP
+              }] : [])
         ];
       }
       else {
@@ -172,48 +178,61 @@ export default function useInfectedVariantDropdown() {
             value: ANY,
             description: <Desc n={
               finalInfVarNumExpLookup[CP_ANY] ?
-                finalInfVarNumExpLookup[ANY] : 0
+                finalInfVarNumExpLookup[ANY] : (
+                  activeRx === EMPTY || activeRx === ANY ? 0 : null
+                )
             } />
           },
-          ...(finalInfVarNumExpLookup[CP_ANY] > 0 ? [
-            {
-              key: 'cp-divider',
-              as: FragmentWithoutWarning,
-              children: <Dropdown.Divider />
-            },
-            {
-              key: CP_ANY,
-              text: 'Any CP',
-              value: CP_ANY,
-              description: <Desc n={finalInfVarNumExpLookup[CP_ANY]} />,
-              type: CP
-            },
-            ...infectedVariants
-              .map(
-                ({varName, synonyms}) => ({
-                  key: varName,
-                  text: `${
-                    synonyms.length > 0 ?
-                      `${varName} (${synonyms[0]})` :
-                      varName
-                  }`,
-                  value: varName,
-                  type: CP,
+          ...(
+            (
+              (activeRx !== EMPTY && activeRx !== ANY) ||
+              finalInfVarNumExpLookup[CP_ANY] > 0
+            ) ?
+              [
+                {
+                  key: 'cp-divider',
+                  as: FragmentWithoutWarning,
+                  children: <Dropdown.Divider />
+                },
+                {
+                  key: CP_ANY,
+                  text: 'Any CP',
+                  value: CP_ANY,
                   description: (
-                    <Desc n={finalInfVarNumExpLookup[varName] || 0} />
+                    <Desc n={finalInfVarNumExpLookup[CP_ANY] || 0} />
                   ),
-                  'data-num-exp': finalInfVarNumExpLookup[varName] || 0
-                })
-              )
-              .filter(v => v['data-num-exp'] > 0)
-              .sort((a, b) => b['data-num-exp'] - a['data-num-exp'])
-          ] : [])
+                  type: CP
+                },
+                ...infectedVariants
+                  .map(
+                    ({varName, synonyms}) => ({
+                      key: varName,
+                      text: `${
+                        synonyms.length > 0 ?
+                          `${varName} (${synonyms[0]})` :
+                          varName
+                      }`,
+                      value: varName,
+                      type: CP,
+                      description: (
+                        <Desc n={finalInfVarNumExpLookup[varName] || 0} />
+                      ),
+                      'data-num-exp': finalInfVarNumExpLookup[varName] || 0,
+                      'data-is-empty': (
+                        varName !== activeRx &&
+                    !finalInfVarNumExpLookup[varName]
+                      )
+                    })
+                  )
+                  .filter(v => !v['data-is-empty'])
+                  .sort((a, b) => b['data-num-exp'] - a['data-num-exp'])
+              ] : [])
         ];
       }
     },
     [
       isPending,
-      paramInfectedVarName,
+      activeRx,
       formOnly,
       finalInfVarNumExpLookup,
       infectedVariants

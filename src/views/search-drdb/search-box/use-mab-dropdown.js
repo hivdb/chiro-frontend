@@ -143,7 +143,7 @@ export default function useMAbDropdown() {
         activeRx = AB_ANY;
       }
       else if (paramAbNames && paramAbNames.length > 0) {
-        activeRx = paramAbNames.join(',');
+        activeRx = csvJoin(paramAbNames);
       }
       return activeRx;
     },
@@ -166,13 +166,15 @@ export default function useMAbDropdown() {
             type: ANTIBODY
           },
           ...(
-            paramAbNames &&
-            paramAbNames.length > 0 &&
-            paramAbNames[0] !== 'any' ?
+            (
+              activeRx !== EMPTY &&
+              activeRx !== ANY &&
+              activeRx !== AB_ANY
+            ) ?
               [{
-                key: paramAbNames.join(','),
+                key: activeRx,
                 text: paramAbNames.join(' + '),
-                value: paramAbNames.join(','),
+                value: activeRx,
                 type: ANTIBODY
               }] : []
           )
@@ -198,72 +200,88 @@ export default function useMAbDropdown() {
             value: ANY,
             description: <Desc n={
               finalAbNumExpLookup[AB_ANY] ?
-                finalAbNumExpLookup[ANY] : 0
+                finalAbNumExpLookup[ANY] : (
+                  activeRx === EMPTY || activeRx === ANY ? 0 : null
+                )
             } />
           },
-          ...(finalAbNumExpLookup[AB_ANY] > 0 ? [
-            {
-              key: 'antibody-divider',
-              as: FragmentWithoutWarning,
-              children: <Dropdown.Divider />
-            },
-            {
-              key: AB_ANY,
-              text: 'Any mAb',
-              value: AB_ANY,
-              type: ANTIBODY,
-              description: <Desc n={finalAbNumExpLookup[AB_ANY]} />
-            },
-            ...[
-              ...antibodyCombinations
-                .map(abNames => {
-                  const textAbNames = csvJoin(abNames);
+          ...(
+            (
+              (activeRx !== EMPTY && activeRx !== ANY) ||
+              finalAbNumExpLookup[AB_ANY] > 0
+            ) ?
+              [
+                {
+                  key: 'antibody-divider',
+                  as: FragmentWithoutWarning,
+                  children: <Dropdown.Divider />
+                },
+                {
+                  key: AB_ANY,
+                  text: 'Any mAb',
+                  value: AB_ANY,
+                  type: ANTIBODY,
+                  description: <Desc n={finalAbNumExpLookup[AB_ANY] || 0} />
+                },
+                ...[
+                  ...antibodyCombinations
+                    .map(abNames => {
+                      const textAbNames = csvJoin(abNames);
 
-                  return {
-                    key: textAbNames,
-                    text: abNames.join(' + '),
-                    value: textAbNames,
-                    type: ANTIBODY,
-                    description: (
-                      <Desc
-                       n={finalAbNumExpLookup[textAbNames] || 0} />
-                    ),
-                    'data-num-results': finalAbNumExpLookup[textAbNames],
-                    'data-is-empty': !finalAbNumExpLookup[textAbNames],
-                    synonyms: []
-                  };
-                }),
-              ...antibodies
-                .filter(({
-                  abName,
-                  priority
-                }) => (
-                  !excludeAbs.includes(abName) &&
+                      return {
+                        key: textAbNames,
+                        text: abNames.join(' + '),
+                        value: textAbNames,
+                        type: ANTIBODY,
+                        description: (
+                          <Desc
+                           n={finalAbNumExpLookup[textAbNames] || 0} />
+                        ),
+                        'data-num-results': finalAbNumExpLookup[textAbNames],
+                        'data-is-empty': (
+                          textAbNames !== activeRx &&
+                      !finalAbNumExpLookup[textAbNames]
+                        ),
+                        synonyms: []
+                      };
+                    }),
+                  ...antibodies
+                    .filter(({
+                      abName,
+                      priority
+                    }) => (
+                      !excludeAbs.includes(abName) &&
                   (paramRefName || priority < 4000)
-                ))
-                .map(
-                  ({
-                    abName,
-                    abbreviationName: abbr,
-                    synonyms
-                  }) => ({
-                    key: abName,
-                    text: abbr ? `${abName} (${abbr})` : abName,
-                    value: abName,
-                    type: ANTIBODY,
-                    description: <Desc n={finalAbNumExpLookup[abName] || 0} />,
-                    'data-num-results': finalAbNumExpLookup[abName],
-                    'data-is-empty': !finalAbNumExpLookup[abName],
-                    synonyms
-                  })
-                )
-            ].filter(v => !v['data-is-empty'])
-          ] : [])
+                    ))
+                    .map(
+                      ({
+                        abName,
+                        abbreviationName: abbr,
+                        synonyms
+                      }) => ({
+                        key: abName,
+                        text: abbr ? `${abName} (${abbr})` : abName,
+                        value: abName,
+                        type: ANTIBODY,
+                        description: (
+                          <Desc n={finalAbNumExpLookup[abName] || 0} />
+                        ),
+                        'data-num-results': finalAbNumExpLookup[abName],
+                        'data-is-empty': (
+                          abName !== activeRx &&
+                      !finalAbNumExpLookup[abName]
+                        ),
+                        synonyms
+                      })
+                    )
+                ].filter(v => !v['data-is-empty'])
+              ] : [])
         ];
       }
     },
     [
       isPending,
+      activeRx,
       paramRefName,
       paramAbNames,
       config,

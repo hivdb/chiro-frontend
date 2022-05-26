@@ -193,6 +193,22 @@ export default function useMutationDropdown() {
             return acc;
           }, {});
 
+        const displayPositions = positions
+          .map(pos => ({
+            ...pos,
+            numExp: positionMutCount[pos.posKey] || 0
+          }))
+          .filter(({posKey, numExp}) => (
+            posKey === paramGenePos ||
+            numExp > 1
+          ));
+
+        const hasAtLeastOne = displayIsolateAggs.some(
+          ({numExp}) => numExp > 0
+        ) || displayPositions.some(
+          ({numExp}) => numExp > 0
+        );
+
         return [
           ...(formOnly ? [{
             key: 'empty',
@@ -207,25 +223,23 @@ export default function useMutationDropdown() {
               <Desc
                approx={approx}
                n={
-                 displayIsolateAggs.length > 0 ?
-                   finalPosNumExpLookup[ANY] : 0
+                 hasAtLeastOne ?
+                   finalPosNumExpLookup[ANY] : (
+                     paramIsoAggKey || paramGenePos ? null : 0
+                   )
                } />
             )
           },
-          ...(displayIsolateAggs.length > 0 ? [
+          ...(displayPositions.length + displayIsolateAggs.length > 0 ? [
             {
               key: 'combomut-divider',
               as: FragmentWithoutWarning,
               children: <Dropdown.Divider />
             },
             ...[
-              ...positions
-                .filter(({posKey}) => (
-                  posKey === paramGenePos ||
-                  positionMutCount[posKey] > 1
-                ))
+              ...displayPositions
                 .map(
-                  ({posKey, gene, position, refAminoAcid}) => ({
+                  ({posKey, gene, position, refAminoAcid, numExp}) => ({
                     key: posKey,
                     text: `${
                       gene === 'S' ? '' : `${gene}:`
@@ -236,7 +250,7 @@ export default function useMutationDropdown() {
                     description: (
                       <Desc
                        approx={approx}
-                       n={finalPosNumExpLookup[posKey]} />
+                       n={numExp} />
                     )
                   })
                 ),

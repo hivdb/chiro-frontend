@@ -127,7 +127,10 @@ export default function useArticleDropdown() {
                    approx={approx}
                    n={totalNumExpLookup[refName] || 0} />
                 ),
-                'data-is-empty': !totalNumExpLookup[refName]
+                'data-is-empty': (
+                  paramRefName !== refName &&
+                  !totalNumExpLookup[refName]
+                )
               })
             )
             .filter(a => !a['data-is-empty'])

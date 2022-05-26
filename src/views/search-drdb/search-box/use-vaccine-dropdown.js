@@ -94,12 +94,18 @@ export default function useVaccineDropdown() {
             value: VP_ANY,
             type: VACCINE
           },
-          ...(paramVaccineName && paramVaccineName !== 'any' ? [{
-            key: paramVaccineName,
-            text: paramVaccineName,
-            value: paramVaccineName,
-            type: VACCINE
-          }] : [])
+          ...(
+            (
+              activeRx !== EMPTY &&
+              activeRx !== ANY &&
+              activeRx !== VP_ANY
+            ) ?
+              [{
+                key: activeRx,
+                text: activeRx,
+                value: activeRx,
+                type: VACCINE
+              }] : [])
         ];
       }
       else {
@@ -115,49 +121,60 @@ export default function useVaccineDropdown() {
             value: ANY,
             description: <Desc n={
               vaccNumExpLookup[VP_ANY] ?
-                vaccNumExpLookup[ANY] : 0
+                vaccNumExpLookup[ANY] : (
+                  activeRx === EMPTY || activeRx === ANY ? 0 : null
+                )
             } />
           },
-          ...(vaccNumExpLookup[VP_ANY] > 0 ? [
-            {
-              key: 'vaccine-divider',
-              as: FragmentWithoutWarning,
-              children: <Dropdown.Divider />
-            },
-            {
-              key: VP_ANY,
-              text: 'Any VP',
-              value: VP_ANY,
-              type: VACCINE,
-              description: <Desc n={vaccNumExpLookup[VP_ANY]} />
-            },
-            ...vaccines
-              .filter(({vaccineName}) => (
-                includeAll ||
-                vaccineName === paramVaccineName ||
+          ...(
+            (
+              (activeRx !== EMPTY && activeRx !== ANY) ||
+              vaccNumExpLookup[VP_ANY] > 0
+            ) ?
+              [
+                {
+                  key: 'vaccine-divider',
+                  as: FragmentWithoutWarning,
+                  children: <Dropdown.Divider />
+                },
+                {
+                  key: VP_ANY,
+                  text: 'Any VP',
+                  value: VP_ANY,
+                  type: VACCINE,
+                  description: <Desc n={vaccNumExpLookup[VP_ANY] || 0} />
+                },
+                ...vaccines
+                  .filter(({vaccineName}) => (
+                    includeAll ||
+                vaccineName === activeRx ||
                 !(/\+/.test(vaccineName))
-              ))
-              .map(
-                ({vaccineName}) => ({
-                  key: vaccineName,
-                  text: vaccineName,
-                  value: vaccineName,
-                  description: (
-                    <Desc n={vaccNumExpLookup[vaccineName] || 0} />
-                  ),
-                  'data-num-exp': vaccNumExpLookup[vaccineName] || 0,
-                  type: VACCINE
-                })
-              )
-              .filter(v => v['data-num-exp'] > 0)
-              .sort((a, b) => b['data-num-exp'] - a['data-num-exp'])
-          ] : [])
+                  ))
+                  .map(
+                    ({vaccineName}) => ({
+                      key: vaccineName,
+                      text: vaccineName,
+                      value: vaccineName,
+                      description: (
+                        <Desc n={vaccNumExpLookup[vaccineName] || 0} />
+                      ),
+                      'data-num-exp': vaccNumExpLookup[vaccineName] || 0,
+                      'data-is-empty': (
+                        vaccineName !== activeRx &&
+                        !vaccNumExpLookup[vaccineName]
+                      ),
+                      type: VACCINE
+                    })
+                  )
+                  .filter(v => !v['data-is-empty'])
+                  .sort((a, b) => b['data-num-exp'] - a['data-num-exp'])
+              ] : [])
         ];
       }
     },
     [
       isPending,
-      paramVaccineName,
+      activeRx,
       formOnly,
       vaccNumExpLookup,
       vaccines,

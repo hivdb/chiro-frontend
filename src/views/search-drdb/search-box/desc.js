@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 
 Desc.propTypes = {
-  n: PropTypes.number.isRequired,
+  n: PropTypes.number,
   approx: PropTypes.bool.isRequired
 };
 
@@ -39,7 +39,12 @@ export default function Desc({n, approx}) {
     }
   }
 
-  return <span className="description">
-    {prefix}{pluralize('result', n, true)}
-  </span>;
+  if (n === null || isNaN(n)) {
+    return null;
+  }
+  else {
+    return <span className="description">
+      {prefix}{pluralize('result', n, true)}
+    </span>;
+  }
 }
