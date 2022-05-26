@@ -1,5 +1,6 @@
 import React from 'react';
 import {Grid, Header} from 'semantic-ui-react';
+import {Link} from 'found';
 
 import {H2} from 'sierra-frontend/dist/components/heading-tags';
 import BackToTop from '../../components/back-to-top';
@@ -64,6 +65,10 @@ export default function SearchDRDBLayout() {
           Search SARS-CoV-2 resistance database
           <Header.Subheader>
             <span className={style['contribute-options']}>
+              <Link to="/susceptibility-data/">
+                View summary data
+              </Link>
+              <span className={style['bullet']}> ⦁ </span>
               <a href="https://git.io/JEQMz" target="_blank" rel="noreferrer">
                 Suggest new study
               </a>

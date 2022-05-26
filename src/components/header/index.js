@@ -23,7 +23,9 @@ function NavItem(props) {
   const {
     to,
     checkIsCurrent,
-    currentPathName, children, highlighted
+    currentPathName,
+    children,
+    highlighted
   } = props;
 
   const isCurrent = React.useMemo(
@@ -74,6 +76,11 @@ export default function Header({currentPathName}) {
     [showMenu, setShowMenu]
   );
 
+  const checkIsSuscDataCurrent = React.useCallback(
+    curPath => /^\/(susceptibility-data|search-drdb)/.test(curPath),
+    []
+  );
+
   const checkIsSierraCurrent = React.useCallback(
     curPath => /^\/sierra\/sars2/.test(curPath),
     []
@@ -100,7 +107,10 @@ export default function Header({currentPathName}) {
           <NavItem to="/page/mutation-viewer/" {...navItemProps}>
             Variants
           </NavItem>
-          <NavItem to="/page/susceptibility-data/" {...navItemProps}>
+          <NavItem
+           to="/susceptibility-data/"
+           checkIsCurrent={checkIsSuscDataCurrent}
+           {...navItemProps}>
             Resistance
           </NavItem>
           <NavItem
