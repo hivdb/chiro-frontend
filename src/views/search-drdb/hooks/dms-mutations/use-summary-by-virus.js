@@ -57,10 +57,12 @@ export default function useSummaryByVirus() {
   const {
     params: {
       refName,
-      abNames
+      abNames,
+      infectedVarName,
+      vaccineName
     }
   } = LocationParams.useMe();
-  const skip = false;
+  const skip = !!infectedVarName || !!vaccineName;
   const {
     sql,
     params
@@ -93,5 +95,5 @@ export default function useSummaryByVirus() {
     [isPending, payload, skip]
   );
 
-  return [splitted, skip || isPending];
+  return [splitted, !skip && isPending];
 }

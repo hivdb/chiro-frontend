@@ -58,10 +58,12 @@ export default function useSummaryByArticle() {
       varName,
       isoAggkey,
       genePos,
-      abNames
+      abNames,
+      infectedVarName,
+      vaccineName
     }
   } = LocationParams.useMe();
-  const skip = false;
+  const skip = !!infectedVarName || !!vaccineName;
   const {
     sql,
     params
@@ -72,5 +74,11 @@ export default function useSummaryByArticle() {
     isPending
   } = useQuery({sql, params, skip});
 
-  return [payload, skip || isPending];
+  const finalPayload = React.useMemo(
+    () => skip ? [] : payload,
+    [skip, payload]
+  );
+
+
+  return [finalPayload, !skip && isPending];
 }
