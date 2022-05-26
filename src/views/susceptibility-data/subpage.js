@@ -105,7 +105,7 @@ function SuscData({
       pageTitle: `${pageTitle} - ${secTitle} - ${shortDesc}`,
       redirect,
       introHeader,
-      subIntroHeader: `${secTitle}: ${secDesc}  \n(${subIntroHeader})`,
+      subIntroHeader,
       hideLastModified,
       lastModified,
       heroImage,
