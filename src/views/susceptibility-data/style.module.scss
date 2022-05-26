@@ -1,3 +1,5 @@
+@import '../../styles/colors';
+
 .susc-data-container {
   position: relative;
 
@@ -28,4 +30,33 @@
   a.tab-link {
     color: black;
   }
+}
+
+.susc-data-intro-header {
+
+  > a.btn-search-database {
+    display: inline-block;
+    vertical-align: middle;
+    background-color: $main-color;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    padding: 0 1rem;
+    text-transform: uppercase;
+    transition: filter 200ms ease-in-out;
+    float: right;
+  
+    &:hover {
+      filter: brightness(118%);
+      color: white;
+    }
+  }
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+
 }

@@ -17,7 +17,7 @@ CMSLayout.propTypes = {
   pageName: PropTypes.string,
   pageTitle: PropTypes.string.isRequired,
   redirect: PropTypes.string,
-  introHeader: PropTypes.string,
+  introHeader: PropTypes.node,
   subIntroHeader: PropTypes.string,
   githubLink: PropTypes.string,
   githubTitle: PropTypes.string,
@@ -78,7 +78,7 @@ export default function CMSLayout({
       {heroImage ?
         <Banner bgImage={`${imagePrefix}${heroImage}`} narrow>
           <Banner.Title as="h1">
-            <Markdown inline>{introHeader}</Markdown>
+            {introHeader}
           </Banner.Title>
           <Banner.Subtitle>
             {subIntroHeader ? <div className={style['sub-intro-header']}>
@@ -91,7 +91,7 @@ export default function CMSLayout({
           </Banner.Subtitle>
         </Banner> :
         <Header as="h1" dividing>
-          <Markdown inline>{introHeader}</Markdown>
+          {introHeader}
           <Header.Subheader>
             {subIntroHeader ? <div className={style['sub-intro-header']}>
               <Markdown inline>{subIntroHeader}</Markdown>

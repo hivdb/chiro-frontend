@@ -73,7 +73,7 @@ function CMSPage({
       pageName,
       pageTitle,
       redirect,
-      introHeader,
+      introHeader: <Markdown inline>{introHeader}</Markdown>,
       subIntroHeader,
       hideLastModified,
       lastModified,

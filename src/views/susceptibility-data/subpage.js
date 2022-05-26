@@ -104,7 +104,15 @@ function SuscData({
     <CMSLayout {...{
       pageTitle: `${pageTitle} - ${secTitle} - ${shortDesc}`,
       redirect,
-      introHeader,
+      introHeader: <div className={style['susc-data-intro-header']}>
+        {introHeader}
+        <Link
+         role="button"
+         className={style['btn-search-database']}
+         to="/search-drdb/?host=human&dosage=2&dosage=3&form_only">
+          Search Database
+        </Link>
+      </div>,
       subIntroHeader,
       hideLastModified,
       lastModified,
