@@ -44,7 +44,7 @@ function usePrepareQuery({
         SELECT
           ${queryIsoAggkeys()},
           (M.gene || ':' || M.position) AS gene_pos,
-          COUNT(*) AS count
+          COUNT(DISTINCT M.ref_name || '::' || M.subject_name) AS count
         FROM invivo_selection_results M
         WHERE
           (${where.join(') AND (')})

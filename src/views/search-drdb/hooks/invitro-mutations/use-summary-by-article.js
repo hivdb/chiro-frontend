@@ -46,7 +46,7 @@ function usePrepareQuery({
       const sql = `
         SELECT
           M.ref_name,
-          COUNT(*) AS count
+          COUNT(DISTINCT M.rx_name) AS count
         FROM invitro_selection_results M
         LEFT JOIN rx_conv_plasma RXCP ON
           RXCP.ref_name = M.ref_name AND

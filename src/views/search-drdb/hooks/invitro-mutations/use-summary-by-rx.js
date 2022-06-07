@@ -42,7 +42,7 @@ function usePrepareQuery({refName, varName, isoAggkey, genePos, skip}) {
         SELECT
           ${queryAbNames()},
           ${queryInfectedVarName()},
-          COUNT(*) AS count
+          COUNT(DISTINCT M.ref_name) AS count
         FROM invitro_selection_results M
           LEFT JOIN rx_conv_plasma RXCP ON
             RXCP.ref_name = M.ref_name AND

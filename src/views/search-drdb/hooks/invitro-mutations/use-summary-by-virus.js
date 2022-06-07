@@ -41,7 +41,7 @@ function usePrepareQuery({
         SELECT
           ${queryIsoAggkeys()},
           (M.gene || ':' || M.position) AS gene_pos,
-          COUNT(*) AS count
+          COUNT(DISTINCT M.ref_name || '::' || M.rx_name) AS count
         FROM invitro_selection_results M
         LEFT JOIN rx_conv_plasma RXCP ON
           RXCP.ref_name = M.ref_name AND

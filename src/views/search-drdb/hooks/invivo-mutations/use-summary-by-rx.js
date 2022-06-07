@@ -49,7 +49,7 @@ function usePrepareQuery({
         SELECT
           ${querySbjRxAbNames()},
           ${querySbjRxInfectedVarNames()},
-          COUNT(*) AS count
+          COUNT(DISTINCT M.ref_name || '::' || M.subject_name) AS count
         FROM invivo_selection_results M
         WHERE
           (${where.join(') AND (')})

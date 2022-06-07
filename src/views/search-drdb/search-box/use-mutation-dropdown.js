@@ -181,22 +181,10 @@ export default function useMutationDropdown() {
           ))
           .sort(compareIsolateAggs);
 
-        const positionMutCount = displayIsolateAggs
-          .filter(({isoType, aa}) => (
-            isoType === 'indiv-mut' &&
-            aa !== 'del'
-          ))
-          .reduce((acc, {gene, position}) => {
-            const key = `${gene}:${position}`;
-            acc[key] = acc[key] || 0;
-            acc[key] ++;
-            return acc;
-          }, {});
-
         const displayPositions = positions
           .map(pos => ({
             ...pos,
-            numExp: positionMutCount[pos.posKey] || 0
+            numExp: finalPosNumExpLookup[pos.posKey] || 0
           }))
           .filter(({posKey, numExp}) => (
             posKey === paramGenePos ||
