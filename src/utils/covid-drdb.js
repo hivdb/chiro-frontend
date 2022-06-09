@@ -213,6 +213,10 @@ export function useQueryWithVersion({
     throw new Error('Required parameter "drdbVersion" is empty');
   }
   const [res, setRes] = React.useState(null);
+  const queryString = React.useMemo(
+    () => JSON.stringify({sql, params, drdbVersion}),
+    [sql, params, drdbVersion]
+  );
 
   React.useEffect(
     () => {
@@ -221,16 +225,14 @@ export function useQueryWithVersion({
       }
       let mounted = true;
       setRes(null);
-      execSQL({sql, params, drdbVersion})
+      execSQL(JSON.parse(queryString))
         .then(res => mounted && setRes(res));
       return () => mounted = false;
     },
     [
       setRes,
-      sql,
-      params,
-      skip,
-      drdbVersion
+      queryString,
+      skip
     ]
   );
 
