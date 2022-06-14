@@ -100,6 +100,15 @@ function SuscData({
     [resetExpansion, sections, router, setLoading]
   );
 
+  React.useEffect(
+    () => {
+      if (selectedIndex < 0) {
+        setSelectedIndex(0);
+      }
+    },
+    [selectedIndex, setSelectedIndex]
+  );
+
   return (
     <CMSLayout {...{
       pageTitle: `${pageTitle} - ${secTitle} - ${shortDesc}`,

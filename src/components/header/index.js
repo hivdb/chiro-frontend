@@ -104,7 +104,7 @@ export default function Header({currentPathName}) {
           showMenu ? style['show'] : null
         )}>
           <NavItem to="/" {...navItemProps}>Home</NavItem>
-          <NavItem to="/page/mutation-viewer/" {...navItemProps}>
+          <NavItem to="/variants/" {...navItemProps}>
             Variants
           </NavItem>
           <NavItem

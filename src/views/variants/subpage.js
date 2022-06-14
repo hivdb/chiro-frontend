@@ -29,8 +29,8 @@ Variant.propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      shortDesc: PropTypes.string.isRequired,
-      desc: PropTypes.string,
+      subTitle: PropTypes.string.isRequired,
+      contentBefore: PropTypes.string,
       attrlist: PropTypes.arrayOf(
         PropTypes.string.isRequired
       ),
@@ -41,13 +41,14 @@ Variant.propTypes = {
           source: PropTypes.string
         }).isRequired
       ),
-      content: PropTypes.string
+      contentAfter: PropTypes.string
     }).isRequired
-  ).isRequired
-  // tables: PropTypes.objectOf(PropTypes.shape({
-  //   columnDefs: PropTypes.array.isRequired,
-  //   data: PropTypes.array.isRequired
-  // }).isRequired),
+  ).isRequired,
+  contentAfter: PropTypes.string,
+  tables: PropTypes.objectOf(PropTypes.shape({
+    columnDefs: PropTypes.array.isRequired,
+    data: PropTypes.array.isRequired
+  }).isRequired)
   // genomeMaps: PropTypes.object
 };
 
@@ -59,7 +60,8 @@ function Variant({
   imagePrefix,
   regionPresets,
   sections,
-  // tables,
+  contentAfter,
+  tables,
   // genomeMaps,
   ...props
 }) {
@@ -72,8 +74,9 @@ function Variant({
   const setLoading = useSetLoading(containerRef);
   const {
     title: secTitle,
-    desc: secDesc,
-    shortDesc: secShortDesc,
+    subTitle: secSubTitle,
+    contentBefore: secContentBefore,
+    contentAfter: secContentAfter,
     attrlist: secAttrList,
     autoGenomeMaps = []
     // content = ''
@@ -93,9 +96,20 @@ function Variant({
     [resetExpansion, sections, router, setLoading]
   );
   const mdProps = {
+    tables,
+    escapeHtml: false,
     imagePrefix,
     cmsPrefix
   };
+
+  React.useEffect(
+    () => {
+      if (selectedIndex < 0) {
+        setSelectedIndex(0);
+      }
+    },
+    [selectedIndex, setSelectedIndex]
+  );
 
   return (
     <CMSLayout {...{
@@ -115,30 +129,32 @@ function Variant({
          onSelect={setSelectedIndex}
          selectedIndex={selectedIndex}>
           <TabList>
-            {sections.map(({title, name, shortDesc}) => (
+            {sections.map(({title, name, subTitle}) => (
               <Tab key={`tab-${name}`}>
                 <Link
                  className={style['tab-link']}
                  to={`/variants/${name}/`}>
-                  <Markdown inline>**{title}**{'  \n'}{shortDesc}</Markdown>
+                  <Markdown inline>
+                    **{title}**{subTitle ? `  \n${subTitle}` : ''}
+                  </Markdown>
                 </Link>
               </Tab>
             ))}
           </TabList>
           {togglerNode}
           {sections.map(({name}, idx) => (
-            <TabPanel key={`tabpanel=${name}`}>
+            <TabPanel key={`tabpanel-${name}`}>
               {idx === selectedIndex ? <section>
                 <H2 disableAnchor>
                   {secTitle}{'\xa0'}
                   <div className={style['short-desc']}>
-                    {secShortDesc}
+                    {secSubTitle}
                   </div>
                 </H2>
-                {secDesc ? <Markdown
-                 key={`${subPageName}-desc`}
+                {secContentBefore ? <Markdown
+                 key={`${subPageName}-content-before`}
                  {...mdProps}>
-                  {secDesc}
+                  {secContentBefore}
                 </Markdown> : null}
                 {secAttrList ? <ul className={style['attr-list']}>
                   {secAttrList.map((attrContent, idx) => (
@@ -169,10 +185,20 @@ function Variant({
                      {...{varName, regionPresets, drdbVersion}} />
                   </section>
                 ) : null}
+                {secContentAfter ? <Markdown
+                 key={`${subPageName}-content-after`}
+                 {...mdProps}>
+                  {secContentAfter}
+                </Markdown> : null}
               </section> : null}
             </TabPanel>
           ))}
         </Tabs>
+        {contentAfter ? <Markdown
+         key={`content-after`}
+         {...mdProps}>
+          {contentAfter}
+        </Markdown> : null}
         <div className={style['variant-loader']}>
           <Loader active inline />
         </div>
