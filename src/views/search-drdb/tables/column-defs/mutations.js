@@ -2,7 +2,7 @@ import React from 'react';
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
-import shortenMutationList from '../../shorten-mutlist';
+import shortenMutationList from '../../../../utils/shorten-mutlist';
 
 import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
 

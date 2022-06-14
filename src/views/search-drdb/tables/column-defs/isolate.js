@@ -1,4 +1,4 @@
-import shortenMutList from '../../shorten-mutlist';
+import shortenMutList from '../../../../utils/shorten-mutlist';
 
 
 export function getIsolateDisplay({isoName, isolateLookup}) {

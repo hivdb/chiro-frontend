@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import shortenMutList from '../../shorten-mutlist';
+import shortenMutList from '../../../../utils/shorten-mutlist';
 
 SubItemIsolate.propTypes = {
   gisaidId: PropTypes.number,

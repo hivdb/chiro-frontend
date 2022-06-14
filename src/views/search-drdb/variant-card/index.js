@@ -5,8 +5,8 @@ import InfoCard from '../info-card';
 import useConfig from '../hooks/use-config';
 import Variants from '../hooks/variants';
 import LocationParams, {buildLocationQuery} from '../hooks/location-params';
-import shortenMutList from '../shorten-mutlist';
-import MutationViewer from '../mutation-viewer';
+import shortenMutList from '../../../utils/shorten-mutlist';
+import MutationViewer from '../../../components/mutation-viewer';
 
 import Markdown from 'sierra-frontend/dist/components/markdown';
 

@@ -9,16 +9,16 @@
   .preset-selection {
     @extend %base-dropdown;
     display: inline-block;
-    vertical-align: middle;
     margin-right: 1rem;
   
     > label {
-      vertical-align: middle;
+      vertical-align: top;
     }
   
     :global .Dropdown-root {
       margin-left: .5rem;
       display: inline-block;
+      vertical-align: top;
     }
   
     :global .Dropdown-control {

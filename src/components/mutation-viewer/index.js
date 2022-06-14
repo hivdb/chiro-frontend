@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 import GenomeMap from 'sierra-frontend/dist/components/genome-map';
+import Button from 'sierra-frontend/dist/components/button';
 import PresetSelection from './preset-selection';
 
-import shortenMutList from '../shorten-mutlist';
+import shortenMutList from '../../utils/shorten-mutlist';
 import style from './style.module.scss';
 
 
@@ -59,6 +60,7 @@ function getGenomeMapPositions(mutations, geneDefs, highlightGenes) {
 
 
 MutationViewer.propTypes = {
+  title: PropTypes.string,
   regionPresets: PropTypes.object.isRequired,
   mutations: PropTypes.arrayOf(
     PropTypes.shape({
@@ -72,6 +74,7 @@ MutationViewer.propTypes = {
 
 
 function MutationViewer({
+  title,
   regionPresets,
   mutations
 }) {
@@ -97,17 +100,38 @@ function MutationViewer({
       positions: getGenomeMapPositions(mutations, genes, highlightGenes)
     }]
   };
+  const mutQuery = mutations.map(
+    ({gene, position, refAminoAcid, aminoAcid}) => (
+      `${gene}:${refAminoAcid}${position}${aminoAcid}`
+    )
+  ).join(',');
+
   return (
     <GenomeMap
      key={curName}
      preset={payload}
      className={style['sierra-genome-map']}
-     extraButtons={
+     extraButtons={<>
        <PresetSelection
         value={curName}
         options={presetOptions}
         onChange={handleChange} />
-     } />
+       {title ? (
+         <Button
+          btnSize="small"
+          btnStyle="primary"
+          name="run-analysis"
+          to={{
+            pathname: '/sierra/sars2/by-patterns/report/',
+            query: {
+              name: title,
+              mutations: mutQuery
+            }
+          }}>
+           Analysis report
+         </Button>
+       ) : null}
+     </>} />
   );
 
   function handleChange(value) {

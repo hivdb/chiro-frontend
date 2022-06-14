@@ -12,6 +12,7 @@ import MutAnnotViewerRoutes from 'sierra-frontend/dist/views/mut-annot-viewer';
 import GenomeViewerRoutes from 'sierra-frontend/dist/views/genome-viewer';
 import SearchDRDBRoutes from './views/search-drdb';
 import SusceptibilityDataRoutes from './views/susceptibility-data';
+import VariantsRoutes from './views/variants';
 
 import {mutAnnotViewerConfig, mutationViewerConfig} from './config';
 import style from './index.module.scss';
@@ -103,6 +104,10 @@ const BrowserRouter = createBrowserRouter({
       {SusceptibilityDataRoutes({
         pathPrefix: 'susceptibility-data/',
         defaultPath: '/susceptibility-data/table-mab-susc/'
+      })}
+      {VariantsRoutes({
+        pathPrefix: 'variants/',
+        defaultPath: '/variants/omicron/'
       })}
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />
