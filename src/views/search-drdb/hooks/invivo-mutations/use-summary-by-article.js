@@ -49,7 +49,7 @@ function usePrepareQuery({
       const sql = `
         SELECT
           M.ref_name,
-          COUNT(DISTINCT subject_name)
+          COUNT(DISTINCT subject_name) AS count
         FROM invivo_selection_results M
         LEFT JOIN variants INFVAR ON
           M.infected_var_name = INFVAR.var_name
