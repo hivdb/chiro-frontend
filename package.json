@@ -10,7 +10,7 @@
     "fuse.js": "^5.0.7-beta",
     "icosa": "hivdb/icosa#fa90e7508e179370ecee949e1d15fdeb4a48aeb8",
     "jquery": ">=3.5.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "smiles-drawer": "^1.2.0",
     "typeface-poppins": "^0.0.72"
   },
