@@ -1,7 +1,10 @@
-import {useQueryWithVersion} from '../../utils/covid-drdb';
+import {useQuery} from 'icosa/utils/sqlite3';
 
 
-export default function useVariantConsensus({varName, drdbVersion}) {
+export default function useVariantConsensus({
+  varName,
+  drdbVersion: dbVersion
+}) {
   const sql = `
     SELECT
     C.gene,
@@ -19,10 +22,11 @@ export default function useVariantConsensus({varName, drdbVersion}) {
   const {
     payload,
     isPending
-  } = useQueryWithVersion({
+  } = useQuery({
     sql,
     params: {$varName: varName},
-    drdbVersion
+    dbVersion,
+    dbName: 'covid-drdb'
   });
 
   return [payload, isPending];
