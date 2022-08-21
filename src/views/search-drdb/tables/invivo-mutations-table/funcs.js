@@ -1,4 +1,4 @@
-import {consecutiveGroupsBy} from 'sierra-frontend/dist/utils/array-groups';
+import {consecutiveGroupsBy} from 'icosa/utils/array-groups';
 
 
 function uniqTreatments(treatments) {

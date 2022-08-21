@@ -7,7 +7,7 @@ import {loadPage} from '../../utils/cms';
 import Banner from '../../components/banner';
 import BackToTop from '../../components/back-to-top';
 import ProjectsSection from '../../components/projects-section';
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 import {Header} from 'semantic-ui-react';
 
 import style from './style.module.scss';

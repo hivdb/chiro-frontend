@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import {Icon, Popup} from 'semantic-ui-react';
 
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+import SimpleTable from 'icosa/components/simple-table';
 import {biochemExperimentsShape} from './prop-types';
 
 import {

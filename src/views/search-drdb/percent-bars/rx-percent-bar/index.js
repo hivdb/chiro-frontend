@@ -1,5 +1,5 @@
 import React from 'react';
-import {csvStringify} from 'sierra-frontend/dist/utils/csv';
+import {csvStringify} from 'icosa/utils/csv';
 
 import Vaccines from '../../hooks/vaccines';
 import Antibodies from '../../hooks/antibodies';

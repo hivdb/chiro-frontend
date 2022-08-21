@@ -1,9 +1,9 @@
 import React from 'react';
 import {Loader} from 'semantic-ui-react';
 
-import {H2} from 'sierra-frontend/dist/components/heading-tags';
-import Markdown from 'sierra-frontend/dist/components/markdown';
-import useSmartAsync from 'sierra-frontend/dist/utils/use-smart-async';
+import {H2} from 'icosa/components/heading-tags';
+import Markdown from 'icosa/components/markdown';
+import useSmartAsync from 'icosa/utils/use-smart-async';
 import style from './style.module.scss';
 import setTitle from '../../utils/set-title';
 

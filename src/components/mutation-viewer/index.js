@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-import GenomeMap from 'sierra-frontend/dist/components/genome-map';
-import Button from 'sierra-frontend/dist/components/button';
+import GenomeMap from 'icosa/components/genome-map';
+import Button from 'icosa/components/button';
 import PresetSelection from './preset-selection';
 
 import shortenMutList from '../../utils/shorten-mutlist';

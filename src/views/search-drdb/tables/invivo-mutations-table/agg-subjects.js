@@ -1,10 +1,10 @@
 import React from 'react';
 import pluralize from 'pluralize';
 
-import {H3} from 'sierra-frontend/dist/components/heading-tags';
+import {H3} from 'icosa/components/heading-tags';
 import InlineLoader
-  from 'sierra-frontend/dist/components/inline-loader';
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+  from 'icosa/components/inline-loader';
+import SimpleTable from 'icosa/components/simple-table';
 
 import {groupByIsolates} from './funcs';
 

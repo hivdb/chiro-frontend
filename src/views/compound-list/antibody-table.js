@@ -8,7 +8,7 @@ import {Header} from 'semantic-ui-react';
 
 import SimpleTable, {
   ColumnDef
-} from 'sierra-frontend/dist/components/simple-table';
+} from 'icosa/components/simple-table';
 import TrialLink from '../../components/clinical-trial-link';
 
 import style from './style.module.scss';

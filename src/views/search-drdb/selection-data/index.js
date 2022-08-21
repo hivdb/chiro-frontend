@@ -1,8 +1,8 @@
 import React from 'react';
 import {Grid, Header/*, Loader*/} from 'semantic-ui-react';
 
-import Markdown from 'sierra-frontend/dist/components/markdown';
-import {H2} from 'sierra-frontend/dist/components/heading-tags';
+import Markdown from 'icosa/components/markdown';
+import {H2} from 'icosa/components/heading-tags';
 import BackToTop from '../../../components/back-to-top';
 import setTitle from '../../../utils/set-title';
 

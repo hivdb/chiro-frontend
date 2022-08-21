@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+import SimpleTable from 'icosa/components/simple-table';
 
 import useColumnDefs from '../column-defs';
 import Modal from '../../../../components/modal';

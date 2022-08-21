@@ -10,7 +10,7 @@ import redirectIfNeeded from '../../utils/redirect-if-needed';
 import handleQueryChange from '../../utils/handle-query-change';
 import {InlineSearchBox} from '../../components/search-box';
 import StatHeader from '../../components/stat-header';
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 import setTitle from '../../utils/set-title';
 import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';

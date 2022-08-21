@@ -1,6 +1,6 @@
 import snakeCase from 'lodash/snakeCase';
 
-import {csvParse, csvStringify} from 'sierra-frontend/dist/utils/csv';
+import {csvParse, csvStringify} from 'icosa/utils/csv';
 
 import {
   AGG_OPTIONS,

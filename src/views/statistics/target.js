@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SimpleTable, {
   ColumnDef
-} from 'sierra-frontend/dist/components/simple-table';
+} from 'icosa/components/simple-table';
 
 // import getTargetShowName from './utils';
 

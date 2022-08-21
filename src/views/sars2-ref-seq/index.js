@@ -5,9 +5,9 @@ import {Dropdown, GridColumn, Grid, Segment, TextArea} from 'semantic-ui-react';
 import PromiseComponent from '../../utils/promise-component';
 import {loadPage} from '../../utils/cms';
 
-import {H2} from 'sierra-frontend/dist/components/heading-tags';
+import {H2} from 'icosa/components/heading-tags';
 import style from './style.module.scss';
-import {makeDownload} from 'sierra-frontend/dist/utils/download';
+import {makeDownload} from 'icosa/utils/download';
 
 
 export default class SARS2RefSeq extends React.Component {

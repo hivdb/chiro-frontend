@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
+import {ColumnDef} from 'icosa/components/simple-table';
 
 import {AiOutlineTable} from '@react-icons/all-files/ai/AiOutlineTable';
 import {AiOutlineCheck} from '@react-icons/all-files/ai/AiOutlineCheck';

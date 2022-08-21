@@ -2,7 +2,7 @@ import React from 'react';
 import uniq from 'lodash/uniq';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
-import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
+import {ColumnDef} from 'icosa/components/simple-table';
 
 import {comparePotency} from './potency';
 import {

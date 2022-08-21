@@ -6,7 +6,7 @@ import {Loader} from 'semantic-ui-react';
 import SearchQuery from './virus.query.gql.js';
 import SimpleTable, {
   ColumnDef
-} from 'sierra-frontend/dist/components/simple-table';
+} from 'icosa/components/simple-table';
 
 class VirusTableInner extends React.Component {
 

@@ -8,7 +8,7 @@ import {loadPage} from '../../utils/cms';
 import setTitle from '../../utils/set-title';
 import PromiseComponent from '../../utils/promise-component';
 
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 
 import style from './style.module.scss';
 

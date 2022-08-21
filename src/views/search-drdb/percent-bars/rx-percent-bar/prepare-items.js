@@ -1,6 +1,6 @@
 import uniq from 'lodash/uniq';
 import capitalize from 'lodash/capitalize';
-import {csvStringify, csvParse} from 'sierra-frontend/dist/utils/csv';
+import {csvStringify, csvParse} from 'icosa/utils/csv';
 
 import style from '../style.module.scss';
 import {groupSmallSlices} from '../funcs';

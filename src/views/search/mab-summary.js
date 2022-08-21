@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PageLoader from '../../components/page-loader';
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 
 
 function MAbSummaryTable({

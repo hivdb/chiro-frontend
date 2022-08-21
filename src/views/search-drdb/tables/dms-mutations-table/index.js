@@ -3,8 +3,8 @@ import {useRouter} from 'found';
 import pluralize from 'pluralize';
 
 import InlineLoader
-  from 'sierra-frontend/dist/components/inline-loader';
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+  from 'icosa/components/inline-loader';
+import SimpleTable from 'icosa/components/simple-table';
 
 
 import DMSMutations from '../../hooks/dms-mutations';

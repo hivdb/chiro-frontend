@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   columnDefShape
-} from 'sierra-frontend/dist/components/simple-table/prop-types';
+} from 'icosa/components/simple-table/prop-types';
 import createPersistedState from 'use-persisted-state/src';
 
 import Checkbox from './checkbox';

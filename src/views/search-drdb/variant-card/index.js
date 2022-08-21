@@ -8,7 +8,7 @@ import LocationParams, {buildLocationQuery} from '../hooks/location-params';
 import shortenMutList from '../../../utils/shorten-mutlist';
 import MutationViewer from '../../../components/mutation-viewer';
 
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 
 import Tagline from './tagline';
 import style from './style.module.scss';

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import {
   columnDefShape
-} from 'sierra-frontend/dist/components/simple-table/prop-types';
-import CheckboxInput from 'sierra-frontend/dist/components/checkbox-input';
+} from 'icosa/components/simple-table/prop-types';
+import CheckboxInput from 'icosa/components/checkbox-input';
 
 import style from './style.module.scss';
 

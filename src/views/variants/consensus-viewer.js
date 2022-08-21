@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
+import InlineLoader from 'icosa/components/inline-loader';
 
 import MutationViewer from '../../components/mutation-viewer';
 import useVariantConsensus from './use-variant-consensus';

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import shortenMutationList from '../../../../utils/shorten-mutlist';
 
-import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
+import {ColumnDef} from 'icosa/components/simple-table';
 
 import style from './style.module.scss';
 

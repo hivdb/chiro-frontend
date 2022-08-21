@@ -5,10 +5,10 @@ import classNames from 'classnames';
 import useRouter from 'found/useRouter';
 import {Loader} from 'semantic-ui-react';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
-import {H2, H3} from 'sierra-frontend/dist/components/heading-tags';
+import {H2, H3} from 'icosa/components/heading-tags';
 import verticalTabsStyle, {useToggleTabs} from
-'sierra-frontend/dist/components/vertical-tabs-style';
-import Markdown from 'sierra-frontend/dist/components/markdown';
+'icosa/components/vertical-tabs-style';
+import Markdown from 'icosa/components/markdown';
 
 import {useSetLoading} from '../../utils/set-loading';
 import PageLoader from '../../components/page-loader';

@@ -1,4 +1,4 @@
-import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
+import {ColumnDef} from 'icosa/components/simple-table';
 
 
 export default class PTColumnDef extends ColumnDef {

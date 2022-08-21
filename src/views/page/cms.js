@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import PageLoader from '../../components/page-loader';
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 import refDataLoader from '../../components/refdata-loader';
 
 import CMSLayout from './cms-layout';

@@ -2,7 +2,7 @@ import React from 'react';
 import {Grid, Header} from 'semantic-ui-react';
 import {Link} from 'found';
 
-import {H2} from 'sierra-frontend/dist/components/heading-tags';
+import {H2} from 'icosa/components/heading-tags';
 import BackToTop from '../../components/back-to-top';
 import setTitle from '../../utils/set-title';
 

@@ -3,7 +3,7 @@ import uniq from 'lodash/uniq';
 import sortBy from 'lodash/sortBy';
 import {AiOutlineCheck} from '@react-icons/all-files/ai/AiOutlineCheck';
 import {AiOutlineClose} from '@react-icons/all-files/ai/AiOutlineClose';
-import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
+import {ColumnDef} from 'icosa/components/simple-table';
 
 import CellAssay from './cell-assay';
 import CellSection from './cell-section';

@@ -5,8 +5,8 @@ import difference from 'lodash/difference';
 import intersection from 'lodash/intersection';
 import createPersistedState from 'use-persisted-state/src';
 
-import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+import InlineLoader from 'icosa/components/inline-loader';
+import SimpleTable from 'icosa/components/simple-table';
 
 import {useSetLoading} from '../../../../utils/set-loading';
 import {useAggregateData} from '../../../../components/pivot-table';

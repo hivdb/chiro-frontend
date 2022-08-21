@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import orderBy from 'lodash/orderBy';
 
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+import SimpleTable from 'icosa/components/simple-table';
 import {clinicalExperimentsShape} from './prop-types';
 
 import {

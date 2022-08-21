@@ -9,7 +9,7 @@ import useConfig from '../hooks/use-config';
 import Antibodies from '../hooks/antibodies';
 import LocationParams, {buildLocationQuery} from '../hooks/location-params';
 
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 
 import style from './style.module.scss';
 

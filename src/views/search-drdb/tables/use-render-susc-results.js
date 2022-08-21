@@ -1,8 +1,8 @@
 import React from 'react';
 import {useRouter} from 'found';
-import {H3} from 'sierra-frontend/dist/components/heading-tags';
+import {H3} from 'icosa/components/heading-tags';
 
-import InlineLoader from 'sierra-frontend/dist/components/inline-loader';
+import InlineLoader from 'icosa/components/inline-loader';
 
 import {useSeparateSuscResults} from '../hooks';
 

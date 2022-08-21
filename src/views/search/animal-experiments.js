@@ -4,7 +4,7 @@ import groupBy from 'lodash/groupBy';
 import arrayFind from 'lodash/find';
 import {Popup, Icon} from 'semantic-ui-react';
 
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+import SimpleTable from 'icosa/components/simple-table';
 import {animalExperimentsShape} from './prop-types';
 import style from './style.module.scss';
 

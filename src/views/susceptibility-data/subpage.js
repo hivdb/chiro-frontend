@@ -8,10 +8,10 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 import {useSetLoading} from '../../utils/set-loading';
 import verticalTabsStyle, {useToggleTabs} from
-'sierra-frontend/dist/components/vertical-tabs-style';
+'icosa/components/vertical-tabs-style';
 import refDataLoader from '../../components/refdata-loader';
 import PageLoader from '../../components/page-loader';
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 import CMSLayout from '../page/cms-layout';
 import style from './style.module.scss';
 

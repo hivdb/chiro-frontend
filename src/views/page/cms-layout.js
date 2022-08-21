@@ -5,7 +5,7 @@ import {Header} from 'semantic-ui-react';
 
 import setTitle from '../../utils/set-title';
 import Banner from '../../components/banner';
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 import BackToTop from '../../components/back-to-top';
 import GitHubCorner from '../../components/github-corner';
 

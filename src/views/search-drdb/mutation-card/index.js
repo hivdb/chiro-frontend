@@ -10,7 +10,7 @@ import LocationParams, {buildLocationQuery} from '../hooks/location-params';
 
 import refDataLoader from '../../../components/refdata-loader';
 
-import Markdown from 'sierra-frontend/dist/components/markdown';
+import Markdown from 'icosa/components/markdown';
 
 import style from './style.module.scss';
 

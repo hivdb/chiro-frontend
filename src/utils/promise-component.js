@@ -1,5 +1,5 @@
 import PromiseComponent, {AsyncComponent}
-  from 'sierra-frontend/dist/utils/promise-component';
+  from 'icosa/utils/promise-component';
 
 export default PromiseComponent;
 export {AsyncComponent};

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 import {Header, Icon, Popup} from 'semantic-ui-react';
 
-import SimpleTable from 'sierra-frontend/dist/components/simple-table';
+import SimpleTable from 'icosa/components/simple-table';
 import isTargetMAb from '../../utils/is-target-mab';
 import {
   ColDef, reformExpData, readableNum, renderXX50,

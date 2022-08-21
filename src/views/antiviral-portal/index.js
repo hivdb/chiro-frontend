@@ -1,8 +1,8 @@
 import React from 'react';
 
 import {useRouter} from 'found';
-import {H2} from 'sierra-frontend/dist/components/heading-tags';
-import useSmartAsync from 'sierra-frontend/dist/utils/use-smart-async';
+import {H2} from 'icosa/components/heading-tags';
+import useSmartAsync from 'icosa/utils/use-smart-async';
 import setTitle from '../../utils/set-title';
 
 import {loadPage} from '../../utils/cms';

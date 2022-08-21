@@ -3,7 +3,7 @@ import {useRouter, Link} from 'found';
 import PropTypes from 'prop-types';
 import {buildLocationQuery} from '../../hooks/location-params';
 
-import {ColumnDef} from 'sierra-frontend/dist/components/simple-table';
+import {ColumnDef} from 'icosa/components/simple-table';
 
 
 CellReference.propTypes = {

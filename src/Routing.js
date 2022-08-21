@@ -7,9 +7,9 @@ import {
   Route
 } from 'found';
 
-import SARS2Routes from 'sierra-frontend/dist/views/sars2';
-import MutAnnotViewerRoutes from 'sierra-frontend/dist/views/mut-annot-viewer';
-import GenomeViewerRoutes from 'sierra-frontend/dist/views/genome-viewer';
+import SARS2Routes from 'icosa/views/sars2';
+import MutAnnotViewerRoutes from 'icosa/views/mut-annot-viewer';
+import GenomeViewerRoutes from 'icosa/views/genome-viewer';
 import SearchDRDBRoutes from './views/search-drdb';
 import SusceptibilityDataRoutes from './views/susceptibility-data';
 import VariantsRoutes from './views/variants';

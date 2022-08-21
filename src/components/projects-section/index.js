@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {Link} from 'found';
-import Markdown from 'sierra-frontend/dist/components/markdown';
-import {H2} from 'sierra-frontend/dist/components/heading-tags';
+import Markdown from 'icosa/components/markdown';
+import {H2} from 'icosa/components/heading-tags';
 import style from './style.module.scss';
 
 
