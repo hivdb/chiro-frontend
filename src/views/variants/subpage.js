@@ -167,6 +167,7 @@ function Variant({
                 </ul> : null}
                 {autoGenomeMaps ? autoGenomeMaps.map(
                   ({varName, title, source}) => <section
+                   key={`section-${varName}`}
                    className={style['consensus-section']}>
                     <H3 disableAnchor>
                       {title}
