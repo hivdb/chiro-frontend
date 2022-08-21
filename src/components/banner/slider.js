@@ -24,11 +24,11 @@ export default class Slider extends React.Component {
     as: PropTypes.string.isRequired,
     children: PropTypes.node,
     endHref: PropTypes.string
-  }
+  };
 
   static defaultProps = {
     as: 'section'
-  }
+  };
 
   constructor() {
     super(...arguments);
@@ -46,7 +46,7 @@ export default class Slider extends React.Component {
     this.setState({
       touchX: evt.touches[0].clientX
     });
-  }
+  };
 
   handleSwipeMove = throttle(evt => {
     if (!evt.touches || evt.touches.length === 0) {
@@ -59,7 +59,7 @@ export default class Slider extends React.Component {
       `translateX(calc(${-100 * currentSectionIdx}% + ${offsetX}px))`
     );
     this.setState({diffX});
-  }, 25)
+  }, 25);
 
   handleSwipeEnd = () => {
     const {diffX, currentSectionIdx} = this.state;
@@ -76,7 +76,7 @@ export default class Slider extends React.Component {
       touchX: null,
       diffX: 0
     });
-  }
+  };
 
   handleClick = evt => {
     const {disableNext} = this.state;
@@ -87,7 +87,7 @@ export default class Slider extends React.Component {
     }
     evt.preventDefault() && evt.stopPropagation();
     this.handleSlide(direction);
-  }
+  };
 
   handleSlide = direction => {
     let {currentSectionIdx} = this.state;
@@ -107,7 +107,7 @@ export default class Slider extends React.Component {
       touchX: null,
       diffX: 0
     });
-  }
+  };
 
   render() {
     const {currentSectionIdx, disablePrev, disableNext} = this.state;

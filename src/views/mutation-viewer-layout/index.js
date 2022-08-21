@@ -24,7 +24,7 @@ class MutationViewerLayout extends React.Component {
         label: PropTypes.string.isRequired
       }).isRequired
     )
-  }
+  };
 
   get preset() {
     const {presets} = this.props;

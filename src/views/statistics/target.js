@@ -37,13 +37,11 @@ export default function TargetTable({changeTarget, data}) {
       new ColumnDef({
         name: 'name',
         label: 'Target',
-        render: (name) => {
-          // const showName = getTargetShowName(name);
-          return (
-            <a
-             onClick={handleTarget(name)}
-             href={"#" + name}>{name}</a>);
-        }
+        render: (name) => (
+          <a
+           onClick={handleTarget(name)}
+           href={"#" + name}>{name}</a>
+        )
       }),
       new ColumnDef({
         name: 'compoundCount2',

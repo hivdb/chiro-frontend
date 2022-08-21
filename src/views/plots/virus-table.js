@@ -13,11 +13,11 @@ class VirusTableInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     viruses: PropTypes.object.isRequired
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {
@@ -109,5 +109,6 @@ export default function VirusTable(props) {
   return (
     <VirusTableInner
      {...props}
-     {...data}/>);
+     {...data}/>
+  );
 }

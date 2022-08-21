@@ -24,7 +24,7 @@ export default class MutAnnotViewerLayout extends React.Component {
         asyncPageName: PropTypes.string.isRequired
       }).isRequired
     )
-  }
+  };
 
   get preset() {
     const {presets} = this.props;
@@ -39,7 +39,7 @@ export default class MutAnnotViewerLayout extends React.Component {
       return <Markdown>{content}</Markdown>;
     }
     return null;
-  }
+  };
 
   render() {
     const {preset} = this;

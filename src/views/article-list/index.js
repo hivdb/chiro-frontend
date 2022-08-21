@@ -17,11 +17,11 @@ class ArticleListInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     articles: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {

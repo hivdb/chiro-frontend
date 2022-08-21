@@ -50,22 +50,22 @@ class CompoundListInner extends React.Component {
     loading: PropTypes.bool.isRequired,
     compoundTarget: PropTypes.object,
     compounds: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   handleQueryChange = (actions) => (
     handleQueryChange(actions, this.props)
-  )
+  );
 
   renderContent = ({content}) => {
     if (content) {
       return <Markdown>{content}</Markdown>;
     }
     return null;
-  }
+  };
 
   render() {
     setTitle('Compounds');

@@ -19,11 +19,11 @@ class CompoundTargetListInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     compoundTargets: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {

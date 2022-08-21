@@ -14,11 +14,11 @@ class CellsListInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     multipleCells: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {loading, multipleCells} = this.props;

@@ -58,16 +58,16 @@ class SearchInner extends React.Component {
     pseudovirusExperiments: PropTypes.object,
     clinicalExperiments: PropTypes.object,
     clinicalTrials: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     formOnly: false,
     loading: false
-  }
+  };
 
   handleQueryChange = (actions) => (
     handleQueryChange(actions, this.props)
-  )
+  );
 
   render() {
     setTitle('Search');

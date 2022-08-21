@@ -190,7 +190,7 @@ export default class PseudovirusExpTable extends React.Component {
   static propTypes = {
     cacheKey: PropTypes.string.isRequired,
     data: PropTypes.object
-  }
+  };
 
   render() {
     const {cacheKey, data} = this.props;

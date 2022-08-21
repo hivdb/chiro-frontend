@@ -74,7 +74,7 @@ export default class ClinicalExpTable extends React.Component {
   static propTypes = {
     cacheKey: PropTypes.string.isRequired,
     data: clinicalExperimentsShape.isRequired
-  }
+  };
 
   render() {
     const {cacheKey, data} = this.props;

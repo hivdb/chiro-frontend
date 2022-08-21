@@ -54,7 +54,7 @@ export default class FusionAssayExpTable extends React.Component {
   static propTypes = {
     cacheKey: PropTypes.string.isRequired,
     data: fusionAssayExperimentsShape.isRequired
-  }
+  };
 
   render() {
     const {cacheKey, data} = this.props;

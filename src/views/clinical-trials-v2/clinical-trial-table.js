@@ -234,7 +234,7 @@ export default class ClinicalTrialTable extends React.Component {
     cacheKey: PropTypes.string.isRequired,
     compounds: PropTypes.object.isRequired,
     data: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
-  }
+  };
 
   render() {
     let {cacheKey, data, compounds} = this.props;

@@ -21,11 +21,11 @@ export default class StatHeader extends React.Component {
       )
     })),
     columnWidth: PropTypes.number.isRequired
-  }
+  };
 
   static defaultProps = {
     columnWidth: 3
-  }
+  };
 
   render() {
     const {children, columnWidth} = this.props;

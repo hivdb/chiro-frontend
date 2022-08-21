@@ -16,11 +16,11 @@ class VirusListInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     viruses: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {

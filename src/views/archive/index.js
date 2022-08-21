@@ -17,7 +17,7 @@ export default class Home extends React.Component {
 
   static propTypes = {
     router: routerShape.isRequired
-  }
+  };
 
   constructor() {
     super(...arguments);
@@ -49,7 +49,7 @@ export default class Home extends React.Component {
     this.props.router.push(
       {pathname: '/search/', query}
     );
-  }
+  };
 
   handleTrialSearchBoxChange = (value, category) => {
     if (value === null) {
@@ -69,7 +69,7 @@ export default class Home extends React.Component {
     this.props.router.push(
       {pathname: '/clinical-trials/', query}
     );
-  }
+  };
 
   thenRender = ({
     projectSections = [],
@@ -102,7 +102,7 @@ export default class Home extends React.Component {
         ))}
       </article>
     );
-  }
+  };
 
   render() {
     const {promise} = this.state;

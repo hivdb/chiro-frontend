@@ -7,7 +7,7 @@ import {Loader} from 'semantic-ui-react';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {H2, H3} from 'icosa/components/heading-tags';
 import verticalTabsStyle, {useToggleTabs} from
-'icosa/components/vertical-tabs-style';
+  'icosa/components/vertical-tabs-style';
 import Markdown from 'icosa/components/markdown';
 
 import {useSetLoading} from '../../utils/set-loading';

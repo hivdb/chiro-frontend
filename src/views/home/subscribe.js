@@ -21,7 +21,7 @@ export default class Subscribe extends React.Component {
   handleSubmit = () => {
     window.open('about:blank', 'mailman-window', 'width=600,height=400');
     setTimeout(() => this.setState({email: '', fullname: ''}), 250);
-  }
+  };
 
   render() {
     const {email, fullname} = this.state;

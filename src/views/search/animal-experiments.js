@@ -157,7 +157,7 @@ export default class AnimalExpTable extends React.Component {
   static propTypes = {
     cacheKey: PropTypes.string.isRequired,
     data: animalExperimentsShape.isRequired
-  }
+  };
 
   render() {
     const {cacheKey, data} = this.props;

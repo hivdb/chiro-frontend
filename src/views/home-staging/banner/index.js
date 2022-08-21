@@ -15,7 +15,7 @@ export default class Banner extends React.Component {
     children: PropTypes.arrayOf(
       PropTypes.node.isRequired
     ).isRequired
-  }
+  };
 
   static defaultProps = {
     bgImage: (
@@ -23,7 +23,7 @@ export default class Banner extends React.Component {
       'AAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg=='
     ),
     narrow: false
-  }
+  };
 
   static SubSection = SubComponent('section', 'banner-sub-section');
   static Slider = Slider;

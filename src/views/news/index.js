@@ -20,11 +20,11 @@ class NewsInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     news: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     let {

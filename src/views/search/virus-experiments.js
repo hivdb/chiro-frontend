@@ -212,7 +212,7 @@ export default class VirusExpTable extends React.Component {
   static propTypes = {
     cacheKey: PropTypes.string.isRequired,
     data: virusExperimentsShape.isRequired
-  }
+  };
 
   render() {
     const {cacheKey, data} = this.props;

@@ -38,11 +38,11 @@ class ClinicalTrialInner extends React.Component {
     compoundTargets: PropTypes.object,
     clinicalTrials: PropTypes.object,
     updateTime: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   constructor() {
     super(...arguments);
@@ -63,7 +63,7 @@ class ClinicalTrialInner extends React.Component {
 
   handleQueryChange = (actions) => (
     handleQueryChange(actions, this.props)
-  )
+  );
 
   handleOpenFigure(e) {
     e && e.preventDefault();
@@ -109,7 +109,7 @@ class ClinicalTrialInner extends React.Component {
     this.props.router.push(
       {pathname: '/clinical-trials/', query}
     );
-  }
+  };
 
   get clinicalTrialGroups() {
     let {

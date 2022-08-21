@@ -94,11 +94,11 @@ class CompoundTableInner extends React.Component {
     compounds: PropTypes.object,
     selectedTarget: PropTypes.string,
     cacheKey: PropTypes.string
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {
@@ -152,7 +152,8 @@ export default function CompoundTable({selectedTarget}) {
     <CompoundTableInner
      cacheKey={selectedTarget}
      {...data}
-     selectedTarget={selectedTarget}/>);
+     selectedTarget={selectedTarget}/>
+  );
 }
 
 CompoundTable.propTypes = {

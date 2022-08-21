@@ -47,7 +47,7 @@ export default class BiochemExpTable extends React.Component {
   static propTypes = {
     cacheKey: PropTypes.string.isRequired,
     data: biochemExperimentsShape.isRequired
-  }
+  };
 
   render() {
     const {cacheKey, data} = this.props;

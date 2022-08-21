@@ -14,7 +14,7 @@ export default class Breadcrumb extends React.Component {
       linkTo: PropTypes.string,
       active: PropTypes.boolean
     }).isRequired).isRequired
-  }
+  };
 
   render() {
     const {children: sections} = this.props;

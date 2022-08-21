@@ -14,11 +14,11 @@ class AnimalModelListInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     animalModels: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {loading, animalModels} = this.props;

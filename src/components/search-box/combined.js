@@ -69,11 +69,11 @@ class SearchBoxInner extends React.Component {
     }).isRequired).isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired
-  }
+  };
 
   static defaultProps = {
     value: ''
-  }
+  };
 
   constructor() {
     super(...arguments);
@@ -115,24 +115,24 @@ class SearchBoxInner extends React.Component {
     }
     this.setState({results: groupByCat(results), ...otherState});
     this.props.onChange(value, category);
-  }
+  };
 
   handleFocus = () => {
     this.setState({open: true});
-  }
+  };
 
   handleBlur = () => {
     this.setState({open: false});
-  }
+  };
 
   handleResultSelect = (e, {result}) => {
     const value = result.title;
     this.updateSuggestions(value, {open: false}, result.category);
-  }
+  };
 
   handleSearchChange = (e, {value}) => {
     this.updateSuggestions(value);
-  }
+  };
 
   render() {
     const {fluid, size, value} = this.props;

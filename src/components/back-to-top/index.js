@@ -8,7 +8,7 @@ export default class BackToTop extends React.Component {
   handleClick = (evt) => {
     evt && evt.preventDefault();
     window.scrollTo(0, 0);
-  }
+  };
 
   render() {
     return <div className={style['back-to-top-container']}>

@@ -6,7 +6,7 @@ export default class GAWrapper extends React.Component {
 
   static propTypes = {
     router: routerShape.isRequired
-  }
+  };
 
   logPageView() {
     setTimeout(() => {

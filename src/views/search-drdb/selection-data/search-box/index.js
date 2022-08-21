@@ -19,6 +19,7 @@ export default function SearchBox({children}) {
       articleDropdown,
       rxDropdown,
       virusDropdown
-    })}</>;
+    })}
+  </>;
 
 }

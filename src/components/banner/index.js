@@ -15,7 +15,7 @@ export default class Banner extends React.Component {
     children: PropTypes.arrayOf(
       PropTypes.node.isRequired
     ).isRequired
-  }
+  };
 
   static defaultProps = {
     bgImage: (
@@ -23,7 +23,7 @@ export default class Banner extends React.Component {
       'AAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
     ),
     narrow: false
-  }
+  };
 
   static Title = createSubComponent('h1', 'banner-header-title');
   static Subtitle = createSubComponent('div', 'banner-header-subtitle');

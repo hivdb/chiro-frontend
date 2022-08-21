@@ -53,7 +53,7 @@ class SearchBoxInner extends React.Component {
     children: PropTypes.func.isRequired,
     dropdownProps: PropTypes.object.isRequired,
     compoundListFilter: PropTypes.func
-  }
+  };
 
   static defaultProps = {
     allowEmpty: false,
@@ -82,7 +82,7 @@ class SearchBoxInner extends React.Component {
       </span>
     ),
     dropdownProps: {}
-  }
+  };
 
   constructor() {
     super(...arguments);
@@ -248,7 +248,7 @@ class SearchBoxInner extends React.Component {
     }
     actions.push([value, category]);
     this.props.onChange(actions);
-  }
+  };
 
   handleSearchChange = category => (event, {searchQuery}) => {
     if (searchQuery === '') {
@@ -257,7 +257,7 @@ class SearchBoxInner extends React.Component {
     else {
       this.setState({searching: category});
     }
-  }
+  };
 
   render() {
     const {

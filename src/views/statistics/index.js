@@ -13,22 +13,22 @@ import getTargetShowName from './utils';
 
 class StatisticsInner extends React.Component {
 
-  state = {selectedTarget: null}
+  state = {selectedTarget: null};
 
   handleChangeTarget = (target) => {
     this.setState({
       selectedTarget: target
     });
-  }
+  };
 
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     compoundTargets: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {

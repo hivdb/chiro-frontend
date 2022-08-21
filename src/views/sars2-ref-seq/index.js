@@ -17,7 +17,7 @@ export default class SARS2RefSeq extends React.Component {
       <H2>SARS-CoV-2 AA mutation to AA sequence</H2>
       <GeneSeqGenerator reference={reference} />
     </>;
-  }
+  };
 
   render() {
     return (
@@ -35,7 +35,7 @@ const EMPTY_TEXT = 'Select gene...';
 class GeneSeqGenerator extends React.Component {
   static propTypes = {
     reference: PropTypes.object.isRequired
-  }
+  };
 
   constructor() {
     super(...arguments);
@@ -90,14 +90,14 @@ class GeneSeqGenerator extends React.Component {
   handleSelectGeneName = (event, {value}) => {
     this.setState({geneName: value});
     this.generateSeq(value, this.state.mutations);
-  }
+  };
 
   handleInputMutation = (event, {value}) => {
     const mutations = parseMutationList(value);
     this.setState({mutations});
 
     this.generateSeq(this.state.geneName, mutations);
-  }
+  };
 
   generateSeq = (geneName, mutations) => {
     if (!geneName || !mutations) {
@@ -110,17 +110,17 @@ class GeneSeqGenerator extends React.Component {
       generateSequence(this.props.reference, geneName, mutations);
 
     this.setState({geneName, mutations, AASeq});
-  }
+  };
 
   handleCopy = async (e) => {
     e && e.preventDefault();
     navigator.clipboard.writeText(this.dumpFasta());
-  }
+  };
 
   dumpFasta = () => {
     const header = `> ${this.fastaHeader}`;
     return `${header}\n${this.state.AASeq}`;
-  }
+  };
 
   handleDownload = async () => {
     const filename = this.fastaHeader;
@@ -129,7 +129,7 @@ class GeneSeqGenerator extends React.Component {
       'text/x-fasta;charset=utf-8',
       this.dumpFasta()
     );
-  }
+  };
 
   render() {
     return (<Grid columns={2}>

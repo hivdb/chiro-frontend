@@ -8,7 +8,7 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 import {useSetLoading} from '../../utils/set-loading';
 import verticalTabsStyle, {useToggleTabs} from
-'icosa/components/vertical-tabs-style';
+  'icosa/components/vertical-tabs-style';
 import refDataLoader from '../../components/refdata-loader';
 import PageLoader from '../../components/page-loader';
 import Markdown from 'icosa/components/markdown';

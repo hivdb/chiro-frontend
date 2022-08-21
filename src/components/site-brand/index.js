@@ -13,13 +13,13 @@ export default class SiteBrand extends React.Component {
     size: PropTypes.oneOf(['normal', 'small', 'large']).isRequired,
     hideSubtitle: PropTypes.bool.isRequired,
     className: PropTypes.string
-  }
+  };
 
   static defaultProps = {
     responsive: false,
     hideSubtitle: false,
     size: 'normal'
-  }
+  };
 
   constructor() {
     super(...arguments);

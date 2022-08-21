@@ -14,11 +14,11 @@ class CellCultureMeasurementListInner extends React.Component {
   static propTypes = {
     loading: PropTypes.bool.isRequired,
     cellCultureMeasurements: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     loading: false
-  }
+  };
 
   render() {
     const {loading, cellCultureMeasurements} = this.props;
