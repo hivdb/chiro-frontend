@@ -8,7 +8,7 @@
   "dependencies": {
     "crypto-js": "^4.1.1",
     "fuse.js": "^5.0.7-beta",
-    "icosa": "hivdb/icosa#409b661c6316842f3b1901b55da827f56ae6b386",
+    "icosa": "hivdb/icosa#c0d9d12289a395fc52992cecf9675d69f888fb95",
     "jquery": ">=3.5.0",
     "moment": "^2.24.0",
     "smiles-drawer": "^1.2.0",
