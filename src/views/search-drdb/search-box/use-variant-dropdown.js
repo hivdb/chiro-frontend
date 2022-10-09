@@ -4,8 +4,6 @@ import escapeRegExp from 'lodash/escapeRegExp';
 import {NumExpStats} from '../hooks/susc-summary';
 import LocationParams from '../hooks/location-params';
 import Variants from '../hooks/variants';
-import InVitroMutations from '../hooks/invitro-mutations';
-import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 
 import useOnChangeWithLoading from './use-on-change-with-loading';
@@ -62,16 +60,6 @@ export default function useVariantDropdown() {
   ] = NumExpStats.useVar();
 
   const [
-    numInVitroMuts,
-    isInVitroMutsPending
-  ] = InVitroMutations.useSummaryByVirus();
-
-  const [
-    numInVivoMuts,
-    isInVivoMutsPending
-  ] = InVivoMutations.useSummaryByVirus();
-
-  const [
     numDMSMuts,
     isDMSMutsPending
   ] = DMSMutations.useSummaryByVirus();
@@ -79,8 +67,6 @@ export default function useVariantDropdown() {
   const isPending = (
     isVarsPending ||
     isVarNumExpLookupPending ||
-    isInVitroMutsPending ||
-    isInVivoMutsPending ||
     isDMSMutsPending
   );
 
@@ -88,8 +74,6 @@ export default function useVariantDropdown() {
     const finalVarNumExpLookup = {...varNumExpLookup};
 
     for (const {varNames, count} of [
-      ...numInVitroMuts,
-      ...numInVivoMuts,
       ...numDMSMuts
     ]) {
       finalVarNumExpLookup[ANY] += count;
@@ -100,8 +84,6 @@ export default function useVariantDropdown() {
     }
     return finalVarNumExpLookup;
   }, [
-    numInVitroMuts,
-    numInVivoMuts,
     numDMSMuts,
     varNumExpLookup
   ]);

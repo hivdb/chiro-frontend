@@ -5,8 +5,6 @@ import {NumExpStats} from '../hooks/susc-summary';
 import LocationParams from '../hooks/location-params';
 import IsolateAggs, {compareIsolateAggs} from '../hooks/isolate-aggs';
 import Positions from '../hooks/positions';
-import InVitroMutations from '../hooks/invitro-mutations';
-import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 
 import useOnChangeWithLoading from './use-on-change-with-loading';
@@ -73,16 +71,6 @@ export default function useMutationDropdown() {
   ] = NumExpStats.usePos();
 
   const [
-    numInVitroMuts,
-    isInVitroMutsPending
-  ] = InVitroMutations.useSummaryByVirus();
-
-  const [
-    numInVivoMuts,
-    isInVivoMutsPending
-  ] = InVivoMutations.useSummaryByVirus();
-
-  const [
     numDMSMuts,
     isDMSMutsPending
   ] = DMSMutations.useSummaryByVirus();
@@ -92,8 +80,6 @@ export default function useMutationDropdown() {
     isPositionsPending ||
     isIsoAggNumExpLookupPending ||
     isPosNumExpLookupPending ||
-    isInVitroMutsPending ||
-    isInVivoMutsPending ||
     isDMSMutsPending
   );
 
@@ -105,8 +91,6 @@ export default function useMutationDropdown() {
     const finalPosNumExpLookup = {...posNumExpLookup};
 
     for (const {isoAggkeys, genePos, count} of [
-      ...numInVitroMuts,
-      ...numInVivoMuts,
       ...numDMSMuts
     ]) {
       finalIsoAggNumExpLookup[ANY] += count;
@@ -127,8 +111,6 @@ export default function useMutationDropdown() {
     ];
   }, [
     isoAggNumExpLookup,
-    numInVitroMuts,
-    numInVivoMuts,
     numDMSMuts,
     posNumExpLookup
   ]);

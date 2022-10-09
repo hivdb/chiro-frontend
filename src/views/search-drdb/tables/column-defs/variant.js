@@ -76,7 +76,7 @@ function exportCellVariant({
 
 CellVariant.propTypes = {
   varName: PropTypes.string,
-  rawVarNames: PropTypes.arrayOf(PropTypes.string.isRequired),
+  rawVarNames: PropTypes.arrayOf(PropTypes.string),
   potencyArray: PropTypes.arrayOf(
     PropTypes.shape({
       potency: PropTypes.number.isRequired,

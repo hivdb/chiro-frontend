@@ -43,6 +43,32 @@ function CellMutation({text, count, total, isEmerging, isWaning, species}) {
   </span>;
 }
 
+export function useMutation({labels, skip, columns}) {
+  return React.useMemo(
+    () => {
+      if (skip || !columns.includes('mutation')) {
+        return null;
+      }
+      return new ColumnDef({
+        name: 'mutation',
+        label: labels.mutation || 'Mutation',
+        render: (_, {refAminoAcid, position, aminoAcid}) => (
+          <CellMutation text={aminoAcid === 'del' ?
+            `Δ${position}` : `${refAminoAcid}${position}${aminoAcid}`} />
+        ),
+        exportCell: (_, {gene, refAminoAcid, position, aminoAcid}) => ({
+          gene,
+          refAA: refAminoAcid,
+          pos: position,
+          AA: aminoAcid
+        }),
+        sort: rows => sortBy(rows, ['gene', 'position', 'aminoAcid'])
+      });
+    },
+    [columns, labels.mutation, skip]
+  );
+}
+
 export default function useMutations({
   colName = 'mutations',
   labels,

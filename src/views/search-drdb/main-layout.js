@@ -10,8 +10,6 @@ import DRDBStatHeader from './stat-header';
 import AbSuscResults from './tables/ab-susc-results';
 import VPSuscResults from './tables/vp-susc-results';
 import CPSuscResults from './tables/cp-susc-results';
-import InVitroMutationsTable from './tables/invitro-mutations-table';
-import InVivoMutationsTable from './tables/invivo-mutations-table';
 import DMSMutationsTable from './tables/dms-mutations-table';
 
 import {useLastUpdate} from './hooks';
@@ -65,6 +63,12 @@ export default function SearchDRDBLayout() {
           Search SARS-CoV-2 resistance database
           <Header.Subheader>
             <span className={style['contribute-options']}>
+              {!formOnly ? <>
+                <Link to="/search-drdb/?form_only">
+                  Reset filters
+                </Link>
+                <span className={style['bullet']}> ⦁ </span>
+              </> : null}
               <Link to="/susceptibility-data/">
                 View summary data
               </Link>
@@ -108,33 +112,15 @@ export default function SearchDRDBLayout() {
           <CPSuscResults />
         </Grid.Column>
       </Grid.Row> : null}
-    {!varName && isIndivMut ? <>
-      {displayAbTables || displayCPTables ?
-        <Grid.Row centered>
-          <Grid.Column width={16}>
-            <H2 id="invitro-mutations">In vitro Selection Data</H2>
-            <InVitroMutationsTable />
-          </Grid.Column>
-        </Grid.Row> : null}
-      {displayAbTables || displayCPTables ?
-        <Grid.Row centered>
-          <Grid.Column width={16}>
-            <H2 id="invivo-mutations">
-              In vivo Selection Data
-            </H2>
-            <InVivoMutationsTable />
-          </Grid.Column>
-        </Grid.Row> : null}
-      {displayAbTables ?
-        <Grid.Row centered>
-          <Grid.Column width={16}>
-            <H2 id="dms-mutations">
-              Deep Mutational Scanning (DMS) Data
-            </H2>
-            <DMSMutationsTable />
-          </Grid.Column>
-        </Grid.Row> : null}
-    </> : null}
+    {!varName && isIndivMut && displayAbTables ?
+      <Grid.Row centered>
+        <Grid.Column width={16}>
+          <H2 id="dms-mutations">
+            Deep Mutational Scanning (DMS) Data
+          </H2>
+          <DMSMutationsTable />
+        </Grid.Column>
+      </Grid.Row> : null}
     <BackToTop />
   </Grid>;
 }
