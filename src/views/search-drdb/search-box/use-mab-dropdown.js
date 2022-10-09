@@ -75,7 +75,6 @@ export default function useMAbDropdown() {
     isAbNumExpPending ||
     isDMSMutsPending
   );
-  console.log(abNumExpLookup);
 
   const finalAbNumExpLookup = React.useMemo(
     () => {

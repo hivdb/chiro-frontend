@@ -26,7 +26,6 @@ export function SuscSummaryProvider({children}) {
 
   const setPayload = React.useCallback(
     (cacheKey, payload) => {
-      console.log('Set cache');
       cache[cacheKey] = payload;
       setCache(cache);
     },
