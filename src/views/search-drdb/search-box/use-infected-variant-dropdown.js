@@ -3,8 +3,6 @@ import {Dropdown} from 'semantic-ui-react';
 import escapeRegExp from 'lodash/escapeRegExp';
 
 import {NumExpStats} from '../hooks/susc-summary';
-import InVitroMutations from '../hooks/invitro-mutations';
-import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 import InfectedVariants from '../hooks/infected-variants';
 import LocationParams from '../hooks/location-params';
@@ -56,14 +54,6 @@ export default function useInfectedVariantDropdown() {
   } = LocationParams.useMe();
 
   const [
-    numInVitroMuts,
-    isInVitroMutsPending
-  ] = InVitroMutations.useSummaryByRx();
-  const [
-    numInVivoMuts,
-    isInVivoMutsPending
-  ] = InVivoMutations.useSummaryByRx();
-  const [
     numDMSMuts,
     isDMSMutsPending
   ] = DMSMutations.useSummaryByRx();
@@ -71,8 +61,6 @@ export default function useInfectedVariantDropdown() {
   const isPending = (
     isInfectedVarsPending ||
     isInfVarNumExpPending ||
-    isInVitroMutsPending ||
-    isInVivoMutsPending ||
     isDMSMutsPending
   );
 
@@ -83,8 +71,6 @@ export default function useInfectedVariantDropdown() {
       }
       const finalInfVarNumExpLookup = {...infVarNumExpLookup};
       for (const {infectedVarNames, infectedVarName, count} of [
-        ...numInVitroMuts,
-        ...numInVivoMuts,
         ...numDMSMuts
       ]) {
         finalInfVarNumExpLookup[ANY] += count;
@@ -114,8 +100,6 @@ export default function useInfectedVariantDropdown() {
     [
       isPending,
       infVarNumExpLookup,
-      numInVitroMuts,
-      numInVivoMuts,
       numDMSMuts
     ]
   );

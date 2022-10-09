@@ -63,6 +63,13 @@ function AntibodiesProvider({children}) {
           ab.epitopes
             .split(LIST_JOIN_MAGIC_SEP)
             .map(pos => Number.parseInt(pos)) : [];
+        ab.isApproved = [
+          'EUA',
+          'Approved',
+          'CN-Approved',
+          'KR-Approved',
+          'EU-Approved'
+        ].includes(ab.availability);
         return acc;
       },
       {}

@@ -6,8 +6,6 @@ import escapeRegExp from 'lodash/escapeRegExp';
 import useConfig from '../hooks/use-config';
 import Antibodies from '../hooks/antibodies';
 import {NumExpStats} from '../hooks/susc-summary';
-import InVitroMutations from '../hooks/invitro-mutations';
-import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 import LocationParams from '../hooks/location-params';
 import {csvJoin} from '../hooks/susc-summary/funcs';
@@ -21,6 +19,7 @@ import style from './style.module.scss';
 const EMPTY = 'empty';
 const ANY = 'any';
 const AB_ANY = 'ab-any';
+const AB_APPROVED = 'ab-approved';
 const EMPTY_TEXT = 'Select item';
 const CP = 'cp';
 const ANTIBODY = 'antibodies';
@@ -50,6 +49,7 @@ export default function useMAbDropdown() {
 
   const {
     antibodies,
+    antibodyLookup,
     isPending: isAntibodiesPending
   } = Antibodies.useAll();
 
@@ -65,14 +65,6 @@ export default function useMAbDropdown() {
   } = LocationParams.useMe();
 
   const [
-    numInVitroMuts,
-    isInVitroMutsPending
-  ] = InVitroMutations.useSummaryByRx();
-  const [
-    numInVivoMuts,
-    isInVivoMutsPending
-  ] = InVivoMutations.useSummaryByRx();
-  const [
     numDMSMuts,
     isDMSMutsPending
   ] = DMSMutations.useSummaryByRx();
@@ -81,10 +73,9 @@ export default function useMAbDropdown() {
     isConfigPending ||
     isAntibodiesPending ||
     isAbNumExpPending ||
-    isInVitroMutsPending ||
-    isInVivoMutsPending ||
     isDMSMutsPending
   );
+  console.log(abNumExpLookup);
 
   const finalAbNumExpLookup = React.useMemo(
     () => {
@@ -94,8 +85,6 @@ export default function useMAbDropdown() {
       const {antibodyCombinations} = config;
       const finalAbNumExpLookup = {...abNumExpLookup};
       for (const {abNames, count} of [
-        ...numInVitroMuts,
-        ...numInVivoMuts,
         ...numDMSMuts
       ]) {
         finalAbNumExpLookup[ANY] += count;
@@ -121,6 +110,13 @@ export default function useMAbDropdown() {
         }
 
       }
+      finalAbNumExpLookup[AB_APPROVED] = 0;
+      for (const [abNamesText, count] of Object.entries(finalAbNumExpLookup)) {
+        const abNames = abNamesText.split(',');
+        if (abNames.some(abName => antibodyLookup[abName]?.isApproved)) {
+          finalAbNumExpLookup[AB_APPROVED] += count;
+        }
+      }
 
       return finalAbNumExpLookup;
     },
@@ -128,8 +124,7 @@ export default function useMAbDropdown() {
       isPending,
       config,
       abNumExpLookup,
-      numInVitroMuts,
-      numInVivoMuts,
+      antibodyLookup,
       numDMSMuts
     ]
   );
@@ -141,6 +136,9 @@ export default function useMAbDropdown() {
       let activeRx = defaultValue;
       if (paramAbNames && paramAbNames[0] === 'any') {
         activeRx = AB_ANY;
+      }
+      if (paramAbNames && paramAbNames[0] === 'approved') {
+        activeRx = AB_APPROVED;
       }
       else if (paramAbNames && paramAbNames.length > 0) {
         activeRx = csvJoin(paramAbNames);
@@ -165,10 +163,17 @@ export default function useMAbDropdown() {
             value: AB_ANY,
             type: ANTIBODY
           },
+          {
+            key: AB_APPROVED,
+            text: 'Approved mAb',
+            value: AB_APPROVED,
+            type: ANTIBODY
+          },
           ...(
             (
               activeRx !== EMPTY &&
               activeRx !== ANY &&
+              activeRx !== AB_APPROVED &&
               activeRx !== AB_ANY
             ) ?
               [{
@@ -222,6 +227,15 @@ export default function useMAbDropdown() {
                   value: AB_ANY,
                   type: ANTIBODY,
                   description: <Desc n={finalAbNumExpLookup[AB_ANY] || 0} />
+                },
+                {
+                  key: AB_APPROVED,
+                  text: 'Approved mAb',
+                  value: AB_APPROVED,
+                  type: ANTIBODY,
+                  description: (
+                    <Desc n={finalAbNumExpLookup[AB_APPROVED] || 0} />
+                  )
                 },
                 ...[
                   ...antibodyCombinations
@@ -305,6 +319,9 @@ export default function useMAbDropdown() {
         }
         else if (value === AB_ANY) {
           onChange(ANTIBODY, 'any');
+        }
+        else if (value === AB_APPROVED) {
+          onChange(ANTIBODY, 'approved');
         }
         else {
           const {type} = options.find(opt => opt.value === value);

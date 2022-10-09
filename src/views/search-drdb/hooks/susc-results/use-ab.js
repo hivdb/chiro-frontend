@@ -38,23 +38,39 @@ function usePrepareQuery({abNames, skip}) {
         let rxAbFiltered = false;
 
         if (realAbNames && realAbNames.length > 0) {
-          rxAbFiltered = true;
-          const excludeAbQuery = [];
-          const orConds = [];
-          for (const [idx, abName] of realAbNames.entries()) {
-            orConds.push(`
+          if (realAbNames.some(name => name === 'approved')) {
+            where.push(`
               EXISTS (
-                SELECT 1 FROM rx_antibodies RXMAB
+                SELECT 1 FROM rx_antibodies RXMAB, antibodies MAB
                 WHERE
                 RXMAB.ref_name = S.ref_name AND
-                RXMAB.ab_name = $abName${idx} AND
-                S.rx_name = RXMAB.rx_name
+                RXMAB.ab_name = MAB.ab_name AND
+                S.rx_name = RXMAB.rx_name AND
+                MAB.availability IN (
+                  'EUA', 'Approved', 'CN-Approved', 'KR-Approved', 'EU-Approved'
+                )
               )
             `);
-            params[`$abName${idx}`] = abName;
-            excludeAbQuery.push(`$abName${idx}`);
           }
-          where.push(orConds.join(' OR '));
+          else {
+            rxAbFiltered = true;
+            const excludeAbQuery = [];
+            const orConds = [];
+            for (const [idx, abName] of realAbNames.entries()) {
+              orConds.push(`
+                EXISTS (
+                  SELECT 1 FROM rx_antibodies RXMAB
+                  WHERE
+                  RXMAB.ref_name = S.ref_name AND
+                  RXMAB.ab_name = $abName${idx} AND
+                  S.rx_name = RXMAB.rx_name
+                )
+              `);
+              params[`$abName${idx}`] = abName;
+              excludeAbQuery.push(`$abName${idx}`);
+            }
+            where.push(orConds.join(' OR '));
+          }
         }
 
         if (!rxAbFiltered) {

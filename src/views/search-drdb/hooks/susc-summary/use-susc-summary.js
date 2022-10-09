@@ -48,6 +48,9 @@ const fetchCache = memoize(async cacheKey => {
 
 
 function setParams(params, key, val) {
+  if (key === 'antibodyNames' && val === 'approved') {
+    val = 'any';
+  }
   if (val !== undefined && val !== null && val !== '') {
     params[key] = val;
   }

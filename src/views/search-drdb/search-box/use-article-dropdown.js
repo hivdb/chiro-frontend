@@ -3,8 +3,6 @@ import {Dropdown} from 'semantic-ui-react';
 
 import Articles from '../hooks/articles';
 import {NumExpStats} from '../hooks/susc-summary';
-import InVitroMutations from '../hooks/invitro-mutations';
-import InVivoMutations from '../hooks/invivo-mutations';
 import DMSMutations from '../hooks/dms-mutations';
 import LocationParams from '../hooks/location-params';
 
@@ -36,22 +34,12 @@ export default function useArticleDropdown() {
     isNumExpLookupPending
   ] = NumExpStats.useRef();
   const [
-    numInVitroMuts,
-    isInVitroMutsPending
-  ] = InVitroMutations.useSummaryByArticle();
-  const [
-    numInVivoMuts,
-    isInVivoMutsPending
-  ] = InVivoMutations.useSummaryByArticle();
-  const [
     numDMSMuts,
     isDMSMutsPending
   ] = DMSMutations.useSummaryByArticle();
   const isPending = (
     isRefLookupPending ||
     isNumExpLookupPending ||
-    isInVitroMutsPending ||
-    isInVivoMutsPending ||
     isDMSMutsPending
   );
   const totalNumExpLookup = React.useMemo(
@@ -61,8 +49,6 @@ export default function useArticleDropdown() {
       }
       const lookup = {...numExpLookup};
       for (const {refName, count} of [
-        ...numInVitroMuts,
-        ...numInVivoMuts,
         ...numDMSMuts
       ]) {
         lookup[refName] = lookup[refName] || 0;
@@ -71,7 +57,7 @@ export default function useArticleDropdown() {
       }
       return lookup;
     },
-    [isPending, numExpLookup, numInVitroMuts, numInVivoMuts, numDMSMuts]
+    [isPending, numExpLookup, numDMSMuts]
   );
   const articleOptions = React.useMemo(
     () => {
