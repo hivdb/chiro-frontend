@@ -231,10 +231,10 @@ export default function useMAbDropdown() {
                   key: AB_APPROVED,
                   text: 'Approved mAb',
                   value: AB_APPROVED,
-                  type: ANTIBODY,
+                  type: ANTIBODY /*,
                   description: (
                     <Desc n={finalAbNumExpLookup[AB_APPROVED] || 0} />
-                  )
+                  )*/
                 },
                 ...[
                   ...antibodyCombinations
