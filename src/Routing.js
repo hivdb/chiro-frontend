@@ -9,12 +9,11 @@ import {
 
 import SARS2Routes from 'icosa/views/sars2';
 import MutAnnotViewerRoutes from 'icosa/views/mut-annot-viewer';
-import GenomeViewerRoutes from 'icosa/views/genome-viewer';
 import SearchDRDBRoutes from './views/search-drdb';
 import SusceptibilityDataRoutes from './views/susceptibility-data';
 import VariantsRoutes from './views/variants';
 
-import {mutAnnotViewerConfig, mutationViewerConfig} from './config';
+import {mutAnnotViewerConfig} from './config';
 import style from './index.module.scss';
 
 import Layout from './components/layout';
@@ -43,9 +42,6 @@ const Plots = lazy(() => import('./views/plots'));
 const Page = lazy(() => import('./views/page'));
 const MutAnnotViewerLayout = lazy(
   () => import('./views/mut-annot-viewer-layout')
-);
-const MutationViewerLayout = lazy(
-  () => import('./views/mutation-viewer-layout')
 );
 
 function renderError({error}) {
@@ -86,18 +82,6 @@ const BrowserRouter = createBrowserRouter({
           className: style['mut-annot-editor-ui']
         })}
       </Route>
-      <Route render={({props}) => (
-        <MutationViewerLayout
-         {...props}
-         {...mutationViewerConfig}
-         pathPrefix="mutation-viewer/" />
-      )}>
-        {GenomeViewerRoutes({
-          ...mutationViewerConfig,
-          pathPrefix: 'mutation-viewer/',
-          className: style['genome-viewer-ui']
-        })}
-      </Route>
 
       <Route Component={Search} path="/search/" />
       {SearchDRDBRoutes("/search-drdb/")}
@@ -107,7 +91,7 @@ const BrowserRouter = createBrowserRouter({
       })}
       {VariantsRoutes({
         pathPrefix: 'variants/',
-        defaultPath: '/variants/omicron/'
+        defaultPath: '/variants/omicron_ba_1_3/'
       })}
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />
@@ -127,6 +111,7 @@ const BrowserRouter = createBrowserRouter({
       <Route Component={Archive} path="/archive/" />
       <Redirect from="/terms-of-use/" to="/page/terms-of-use/" />
       <Redirect from="/database-schema/" to="/page/database-schema/" />
+      <Redirect from="/mutation-viewer/*" to="/variants/" />
     </Route>
   ),
 

@@ -1,3 +1,4 @@
+@import 'icosa/styles/select';
 @import '../../styles/colors';
 
 .variant-container {
@@ -51,6 +52,24 @@
     }
   }
 
+  .parent-variant-select-container {
+    text-align: right;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    margin-bottom: .5rem;
+
+    > label {
+      margin-right: .5rem;
+    }
+
+    > .parent-variant-select {
+      text-align: left;
+      width: 10rem;
+      display: inline-block;
+      @include select('parent-variant-select');
+    }
+  }
+
   section.consensus-section {
     border: 1px solid rgba(0,0,0,.4);
     padding: 1rem;
@@ -58,6 +77,15 @@
     > h3 {
       margin-top: 0;
       margin-bottom: 0;
+      > .parent-variant {
+        font-size: 1rem;
+        color: rgba(0,0,0,.4);
+        &::before {
+          content: "⇐";
+          font-weight: 400;
+          margin-right: .25rem;
+        }
+      }
       > .consensus-source {
         font-size: 1rem;
         font-weight: 400;

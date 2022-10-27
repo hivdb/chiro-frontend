@@ -106,6 +106,14 @@ function MutationViewer({
     )
   ).join(',');
 
+  const handleChange = React.useCallback(
+    value => {
+      const preset = presets.find(({name}) => name === value);
+      setPreset(preset);
+    },
+    [presets]
+  );
+
   return (
     <GenomeMap
      key={curName}
@@ -134,10 +142,6 @@ function MutationViewer({
      </>} />
   );
 
-  function handleChange(value) {
-    const preset = presets.find(({name}) => name === value);
-    setPreset(preset);
-  }
 }
 
 

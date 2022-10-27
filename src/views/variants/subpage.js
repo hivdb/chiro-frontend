@@ -14,6 +14,7 @@ import {useSetLoading} from '../../utils/set-loading';
 import PageLoader from '../../components/page-loader';
 import CMSLayout from '../page/cms-layout';
 
+import useParentVariant from './use-parent-variant';
 import ConsensusViewer from './consensus-viewer';
 import style from './style.module.scss';
 
@@ -34,11 +35,17 @@ Variant.propTypes = {
       attrlist: PropTypes.arrayOf(
         PropTypes.string.isRequired
       ),
+      defaultParentVariant: PropTypes.string,
+      parentVariants: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string.isRequired,
+          varName: PropTypes.string.isRequired
+        }).isRequired
+      ),
       autoGenomeMaps: PropTypes.arrayOf(
         PropTypes.shape({
           title: PropTypes.string.isRequired,
           varName: PropTypes.string.isRequired,
-          parentVarName: PropTypes.string,
           source: PropTypes.string
         }).isRequired
       ),
@@ -79,6 +86,8 @@ function Variant({
     contentBefore: secContentBefore,
     contentAfter: secContentAfter,
     attrlist: secAttrList,
+    defaultParentVariant,
+    parentVariants,
     autoGenomeMaps = []
     // content = ''
   } = sections[selectedIndex] || {};
@@ -111,6 +120,15 @@ function Variant({
     },
     [selectedIndex, setSelectedIndex]
   );
+
+  const [
+    parentVarName,
+    parentVarDisplay,
+    parentVarSelect
+  ] = useParentVariant({
+    defaultParentVariant,
+    parentVariants
+  });
 
   return (
     <CMSLayout {...{
@@ -169,12 +187,20 @@ function Variant({
                     </li>
                   ))}
                 </ul> : null}
+                {parentVarSelect}
                 {autoGenomeMaps ? autoGenomeMaps.map(
-                  ({varName, parentVarName, title, source}) => <section
+                  ({varName, title, source}) => <section
                    key={`section-${varName}`}
                    className={style['consensus-section']}>
                     <H3 disableAnchor>
                       {title}
+                      {parentVarName ? <>
+                        {'\xa0'}
+                        <span className={style['parent-variant']}>
+                          {parentVarName === varName ?
+                            'Wuhan-Hu-1' : parentVarDisplay}
+                        </span>
+                      </> : null}
                       {source ? <>
                         {'\xa0'}
                         <span className={style['consensus-source']}>
@@ -187,12 +213,12 @@ function Variant({
                       </> : null}
                     </H3>
                     <ConsensusViewer
-                     {...{
-                       varName,
-                       parentVarName,
-                       regionPresets,
-                       drdbVersion
-                     }} />
+                     varName={varName}
+                     regionPresets={regionPresets}
+                     drdbVersion={drdbVersion}
+                     parentVarName={
+                       parentVarName === varName ? null : parentVarName
+                     } />
                   </section>
                 ) : null}
                 {secContentAfter ? <Markdown

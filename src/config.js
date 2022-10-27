@@ -37,20 +37,7 @@ const mutAnnotViewerConfig = {
 };
 
 
-const mutationViewerConfig = {
-  indexLoader: async () => (
-    await loadPage('mutation-viewer/index')
-  ),
-  makePresetLoader: name => (
-    async () => (
-      await loadPage(`mutation-viewer/${name}`)
-    )
-  )
-};
-
-
 export {
   backendPrefix,
-  mutAnnotViewerConfig,
-  mutationViewerConfig
+  mutAnnotViewerConfig
 };
