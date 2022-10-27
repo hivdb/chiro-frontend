@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Loader from 'react-loader';
+import Loader from 'icosa/components/loader';
 
 import {usePage} from '../../utils/cms';
 
@@ -20,7 +20,7 @@ export default function PageLoader({
   const [payload, isPending, hasError] = usePage(pageName);
 
   return <>
-    {isPending ? <Loader loaded={false} /> : (
+    {isPending ? <Loader /> : (
       hasError ? "Page not found." : React.createElement(
         component,
         {pageName, ...payload, ...childProps},

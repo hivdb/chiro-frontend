@@ -5,7 +5,7 @@ import {Container} from 'semantic-ui-react';
 
 import Header from './header';
 import Footer from './footer';
-import Loader from 'react-loader';
+import Loader from 'icosa/components/loader';
 import GAWrapper from './ga/gawrapper';
 
 import "typeface-poppins";
@@ -41,7 +41,7 @@ export default function Layout({match, router, children}) {
     [router, currentPathName]
   );
 
-  return <Suspense fallback={<Loader loaded={false} />}>
+  return <Suspense fallback={<Loader />}>
     <Header currentPathName={currentPathName} />
     <div className={globalStyle["main-content"]}>
       <Container className="he is dead jim">
