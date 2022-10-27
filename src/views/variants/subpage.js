@@ -29,7 +29,7 @@ Variant.propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      subTitle: PropTypes.string.isRequired,
+      subTitle: PropTypes.string,
       contentBefore: PropTypes.string,
       attrlist: PropTypes.arrayOf(
         PropTypes.string.isRequired
@@ -38,6 +38,7 @@ Variant.propTypes = {
         PropTypes.shape({
           title: PropTypes.string.isRequired,
           varName: PropTypes.string.isRequired,
+          parentVarName: PropTypes.string,
           source: PropTypes.string
         }).isRequired
       ),
@@ -146,10 +147,13 @@ function Variant({
             <TabPanel key={`tabpanel-${name}`}>
               {idx === selectedIndex ? <section>
                 <H2 disableAnchor>
-                  {secTitle}{'\xa0'}
-                  <div className={style['short-desc']}>
-                    {secSubTitle}
-                  </div>
+                  {secTitle}
+                  {secSubTitle ? <>
+                    {'\xa0'}
+                    <div className={style['short-desc']}>
+                      {secSubTitle}
+                    </div>
+                  </> : null}
                 </H2>
                 {secContentBefore ? <Markdown
                  key={`${subPageName}-content-before`}
@@ -166,7 +170,7 @@ function Variant({
                   ))}
                 </ul> : null}
                 {autoGenomeMaps ? autoGenomeMaps.map(
-                  ({varName, title, source}) => <section
+                  ({varName, parentVarName, title, source}) => <section
                    key={`section-${varName}`}
                    className={style['consensus-section']}>
                     <H3 disableAnchor>
@@ -183,7 +187,12 @@ function Variant({
                       </> : null}
                     </H3>
                     <ConsensusViewer
-                     {...{varName, regionPresets, drdbVersion}} />
+                     {...{
+                       varName,
+                       parentVarName,
+                       regionPresets,
+                       drdbVersion
+                     }} />
                   </section>
                 ) : null}
                 {secContentAfter ? <Markdown

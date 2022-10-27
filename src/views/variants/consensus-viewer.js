@@ -8,6 +8,7 @@ import useVariantConsensus from './use-variant-consensus';
 
 ConsensusViewer.propTypes = {
   varName: PropTypes.string.isRequired,
+  parentVarName: PropTypes.string,
   regionPresets: PropTypes.object.isRequired,
   drdbVersion: PropTypes.string.isRequired
 };
@@ -15,11 +16,16 @@ ConsensusViewer.propTypes = {
 
 export default function ConsensusViewer({
   varName,
+  parentVarName,
   regionPresets,
   drdbVersion
 }) {
 
-  const [consensus, isPending] = useVariantConsensus({varName, drdbVersion});
+  const [consensus, isPending] = useVariantConsensus({
+    varName,
+    parentVarName,
+    drdbVersion
+  });
 
   return isPending ?
     <InlineLoader /> : (

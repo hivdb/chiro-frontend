@@ -22,9 +22,16 @@ export default function shortenMutationList(
     let text;
     const [{gene, position, aminoAcid, refAminoAcid, ...others}] = group;
     if (group.length === 1) {
-      text = aminoAcid === 'del' ?
-        `Δ${position}` :
-        `${refAminoAcid}${position}${aminoAcid}`;
+      text = `${refAminoAcid}${position}${aminoAcid}`;
+      if (refAminoAcid === 'ins') {
+        text = `${position}ins=>${aminoAcid}`;
+      }
+      else if (refAminoAcid === 'del') {
+        text = `${position}del=>${aminoAcid}`;
+      }
+      else if (aminoAcid === 'del') {
+        text = `Δ${position}`;
+      }
     }
     else {
       const leftest = group[0];
