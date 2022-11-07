@@ -37,7 +37,8 @@ function getGenomeMapPositions(mutations, geneDefs, highlightGenes) {
   for (const {
     gene,
     position,
-    text
+    text,
+    isBackMutation
   } of shortMutations) {
     const {
       displayGene, range,
@@ -49,7 +50,13 @@ function getGenomeMapPositions(mutations, geneDefs, highlightGenes) {
       gene: displayGene,
       name: gene === 'S' ? text : `${displayGene}:${text}`,
       pos: absNAPos,
-      ...(highlight ? null : {
+      ...(highlight ? (isBackMutation ? {
+        stroke: '#e0e0e0',
+        color: '#a0a0a0',
+        fontWeight: 'bold'
+      } : {
+        fontWeight: 'bold'
+      }) : {
         stroke: '#e0e0e0',
         color: '#a0a0a0'
       })
@@ -67,7 +74,8 @@ MutationViewer.propTypes = {
       gene: PropTypes.string.isRequired,
       position: PropTypes.number.isRequired,
       refAminoAcid: PropTypes.string.isRequired,
-      aminoAcid: PropTypes.string.isRequired
+      aminoAcid: PropTypes.string.isRequired,
+      isBackMutation: PropTypes.bool
     }).isRequired
   ).isRequired
 };

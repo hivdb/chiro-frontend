@@ -19,7 +19,8 @@ export default function useVariantConsensus({
               ELSE P.amino_acid
             END AS ref_amino_acid,
             C.position,
-            C.amino_acid
+            C.amino_acid,
+            FALSE AS is_back_mutation
             FROM ref_amino_acid R, variant_consensus C
               LEFT JOIN variant_consensus P ON
                 C.gene = P.gene AND
@@ -41,7 +42,8 @@ export default function useVariantConsensus({
             CASE
               WHEN C.amino_acid IS NULL THEN R.amino_acid
               ELSE C.amino_acid
-            END AS amino_acid
+            END AS amino_acid,
+            C.amino_acid IS NULL AS is_back_mutation
             FROM ref_amino_acid R, variant_consensus P
               LEFT JOIN variant_consensus C ON
                 C.gene = P.gene AND
@@ -65,7 +67,8 @@ export default function useVariantConsensus({
           C.gene,
           R.amino_acid ref_amino_acid,
           C.position,
-          C.amino_acid
+          C.amino_acid,
+          FALSE AS is_back_mutation
           FROM variant_consensus C, ref_amino_acid R
           WHERE
             C.var_name = $varName AND
@@ -88,5 +91,18 @@ export default function useVariantConsensus({
     dbName: 'covid-drdb'
   });
 
-  return [payload, isPending];
+  const mutations = React.useMemo(
+    () => {
+      if (isPending) {
+        return [];
+      }
+      return payload.map(mut => ({
+        ...mut,
+        isBackMutation: !!mut.isBackMutation
+      }));
+    },
+    [payload, isPending]
+  );
+
+  return [mutations, isPending];
 }
