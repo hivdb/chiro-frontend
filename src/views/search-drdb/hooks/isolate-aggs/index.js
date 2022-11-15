@@ -17,6 +17,7 @@ function IsolateAggsProvider({children}) {
   const sql = `
     SELECT iso_aggkey, iso_agg_display, var_name, iso_type
     FROM isolate_aggs
+    WHERE gene = 'S'
   `;
 
   const {

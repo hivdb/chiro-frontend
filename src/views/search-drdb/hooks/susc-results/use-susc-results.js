@@ -116,6 +116,7 @@ function usePrepareQuery({
         `LEFT JOIN isolates expiso ON
           S.iso_name = expiso.iso_name`,
         `JOIN isolate_pairs pair ON
+          pair.gene = 'S' AND
           S.control_iso_name = pair.control_iso_name AND
           S.iso_name = pair.iso_name`
       ];
