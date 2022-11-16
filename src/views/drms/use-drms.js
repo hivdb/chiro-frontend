@@ -13,7 +13,7 @@ export default function useDRMs({
     () => {
       const conds = [`drm.gene = $gene`];
       const params = {$gene: gene};
-      if (minPrevalence !== null) {
+      if (minPrevalence) {
         params.$minPrevalence = minPrevalence;
         conds.push(`EXISTS(
           SELECT 1 FROM resistance_mutation_attributes drm2

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {GiPieChart} from '@react-icons/all-files/gi/GiPieChart';
 import style from './style.module.scss';
 
 
@@ -22,7 +21,7 @@ export default function DrugCell({fold, pocket}) {
     <span
      data-level={level}
      className={style['drug-cell']}>
-      {pocket ? <GiPieChart /> : null}
+      {pocket ? 'P' : null}
     </span>
   );
 }

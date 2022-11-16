@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 
+import Markdown from 'icosa/components/markdown';
 import SimpleTable, {ColumnDef} from 'icosa/components/simple-table';
 import Loader from 'icosa/components/loader';
 import useDRMs from './use-drms';
 import useDrugAbbrs from './use-drug-abbrs';
+import MutationCell from './mutation-cell';
 import DrugCell from './drug-cell';
 import IntegerCell from './integer-cell';
 import PrevalenceCell from './prevalence-cell';
@@ -14,19 +16,20 @@ import style from './style.module.scss';
 
 RdRPDRMs.propTypes = {
   drdbVersion: PropTypes.string.isRequired,
+  contentBefore: PropTypes.string,
   displayDrugs: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ).isRequired
 };
 
-export default function RdRPDRMs({drdbVersion, displayDrugs}) {
+export default function RdRPDRMs({drdbVersion, displayDrugs, contentBefore}) {
   const params = {
     drdbVersion,
     gene: 'RdRP'
   };
   const [drms, isDRMsPending] = useDRMs(params);
   const cacheKey = JSON.stringify(params);
-  const [DrugLookup, isDrugPending] = useDrugAbbrs(params);
+  const [drugLookup, isDrugPending] = useDrugAbbrs(params);
   const isPending = isDRMsPending || isDrugPending;
 
   const colDefs = React.useMemo(
@@ -38,20 +41,27 @@ export default function RdRPDRMs({drdbVersion, displayDrugs}) {
         new ColumnDef({
           name: 'text',
           label: 'Mutation',
+          render: (text, row) => (
+            <MutationCell text={text} varcons={row.VARCONS} />
+          ),
           sort: rows => sortBy(rows, ['position', 'aminoAcid'])
         })
       ];
-      for (const Drug of displayDrugs) {
+      for (const drug of displayDrugs) {
         colDefs.push(
           new ColumnDef({
-            name: `Drug:${Drug}`,
-            label: DrugLookup[Drug],
+            name: `drug:${drug}`,
+            label: drugLookup[drug],
             render: (_, row) => (
               <DrugCell
-               fold={row[`FOLD:${Drug}`]}
-               pocket={row[`POCKET:${Drug}`]} />
+               fold={row[`FOLD:${drug}`]}
+               pocket={row[`POCKET:${drug}`]} />
             ),
-            sort: rows => sortBy(rows, [`FOLD:${Drug}`, `POCKET:${Drug}`])
+            exportCell: (_, row) => ({
+              fold: row[`FOLD:${drug}`],
+              pocket: row[`POCKET:${drug}`]
+            }),
+            sort: rows => sortBy(rows, [`FOLD:${drug}`, `POCKET:${drug}`])
           })
         );
       }
@@ -74,20 +84,28 @@ export default function RdRPDRMs({drdbVersion, displayDrugs}) {
       ]);
       return colDefs;
     },
-    [isPending, displayDrugs, DrugLookup]
+    [isPending, displayDrugs, drugLookup]
   );
 
   return <>
-    {isPending ? <Loader /> :
-    <SimpleTable
-     key={cacheKey}
-     cacheKey={cacheKey}
-     windowScroll
-     noHeaderOverlapping
-     compact
-     lastCompact
-     className={style['drms-table']}
-     columnDefs={colDefs}
-     data={drms} />}
+    {isPending ? <Loader /> : <>
+      {contentBefore ? <Markdown escapeHtml={false}>
+        {contentBefore}
+      </Markdown> : null}
+      <p className={style['display-desc']}>
+        Following lists {drms.length.toLocaleString('en-US')} RdRP inhibitor
+        resistance mutations.
+      </p>
+      <SimpleTable
+       key={cacheKey}
+       cacheKey={cacheKey}
+       windowScroll
+       noHeaderOverlapping
+       compact
+       lastCompact
+       className={style['drms-table']}
+       columnDefs={colDefs}
+       data={drms} />
+    </>}
   </>;
 }
