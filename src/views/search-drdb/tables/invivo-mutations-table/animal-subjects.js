@@ -166,6 +166,7 @@ export default function InVivoAnimalSbjTable() {
     <div ref={tableCtlRef} className={style['invivo-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable
+       windowScroll
        className={style['invivo-muts-table']}
        columnDefs={columnDefs}
        cacheKey={cacheKey}

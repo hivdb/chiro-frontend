@@ -122,6 +122,7 @@ export default function InVitroMutationsTable() {
     <div ref={tableCtlRef} className={style['invitro-muts-table-control']}>
       <InlineLoader className={style['loader']} />
       <SimpleTable
+       windowScroll
        className={style['invitro-muts-table']}
        columnDefs={columnDefs}
        cacheKey={cacheKey}

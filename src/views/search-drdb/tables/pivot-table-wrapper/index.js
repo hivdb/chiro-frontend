@@ -348,6 +348,7 @@ export default function PivotTableWrapper({
         <ModalContext.Provider value={{setData: setModalData}}>
           <SimpleTable
            {...props}
+           windowScroll
            className={style['pivot-table']}
            columnDefs={cleanedColumnDefs}
            key={`${cacheKey}__${hideNN}__${hideNon50}__${

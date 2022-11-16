@@ -1,0 +1,106 @@
+.drms-table {
+  &:global(__scroll) {
+    border: none !important;
+  }
+  thead > tr > th[data-column] {
+    vertical-align: bottom;
+    background-color: white;
+    border-left: none !important;
+    border-bottom: 1px solid black;
+    padding: .4rem .2rem 0 !important;
+    &[data-colname^="MAb:"],
+    &[data-colname^="Drug:"],
+    &[data-colname="FITNESS"],
+    &[data-colname="INVITRO"],
+    &[data-colname="INVIVO"] {
+      > div[class*="th-container"] {
+        > div:first-child {
+          transform: rotate(180deg);
+        }
+        writing-mode: vertical-lr;
+        > div[class*="sort-icon"] {
+          margin-left: 0;
+          margin-top: .3rem;
+          > svg {
+            vertical-align: inherit;
+          }
+          > sup {
+            top: 0;
+            display: inline-block;
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+  }
+  tbody > tr {
+    > td[data-colname] {
+      border-left: none !important;
+      border-top: none;
+      padding: .2rem !important;
+      vertical-align: middle;
+    }
+    &:hover {
+      .integer-cell, .mab-cell[data-level="U"], .drug-cell[data-level="U"], .fitness-cell, .prevalence-cell {
+        border: 1px solid #aaa;
+      }
+    }
+  }
+  tbody > tr > td {
+  }
+
+  .mab-cell, .integer-cell, .prevalence-cell, .drug-cell, .fitness-cell {
+    display: block;
+    box-sizing: border-box;
+    border-radius: 0.3rem;
+    background-color: #f0f0f0;
+    height: 1.5rem;
+  }
+
+  .mab-cell, .drug-cell, .integer-cell {
+    width: 1.5rem;
+  }
+
+  .fitness-cell {
+    width: 2rem;
+  }
+ 
+  .drug-cell {
+    font-size: .7rem;
+    > svg {
+      vertical-align: middle;
+    }
+  }
+
+  .prevalence-cell {
+    width: 4.2rem;
+    box-sizing: border-box;
+    text-align: right;
+    padding: 0 .2rem;
+    &[data-is-usual="true"] {
+      background-color: #f0eabb;
+    }
+  }
+
+  .mab-cell[data-level="S"], .drug-cell[data-level="S"], .fitness-cell[data-level="OK"] {
+    border: 1px solid black;
+    background-color: white;
+  }
+
+  .drug-cell[data-level="I"], .fitness-cell[data-level="reduced"] {
+    border: 1px solid black;
+    background-color: #e6f5fc;
+  }
+
+  .mab-cell[data-level="I"], .drug-cell[data-level="II"], .fitness-cell[data-level="fair"] {
+   background-color: #7fcbee;
+  
+  }
+  
+  .mab-cell[data-level="R"], .drug-cell[data-level="R"], .fitness-cell[data-level="poor"] {
+    color: white;
+    background-color: #146aa8;
+  }
+
+
+}

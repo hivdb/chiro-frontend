@@ -12,6 +12,7 @@ import MutAnnotViewerRoutes from 'icosa/views/mut-annot-viewer';
 import SearchDRDBRoutes from './views/search-drdb';
 import SusceptibilityDataRoutes from './views/susceptibility-data';
 import VariantsRoutes from './views/variants';
+import DRMsRoutes from './views/drms';
 
 import {mutAnnotViewerConfig} from './config';
 import style from './index.module.scss';
@@ -92,6 +93,10 @@ const BrowserRouter = createBrowserRouter({
       {VariantsRoutes({
         pathPrefix: 'variants/',
         defaultPath: '/variants/omicron_ba_1_3/'
+      })}
+      {DRMsRoutes({
+        pathPrefix: 'drms/',
+        defaultPath: '/drms/spike/'
       })}
       <Route Component={CompoundList} path="/compound-list/" />
       <Route Component={CompoundTargetList} path="/compound-target-list/" />
