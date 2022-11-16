@@ -25,3 +25,5 @@ yarn-error.log*
 # vim
 *.swp
 *.swo
+
+local/

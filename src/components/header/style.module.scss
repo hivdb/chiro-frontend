@@ -24,6 +24,10 @@ header.chiro-header {
     text-transform: uppercase;
     font-weight: 700;
 
+    @media print {
+      display: none;
+    }
+
     a.menu-toggle {
       display: none;
       color: white;

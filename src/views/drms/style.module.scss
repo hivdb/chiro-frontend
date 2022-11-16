@@ -1,4 +1,77 @@
+@page {
+  size: landscape;
+};
+
+.drms-container {
+  position: relative;
+  
+  .drms-loader {
+    display: none;
+    position: absolute;
+    background-color: rgba(0,0,0,.1);
+    padding: 1rem;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+  }
+  &[data-loading] .drms-loader {
+    display: block;
+  }
+
+  .drms-tabs {
+    --tab-width: 15rem;
+  }
+
+  div[role="tabpanel"] {
+    padding: 0 2rem;
+    overflow: visible;
+  }
+
+  a.tab-link {
+    color: black;
+  }
+  &[data-current-section="spike"] {
+    @media only screen and (min-width: 1700px) {
+      .drms-table {
+        column-count: 2;
+      }
+    }
+    @media only print {
+      .drms-table {
+        column-count: 2;
+      }
+    }
+  }
+  &[data-current-section="3clpro"], &[data-current-section="rdrp"] {
+    @media only screen and (min-width: 900px) {
+      .drms-table {
+        column-count: 2;
+      }
+    }
+    @media only screen and (min-width: 1250px) {
+      .drms-table {
+        column-count: 3;
+      }
+    }
+    @media only screen and (min-width: 1700px) {
+      .drms-table {
+        column-count: 4;
+      }
+    }
+    @media only print {
+      .drms-table {
+        column-count: 4;
+      }
+    }
+  }
+}
+
 .drms-table {
+  display: block;
+  column-gap: 2rem;
+  column-rule: 1px solid rgba(0,0,0,.4);
   &:global(__scroll) {
     border: none !important;
   }
@@ -82,22 +155,22 @@
     }
   }
 
-  .mab-cell[data-level="S"], .drug-cell[data-level="S"], .fitness-cell[data-level="OK"] {
+  .mab-cell[data-level="S"], .drug-cell[data-level="S"], .fitness-cell[data-level="poor"] {
     border: 1px solid black;
     background-color: white;
   }
 
-  .drug-cell[data-level="I"], .fitness-cell[data-level="reduced"] {
+  .drug-cell[data-level="I"], .fitness-cell[data-level="fair"] {
     border: 1px solid black;
     background-color: #e6f5fc;
   }
 
-  .mab-cell[data-level="I"], .drug-cell[data-level="II"], .fitness-cell[data-level="fair"] {
+  .mab-cell[data-level="I"], .drug-cell[data-level="II"], .fitness-cell[data-level="reduced"] {
    background-color: #7fcbee;
   
   }
   
-  .mab-cell[data-level="R"], .drug-cell[data-level="R"], .fitness-cell[data-level="poor"] {
+  .mab-cell[data-level="R"], .drug-cell[data-level="R"], .fitness-cell[data-level="OK"] {
     color: white;
     background-color: #146aa8;
   }

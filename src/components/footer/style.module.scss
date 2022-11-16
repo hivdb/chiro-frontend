@@ -2,6 +2,19 @@
 @import "../../styles/variables";
 
 .footer {
+  @media print {
+    padding-top: 0;
+    min-height: max-content;
+    width: 100%;
+    > *:not(.copyright) {
+      display: none;
+    }
+    .copyright a::after {
+      content: "<" attr(href) ">";
+      padding-left: .2rem;
+    }
+  }
+
   position: absolute;
   box-sizing: border-box;
   width: 100vw;
