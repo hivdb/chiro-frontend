@@ -1,6 +1,6 @@
 {
   "name": "chiro-frontend",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "resolutions": {
     "vfile": "^4.2.1"
@@ -8,7 +8,7 @@
   "dependencies": {
     "crypto-js": "^4.1.1",
     "fuse.js": "^5.0.7-beta",
-    "icosa": "hivdb/icosa#e3977cd",
+    "icosa": "hivdb/icosa#a0acd9b",
     "jquery": ">=3.5.0",
     "moment": "^2.24.0",
     "smiles-drawer": "^1.2.0",

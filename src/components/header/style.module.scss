@@ -166,4 +166,9 @@ header.chiro-header {
     }
   }
 
+  @media print {
+    background-color: transparent;
+    padding-left: 0;
+  }
+
 }

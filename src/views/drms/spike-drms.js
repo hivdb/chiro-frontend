@@ -99,10 +99,10 @@ export default function SpikeDRMs({drdbVersion, contentBefore, displayMAbs}) {
         Following lists {drms.length.toLocaleString('en-US')} Spike mAb
         resistance mutations. Resistance mutations with global prevalence ≤
         0.0001% are{displayAll ? ' shown.' : ' not shown.'}
-        <br />
         <CheckboxInput
          id="display-all"
          name="display-all"
+         className={style['display-all-checkbox']}
          onChange={toggleDisplayAll}
          checked={displayAll}>
           Click here to {displayAll ? 'hide' : 'display'} them all.

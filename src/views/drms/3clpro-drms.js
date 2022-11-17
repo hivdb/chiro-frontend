@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy';
 
 import Markdown from 'icosa/components/markdown';
 import SimpleTable, {ColumnDef} from 'icosa/components/simple-table';
+import CheckboxInput from 'icosa/components/checkbox-input';
 import Loader from 'icosa/components/loader';
 import useDRMs from './use-drms';
 import useDrugAbbrs from './use-drug-abbrs';
@@ -24,9 +25,11 @@ MproDRMs.propTypes = {
 };
 
 export default function MproDRMs({drdbVersion, displayDrugs, contentBefore}) {
+  const [displayAll, toggleDisplayAll] = React.useReducer(f => !f, false);
   const params = {
     drdbVersion,
-    gene: '_3CLpro'
+    gene: '_3CLpro',
+    minPrevalence: displayAll ? 0 : 0.000001
   };
   const [drms, isDRMsPending] = useDRMs(params);
   const cacheKey = JSON.stringify(params);
@@ -101,7 +104,16 @@ export default function MproDRMs({drdbVersion, displayDrugs, contentBefore}) {
       </Markdown> : null}
       <p className={style['display-desc']}>
         Following lists {drms.length.toLocaleString('en-US')} 3CLpro inhibitor
-        resistance mutations.
+        resistance mutations. Resistance mutations with global prevalence ≤
+        0.0001% are{displayAll ? ' shown.' : ' not shown.'}
+        <CheckboxInput
+         id="display-all"
+         name="display-all"
+         className={style['display-all-checkbox']}
+         onChange={toggleDisplayAll}
+         checked={displayAll}>
+          Click here to {displayAll ? 'hide' : 'display'} them all.
+        </CheckboxInput>
       </p>
       <SimpleTable
        key={cacheKey}

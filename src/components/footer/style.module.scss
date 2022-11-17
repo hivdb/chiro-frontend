@@ -2,19 +2,6 @@
 @import "../../styles/variables";
 
 .footer {
-  @media print {
-    padding-top: 0;
-    min-height: max-content;
-    width: 100%;
-    > *:not(.copyright) {
-      display: none;
-    }
-    .copyright a::after {
-      content: "<" attr(href) ">";
-      padding-left: .2rem;
-    }
-  }
-
   position: absolute;
   box-sizing: border-box;
   width: 100vw;
@@ -87,5 +74,26 @@
   @media only screen and (max-width: $mobile-main-content-max-width) {
     padding-left: #{(100vw - $mobile-main-content-width) / 2};
     padding-right: #{(100vw - $mobile-main-content-width) / 2};
+  }
+
+  @media print {
+    background-color: transparent;
+    padding-top: 0;
+    min-height: max-content;
+    width: 100%;
+    > *:not(.copyright) {
+      display: none;
+    }
+    .copyright {
+      background-color: transparent;
+      color: black;
+      a {
+        color: black;
+        &::after {
+          content: "<" attr(href) ">";
+          padding-left: .2rem;
+        }
+      }
+    }
   }
 }
