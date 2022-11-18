@@ -29,7 +29,7 @@ export default function MproDRMs({drdbVersion, displayDrugs, contentBefore}) {
   const params = {
     drdbVersion,
     gene: '_3CLpro',
-    minPrevalence: displayAll ? 0 : 0.000001
+    minPrevalence: displayAll ? 0 : 0.0000001
   };
   const [drms, isDRMsPending] = useDRMs(params);
   const cacheKey = JSON.stringify(params);
@@ -109,7 +109,7 @@ export default function MproDRMs({drdbVersion, displayDrugs, contentBefore}) {
       <p className={style['display-desc']}>
         Following lists {drms.length.toLocaleString('en-US')} 3CLpro inhibitor
         resistance mutations. Resistance mutations with global prevalence ≤
-        0.0001% are{displayAll ? ' shown.' : ' not shown.'}
+        1/10,000,000 are{displayAll ? ' shown.' : ' not shown.'}
         <CheckboxInput
          id="display-all"
          name="display-all"
