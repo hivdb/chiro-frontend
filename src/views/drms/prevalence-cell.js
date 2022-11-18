@@ -4,11 +4,12 @@ import style from './style.module.scss';
 
 
 PrevalenceCell.propTypes = {
+  indel: PropTypes.bool,
   value: PropTypes.number
 };
 
-export default function PrevalenceCell({value}) {
-  return (
+export default function PrevalenceCell({value, indel}) {
+  return indel ? null : (
     <span
      data-is-usual={value >= 0.0001}
      className={style['prevalence-cell']}>

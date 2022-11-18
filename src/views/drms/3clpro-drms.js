@@ -89,7 +89,11 @@ export default function MproDRMs({drdbVersion, displayDrugs, contentBefore}) {
         new ColumnDef({
           name: 'PREVALENCE',
           label: 'Prevalence',
-          render: val => <PrevalenceCell value={val} />
+          render: (val, {aminoAcid: aa}) => (
+            <PrevalenceCell
+             indel={aa === 'ins' || aa === 'del'}
+             value={val} />
+          )
         })
       ]);
       return colDefs;

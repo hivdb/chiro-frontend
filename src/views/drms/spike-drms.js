@@ -82,7 +82,11 @@ export default function SpikeDRMs({drdbVersion, contentBefore, displayMAbs}) {
         new ColumnDef({
           name: 'PREVALENCE',
           label: 'Prevalence',
-          render: val => <PrevalenceCell value={val} />
+          render: (val, {aminoAcid: aa}) => (
+            <PrevalenceCell
+             indel={aa === 'ins' || aa === 'del'}
+             value={val} />
+          )
         })
       ]);
       return colDefs;

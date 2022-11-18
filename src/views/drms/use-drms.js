@@ -15,14 +15,17 @@ export default function useDRMs({
       const params = {$gene: gene};
       if (minPrevalence) {
         params.$minPrevalence = minPrevalence;
-        conds.push(`EXISTS(
-          SELECT 1 FROM resistance_mutation_attributes drm2
-          WHERE
-            drm.gene = drm2.gene AND
-            drm.position = drm2.position AND
-            drm.amino_acid = drm2.amino_acid AND
-            drm2.col_name = 'PREVALENCE' AND
-            CAST(drm2.col_value AS DECIMAL) >= $minPrevalence
+        conds.push(`(
+          drm.amino_acid IN ('ins', 'del') OR
+          EXISTS(
+            SELECT 1 FROM resistance_mutation_attributes drm2
+            WHERE
+              drm.gene = drm2.gene AND
+              drm.position = drm2.position AND
+              drm.amino_acid = drm2.amino_acid AND
+              drm2.col_name = 'PREVALENCE' AND
+              CAST(drm2.col_value AS DECIMAL) >= $minPrevalence
+          )
         )`);
       }
       if (posStart !== null) {
