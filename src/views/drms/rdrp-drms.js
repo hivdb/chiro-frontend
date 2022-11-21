@@ -17,12 +17,18 @@ import style from './style.module.scss';
 RdRPDRMs.propTypes = {
   drdbVersion: PropTypes.string.isRequired,
   contentBefore: PropTypes.string,
+  contentAfter: PropTypes.string,
   displayDrugs: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ).isRequired
 };
 
-export default function RdRPDRMs({drdbVersion, displayDrugs, contentBefore}) {
+export default function RdRPDRMs({
+  drdbVersion,
+  displayDrugs,
+  contentBefore,
+  contentAfter
+}) {
   const params = {
     drdbVersion,
     gene: 'RdRP'
@@ -50,7 +56,7 @@ export default function RdRPDRMs({drdbVersion, displayDrugs, contentBefore}) {
       for (const drug of displayDrugs) {
         colDefs.push(
           new ColumnDef({
-            name: `drug:${drug}`,
+            name: `Drug:${drug}`,
             label: drugLookup[drug],
             render: (_, row) => (
               <DrugCell
@@ -110,6 +116,9 @@ export default function RdRPDRMs({drdbVersion, displayDrugs, contentBefore}) {
        className={style['drms-table']}
        columnDefs={colDefs}
        data={drms} />
+      {contentAfter ? <Markdown escapeHtml={false}>
+        {contentAfter}
+      </Markdown> : null}
     </>}
   </>;
 }

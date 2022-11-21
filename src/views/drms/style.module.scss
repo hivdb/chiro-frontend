@@ -78,6 +78,7 @@
   column-rule: 1px solid rgba(0,0,0,.4);
   &:global(__container) {
     margin-right: 0 !important;
+    margin-bottom: 3rem !important;
   }
   &:global(__scroll) {
     border: none !important;

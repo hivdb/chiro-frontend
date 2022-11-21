@@ -19,12 +19,18 @@ import style from './style.module.scss';
 MproDRMs.propTypes = {
   drdbVersion: PropTypes.string.isRequired,
   contentBefore: PropTypes.string,
+  contentAfter: PropTypes.string,
   displayDrugs: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ).isRequired
 };
 
-export default function MproDRMs({drdbVersion, displayDrugs, contentBefore}) {
+export default function MproDRMs({
+  drdbVersion,
+  displayDrugs,
+  contentBefore,
+  contentAfter
+}) {
   const [displayAll, toggleDisplayAll] = React.useReducer(f => !f, false);
   const params = {
     drdbVersion,
@@ -129,6 +135,9 @@ export default function MproDRMs({drdbVersion, displayDrugs, contentBefore}) {
        className={style['drms-table']}
        columnDefs={colDefs}
        data={drms} />
+      {contentAfter ? <Markdown escapeHtml={false}>
+        {contentAfter}
+      </Markdown> : null}
     </>}
   </>;
 }

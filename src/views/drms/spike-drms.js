@@ -18,12 +18,18 @@ import style from './style.module.scss';
 SpikeDRMs.propTypes = {
   drdbVersion: PropTypes.string.isRequired,
   contentBefore: PropTypes.string,
+  contentAfter: PropTypes.string,
   displayMAbs: PropTypes.arrayOf(
     PropTypes.string.isRequired
   ).isRequired
 };
 
-export default function SpikeDRMs({drdbVersion, contentBefore, displayMAbs}) {
+export default function SpikeDRMs({
+  drdbVersion,
+  contentBefore,
+  contentAfter,
+  displayMAbs
+}) {
   const [displayAll, toggleDisplayAll] = React.useReducer(f => !f, false);
   const params = {
     drdbVersion,
@@ -122,6 +128,9 @@ export default function SpikeDRMs({drdbVersion, contentBefore, displayMAbs}) {
        className={style['drms-table']}
        columnDefs={colDefs}
        data={drms} />
+      {contentAfter ? <Markdown escapeHtml={false}>
+        {contentAfter}
+      </Markdown> : null}
     </>}
   </>;
 }
