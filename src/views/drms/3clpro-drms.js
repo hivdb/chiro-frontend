@@ -13,6 +13,7 @@ import DrugCell from './drug-cell';
 import FitnessCell from './fitness-cell';
 import IntegerCell from './integer-cell';
 import PrevalenceCell from './prevalence-cell';
+import References from './references';
 import style from './style.module.scss';
 
 
@@ -138,6 +139,7 @@ export default function MproDRMs({
       {contentAfter ? <Markdown escapeHtml={false}>
         {contentAfter}
       </Markdown> : null}
+      <References gene="_3CLpro" drdbVersion={drdbVersion} />
     </>}
   </>;
 }

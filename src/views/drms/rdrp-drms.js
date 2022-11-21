@@ -11,6 +11,7 @@ import MutationCell from './mutation-cell';
 import DrugCell from './drug-cell';
 import IntegerCell from './integer-cell';
 import PrevalenceCell from './prevalence-cell';
+import References from './references';
 import style from './style.module.scss';
 
 
@@ -119,6 +120,7 @@ export default function RdRPDRMs({
       {contentAfter ? <Markdown escapeHtml={false}>
         {contentAfter}
       </Markdown> : null}
+      <References gene="RdRP" drdbVersion={drdbVersion} />
     </>}
   </>;
 }

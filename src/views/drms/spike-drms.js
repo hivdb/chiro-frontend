@@ -12,6 +12,7 @@ import MutationCell from './mutation-cell';
 import MAbCell from './mab-cell';
 import IntegerCell from './integer-cell';
 import PrevalenceCell from './prevalence-cell';
+import References from './references';
 import style from './style.module.scss';
 
 
@@ -131,6 +132,7 @@ export default function SpikeDRMs({
       {contentAfter ? <Markdown escapeHtml={false}>
         {contentAfter}
       </Markdown> : null}
+      <References gene="S" drdbVersion={drdbVersion} />
     </>}
   </>;
 }
