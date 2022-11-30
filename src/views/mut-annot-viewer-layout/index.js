@@ -4,65 +4,57 @@ import {matchShape} from 'found';
 
 import {Grid, Header} from 'semantic-ui-react';
 
-import {loadPage} from '../../utils/cms';
+import {usePage} from '../../utils/cms';
 import setTitle from '../../utils/set-title';
-import PromiseComponent from '../../utils/promise-component';
 
 import Markdown from 'icosa/components/markdown';
 
 import style from './style.module.scss';
 
 
-export default class MutAnnotViewerLayout extends React.Component {
+MutAnnotViewerLayout.propTypes = {
+  match: matchShape.isRequired,
+  children: PropTypes.node,
+  presets: PropTypes.arrayOf(
+    PropTypes.shape({
+      display: PropTypes.string.isRequired,
+      asyncPageName: PropTypes.string.isRequired
+    }).isRequired
+  )
+};
 
-  static propTypes = {
-    match: matchShape.isRequired,
-    children: PropTypes.node,
-    presets: PropTypes.arrayOf(
-      PropTypes.shape({
-        display: PropTypes.string.isRequired,
-        asyncPageName: PropTypes.string.isRequired
-      }).isRequired
-    )
-  };
+export default function MutAnnotViewerLayout({
+  match,
+  children,
+  presets
+}) {
 
-  get preset() {
-    const {presets} = this.props;
-    const {match: {location: {pathname}}} = this.props;
-    const split = pathname.replace(/\/$/, '').split('/');
-    const geneName = split[split.length - 1];
-    return presets.find(({name}) => name === geneName);
+  const preset = React.useMemo(
+    () => {
+      const {location: {pathname}} = match;
+      const split = pathname.replace(/\/$/, '').split('/');
+      const geneName = split[split.length - 1];
+      return presets.find(({name}) => name === geneName);
+    },
+    [match, presets]
+  );
+
+  let title = 'Mutation annotation viewer';
+  if (preset) {
+    title += ` - ${preset.display}`;
   }
 
-  renderContent = ({content}) => {
-    if (content) {
-      return <Markdown>{content}</Markdown>;
-    }
-    return null;
-  };
+  setTitle(title);
 
-  render() {
-    const {preset} = this;
-    const {children} = this.props;
-    let title = 'Mutation annotation viewer';
-    if (preset) {
-      title += ` - ${preset.display}`;
-    }
+  const [payload, isPending] = usePage(preset.asyncPageName);
 
-    setTitle(title);
-
-    return <Grid stackable className={style['full-width-viewer']}>
-      <Grid.Row>
-        <Grid.Column width={16}>
-          <Header as="h1" dividing>{title}</Header>
-          {preset ? <PromiseComponent
-           promise={loadPage(preset.asyncPageName)}
-           then={this.renderContent} /> : null}
-          {children}
-        </Grid.Column>
-      </Grid.Row>
-    </Grid>;
-
-  }
-
+  return <Grid stackable className={style['full-width-viewer']}>
+    <Grid.Row>
+      <Grid.Column width={16}>
+        <Header as="h1" dividing>{title}</Header>
+        {isPending ? null : <Markdown>{payload.content}</Markdown>}
+        {children}
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>;
 }
