@@ -45,8 +45,9 @@ export default function MutAnnotViewerLayout({
   }
 
   setTitle(title);
+  const skip = !preset?.asyncPageName;
 
-  const [payload, isPending] = usePage(preset.asyncPageName);
+  const [payload, isPending] = usePage(preset?.asyncPageName, skip);
 
   return <Grid stackable className={style['full-width-viewer']}>
     <Grid.Row>

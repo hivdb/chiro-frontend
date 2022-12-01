@@ -21,16 +21,22 @@ function makeMutationAnnotationLoader(pageName) {
 const mutAnnotViewerConfig = {
   presets: [
     {
-      name: 'SARS2S',
-      display: "SARS-CoV-2 Spike gene",
+      name: 'spike',
+      display: "Spike",
       asyncPageName: 'mutannot-spike',
       annotationLoader: makeMutationAnnotationLoader('mutannot-spike')
     },
     {
-      name: 'SARS2RdRP',
-      display: "SARS-CoV-2 RdRP gene",
+      name: 'rdrp',
+      display: "RNA-dependent RNA polymerase (RdRP)",
       asyncPageName: 'mutannot-rdrp',
       annotationLoader: makeMutationAnnotationLoader('mutannot-rdrp')
+    },
+    {
+      name: '3clpro',
+      display: "3C-like protease (3CL/Mpro)",
+      asyncPageName: 'mutannot-3clpro',
+      annotationLoader: makeMutationAnnotationLoader('mutannot-3clpro')
     }
   ],
   refDataLoader

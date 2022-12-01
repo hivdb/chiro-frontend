@@ -73,18 +73,21 @@ export async function loadPage(pageName, props = {}) {
   };
 }
 
-export function usePage(pageName) {
+export function usePage(pageName, skip = false) {
   const [payload, setPayload] = useState([null, true, null]);
 
   useEffect(
     () => {
+      if (skip) {
+        return;
+      }
       let mounted = true;
       loadPage(pageName)
         .then(payload => mounted ? setPayload([payload, false, false]) : null)
         .catch(error => mounted ? setPayload([error, false, true]) : null);
       return () => mounted = false;
     },
-    [pageName, setPayload]
+    [pageName, setPayload, skip]
   );
 
   return payload;
