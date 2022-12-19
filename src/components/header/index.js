@@ -134,7 +134,10 @@ export default function Header({currentPathName}) {
           </NavItem>
           <NavItem highlighted>
             <a
-             href="https://makeagift.stanford.edu/goto/covid19antiviral"
+             href={
+               'https://give.stanford.edu/med/fund/' +
+               '?kwoDCFilter=KDC-469CVQ9&kwoDCPreselect=KDC-469CVQ9'
+             }
              target="_blank" rel="noopener noreferrer"
              className={style.donation}>
               Support CoVDB
