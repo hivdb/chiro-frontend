@@ -5954,9 +5954,9 @@ iconv-lite@^0.6.2, iconv-lite@^0.6.3:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
-icosa@hivdb/icosa#42c7cac:
-  version "0.3.21"
-  resolved "https://codeload.github.com/hivdb/icosa/tar.gz/42c7cacbe425fbaf7317108acc1fb8588a4f047a"
+icosa@hivdb/icosa#9964a2a:
+  version "0.3.27"
+  resolved "https://codeload.github.com/hivdb/icosa/tar.gz/9964a2a97b62ae6d497eb54a16e2565df573d851"
   dependencies:
     "@apollo/client" "^3.7.0"
     "@babel/cli" "^7.17.10"
