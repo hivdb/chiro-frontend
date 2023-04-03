@@ -61,8 +61,9 @@ export default class Footer extends React.Component {
         </Grid.Column>
       </Grid>
       <div className={style.copyright}>
-        © 2020. All Rights Reserved. Questions? Contact{' '}
-        <a href="mailto:hivdbteam@stanford.edu">HIVDB team</a>.
+        © 2020 - {new Date().getUTCFullYear()}. All Rights Reserved.
+        Questions? Contact{' '}
+        <a href="mailto:hivdbteam@lists.stanford.edu">HIVDB team</a>.
       </div>
     </footer>;
 
