@@ -8,14 +8,19 @@ import CheckboxInput from 'icosa/components/checkbox-input';
 import Loader from 'icosa/components/loader';
 import useDRMs from './use-drms';
 import useDrugAbbrs from './use-drug-abbrs';
+import useIndexedFootnotes from './use-indexed-footnotes';
 import MutationCell from './mutation-cell';
 import DrugCell from './drug-cell';
 import FitnessCell from './fitness-cell';
 import IntegerCell from './integer-cell';
 import PrevalenceCell from './prevalence-cell';
+import FootnotesCell from './footnotes-cell';
 import References from './references';
 import style from './style.module.scss';
 
+const REF_COL_TYPE_ORDER = [
+  'FOLD', 'DMS', 'POCKET', 'FITNESS', 'INVIVO', 'INVITRO'
+];
 
 MproDRMs.propTypes = {
   drdbVersion: PropTypes.string.isRequired,
@@ -33,6 +38,7 @@ export default function MproDRMs({
   contentAfter
 }) {
   const [displayAll, toggleDisplayAll] = React.useReducer(f => !f, false);
+  const [displayFn, toggleDisplayFn] = React.useReducer(f => !f, false);
   const params = {
     drdbVersion,
     gene: '_3CLpro',
@@ -42,6 +48,7 @@ export default function MproDRMs({
   const cacheKey = JSON.stringify(params);
   const [drugLookup, isDrugPending] = useDrugAbbrs(params);
   const isPending = isDRMsPending || isDrugPending;
+  const refNames = useIndexedFootnotes(drms, REF_COL_TYPE_ORDER);
 
   const colDefs = React.useMemo(
     () => {
@@ -101,11 +108,23 @@ export default function MproDRMs({
              indel={aa === 'ins' || aa === 'del'}
              value={val} />
           )
-        })
+        }),
+        ...(displayFn ? [
+          new ColumnDef({
+            name: 'footnotes',
+            label: 'Footnote',
+            render: footnotes => (
+              <FootnotesCell
+               footnotes={footnotes}
+               orderedColTypes={REF_COL_TYPE_ORDER}
+               refNames={refNames} />
+            )
+          })
+        ] : [])
       ]);
       return colDefs;
     },
-    [isPending, displayDrugs, drugLookup]
+    [isPending, displayDrugs, drugLookup, refNames, displayFn]
   );
 
   return <>
@@ -123,7 +142,16 @@ export default function MproDRMs({
          className={style['display-all-checkbox']}
          onChange={toggleDisplayAll}
          checked={displayAll}>
-          Click here to {displayAll ? 'hide' : 'display'} them all.
+          Click here to {displayAll ? 'hide' : 'display'} DRMs with global
+          prevalence ≤ 1/1,000,000.
+        </CheckboxInput>
+        <CheckboxInput
+         id="display-fn"
+         name="display-fn"
+         className={style['display-fn-checkbox']}
+         onChange={toggleDisplayFn}
+         checked={displayFn}>
+          Click here to {displayFn ? 'hide' : 'display'} reference footnotes.
         </CheckboxInput>
       </p>
       <SimpleTable
@@ -139,7 +167,7 @@ export default function MproDRMs({
       {contentAfter ? <Markdown escapeHtml={false}>
         {contentAfter}
       </Markdown> : null}
-      <References gene="_3CLpro" drdbVersion={drdbVersion} />
+      <References refNames={refNames} />
     </>}
   </>;
 }

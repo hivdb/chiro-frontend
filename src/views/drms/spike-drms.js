@@ -8,13 +8,19 @@ import CheckboxInput from 'icosa/components/checkbox-input';
 import Loader from 'icosa/components/loader';
 import useDRMs from './use-drms';
 import useMAbAbbrs from './use-mab-abbrs';
+import useIndexedFootnotes from './use-indexed-footnotes';
 import MutationCell from './mutation-cell';
 import MAbCell from './mab-cell';
 import IntegerCell from './integer-cell';
 import PrevalenceCell from './prevalence-cell';
+import FootnotesCell from './footnotes-cell';
 import References from './references';
 import style from './style.module.scss';
 
+
+const REF_COL_TYPE_ORDER = [
+  'FOLD', 'DMS', 'POCKET', 'FITNESS', 'INVIVO', 'INVITRO'
+];
 
 SpikeDRMs.propTypes = {
   drdbVersion: PropTypes.string.isRequired,
@@ -32,6 +38,7 @@ export default function SpikeDRMs({
   displayMAbs
 }) {
   const [displayAll, toggleDisplayAll] = React.useReducer(f => !f, false);
+  const [displayFn, toggleDisplayFn] = React.useReducer(f => !f, false);
   const params = {
     drdbVersion,
     gene: 'S',
@@ -41,6 +48,7 @@ export default function SpikeDRMs({
   const cacheKey = JSON.stringify(params);
   const [mabLookup, isMAbPending] = useMAbAbbrs(params);
   const isPending = isDRMsPending || isMAbPending;
+  const refNames = useIndexedFootnotes(drms, REF_COL_TYPE_ORDER);
 
   const colDefs = React.useMemo(
     () => {
@@ -94,11 +102,23 @@ export default function SpikeDRMs({
              indel={aa === 'ins' || aa === 'del'}
              value={val} />
           )
-        })
+        }),
+        ...(displayFn ? [
+          new ColumnDef({
+            name: 'footnotes',
+            label: 'Footnote',
+            render: footnotes => (
+              <FootnotesCell
+               footnotes={footnotes}
+               orderedColTypes={REF_COL_TYPE_ORDER}
+               refNames={refNames} />
+            )
+          })
+        ] : [])
       ]);
       return colDefs;
     },
-    [isPending, displayMAbs, mabLookup]
+    [isPending, displayMAbs, mabLookup, refNames, displayFn]
   );
 
   return <>
@@ -116,7 +136,16 @@ export default function SpikeDRMs({
          className={style['display-all-checkbox']}
          onChange={toggleDisplayAll}
          checked={displayAll}>
-          Click here to {displayAll ? 'hide' : 'display'} them all.
+          Click here to {displayAll ? 'hide' : 'display'} DRMs with global
+          prevalence ≤ 1/1,000,000.
+        </CheckboxInput>
+        <CheckboxInput
+         id="display-fn"
+         name="display-fn"
+         className={style['display-fn-checkbox']}
+         onChange={toggleDisplayFn}
+         checked={displayFn}>
+          Click here to {displayFn ? 'hide' : 'display'} reference footnotes.
         </CheckboxInput>
       </p>
       <SimpleTable
@@ -132,7 +161,7 @@ export default function SpikeDRMs({
       {contentAfter ? <Markdown escapeHtml={false}>
         {contentAfter}
       </Markdown> : null}
-      <References gene="S" drdbVersion={drdbVersion} />
+      <References refNames={refNames} />
     </>}
   </>;
 }

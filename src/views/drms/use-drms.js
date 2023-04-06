@@ -9,7 +9,7 @@ export default function useDRMs({
   posStart = null,
   posEnd = null
 }) {
-  const [sql, params] = React.useMemo(
+  const [sql, refSql, params] = React.useMemo(
     () => {
       const conds = [`drm.gene = $gene`];
       const params = {$gene: gene};
@@ -53,6 +53,21 @@ export default function useDRMs({
         ORDER BY
           drm.position,
           drm.amino_acid
+      `, `
+        SELECT
+          gene,
+          position,
+          amino_acid,
+          ref_name,
+          col_type
+        FROM resistance_mutation_articles drm
+        WHERE
+          ${conds.join(' AND ')}
+        ORDER BY
+          position,
+          amino_acid,
+          ref_name,
+          col_type
       `, params];
     },
     [gene, minPrevalence, posStart, posEnd]
@@ -68,32 +83,52 @@ export default function useDRMs({
     dbName: 'covid-drdb'
   });
 
+  const {
+    payload: refPayload,
+    isPending: isRefPending
+  } = useQuery({
+    sql: refSql,
+    params,
+    dbVersion: drdbVersion,
+    dbName: 'covid-drdb'
+  });
+
   const mutations = React.useMemo(
     () => {
-      if (isPending) {
+      if (isPending || isRefPending) {
         return [];
       }
+      const refLookup = {};
+      for (const ref of refPayload) {
+        const key = `${ref.gene}:${ref.position}${ref.aminoAcid}`;
+        refLookup[key] = refLookup[key] || {};
+        refLookup[key][ref.colType] = refLookup[key][ref.colType] || [];
+        refLookup[key][ref.colType].push(ref.refName);
+      }
       return Object.values(payload.reduce((acc, {
+        gene,
         refAminoAcid,
         position,
         aminoAcid,
         colName,
         colValue
       }) => {
+        const key = `${gene}:${position}${aminoAcid}`;
         const mutText = `${refAminoAcid}${position}${aminoAcid}`;
         if (!(mutText in acc)) {
           acc[mutText] = {
             text: mutText,
             refAminoAcid,
             position,
-            aminoAcid
+            aminoAcid,
+            footnotes: refLookup[key] || []
           };
         }
         acc[mutText][colName] = Number.parseFloat(colValue);
         return acc;
       }, {}));
     },
-    [payload, isPending]
+    [payload, refPayload, isPending, isRefPending]
   );
 
   return [mutations, isPending];

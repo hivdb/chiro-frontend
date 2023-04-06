@@ -70,6 +70,13 @@
       display: none;
     }
   }
+
+  .display-fn-checkbox {
+    display: block;
+    @media only print {
+      display: none;
+    }
+  }
 }
 
 .drms-table {
