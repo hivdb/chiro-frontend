@@ -33,18 +33,27 @@ function uniqTreatments(treatments) {
 export function groupByIsolates(inVivoSbjs) {
   const isoRows = [];
   for (const {isolates, ...sbjRow} of inVivoSbjs) {
-    for (const iso of isolates) {
+    for (let idx = 0; idx < isolates.length; idx ++) {
+      const iso = isolates[idx];
       const isoDate = new Date(iso.isolateDate);
       const treatments = sbjRow.treatments.filter(
         ({startDate}) => new Date(startDate) < isoDate
       );
-      isoRows.push({
-        ...sbjRow,
-        infectionTiming: iso.timing,
-        treatments: uniqTreatments(treatments),
-        mutations: iso.mutations,
-        waningMutations: iso.waningMutations
-      });
+      const emergingMutations = idx === 0 ?
+        iso.mutations : iso.mutations.filter(
+          ({isEmerging}) => isEmerging
+        );
+      if (idx === 0 || emergingMutations.length > 0) {
+        isoRows.push({
+          ...sbjRow,
+          isBaseline: idx === 0,
+          infectionTiming: iso.timing,
+          treatments: uniqTreatments(treatments),
+          mutations: iso.mutations,
+          emergingMutations,
+          waningMutations: iso.waningMutations
+        });
+      }
     }
   }
 
@@ -58,8 +67,13 @@ export function groupByIsolates(inVivoSbjs) {
       left.infectionDate === right.infectionDate &&
       JSON.stringify(left.treatments) ===
       JSON.stringify(right.treatments) &&
+      left.isBaseline === right.isBaseline &&
       JSON.stringify(left.mutations) ===
-      JSON.stringify(right.mutations)
+      JSON.stringify(right.mutations) &&
+      JSON.stringify(left.emergingMutations) ===
+      JSON.stringify(right.emergingMutations) &&
+      JSON.stringify(left.waningMutations) ===
+      JSON.stringify(right.waningMutations)
     )
   )).map(group => {
     const [{
@@ -72,7 +86,9 @@ export function groupByIsolates(inVivoSbjs) {
       infectedVarName,
       infectionDate,
       treatments,
+      isBaseline,
       mutations,
+      emergingMutations,
       waningMutations
     }] = group;
     const minTiming = Math.min(...group.map(
@@ -92,7 +108,9 @@ export function groupByIsolates(inVivoSbjs) {
       infectionDate,
       treatments,
       infectionTiming: [minTiming, maxTiming],
+      isBaseline,
       mutations,
+      emergingMutations,
       waningMutations
     };
   });

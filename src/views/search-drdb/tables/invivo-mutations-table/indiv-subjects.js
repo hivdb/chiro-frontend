@@ -26,13 +26,13 @@ const tableConfig = {
     'infectionDate',
     'treatments',
     'infectionTiming',
-    'mutations',
+    'emergingMutations',
     'waningMutations'
   ],
   labels: {
     subjectName: 'Patient',
     infectedVarName: 'Infection Variant',
-    mutations: 'Emerging Spike Mutations',
+    emergingMutations: 'Emerging Spike Mutations',
     waningMutations: 'Waning Mutations',
     treatments: 'Monoclonal Antibody'
   },
@@ -55,7 +55,7 @@ const tableConfig = {
   },
   multiCells: [
     'infectionTiming',
-    'mutations',
+    'emergingMutations',
     'waningMutations'
   ]
 };

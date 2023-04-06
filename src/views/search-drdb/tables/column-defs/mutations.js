@@ -73,7 +73,8 @@ export default function useMutations({
   colName = 'mutations',
   labels,
   skip,
-  columns
+  columns,
+  distinguishBaseline = false
 }) {
   return React.useMemo(
     () => {
@@ -83,33 +84,37 @@ export default function useMutations({
       return new ColumnDef({
         name: colName,
         label: labels[colName],
-        render: (mutations, {subjectSpecies}) => shortenMutationList(
-          mutations || [],
-          true
-        ).map(({
-          text,
-          count,
-          total,
-          isEmerging,
-          isWaning
-        }, idx) => <React.Fragment key={idx}>
-          {idx === 0 ? null : ', '}
-          <CellMutation {...{
+        render: (mutations, {subjectSpecies, isBaseline}) => <>
+          {distinguishBaseline && isBaseline ? '(Baseline: ' : null}
+          {shortenMutationList(
+            mutations || [],
+            true
+          ).map(({
             text,
             count,
             total,
             isEmerging,
-            isWaning,
-            species: subjectSpecies
-          }} />
-        </React.Fragment>),
-        exportCell: (mutations, {subjectSpecies: species}) => (
+            isWaning
+          }, idx) => <React.Fragment key={idx}>
+            {idx === 0 ? null : ', '}
+            <CellMutation {...{
+              text,
+              count,
+              total,
+              isEmerging,
+              isWaning,
+              species: subjectSpecies
+            }} />
+          </React.Fragment>)}
+          {distinguishBaseline && isBaseline ? ')' : null}
+        </>,
+        exportCell: (mutations, {subjectSpecies: species, isBaseline}) => (
+          (distinguishBaseline && isBaseline ? '(Baseline: ' : '') +
           shortenMutationList(mutations || [], true)
             .map(({
               text,
               count,
-              total,
-              isEmerging
+              total
             }) => (
               `${text}${total > 1 ? ` (${
                 Number.parseInt(count).toLocaleString('en-US')
@@ -120,10 +125,11 @@ export default function useMutations({
                   Number.parseInt(count),
                   false
                 )
-              })` : (isEmerging ? ' (+)' : '')
+              })` : ''
               }`
             ))
-            .join(', ')
+            .join(', ') +
+          (distinguishBaseline && isBaseline ? ')' : '')
         ),
         sort: rows => sortBy(rows, [
           `${colName}.0.gene`,
@@ -138,6 +144,6 @@ export default function useMutations({
         ])
       });
     },
-    [columns, labels, skip, colName]
+    [columns, labels, skip, colName, distinguishBaseline]
   );
 }
